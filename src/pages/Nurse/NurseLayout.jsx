@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import SideBar from "../../components/SideBar/SideBar";
+import SideBar from "../../components/SideBar/SideBarNurse";
 
 const NurseLayout = () => {
   return (

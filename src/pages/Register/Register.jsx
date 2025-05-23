@@ -23,17 +23,17 @@ function Register() {
   return (
     <div className="flex flex-col min-h-screen relative">
       <div
-        className="flex flex-1 bg-cover bg-center w-full bg-opacity-45 pl-[10%] pr-[10%] gap-[7%]"
+        className="flex flex-1 bg-cover bg-center w-full bg-opacity-45 pl-[10%] pr-[10%]"
         style={{ backgroundImage: `url(${bg})` }}
       >
         <div className="w-[35%] bg-white h-auto m-auto justify-center text-center rounded-[15px] pl-5 pr-5 shadow-lg shadow-black/60">
-          <h1 className="text-3xl mt-5 font-serif">Register Page</h1>
-          <p className="font-serif text-[#777777] mt-1 mb-1 text-[13px]">
+          <h1 className="text-5xl mt-5 font-serif">Register Page</h1>
+          <p className="font-serif text-[#777777] mt-3 text-[19px]">
             School health is the care, prevention and health promotion of
             students in schools.
           </p>
 
-          <div className="">
+          <div className="pl-7 pr-7 p-3">
             <Form>
               <Form.Item
                 name="fullname"
@@ -42,7 +42,7 @@ function Register() {
                 <Input
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  style={{ height: "30px", fontWeight: 600 }}
+                  style={{ height: "40px", fontWeight: 600 }}
                   placeholder={fullName ? "" : "Enter your Full Name"}
                   prefix={
                     !fullName && <UserOutlined style={{ color: "#767676" }} />
@@ -57,7 +57,7 @@ function Register() {
                 <Input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  style={{ height: "30px", fontWeight: 600 }}
+                  style={{ height: "40px", fontWeight: 600 }}
                   placeholder={phone ? "" : "Enter your phone number"}
                   prefix={
                     !phone && <PhoneOutlined style={{ color: "#767676" }} />
@@ -73,7 +73,7 @@ function Register() {
                   value={email}
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{ height: "30px", fontWeight: 600 }}
+                  style={{ height: "40px", fontWeight: 600 }}
                   placeholder={email ? "" : "Enter your email"}
                   prefix={
                     !email && <MailOutlined style={{ color: "#767676" }} />
@@ -88,7 +88,7 @@ function Register() {
                 <Input.Password
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  style={{ height: "30px", fontWeight: 600 }}
+                  style={{ height: "40px", fontWeight: 600 }}
                   placeholder={password ? "" : "Enter your password"}
                   prefix={
                     !password && <LockOutlined style={{ color: "#767676" }} />
@@ -106,7 +106,7 @@ function Register() {
                 <Input.Password
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
-                  style={{ height: "30px", fontWeight: 600 }}
+                  style={{ height: "40px", fontWeight: 600 }}
                   placeholder={confirm ? "" : "Enter confirm password"}
                   prefix={
                     !confirm && <LockOutlined style={{ color: "#767676" }} />
@@ -118,8 +118,8 @@ function Register() {
               </Form.Item>
 
               <Button
-                style={{ height: "30px", fontWeight: 300 }}
-                className="w-full bg-[#34A0B5] text-white text-2xl font-serif hover:bg-[#1c606d]"
+                style={{ height: "40px", fontWeight: 300 }}
+                className="!w-full !bg-[#34A0B5] !text-white !text-2xl !font-serif hover:!bg-[#1c606d]"
                 type="secondary"
               >
                 Register
@@ -135,7 +135,7 @@ function Register() {
           </div>
         </div>
 
-        <div className="w-[65%] h-auto items-center justify-center text-left text-[#252424]  m-auto mt-[8%]">
+        <div className="w-[45%] h-auto items-center justify-center text-left text-[#252424]  m-auto mt-[12%]">
           <h1 className="font-serif text-[40px]">
             School health team – Accompanying students' health
           </h1>
@@ -145,8 +145,8 @@ function Register() {
             and mentally.
           </p>
           <Button
-            style={{ height: "30px", fontWeight: 300 }}
-            className="w-[150px] bg-[#34A0B5] text-white text-xl font-serif hover:bg-[#1c606d] mt-3"
+            style={{ height: "40px", fontWeight: 300 }}
+            className="!w-[150px] !bg-[#34A0B5] !text-white !text-xl !font-serif hover:!bg-[#1c606d] !mt-3"
             type="secondary"
           >
             Read more
