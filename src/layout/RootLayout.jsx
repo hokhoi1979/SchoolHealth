@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 import { ToastContainer } from "react-toastify";
-import "@/assets/fonts/Font.scss";
+
 function RootLayout() {
   return (
     <div className="flex bg-primary flex-col min-h-svh">
