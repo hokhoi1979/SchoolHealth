@@ -1,0 +1,204 @@
+{
+  "approval": [
+    {
+      "label": "Dashboard",
+      "path": "/approval",
+      "icon": "mdi:monitor-dashboard"
+    },
+    {
+      "label": "For My Vetting",
+      "path": "/approval/for-my-vetting",
+      "icon": "mdi:account-check"
+    },
+    {
+      "label": "Audit Trail",
+      "path": "/approval/audit-trail",
+      "icon": "mdi:file-document-multiple"
+    }
+  ],
+  "finance": [
+    {
+      "label": "Dashboard",
+      "path": "/finance",
+      "icon": "mdi:monitor-dashboard"
+    },
+    {
+      "label": "Finance Task",
+      "path": "/finance/task",
+      "icon": "mdi:account-check"
+    },
+    {
+      "label": "Audit Trail",
+      "path": "/finance/request",
+      "icon": "mdi:file-document-multiple"
+    }
+  ],
+  "claimer": [
+    {
+      "label": "Request List",
+      "path": "/claimer",
+      "icon": "mdi:file-document-multiple"
+    },
+    {
+      "label": "Create Request",
+      "path": "/claimer/create",
+      "icon": "material-symbols:note-add-outline-rounded"
+    }
+  ],
+  "profile": [
+    {
+      "label": "Your Profile",
+      "path": "/profile",
+      "icon": "mdi:account"
+    },
+    {
+      "label": "Security",
+      "path": "/security",
+      "icon": "mdi:lock"
+    },
+    {
+      "label": "Activities",
+      "path": "/activities",
+      "icon": "mdi:history"
+    }
+  ],
+  
+  "activities": [
+    {
+      "date": "2025-03-15 14:30",
+      "action": "Login",
+      "details": "Successful login from IP 192.168.1.1"
+    },
+    {
+      "date": "2025-03-14 10:15",
+      "action": "Password Change",
+      "details": "Password successfully updated"
+    },
+    {
+      "date": "2025-03-13 09:45",
+      "action": "Profile Update",
+      "details": "Updated phone number"
+    },
+    {
+      "date": "2025-03-12 16:20",
+      "action": "Claim Submitted",
+      "details": "New claim #12345 submitted"
+    },
+    {
+      "date": "2025-03-11 11:05",
+      "action": "Login",
+      "details": "Successful login from IP 192.168.1.2"
+    },
+    {
+      "date": "2025-03-10 08:00",
+      "action": "Email Change",
+      "details": "Updated email to newemail@example.com"
+    },
+    {
+      "date": "2025-03-09 19:30",
+      "action": "Logout",
+      "details": "User logged out from session"
+    },
+    {
+      "date": "2025-03-08 15:45",
+      "action": "Two-Factor Authentication Enabled",
+      "details": "2FA activated for added security"
+    },
+    {
+      "date": "2025-03-07 12:10",
+      "action": "Claim Approved",
+      "details": "Claim #12345 has been approved"
+    },
+    {
+      "date": "2025-03-06 09:00",
+      "action": "Address Updated",
+      "details": "Shipping address changed to 123 New Street"
+    },
+    {
+      "date": "2025-03-05 21:15",
+      "action": "Failed Login Attempt",
+      "details": "Failed login attempt from IP 203.0.113.10"
+    },
+    {
+      "date": "2025-03-04 18:40",
+      "action": "Subscription Renewed",
+      "details": "Premium subscription renewed successfully"
+    },
+    {
+      "date": "2025-03-03 14:25",
+      "action": "Account Deactivated",
+      "details": "User requested account deactivation"
+    },
+    {
+      "date": "2025-03-02 11:50",
+      "action": "Support Ticket Created",
+      "details": "New support ticket #56789 opened"
+    },
+    {
+      "date": "2025-03-01 07:30",
+      "action": "Payment Made",
+      "details": "Payment of $49.99 completed for order #99887"
+    },
+    {
+      "date": "2025-02-28 20:00",
+      "action": "Review Submitted",
+      "details": "Left a 5-star review on product ABC123"
+    },
+    {
+      "date": "2025-02-27 16:35",
+      "action": "Order Canceled",
+      "details": "Order #99886 was canceled by user"
+    },
+    {
+      "date": "2025-02-26 13:15",
+      "action": "Device Added",
+      "details": "New device registered for account access"
+    },
+    {
+      "date": "2025-02-25 09:45",
+      "action": "Profile Picture Updated",
+      "details": "Uploaded a new profile picture"
+    },
+    {
+      "date": "2025-02-25 09:45",
+      "action": "Profile Picture Updated",
+      "details": "Uploaded a new profile picture"
+    },
+    {
+      "date": "2025-02-25 09:45",
+      "action": "Profile Picture Updated",
+      "details": "Uploaded a new profile picture"
+    },
+    {
+      "date": "2025-02-25 09:45",
+      "action": "Profile Picture Updated",
+      "details": "Uploaded a new profile picture"
+    },
+    {
+      "date": "2025-02-25 09:45",
+      "action": "Profile Picture Updated",
+      "details": "Uploaded a new profile picture"
+    },
+    {
+      "date": "2025-02-25 09:45",
+      "action": "Profile Picture Updated",
+      "details": "Uploaded a new profile picture"
+    },
+    {
+      "date": "2025-02-25 09:45",
+      "action": "Profile Picture Updated",
+      "details": "Uploaded a new profile picture"
+    },
+    {
+      "date": "2025-02-25 09:45",
+      "action": "Profile Picture Updated",
+      "details": "Uploaded a new profile picture"
+    },
+
+    {
+      "date": "2025-02-24 22:10",
+      "action": "Notification Preferences Changed",
+      "details": "Email notifications turned off"
+    }
+  ]
+}

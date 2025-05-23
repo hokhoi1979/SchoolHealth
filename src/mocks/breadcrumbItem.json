@@ -1,0 +1,31 @@
+{
+    "home": "Home",
+    "claimer": {
+        "title": "Claimer",
+        "pages": {
+            "createRequest": "Create Request",
+            "requestList": "Request List"
+        }
+    },
+    "approval": {
+        "title": "Approval",
+        "pages": {
+            "dashboard": "Dashboard",
+            "forMyVetting": "For My Vetting",
+            "auditTrail": "Audit Trail"
+        }
+    },
+    "finance": {
+        "title": "Finance",
+        "pages": {
+            "dashboard": "Dashboard",
+            "financeTask": "Finance Task",
+            "auditTrail": "Audit Trail"
+        }
+    },
+    "profile": {
+        "yourProfile": "Your Profile",
+        "security": "Security",
+        "activities": "Activities"
+    }
+}
