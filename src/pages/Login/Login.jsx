@@ -9,7 +9,7 @@ import bg from "../../img/background.jpg";
 import { Button, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router";
 import { AppFooter } from "../../components/Footer/AppFooter";
-import bs from "../../img/bs.png";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -99,11 +99,7 @@ function Login() {
           </Button>
         </div>
       </div>
-      <img
-        src={bs}
-        width={400}
-        className="absolute bottom-0 left-[67%]  z-10"
-      />
+
       <AppFooter />
     </div>
   );

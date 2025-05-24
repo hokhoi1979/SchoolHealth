@@ -4,7 +4,9 @@
         "title": "Nurse",
         "pages": {
             "dashboard": "Dashboard",
-            "materials": "Materials"
+            "materials": "Materials",
+            "student": "Student Profile",
+            "medicalEvent": "Medical Event"
         }
     }
 }
