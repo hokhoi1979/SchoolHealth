@@ -6,7 +6,7 @@ const SideBar = () => {
   const [click, setClick] = useState("");
   return (
     <>
-      <div className="w-[19%] h-full bg-white pt-2 pb-2 font-inria flex flex-col">
+      <div className="w-[18%] h-full bg-white pt-2 pb-2 font-inria flex flex-col">
         <div className="flex items-center pt-2 pb-2  pl-1 pr-1 gap-3">
           <div className="flex items-center">
             <div className="w-[80px]">
@@ -71,7 +71,7 @@ const SideBar = () => {
           </div>
 
           <div
-            className={`flex items-center gap-4  hover:bg-[#EFEEEE] p-2 rounded-xl ${
+            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
               click === "materials"
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
@@ -102,8 +102,10 @@ const SideBar = () => {
           </div>
 
           <div
-            className={`flex items-center gap-4  hover:bg-[#EFEEEE] p-2 rounded-xl ${
-              click === "materials" ? "" : ""
+            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+              click === "profile"
+                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
+                : ""
             }`}
           >
             <svg
@@ -127,8 +129,10 @@ const SideBar = () => {
           </div>
 
           <div
-            className={`flex items-center gap-4  hover:bg-[#EFEEEE] p-2 rounded-xl ${
-              click === "materials" ? "" : ""
+            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+              click === "medical"
+                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
+                : ""
             }`}
           >
             <svg
@@ -152,8 +156,10 @@ const SideBar = () => {
           </div>
 
           <div
-            className={`flex items-center gap-4  hover:bg-[#EFEEEE] p-2 rounded-xl ${
-              click === "materials" ? "" : ""
+            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+              click === "vaccine"
+                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
+                : ""
             }`}
           >
             <svg
@@ -181,8 +187,10 @@ const SideBar = () => {
           </div>
 
           <div
-            className={`flex items-center gap-4  hover:bg-[#EFEEEE] p-2 rounded-xl ${
-              click === "materials" ? "" : ""
+            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+              click === "checkup"
+                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
+                : ""
             }`}
           >
             <svg
@@ -206,8 +214,10 @@ const SideBar = () => {
           </div>
 
           <div
-            className={`flex items-center gap-4  hover:bg-[#EFEEEE] p-2 rounded-xl ${
-              click === "materials" ? "" : ""
+            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+              click === "history"
+                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
+                : ""
             }`}
           >
             <svg

@@ -47,10 +47,10 @@ const router = createBrowserRouter([
             path: "materials",
             element: <Materials />,
             children: [
-              { path: "inventory", element: <Inventory /> },
+              { path: "", element: <Inventory /> },
               { path: "import", element: <Import /> },
               { path: "export", element: <Export /> },
-              { path: "student", element: <MedicineForStudent /> },
+              { path: "medicine", element: <MedicineForStudent /> },
             ],
           },
           {
