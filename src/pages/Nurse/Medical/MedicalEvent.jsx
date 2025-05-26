@@ -1,9 +1,29 @@
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import React from "react";
+
+import { Button, Input, Modal, Space, Table, Tooltip } from "antd";
+import React, { useState } from "react";
+
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 
 const MedicalEvent = () => {
+
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const showModal = () => {
+    setOpen(true);
+  };
+  const closeModal = () => {
+    setOpen(false);
+  };
+  const handleOK = () => {
+    setLoading(true);
+
+    setTimeout(() => {
+      setOpen(false);
+      setLoading(false);
+    }, 3000);
+  };
+
   const columns = [
     {
       title: "ID",
@@ -179,6 +199,11 @@ const MedicalEvent = () => {
             >
               <p className="text-white font-kameron"> Search</p>
             </Button>
+
+            <div className="">
+              <Button className="ml-[600px]">Create a new medical event</Button>
+            </div>
+
           </div>
           <Table className="mt-5" columns={columns} dataSource={dataSource} />
         </div>
@@ -186,6 +211,32 @@ const MedicalEvent = () => {
         {/* Footer nằm dưới cùng */}
         <AppFooter />
       </div>
+
+      {/* Modal */}
+      <Modal
+        open={open}
+        title="New Medical Event"
+        onOk={handleOK}
+        onCancel={closeModal}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Return
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            loading={loading}
+            onClick={handleOk}
+          >
+            Submit
+          </Button>,
+        ]}
+      >
+
+
+        
+      </Modal>
+
     </>
   );
 };

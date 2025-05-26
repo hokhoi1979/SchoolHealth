@@ -1,161 +1,167 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import logo from "@/assets/images/logo.png";
-import text from "@/mocks/index.json";
-import "@/assets/fonts/Font.scss";
-import AuthModal from "@/components/Header/AuthModal";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchSuccess, logout } from "../../redux/auth/authSlice";
-import { jwtDecode } from "jwt-decode";
-import { Icon } from "@iconify/react"; // Import Iconify
-
+import logo from "../../img/logocatnen.png";
+import { Link } from "react-router";
+import bs3 from "../../img/bs3.jpg";
+import user from "../../img/user.png";
+import logout from "../../img/logout.png";
+import contact from "../../img/contact.png";
+import news from "../../img/news.png";
+import home1 from "../../img/home1.jpeg";
 const Header = ({ object }) => {
-  const [openModal, setOpenModal] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { token } = useSelector((state) => state.account);
-
-  const handleOpenLogin = () => {
-    setOpenModal(true);
-  };
-
-  const handleClose = () => {
-    setOpenModal(false);
-  };
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
-  };
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("accessToken");
-    if (storedToken) {
-      const decodedUser = jwtDecode(storedToken);
-      dispatch(fetchSuccess({ user: decodedUser, token: storedToken }));
-    }
-  }, [dispatch]);
-
   return (
     <>
-      {/* Header Mobile */}
-      <div className="flex items-center justify-between px-5 py-4 md:hidden relative">
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          {mobileMenuOpen ? (
-            <Icon icon="mdi:close" width="32" height="32" />
-          ) : (
-            <Icon icon="mdi:menu" width="32" height="32" />
-          )}
-        </button>
-
-        {token ? (
-          <button
-            className="normalText px-3 py-1 bg-btn-primary text-[15px] text-btn-primary rounded-[35px]"
-            onClick={handleLogout}
-          >
-            {text.logout}
-          </button>
-        ) : (
-          <button
-            className="normalText px-3 py-1 bg-btn-primary text-[15px] text-btn-primary rounded-[35px]"
-            onClick={handleOpenLogin}
-          >
-            {text.login}
-          </button>
-        )}
-      </div>
-
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-40"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
-
-      <div
-        className={`fixed top-0 left-0 h-full w-[60%] bg-white shadow-lg z-50 transform transition-transform duration-300 md:hidden ${
-          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } flex flex-col`}
-      >
-        <div className="px-3 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <img src={logo} width={40} alt="Logo" />
-            </Link>
-            <h2 className="webText font-bold text-xl">{text.claimx}</h2>
+      <div className="container w-full  p-4 mt-2 mb-4">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center flex-col gap-4">
+            <img src={logo} alt="Logo" width={100} />
+            <p className="font-bold text-xl ml-[10px]">Health Care</p>
           </div>
-          <button onClick={() => setMobileMenuOpen(false)}>
-            <Icon icon="mdi:close" width="32" height="32" />
+
+          <div className="flex items-center gap-7 font-bold text-lg">
+            <Link to="/" className="flex items-center gap-2">
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-dasharray="16"
+                      stroke-dashoffset="16"
+                      d="M4.5 21.5h15"
+                    >
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        dur="0.2s"
+                        values="16;0"
+                      />
+                    </path>
+                    <path
+                      stroke-dasharray="16"
+                      stroke-dashoffset="16"
+                      d="M4.5 21.5v-13.5M19.5 21.5v-13.5"
+                    >
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        begin="0.2s"
+                        dur="0.2s"
+                        values="16;0"
+                      />
+                    </path>
+                    <path
+                      stroke-dasharray="28"
+                      stroke-dashoffset="28"
+                      d="M2 10l10 -8l10 8"
+                    >
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        begin="0.4s"
+                        dur="0.4s"
+                        values="28;0"
+                      />
+                    </path>
+                    <path
+                      stroke-dasharray="24"
+                      stroke-dashoffset="24"
+                      d="M9.5 21.5v-9h5v9"
+                    >
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        begin="0.7s"
+                        dur="0.4s"
+                        values="24;0"
+                      />
+                    </path>
+                  </g>
+                </svg>
+              </span>
+              Home
+            </Link>
+            <Link to="/news" className="flex items-center gap-2">
+              <img src={news} alt="News" className="w-8 h-8" />
+              News
+            </Link>
+            <Link to="/medicines">Medicines</Link>
+            <Link to="/contact" className="flex items-center gap-2">
+              <img src={contact} alt="Contact" className="w-8 h-8" />
+              Contact
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-5 font-bold text-lg">
+            <Link to="/login" className="flex items-center gap-2">
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-dasharray="28"
+                    stroke-dashoffset="28"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  >
+                    <path d="M4 21v-1c0 -3.31 2.69 -6 6 -6h4c3.31 0 6 2.69 6 6v1">
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        dur="0.4s"
+                        values="28;0"
+                      />
+                    </path>
+                    <path d="M12 11c-2.21 0 -4 -1.79 -4 -4c0 -2.21 1.79 -4 4 -4c2.21 0 4 1.79 4 4c0 2.21 -1.79 4 -4 4Z">
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        begin="0.4s"
+                        dur="0.4s"
+                        values="28;0"
+                      />
+                    </path>
+                  </g>
+                </svg>
+              </span>
+              User
+            </Link>
+            <Link to="/logout">
+              <img src={logout} alt="Logout" className="w-8 h-8" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative w-full h-[600px]">
+        <img
+          src={bs3}
+          alt="Health Care Background"
+          className="w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
+          <h1 className="text-5xl font-serif mb-2">Health Care</h1>
+          <p className="text-lg mb-4">
+            School health team - Accompanying students’ health
+          </p>
+          <button className="bg-white text-black py-1 px-3 text-sm rounded hover:bg-gray-200 transition">
+            <p className="font-serif">Click here</p>
           </button>
         </div>
-        <div className="w-full h-[1px] bg-gray-200"></div>
-
-        <nav className="flex flex-col mt-4">
-          <Link
-            to="/"
-            className="normalText py-2 px-5 text-lg"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            {text.home}
-          </Link>
-          <Link
-            to="/about"
-            className="normalText py-2 px-5 text-lg"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            {text.aboutus}
-          </Link>
-          <Link
-            to="/privacy"
-            className="normalText py-2 px-5 text-lg"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            {text.privacy}
-          </Link>
-        </nav>
       </div>
-
-      {/* Header Desktop */}
-      <div className="hidden md:grid w-full h-[5rem] px-10 py-5 md:grid-cols-3 items-center relative">
-        <div className="flex items-center gap-3">
-          <Link to="/">
-            <img className="self-start" src={logo} width={40} alt="" />
-          </Link>
-          <h2 className="webText font-bold text-xl">{text.claimx}</h2>
-        </div>
-
-        <div className="normalText flex justify-center gap-10 text-[18px] !text-black">
-          <Link to="/">{text.home}</Link>
-          <Link to="/about">{text.aboutus}</Link>
-          <Link to="/privacy">{text.privacy}</Link>
-        </div>
-
-        <div className="relative flex justify-end">
-          {token ? (
-            <button
-              className="normalText flex items-center px-5 py-2 bg-btn-primary text-btn-primary rounded-[35px] gap-2"
-              onClick={handleLogout}
-              style={{ cursor: "pointer" }}
-            >
-              {text.logout}
-            </button>
-          ) : (
-            <button
-              className="normalText flex items-center px-5 py-2 bg-btn-primary text-btn-primary rounded-[35px] gap-2"
-              onClick={handleOpenLogin}
-              style={{ cursor: "pointer" }}
-            >
-              {text.login}
-            </button>
-          )}
-
-          <AuthModal isOpen={openModal} onClose={handleClose} />
-        </div>
-      </div>
-
-      <div className="w-[95%] flex m-auto h-[1px] bg-gray-600"></div>
     </>
   );
 };
