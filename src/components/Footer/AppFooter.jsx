@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 import bs from "../../img/bs.png";
 const { Footer } = Layout;
-
+  
 export const AppFooter = () => {
   return (
     <Footer className="bg-[#B6C2CA] bg-opacity-5 h-[140px] w-full relative pl-[5%] pr-[5%] font-serif text-[#252424] flex gap-2 ">
