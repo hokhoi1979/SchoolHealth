@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import SideBar from "../../components/SideBar/SideBarNurse";
+import SideBar from "../../components/SideBar/SideBarParent";
 
-const NurseLayout = () => {
+const ParentLayout = () => {
   return (
     <div className="flex h-screen">
       <SideBar />
@@ -13,4 +13,4 @@ const NurseLayout = () => {
   );
 };
 
-export default NurseLayout;
+export default ParentLayout;
