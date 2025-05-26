@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from "../../img/logo.png";
+import logo from "../../img/icon.png";
 import { Link } from "react-router-dom";
 import bs from "../../img/bs.png";
 const SideBar = () => {
@@ -19,25 +19,20 @@ const SideBar = () => {
         <div className="flex items-center pt-2 pb-2  pl-1 pr-1 gap-3">
           <div className="flex items-center">
             <div className="w-[80px]">
-              <img
-                src={logo}
-                className="flex text-center justify-center"
-                width="120%"
-                alt=""
-              />
+              <img src={logo} className="flex m-auto" width="60%" alt="" />
               <p className="font-inria text-center justify-center text-[13px] font-medium text-[#040404] font-kameron">
                 Heath Care
               </p>
             </div>
             {!toggle && (
-              <h1 className="font-inria text-xl pl-2 font-medium text-center justify-center items-center">
-                School Health Care
+              <h1 className="font-inria text-xl pl-6 font-medium text-center justify-center items-center">
+                School Health
               </h1>
             )}
           </div>
           {!toggle && (
             <div
-              style={{ cursor: "pointer", marginLeft: 30 }}
+              style={{ cursor: "pointer", marginLeft: 50 }}
               onClick={handleToggle}
             >
               <svg
