@@ -1,9 +1,15 @@
+<<<<<<< HEAD
 import { Button, Input, Modal, Space, Table, Tooltip } from "antd";
 import React, { useState } from "react";
+=======
+import { Button, Input, Space, Table, Tooltip } from "antd";
+import React from "react";
+>>>>>>> 9b84723843da697e903b71fa5b4a96b30dd5c000
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 
 const MedicalEvent = () => {
+<<<<<<< HEAD
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const showModal = () => {
@@ -20,6 +26,8 @@ const MedicalEvent = () => {
       setLoading(false);
     }, 3000);
   };
+=======
+>>>>>>> 9b84723843da697e903b71fa5b4a96b30dd5c000
   const columns = [
     {
       title: "ID",
@@ -184,7 +192,10 @@ const MedicalEvent = () => {
               <p className="flex justify-center text-[50px]">12</p>
             </div>
           </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9b84723843da697e903b71fa5b4a96b30dd5c000
           <div className="pl-5 mt-5 flex gap-5">
             <Input
               style={{ borderRadius: "7px", width: "300px" }}
@@ -196,9 +207,12 @@ const MedicalEvent = () => {
             >
               <p className="text-white font-kameron"> Search</p>
             </Button>
+<<<<<<< HEAD
             <div className="">
               <Button className="ml-[600px]">Create a new medical event</Button>
             </div>
+=======
+>>>>>>> 9b84723843da697e903b71fa5b4a96b30dd5c000
           </div>
           <Table className="mt-5" columns={columns} dataSource={dataSource} />
         </div>
@@ -206,6 +220,7 @@ const MedicalEvent = () => {
         {/* Footer nằm dưới cùng */}
         <AppFooter />
       </div>
+<<<<<<< HEAD
       {/* Modal */}
       <Modal
         open={open}
@@ -230,6 +245,8 @@ const MedicalEvent = () => {
 
         
       </Modal>
+=======
+>>>>>>> 9b84723843da697e903b71fa5b4a96b30dd5c000
     </>
   );
 };
