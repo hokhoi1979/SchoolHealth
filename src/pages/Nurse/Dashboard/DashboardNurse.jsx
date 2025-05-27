@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 
-const Dashboard = () => {
+function DashboardNurse() {
+  const [click, setClick] = useState("event");
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -15,7 +16,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
             <div className="h-[120px] bg-white rounded-2xl">
               <p className="flex justify-center mt-5">Today's Medical Events</p>
-              <p className="flex justify-center text-[50px]">7</p>
+              <p className="flex justify-center text-[50px]">66</p>
             </div>
             <div className="h-[120px] bg-white rounded-2xl">
               <p className="flex justify-center mt-5">Vaccination Rate</p>
@@ -35,17 +36,41 @@ const Dashboard = () => {
 
           <div className="flex mt-5 bg-[#F3F3F3] font-kameron w-[500px] h-10 items-center rounded-xl ml-5">
             <div className=" m-auto flex gap-5">
-              <div className="hover:bg-white p-1 rounded-lg">
-                <Link to={""}>Medical Events</Link>
+              <div
+                className={`hover:bg-white p-1 rounded-lg ${
+                  click === "event" ? "bg-white rounded-md text-black" : ""
+                }`}
+              >
+                <Link onClick={() => setClick("event")} to={""}>
+                  Medical Events
+                </Link>
               </div>
-              <div className="hover:bg-white p-1 rounded-lg">
-                <Link to={"vaccination"}>Vaccination</Link>
+              <div
+                className={`hover:bg-white p-1 rounded-lg ${
+                  click === "vaccine" ? "bg-white rounded-md text-black" : ""
+                }`}
+              >
+                <Link onClick={() => setClick("vaccine")} to={"vaccination"}>
+                  Vaccination
+                </Link>
               </div>
-              <div className="hover:bg-white p-1 rounded-lg">
-                <Link to={"checkup"}>Medical Checkup</Link>
+              <div
+                className={`hover:bg-white p-1 rounded-lg ${
+                  click === "checkup" ? "bg-white rounded-md text-black" : ""
+                }`}
+              >
+                <Link onClick={() => setClick("checkup")} to={"checkup"}>
+                  Medical Checkup
+                </Link>
               </div>
-              <div className="hover:bg-white p-1 rounded-lg">
-                <Link to={"trend"}>Trend</Link>
+              <div
+                className={`hover:bg-white p-1 rounded-lg ${
+                  click === "trend" ? "bg-white rounded-md text-black" : ""
+                }`}
+              >
+                <Link onClick={() => setClick("trend")} to={"trend"}>
+                  Trend
+                </Link>
               </div>
             </div>
           </div>
@@ -58,6 +83,6 @@ const Dashboard = () => {
       </div>
     </>
   );
-};
+}
 
-export default Dashboard;
+export default DashboardNurse;
