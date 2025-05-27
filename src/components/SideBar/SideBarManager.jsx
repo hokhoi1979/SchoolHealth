@@ -129,7 +129,7 @@ const SideBarManager = () => {
             </svg>
             <Link
               onClick={() => setClick("vaccine")}
-              to={"/manager/vaccineManager"}
+              to={"/manager/vaccine"}
               className="text-[18px]"
             >
               Vaccine Management

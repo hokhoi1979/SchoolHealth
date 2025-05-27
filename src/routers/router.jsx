@@ -21,6 +21,7 @@ import Medical from "../pages/Manager/Dashboard/Medical";
 import Home from "../pages/Home/Home"
 import ManagerLayout from "../pages/Manager/ManagerLayout";
 import MedicalCheckup from "../pages/Manager/MedicalCheckup/MedicalCheckup";
+import Vaccine from "../pages/Manager/vaccine/Vaccine";
 
 
 
@@ -103,6 +104,17 @@ const router = createBrowserRouter([
             path: "medicalcheckup",
             element: <MedicalCheckup/>,
           },
+          {
+            path: "vaccine",
+            element: <Vaccine />,
+            children: [
+              { path: "", element: <Medical /> }, // index
+              { path: "vaccination", element: <Vaccination /> },
+              { path: "checkup", element: <Checkup /> },
+              { path: "trend", element: <Trend /> },
+            ],
+          },
+         
           
 
 
