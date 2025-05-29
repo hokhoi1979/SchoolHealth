@@ -1,8 +1,16 @@
-import { Button } from "antd";
-import React from "react";
+import { Button, Input, Modal } from "antd";
+import React, { useState } from "react";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 
 const VaccineManager = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleShowModal = () => {
+    setOpen(true);
+  };
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
   let vaccineDate = [
     {
       status: "Scheduled",
@@ -54,8 +62,24 @@ const VaccineManager = () => {
           <p className="flex justify-center text-[50px]">12</p>
         </div>
       </div>
+
       {/* ..... */}
-      <div className="p-4">
+      <div className="pl-5 mt-5 flex gap-5">
+        <Input
+          style={{ borderRadius: "7px", width: "300px" }}
+          placeholder="Search for ID, Name student..."
+        />
+        <Button className="!bg-[#90A8B0] !hover:bg-gray-600" type="secondary">
+          <p className="text-white font-kameron"> Search</p>
+        </Button>
+        <div className="">
+          <Button className="ml-[600px]" onClick={handleShowModal}>
+            Create a new medical event
+          </Button>
+        </div>
+      </div>
+
+      <div className="mt-10">
         <div className="grid grid-cols-3 mt-5 pl-5 gap-5.5">
           {vaccineDate.map((item) => (
             <div className="bg-white p-6 rounded-2xl">
@@ -141,6 +165,74 @@ const VaccineManager = () => {
           ))}
         </div>
       </div>
+
+      {/* modal for create new medical checkup */}
+      <Modal
+        open={open}
+        onCancel={handleCloseModal}
+        footer={[
+      <Button>
+        Create 
+      </Button>
+
+        ]}
+      >
+   <div>
+          <div>
+            <div className="flex justify items-center gap-4 mb-[10px] pt-2">
+              <div>
+                {" "}
+                <img src={logo} alt="Logo" width={100} />
+                <p className="font-bold text-xl ml-[10px]">Health Care</p>
+              </div>
+              <div>
+                <h1 className="font-bold text-2xl ml-[10px]">New Check Up</h1>
+              </div>
+            </div>
+            <div className="flex justify items-center gap-4">
+              <div>
+                <p className="font-serif text-[#7F7F7F]">Checkup Name:</p>
+              </div>
+              <div>
+                <Input></Input>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2 pt-2">
+              <p className="font-serif text-[#7F7F7F] w-30">Checkup Items:</p>
+              <div className="flex flex-col gap-2">
+                <Checkbox defaultChecked>Height and Weight</Checkbox>
+                <Checkbox>Dental</Checkbox>
+                <Checkbox>Vision</Checkbox>
+                <Checkbox>General Examination</Checkbox>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 pt-2">
+              <p className="font-serif text-[#7F7F7F] w-40">
+                Implementation Date:
+              </p>
+              <Input type="date" className="rounded-full" />
+            </div>
+
+            <div className="flex items-center gap-4 pt-2">
+              <p className="font-serif text-[#7F7F7F] w-40">Target Class:</p>
+              <Input className="rounded-full" />
+            </div>
+
+            <div className="flex items-center gap-4 pt-2">
+              <p className="font-serif text-[#7F7F7F] w-29">Checkup Time:</p>
+              <div className="flex gap-4">
+                <Input
+                  type="time"
+                  className="rounded-full"
+                  placeholder="From"
+                />
+                <Input type="time" className="rounded-full" placeholder="To" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };
