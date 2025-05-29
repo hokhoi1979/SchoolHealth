@@ -19,6 +19,7 @@ import Inventory from "../pages/Nurse/Materials/Inventory";
 import Import from "../pages/Nurse/Materials/Import";
 import Export from "../pages/Nurse/Materials/Export";
 import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
+import VaccineResult from "../pages/Nurse/Medical/VaccineResult";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -64,42 +65,11 @@ const router = createBrowserRouter([
               { path: "", element: <VaccineDay /> },
               { path: "studentList", element: <StudentList /> },
               { path: "vaccineHistory", element: <VaccineHistory /> },
+              { path: "vaccineResult", element: <VaccineResult /> },
             ],
           },
         ],
       },
-      //
-      // {
-      //   path: "/manager",
-      //   element: <ManagerLayout />,
-      //   children: [
-      //     { path: "", element: <Navigate to="dashboard" /> }, // chuyển hướng mặc định
-      //     {
-      //       path: "dashboard",
-      //       element: <Dashboard />,
-      //       children: [
-      //         { path: "", element: <Medical /> }, // index
-      //         { path: "vaccination", element: <Vaccination /> },
-      //         { path: "checkup", element: <Checkup /> },
-      //         { path: "trend", element: <Trend /> },
-      //       ],
-      //     },
-      //     {
-      //       path: "materials",
-      //       element: <Materials />,
-      //       children: [
-      //         { path: "", element: <Inventory /> },
-      //         { path: "import", element: <Import /> },
-      //         { path: "export", element: <Export /> },
-      //         { path: "medicine", element: <MedicineForStudent /> },
-      //       ],
-      //     },
-      //     {
-      //       path: "medicalcheckup",
-      //       element: <MedicalCheckup />,
-      //     },
-      //   ],
-      // },
     ],
   },
 ]);
