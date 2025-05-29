@@ -8,5 +8,14 @@
             "student": "Student Profile",
             "medicalEvent": "Medical Event"
         }
+    },
+    "Manager": {
+        "title": "Manager",
+        "pages": {
+            "dashboard": "Dashboard",
+            "materials": "Materials",
+            "student": "Student Profile",
+            "medicalEvent": "Medical Event"
+        }
     }
 }

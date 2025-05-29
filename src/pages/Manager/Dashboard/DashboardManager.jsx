@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 
-const Dashboard = () => {
+const DashboardManager = () => {
+  const [click,setClick] = useState("event");
+
   return (
     <>
       <div className="flex flex-col min-h-screen">
         <div className="p-6 flex flex-col flex-1">
           <h1 className="text-xl font-inria font-medium mb-4">
-            <CommonBreadcrumb role={"Nurse"} page={"dashboard"} />
+            <CommonBreadcrumb role={"Manager"} page={"dashboard"} />
           </h1>
 
           <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
@@ -35,17 +37,33 @@ const Dashboard = () => {
 
           <div className="flex mt-5 bg-[#F3F3F3] font-kameron w-[500px] h-10 items-center rounded-xl ml-5">
             <div className=" m-auto flex gap-5">
-              <div className="hover:bg-white p-1 rounded-lg">
-                <Link to={""}>Medical Events</Link>
+            <div
+                className={`hover:bg-white p-1 rounded-lg ${
+                  click === "event" ? "bg-white rounded-md text-black" : ""
+                }`}
+              > 
+                <Link to={""} onClick={()=>setClick("event")}>Medical Events</Link>
               </div>
-              <div className="hover:bg-white p-1 rounded-lg">
-                <Link to={"vaccination"}>Vaccination</Link>
+              <div
+                className={`hover:bg-white p-1 rounded-lg ${
+                  click === "vaccine" ? "bg-white rounded-md text-black" : ""
+                }`}
+              >
+                <Link to={"vaccinationManager"} onClick={()=>setClick("vaccine")}>Vaccination</Link>
               </div>
-              <div className="hover:bg-white p-1 rounded-lg">
-                <Link to={"checkup"}>Medical Checkup</Link>
+              <div
+                className={`hover:bg-white p-1 rounded-lg ${
+                  click === "checkup" ? "bg-white rounded-md text-black" : ""
+                }`}
+              >
+                <Link to={"checkupManager"} onClick={()=>setClick("checkup")}>Medical Checkup</Link>
               </div>
-              <div className="hover:bg-white p-1 rounded-lg">
-                <Link to={"trend"}>Trend</Link>
+              <div
+                className={`hover:bg-white p-1 rounded-lg ${
+                  click === "trend" ? "bg-white rounded-md text-black" : ""
+                }`}
+              >
+                <Link to={"trendManager"} onClick={()=>setClick("trend")}>Trend</Link>
               </div>
             </div>
           </div>
@@ -60,4 +78,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardManager;

@@ -5,7 +5,8 @@ import RootLayout from "../layout/RootLayout";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import StudentProfile from "../pages/Nurse/StudentProfile/StudentProfile";
-import Home from "../pages/Home/Home";
+
+// Nurse imports
 import VaccineDay from "../pages/Nurse/Medical/VaccineDay";
 import StudentList from "../pages/Nurse/Medical/StudentList";
 import VaccineHistory from "../pages/Nurse/Medical/VaccineHistory";
@@ -19,7 +20,19 @@ import Inventory from "../pages/Nurse/Materials/Inventory";
 import Import from "../pages/Nurse/Materials/Import";
 import Export from "../pages/Nurse/Materials/Export";
 import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
+
 import VaccineResult from "../pages/Nurse/Medical/VaccineResult";
+
+// Manager imports
+import Home from "../pages/Home/Home";
+import ManagerLayout from "../pages/Manager/ManagerLayout";
+import Dashboard from "../pages/Nurse/Dashboard/DashboardNurse"; // Nếu bạn có Dashboard riêng cho Manager, nên thay lại path cho đúng
+import MedicalCheckup from "../pages/Manager/MedicalCheckup/MedicalCheckupManager";
+import VaccineManager from "../pages/Manager/vaccine/VaccineManager";
+import MedicalManager from "../pages/Manager/Dashboard/MedicalManager";
+import DashboardManager from "../pages/Manager/Dashboard/dashboardManager";
+import VaccinationManager from "../pages/Manager/Dashboard/VaccinationManager";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,6 +42,7 @@ const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
 
+      // Nurse routes
       {
         path: "nurse",
         element: <NurseLayout />,
@@ -66,6 +80,49 @@ const router = createBrowserRouter([
               { path: "studentList", element: <StudentList /> },
               { path: "vaccineHistory", element: <VaccineHistory /> },
               { path: "vaccineResult", element: <VaccineResult /> },
+            ],
+          },
+        ],
+      },
+
+      // Manager routes
+      {
+        path: "/manager",
+        element: <ManagerLayout />,
+        children: [
+          { path: "", element: <Navigate to="dashboard" /> },
+          {
+            path: "dashboard",
+            element: <DashboardManager />,
+            children: [
+              { path: "", element: <MedicalManager /> },
+              { path: "vaccinationManager", element: <VaccinationManager /> },
+              { path: "checkupManager", element: <Checkup /> },
+              { path: "trendManager", element: <Trend /> },
+            ],
+          },
+          {
+            path: "materials",
+            element: <Materials />,
+            children: [
+              { path: "", element: <Inventory /> },
+              { path: "import", element: <Import /> },
+              { path: "export", element: <Export /> },
+              { path: "medicine", element: <MedicineForStudent /> },
+            ],
+          },
+          {
+            path: "medicalcheckup",
+            element: <MedicalCheckup />,
+          },
+          {
+            path: "vaccine",
+            element: <VaccineManager />,
+            children: [
+              { path: "", element: <MedicalManager /> },
+              { path: "vaccination", element: <Vaccination /> },
+              { path: "checkup", element: <Checkup /> },
+              { path: "trend", element: <Trend /> },
             ],
           },
         ],

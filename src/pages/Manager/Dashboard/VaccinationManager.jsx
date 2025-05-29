@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-function Vaccination() {
+function VaccinationManager() {
   const healthIssuesData = [
     { name: "2020", ThiLuc: 28, RangMieng: 20, DinhDuong: 18, CotSong: 14 },
     { name: "2021", ThiLuc: 30, RangMieng: 22, DinhDuong: 16, CotSong: 15 },
@@ -61,4 +61,4 @@ function Vaccination() {
   );
 }
 
-export default Vaccination;
+export default VaccinationManager;

@@ -9,15 +9,15 @@ import home1 from "../../img/home1.jpeg";
 const Header = ({ object }) => {
   return (
     <>
-      <div className="container w-full  p-4 mt-2 mb-4">
+      <div className="container w-full   mt-2 mb-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center flex-col gap-4">
-            <img src={logo} alt="Logo" width={100} />
-            <p className="font-bold text-xl ml-[10px]">Health Care</p>
+          <div className="flex items-center flex-col gap-2">
+            <img src={logo} alt="Logo" width={70} />
+            <p className="font-bold text-[12px] ml-[10px]">Health Care</p>
           </div>
 
           <div className="flex items-center gap-7 font-bold text-lg">
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2 hover:underline">
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -88,19 +88,52 @@ const Header = ({ object }) => {
               </span>
               Home
             </Link>
-            <Link to="/news" className="flex items-center gap-2">
+            <div className="flex gap-2">
               <img src={news} alt="News" className="w-8 h-8" />
-              News
-            </Link>
-            <Link to="/medicines">Medicines</Link>
-            <Link to="/contact" className="flex items-center gap-2">
+              <Link
+                to="/news"
+                className="flex items-center gap-2  hover:underline"
+              >News</Link>
+            </div>
+
+            <div className="flex gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+              >
+                <g
+                  fill="none"
+                  stroke="#4f4c4c"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                >
+                  <path d="M12 11v4m2-2h-4m6-7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2m10 0v14M6 6v14" />
+                  <rect width="20" height="14" x="2" y="6" rx="2" />
+                </g>
+              </svg>
+              <Link className=" hover:underline" to="/medicines">
+                Medicines
+              </Link>
+            </div>
+            <div className="flex gap-2">
               <img src={contact} alt="Contact" className="w-8 h-8" />
-              Contact
-            </Link>
+              <Link
+                to="/contact"
+                className="flex items-center gap-2  hover:underline"
+              >
+                Contact
+              </Link>
+            </div>
           </div>
 
           <div className="flex items-center gap-5 font-bold text-lg">
-            <Link to="/login" className="flex items-center gap-2">
+            <Link
+              to="/login"
+              className="flex items-center gap-2  hover:underline"
+            >
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +172,7 @@ const Header = ({ object }) => {
               </span>
               User
             </Link>
-            <Link to="/logout">
+            <Link to="/login">
               <img src={logout} alt="Logout" className="w-8 h-8" />
             </Link>
           </div>
