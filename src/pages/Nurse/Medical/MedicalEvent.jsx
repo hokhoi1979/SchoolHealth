@@ -52,7 +52,7 @@ const MedicalEvent = () => {
             </div>
           </div>
 
-          <div className="flex bg-[#F3F3F3] font-kameron w-[430px] h-10 items-center rounded-md ml-5 mt-5">
+          <div className="flex bg-[#F3F3F3] font-kameron w-[570px] h-10 items-center rounded-md ml-5 mt-5">
             <div className="m-auto flex gap-5">
               <div
                 className={`hover:bg-white p-1 rounded-md ${
@@ -90,6 +90,21 @@ const MedicalEvent = () => {
                   to={"vaccineHistory"}
                 >
                   Vaccination history
+                </Link>
+              </div>
+
+              <div
+                className={`hover:bg-white p-1 rounded-md ${
+                  click === "vaccineResult"
+                    ? "bg-white rounded-md text-black"
+                    : ""
+                }`}
+              >
+                <Link
+                  onClick={() => setClick("vaccineResult")}
+                  to={"vaccineResult"}
+                >
+                  Vaccination result
                 </Link>
               </div>
             </div>

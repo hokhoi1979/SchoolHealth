@@ -21,6 +21,8 @@ import Import from "../pages/Nurse/Materials/Import";
 import Export from "../pages/Nurse/Materials/Export";
 import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
 
+import VaccineResult from "../pages/Nurse/Medical/VaccineResult";
+
 // Manager imports
 import Home from "../pages/Home/Home";
 import ManagerLayout from "../pages/Manager/ManagerLayout";
@@ -77,6 +79,7 @@ const router = createBrowserRouter([
               { path: "", element: <VaccineDay /> },
               { path: "studentList", element: <StudentList /> },
               { path: "vaccineHistory", element: <VaccineHistory /> },
+              { path: "vaccineResult", element: <VaccineResult /> },
             ],
           },
         ],
@@ -116,7 +119,7 @@ const router = createBrowserRouter([
             path: "vaccine",
             element: <VaccineManager />,
             children: [
-              { path: "", element: <MedicalManager   /> },
+              { path: "", element: <MedicalManager /> },
               { path: "vaccination", element: <Vaccination /> },
               { path: "checkup", element: <Checkup /> },
               { path: "trend", element: <Trend /> },
@@ -124,10 +127,7 @@ const router = createBrowserRouter([
           },
         ],
       },
-
     ],
-
-    
   },
 ]);
 
