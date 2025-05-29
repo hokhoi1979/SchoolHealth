@@ -179,7 +179,7 @@ function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 p-10 mb-17 ">
+            <div className="grid grid-cols-2 p-10 mb-20 ">
               <div className="">
                 <div className="">
                   <div className="h-[250px] flex flex-col gap-[6px]">
@@ -204,7 +204,7 @@ function Home() {
                 </div>
               </div>
               <div className=" ml-10 mb-10">
-                <img src={newspic} alt="" className=" rounded-2xl" />
+                <img src={newspic}   alt="" className=" rounded-2xl h-[400px]" />
               </div>
      
             </div>

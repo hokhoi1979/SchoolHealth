@@ -25,8 +25,11 @@ import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
 import Home from "../pages/Home/Home";
 import ManagerLayout from "../pages/Manager/ManagerLayout";
 import Dashboard from "../pages/Nurse/Dashboard/DashboardNurse"; // Nếu bạn có Dashboard riêng cho Manager, nên thay lại path cho đúng
-import MedicalCheckup from "../pages/Manager/MedicalCheckup/MedicalCheckup";
-import Vaccine from "../pages/Manager/vaccine/Vaccine";
+import MedicalCheckup from "../pages/Manager/MedicalCheckup/MedicalCheckupManager";
+import VaccineManager from "../pages/Manager/vaccine/VaccineManager";
+import MedicalManager from "../pages/Manager/Dashboard/MedicalManager";
+import DashboardManager from "../pages/Manager/Dashboard/dashboardManager";
+import VaccinationManager from "../pages/Manager/Dashboard/VaccinationManager";
 
 const router = createBrowserRouter([
   {
@@ -87,12 +90,12 @@ const router = createBrowserRouter([
           { path: "", element: <Navigate to="dashboard" /> },
           {
             path: "dashboard",
-            element: <Dashboard />,
+            element: <DashboardManager />,
             children: [
-              { path: "", element: <Medical /> },
-              { path: "vaccination", element: <Vaccination /> },
-              { path: "checkup", element: <Checkup /> },
-              { path: "trend", element: <Trend /> },
+              { path: "", element: <MedicalManager /> },
+              { path: "vaccinationManager", element: <VaccinationManager /> },
+              { path: "checkupManager", element: <Checkup /> },
+              { path: "trendManager", element: <Trend /> },
             ],
           },
           {
@@ -111,9 +114,9 @@ const router = createBrowserRouter([
           },
           {
             path: "vaccine",
-            element: <Vaccine />,
+            element: <VaccineManager />,
             children: [
-              { path: "", element: <Medical /> },
+              { path: "", element: <MedicalManager   /> },
               { path: "vaccination", element: <Vaccination /> },
               { path: "checkup", element: <Checkup /> },
               { path: "trend", element: <Trend /> },
@@ -121,7 +124,10 @@ const router = createBrowserRouter([
           },
         ],
       },
+
     ],
+
+    
   },
 ]);
 

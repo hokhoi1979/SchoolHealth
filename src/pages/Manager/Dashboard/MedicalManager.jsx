@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-function Medical() {
+function MedicalManager() {
   const eventTypeData = [
     { name: "Tháng 9", TaiNan: 12, Benh: 18, Khac: 5 },
     { name: "Tháng 10", TaiNan: 15, Benh: 25, Khac: 8 },
@@ -40,4 +40,4 @@ function Medical() {
   );
 }
 
-export default Medical;
+export default MedicalManager;

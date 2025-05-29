@@ -16,6 +16,38 @@ import logo from "../../../img/logo.png";
 function MedicalCheckup() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [notificationModalOpen, setNotificationModalOpen] = useState(false);
+  const [notificationTitle, setNotificationTitle] = useState("");
+  const [notificationContent, setNotificationContent] = useState("");
+
+  const handleSendNotification = (event) => {
+    setNotificationModalOpen(true);
+    setSelectedEvent(event);
+    setNotificationTitle(`Checkup Notice for ${event.title}`);
+    setNotificationContent(
+      `Dear Parents,\n\nOur school will organize the ${event.title.toLowerCase()} for students in class ${event.classes.join(
+        ", "
+      )} on ${
+        event.date
+      }.\n\nPlease confirm your participation and support us in ensuring the best preparation.\n\nSincerely,`
+    );
+   
+  };
+  const handleCloseNotification = () => {
+    setNotificationModalOpen(false);
+  };
+
+  const handleViewMore = (event) => {
+    setSelectedEvent(event);
+    setViewModalOpen(true);
+  };
+  const handleCloseViewMore = () => {
+    setViewModalOpen(false);
+    setSelectedEvent(null);
+  };
+
   const showModal = () => {
     setOpen(true);
   };
@@ -132,7 +164,9 @@ function MedicalCheckup() {
           <p className="text-white font-kameron"> Search</p>
         </Button>
         <div className="">
-          <Button className="ml-[600px]" onClick={showModal}>Create a new medical event</Button>
+          <Button className="ml-[600px]" onClick={showModal}>
+            Create a new medical event
+          </Button>
         </div>
       </div>
       <div className="mb-40 mt-20">
@@ -198,6 +232,26 @@ function MedicalCheckup() {
                   <strong>{schedule.students}</strong>
                   <span>students</span>
                 </p>
+                <div className="flex mt-5 gap-10  h-full w-full ">
+                  <div className="w-1/3">
+                    <button
+                      className="bg-[#34A0B5] hover:bg-[#2b8b9e] transition duration-300 font-serif text-white rounded-xl w-full h-full"
+                      onClick={() => handleViewMore(schedule)}
+                    >
+                      View More
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                     onClick={
+                      ()=> handleSendNotification(schedule)
+                     }
+                      className="bg-[#34A0B5] hover:bg-[#2b8b9e] transition duration-300 font-serif text-white rounded-xl w-[150px] h-full "
+                    >
+                      Send notification
+                    </button>
+                  </div>
+                </div>
               </Card>
             );
           })}
@@ -262,13 +316,11 @@ function MedicalCheckup() {
               <Input type="date" className="rounded-full" />
             </div>
 
-        
             <div className="flex items-center gap-4 pt-2">
               <p className="font-serif text-[#7F7F7F] w-40">Target Class:</p>
               <Input className="rounded-full" />
             </div>
 
-         
             <div className="flex items-center gap-4 pt-2">
               <p className="font-serif text-[#7F7F7F] w-29">Checkup Time:</p>
               <div className="flex gap-4">
@@ -281,6 +333,135 @@ function MedicalCheckup() {
               </div>
             </div>
           </div>
+        </div>
+      </Modal>
+      {/* Modal View More */}
+      <Modal
+        open={viewModalOpen}
+        onCancel={handleCloseViewMore}
+        footer={[<Button onClick={handleCloseViewMore}>Close</Button>]}
+      >
+        {selectedEvent && (
+          <div className="font-sans px-4">
+            <h2 className="text-xl font-bold">
+              Campaign Name - {selectedEvent.title}
+            </h2>
+            <p className="text-sm text-gray-500 mt-1 mb-4">
+              {" "}
+              Detailed information about the vaccination campaign
+            </p>
+
+            <div className="grid grid-cols-2 gap-y-4 text-sm mb-4">
+              <div>
+                <p className="text-gray-500"> Campaign Name</p>
+                <p className="font-semibold flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M22 2.25h-3.25V.75a.75.75 0 0 0-1.5-.001V2.25h-4.5V.75a.75.75 0 0 0-1.5-.001V2.25h-4.5V.75a.75.75 0 0 0-1.5-.001V2.25H2a2 2 0 0 0-2 1.999v17.75a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V4.249a2 2 0 0 0-2-1.999M22.5 22a.5.5 0 0 1-.499.5H2a.5.5 0 0 1-.5-.5V4.25a.5.5 0 0 1 .5-.499h3.25v1.5a.75.75 0 0 0 1.5.001V3.751h4.5v1.5a.75.75 0 0 0 1.5.001V3.751h4.5v1.5a.75.75 0 0 0 1.5.001V3.751H22a.5.5 0 0 1 .499.499z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M5.25 9h3v2.25h-3zm0 3.75h3V15h-3zm0 3.75h3v2.25h-3zm5.25 0h3v2.25h-3zm0-3.75h3V15h-3zm0-3.75h3v2.25h-3zm5.25 7.5h3v2.25h-3zm0-3.75h3V15h-3zm0-3.75h3v2.25h-3z"
+                    />
+                  </svg>
+                  {selectedEvent.title}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-gray-500">Execution Date</p>
+                <p className=" font-semibold flex items-center gap-1 mb-5 ">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M12 2a10 10 0 1 1 0 20a10 10 0 0 1 0-20m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m1 3v5.586l2.707 2.707a1 1 0 1 1-1.414 1.414l-3-3A1 1 0 0 1 11 12V7a1 1 0 0 1 2 0" />
+                  </svg>
+                  {selectedEvent.date}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-gray-500">Number: </p>
+                <p className="font-semibold flex items-center gap-1 mb-5 ">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M12 2a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2m-1.5 5h3a2 2 0 0 1 2 2v5.5H14V22h-4v-7.5H8.5V9a2 2 0 0 1 2-2" />
+                  </svg>
+                  {selectedEvent.students} students
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-gray-500">Status</p>
+                <span className="inline-block bg-black text-white px-2 py-1 rounded-full text-xs  flex items-center gap-1 mb-5 ">
+                  {selectedEvent.status}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-4 ">
+              <p className="text-gray-500 text-sm mb-2">Joined Classes</p>
+              <div className="flex flex-wrap gap-2">
+                {selectedEvent.classes.map((cls, idx) => (
+                  <span
+                    key={idx}
+                    className="border border-gray-300 rounded-full px-3 py-1 text-sm"
+                  >
+                    {cls}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+      {/* Modal of Notification */}
+      <Modal
+        open={notificationModalOpen}
+        onCancel={handleCloseNotification}
+        footer={[
+          <Button
+            key="send"
+            type="primary"
+            className="!bg-black"
+            onClick={() => {
+              setNotificationModalOpen(false);
+            }}
+          >
+            Send Notification
+          </Button>,
+        ]}
+      >
+        <p>
+          Compose a message to parents to confirm their consent for vaccination
+        </p>
+        <div>
+          <label className="font-medium mb-2 block">Notification Title</label>
+
+          <Input
+            value={notificationTitle}
+            onChange={(e) => setNotificationTitle(e.target.value)}
+            placeholder="Enter notification title"
+          />
+        </div>
+        <div>
+          <label className="font-medium mb-1 block">Notification Content</label>
+          <Input.TextArea
+            rows={6}
+            value={notificationContent}
+            onChange={(e) => setNotificationContent(e.target.value)}
+            placeholder="Enter message content"
+          />
         </div>
       </Modal>
     </>
