@@ -21,15 +21,17 @@ import Medical from "../pages/Nurse/Dashboard/Medical";
 import MedicalEvent from "../pages/Nurse/Medical/MedicalEvent";
 
 import ParentLayout from "../pages/Parent/ParentLayout";
+
 import StudentHealth from "../pages/Parent/StudentHealth/StudentHealth";
-// import MedicalRequest from "../pages/Parent/MedicalRequest/MedicalRequest"; // Giả định
-// import CheckUp from "../pages/Parent/CheckUp/CheckUp"; // Giả định
-// import History from "../pages/Parent/History/History"; // Giả định
 import GeneralInformation from "../pages/Parent/StudentHealth/Information";
 import Allergies from "../pages/Parent/StudentHealth/Allergies";
 import Chronic from "../pages/Parent/StudentHealth/Chronic";
 import VisionHearing from "../pages/Parent/StudentHealth/VisionHearing";
 import VaccinationParent from "../pages/Parent/StudentHealth/Vacciation";
+
+import MedicalRequest from "../pages/Parent/MedicalRequest/MedicalRequest";
+import MedicalUsing from "../pages/Parent/MedicalRequest/MedicationUsing";
+import MedicalHistory from "../pages/Parent/MedicalRequest/MedicationHistory";
 
 const router = createBrowserRouter([
   {
@@ -90,10 +92,14 @@ const router = createBrowserRouter([
               { path: "vaccination", element: <VaccinationParent /> },
             ],
           },
-          // { path: "medical_request", element: <MedicalRequest /> },
-          // { path: "vaccination", element: <Vaccination /> },
-          // { path: "check_up", element: <CheckUp /> },
-          // { path: "history", element: <History /> },
+          {
+            path: "medical_request",
+            element: <MedicalRequest />,
+            children: [
+              { path: "", element: <MedicalUsing /> },
+              { path: "medication_history", element: <MedicalHistory /> },
+            ],
+          },
         ],
       },
     ],

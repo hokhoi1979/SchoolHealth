@@ -45,21 +45,21 @@ const Information = () => {
               <div className="flex gap-100">
                 <p>SE14</p>
                 <p>Vu Minh Duc</p>
-                <p>123</p>
+                <p className="ml-14">123</p>
               </div>
             </Option>
-            <Option value="2">
+            <Option value="3">
               <div className="flex gap-100">
                 <p>SE15</p>
                 <p>Ho Vu Khoi</p>
-                <p>123</p>
+                <p className="ml-17">123</p>
               </div>
             </Option>
-            <Option value="2">
+            <Option value="4">
               <div className="flex gap-100">
                 <p>SE16</p>
                 <p>Pham Nguyen Khoa</p>
-                <p>123</p>
+                <p className="ml-4">123</p>
               </div>
             </Option>
           </Select>
