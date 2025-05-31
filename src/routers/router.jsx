@@ -33,6 +33,15 @@ import MedicalRequest from "../pages/Parent/MedicalRequest/MedicalRequest";
 import MedicalUsing from "../pages/Parent/MedicalRequest/MedicationUsing";
 import MedicalHistory from "../pages/Parent/MedicalRequest/MedicationHistory";
 
+import VaccinationParentFunction from "../pages/Parent/Vaccination/Vaccination";
+import VaccinationPending from "../pages/Parent/Vaccination/Pending";
+import VaccinationCompleted from "../pages/Parent/Vaccination/Completed";
+import VaccinationRejected from "../pages/Parent/Vaccination/Rejected";
+
+import CheckUpParentFunction from "../pages/Parent/CheckUp/CheckUp";
+import CheckUpPending from "../pages/Parent/CheckUp/Pending";
+import CheckUpCompleted from "../pages/Parent/CheckUp/CheckUp";
+import CheckUpRejected from "../pages/Parent/CheckUp/Rejected";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -98,6 +107,24 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <MedicalUsing /> },
               { path: "medication_history", element: <MedicalHistory /> },
+            ],
+          },
+          {
+            path: "vaccination",
+            element: <VaccinationParentFunction />,
+            children: [
+              { path: "", element: <VaccinationPending /> },
+              { path: "completed", element: <VaccinationCompleted /> },
+              { path: "rejected", element: <VaccinationRejected /> },
+            ],
+          },
+          {
+            path: "check_up",
+            element: <CheckUpParentFunction />,
+            children: [
+              { path: "", element: <CheckUpPending /> },
+              { path: "completed", element: <CheckUpCompleted /> },
+              { path: "rejected", element: <CheckUpRejected /> },
             ],
           },
         ],
