@@ -4,6 +4,7 @@ import {
   Checkbox,
   Input,
   Modal,
+  Radio,
   Space,
   Table,
   Tooltip,
@@ -21,6 +22,28 @@ function MedicalCheckup() {
   const [notificationModalOpen, setNotificationModalOpen] = useState(false);
   const [notificationTitle, setNotificationTitle] = useState("");
   const [notificationContent, setNotificationContent] = useState("");
+  const [targetType, setTargetType] = useState("school");
+  const [selectedClasses, setSelectedClasses] = useState([]);
+  const [selectAllClasses, setSelectAllClasses] = useState(false);
+  const [selectedGrades, setSelectedGrades] = useState([]);
+
+  const availableClasses = [
+    "1A",
+    "1B",
+    "1C",
+    "2A",
+    "2B",
+    "2C",
+    "3A",
+    "3B",
+    "3C",
+    "4A",
+    "4B",
+    "5A",
+    "5B",
+    "5C",
+  ];
+  const availableGrades = ["10", "11", "12"];
 
   const handleSendNotification = (event) => {
     setNotificationModalOpen(true);
@@ -33,7 +56,6 @@ function MedicalCheckup() {
         event.date
       }.\n\nPlease confirm your participation and support us in ensuring the best preparation.\n\nSincerely,`
     );
-   
   };
   const handleCloseNotification = () => {
     setNotificationModalOpen(false);
@@ -53,14 +75,114 @@ function MedicalCheckup() {
   };
   const closeModal = () => {
     setOpen(false);
+    setTargetType("school");
+    setSelectedClasses([]);
+    setSelectedGrades([]);
+    setSelectAllClasses(false);
   };
   const handleOk = () => {
     setLoading(true);
 
     setTimeout(() => {
       setOpen(false);
+      setTargetType("school");
+      setSelectedClasses([]);
+      setSelectedGrades([]);
+      setSelectAllClasses(false);
       setLoading(false);
     }, 3000);
+  };
+  const handleSelectAllClasses = (checked) => {
+    setSelectAllClasses(checked);
+    if (checked) {
+      setSelectedClasses(availableClasses);
+    } else {
+      setSelectedClasses([]);
+    }
+  };
+
+  const handleClassSelection = (classID, checked) => {
+    if (checked) {
+      setSelectedClasses([...selectedClasses, classID]);
+    } else {
+      setSelectedClasses(selectedClasses.filter((id) => id !== classID));
+      setSelectAllClasses(false);
+    }
+  };
+
+  const handleGradeSection = (grade, checked) => {
+    if (checked) {
+      setSelectedGrades([...selectedGrades, grade]);
+    } else {
+      setSelectedGrades(selectedGrades.filter((g) => g !== grade));
+    }
+  };
+
+  const renderTargetSelection = () => {
+    switch (targetType) {
+      case "school":
+        return (
+          <div className="text-gray-600 italic">Áp dụng cho toàn trường</div>
+        );
+
+      case "class":
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 mb-3">
+              <Checkbox
+                checked={selectAllClasses}
+                onChange={(e) => handleSelectAllClasses(e.target.checked)}
+              >
+                <span className="font-medium">Chọn tất cả lớp</span>
+              </Checkbox>
+            </div>
+            <div className="grid grid-cols-3 gap-2 max-h-32 overflow-y-auto border p-3 rounded">
+              {availableClasses.map((classId) => (
+                <Checkbox
+                  key={classId}
+                  checked={selectedClasses.includes(classId)}
+                  onChange={(e) =>
+                    handleClassSelection(classId, e.target.checked)
+                  }
+                >
+                  Lớp {classId}
+                </Checkbox>
+              ))}
+            </div>
+            {selectedClasses.length > 0 && (
+              <div className="text-sm text-blue-600">
+                Đã chọn: {selectedClasses.join(", ")}
+              </div>
+            )}
+          </div>
+        );
+
+      case "grade":
+        return (
+          <div className="space-y-3">
+            <div className="font-medium mb-2">Chọn khối:</div>
+            <div className="flex gap-4">
+              {availableGrades.map((grade) => (
+                <Checkbox
+                  key={grade}
+                  checked={selectedGrades.includes(grade)}
+                  onChange={(e) => handleGradeSection(grade, e.target.checked)}
+                >
+                  Grade {grade}
+                </Checkbox>
+              ))}
+            </div>
+            {selectedGrades.length > 0 && (
+              <div className="text-sm text-blue-600">
+                Grade {selectedGrades.join(", ")}
+              </div>
+            )}
+          </div>
+        );
+
+      default:
+        return null;
+    }
   };
   const schedules = [
     {
@@ -243,9 +365,7 @@ function MedicalCheckup() {
                   </div>
                   <div>
                     <button
-                     onClick={
-                      ()=> handleSendNotification(schedule)
-                     }
+                      onClick={() => handleSendNotification(schedule)}
                       className="bg-[#34A0B5] hover:bg-[#2b8b9e] transition duration-300 font-serif text-white rounded-xl w-[150px] h-full "
                     >
                       Send notification
@@ -316,9 +436,29 @@ function MedicalCheckup() {
               <Input type="date" className="rounded-full" />
             </div>
 
-            <div className="flex items-center gap-4 pt-2">
-              <p className="font-serif text-[#7F7F7F] w-40">Target Class:</p>
-              <Input className="rounded-full" />
+            <div className="pt-2 mb-4">
+              <p className="font-serif text-[#7F7F7F] mb-3">Target Class:</p>
+
+              <Radio.Group
+                value={targetType}
+                onChange={(e) => {
+                  setTargetType(e.target.value);
+                  setSelectedClasses([]);
+                  setSelectedGrades([]);
+                  setSelectAllClasses(false);
+                }}
+                className="mb-4"
+              >
+                <div className="flex flex-col gap-2">
+                  <Radio value="school">School</Radio>
+                  <Radio value="class">Classes</Radio>
+                  <Radio value="grade">Grades</Radio>
+                </div>
+              </Radio.Group>
+
+              <div className="mt-4 p-4 border rounded-lg bg-gray-50">
+                {renderTargetSelection()}
+              </div>
             </div>
 
             <div className="flex items-center gap-4 pt-2">
