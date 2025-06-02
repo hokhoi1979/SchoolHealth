@@ -1,14 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../img/icon.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import bs from "../../img/bs.png";
+import { useDispatch, useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import { fetchSuccess, logout } from "../../redux/auth/authSlice";
 const SideBar = () => {
   const [click, setClick] = useState("");
   const [toggle, setToggle] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { token } = useSelector((state) => state.account);
+
   const handleToggle = () => {
     setToggle((pre) => !pre);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    dispatch(logout());
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    if (token) {
+      const decode = jwtDecode(token);
+      dispatch(fetchSuccess({ user: decode, token: token }));
+    }
+  }, [dispatch]);
   return (
     <>
       <div
@@ -311,7 +331,12 @@ const SideBar = () => {
               toggle && "justify-center w-full"
             } hover:bg-[#EFEEEE] `}
             style={{ cursor: "pointer" }}
-            onClick={() => navigate("/")}
+            onClick={() => {
+              const confirmed = window.confirm("Do you want to logout?");
+              if (confirmed) {
+                handleLogout();
+              }
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
