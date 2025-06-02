@@ -1,6 +1,7 @@
-import { Button, Input, Modal } from "antd";
+import { Button, Checkbox, Input, Modal } from "antd";
 import React, { useState } from "react";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
+import logo from "../../../img/logo.jpg";
 
 const VaccineManager = () => {
   const [open, setOpen] = useState(false);
@@ -53,7 +54,7 @@ const VaccineManager = () => {
         </div>
         <div className="h-[120px] bg-white rounded-2xl">
           <p className="flex justify-center mt-5">Injure</p>
-          <p className="flex justify-center text-[50px]">7</p>
+          <p className="flex justify-center text-[50px]">7</p>    
         </div>
         <div className="h-[120px] bg-white rounded-2xl">
           <p className="flex justify-center mt-5">
@@ -203,7 +204,7 @@ const VaccineManager = () => {
               <div className="flex flex-col gap-2">
                 <Checkbox defaultChecked>Height and Weight</Checkbox>
                 <Checkbox>Dental</Checkbox>
-                <Checkbox>Vision</Checkbox>
+                <Checkbox>Vision</Checkbox> 
                 <Checkbox>General Examination</Checkbox>
               </div>
             </div>
