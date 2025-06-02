@@ -33,6 +33,7 @@ import MedicalManager from "../pages/Manager/Dashboard/MedicalManager";
 import DashboardManager from "../pages/Manager/Dashboard/dashboardManager";
 import VaccinationManager from "../pages/Manager/Dashboard/VaccinationManager";
 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -130,5 +131,5 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
+  
 export default router;

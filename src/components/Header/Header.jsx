@@ -1,4 +1,4 @@
-import logo from "../../img/logocatnen.png";
+import logo from "../../img/icon.png";
 import { Link } from "react-router";
 import bs3 from "../../img/bs3.jpg";
 import user from "../../img/user.png";
@@ -12,7 +12,7 @@ const Header = ({ object }) => {
       <div className="container w-full   mt-2 mb-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center flex-col gap-2">
-            <img src={logo} alt="Logo" width={70} />
+            <img src={logo} alt="Logo" width={50} />
             <p className="font-bold text-[12px] ml-[10px]">Health Care</p>
           </div>
 
@@ -93,7 +93,9 @@ const Header = ({ object }) => {
               <Link
                 to="/news"
                 className="flex items-center gap-2  hover:underline"
-              >News</Link>
+              >
+                News
+              </Link>
             </div>
 
             <div className="flex gap-2">
