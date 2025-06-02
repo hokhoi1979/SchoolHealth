@@ -1,31 +1,21 @@
 {
     "home": "Home",
-    "claimer": {
-        "title": "Claimer",
-        "pages": {
-            "createRequest": "Create Request",
-            "requestList": "Request List"
-        }
-    },
-    "approval": {
-        "title": "Approval",
+    "Nurse": {
+        "title": "Nurse",
         "pages": {
             "dashboard": "Dashboard",
-            "forMyVetting": "For My Vetting",
-            "auditTrail": "Audit Trail"
+            "materials": "Materials",
+            "student": "Student Profile",
+            "medicalEvent": "Medical Event"
         }
     },
-    "finance": {
-        "title": "Finance",
+    "Manager": {
+        "title": "Manager",
         "pages": {
             "dashboard": "Dashboard",
-            "financeTask": "Finance Task",
-            "auditTrail": "Audit Trail"
+            "materials": "Materials",
+            "student": "Student Profile",
+            "medicalEvent": "Medical Event"
         }
-    },
-    "profile": {
-        "yourProfile": "Your Profile",
-        "security": "Security",
-        "activities": "Activities"
     }
 }

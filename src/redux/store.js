@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import rootReducer from "@/redux/rootReducer";
+
 import rootSaga from "@/redux/rootSaga";
 import { jwtDecode } from "jwt-decode";
 import { fetchSuccess } from "./auth/authSlice";
+import rootReducer from "./rootReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 

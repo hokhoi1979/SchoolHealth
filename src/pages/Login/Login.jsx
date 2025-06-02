@@ -9,7 +9,7 @@ import bg from "../../img/background.jpg";
 import { Button, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router";
 import { AppFooter } from "../../components/Footer/AppFooter";
-import bs from "../../img/bs.png";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,12 +17,12 @@ function Login() {
   return (
     <div className="flex flex-col min-h-screen relative">
       <div
-        className="flex flex-1 bg-cover bg-center w-full bg-opacity-45 pl-[10%] pr-[10%] gap-[4%]"
+        className="flex flex-1 bg-cover bg-center w-full bg-opacity-45 pl-[10%] pr-[10%]"
         style={{ backgroundImage: `url(${bg})` }}
       >
         <div className="w-[35%] bg-white h-auto m-auto justify-center text-center rounded-[15px] pl-5 pr-5 shadow-lg shadow-black/60">
-          <h1 className="text-3xl mt-5 font-serif">Login Page</h1>
-          <p className="font-serif text-[#777777] mt-3 text-[13px]">
+          <h1 className="text-5xl mt-5 font-serif">Login Page</h1>
+          <p className="font-serif text-[#777777] mt-3 text-[19px]">
             School health is the care, prevention and health promotion of
             students in schools.
           </p>
@@ -37,7 +37,7 @@ function Login() {
                   value={email}
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{ height: "30px", fontWeight: 600 }}
+                  style={{ height: "40px", fontWeight: 600 }}
                   placeholder={email ? "" : "Enter your email"}
                   prefix={
                     !email && <MailOutlined style={{ color: "#767676" }} />
@@ -52,7 +52,7 @@ function Login() {
                 <Input.Password
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  style={{ height: "30px", fontWeight: 600 }}
+                  style={{ height: "40px", fontWeight: 600 }}
                   placeholder={password ? "" : "Enter your password"}
                   prefix={
                     !password && <LockOutlined style={{ color: "#767676" }} />
@@ -64,8 +64,8 @@ function Login() {
               </Form.Item>
 
               <Button
-                style={{ height: "30px", fontWeight: 300 }}
-                className="w-full bg-[#34A0B5] text-white text-2xl font-serif hover:bg-[#1c606d]"
+                style={{ height: "40px", fontWeight: 300 }}
+                className="!w-full !bg-[#34A0B5] !text-white !text-2xl !font-serif hover:!bg-[#1c606d] "
                 type="secondary"
               >
                 Login
@@ -81,7 +81,7 @@ function Login() {
           </div>
         </div>
 
-        <div className="w-[65%] h-auto items-center justify-center text-left text-[#252424]  m-auto mt-[8%]">
+        <div className="w-[45%] h-auto items-center justify-center text-left text-[#252424]  m-auto mt-[12%]">
           <h1 className="font-serif text-[40px]">
             School health team – Accompanying students' health
           </h1>
@@ -91,19 +91,15 @@ function Login() {
             and mentally.
           </p>
           <Button
-            style={{ height: "30px", fontWeight: 300 }}
-            className="w-[150px] bg-[#34A0B5] text-white text-xl font-serif hover:bg-[#1c606d] mt-3"
+            style={{ height: "40px", fontWeight: 300 }}
+            className="!w-[150px] !bg-[#34A0B5] !text-white !text-xl !font-serif hover:!bg-[#1c606d] !mt-3"
             type="secondary"
           >
             Read more
           </Button>
         </div>
       </div>
-      <img
-        src={bs}
-        width={400}
-        className="absolute bottom-0 left-[67%]  z-10"
-      />
+
       <AppFooter />
     </div>
   );
