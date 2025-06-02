@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MailOutlined,
   LockOutlined,
@@ -6,14 +6,46 @@ import {
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
 import bg from "../../img/background.jpg";
-import { Button, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router";
+import { Button, Form, Input, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import { AppFooter } from "../../components/Footer/AppFooter";
+import { useForm } from "antd/es/form/Form";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLogin } from "../../redux/auth/authSlice";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form] = useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user, error } = useSelector((state) => state.account);
+  const [message, setMessage] = useState("");
+  const handleLogin = async () => {
+    try {
+      const values = await form.validateFields();
+      dispatch(fetchLogin(values));
+    } catch (err) {
+      console.log("Validation failed:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      if (user?.roleID === 3) {
+        navigate("/nurse");
+      } else if (user?.roleID === 1) {
+        navigate("/manager");
+      }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+
+      setMessage(error);
+    }
+  }, [error]);
+
   return (
     <div className="flex flex-col min-h-screen relative">
       <div
@@ -46,45 +78,64 @@ function Login() {
           </p>
 
           <div className="pl-7 pr-7 p-3">
-            <Form>
+            <Form form={form}>
               <Form.Item
                 name="email"
-                rules={[{ required: true, message: "Email is not empty!" }]}
+                rules={[
+                  { required: true, message: "Email is not empty!" },
+                  {
+                    type: "email",
+                    message: "Please enter a valid email address.",
+                  },
+                ]}
               >
                 <Input
-                  value={email}
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
                   style={{ height: "40px", fontWeight: 600 }}
-                  placeholder={email ? "" : "Enter your email"}
-                  prefix={
-                    !email && <MailOutlined style={{ color: "#767676" }} />
-                  }
+                  placeholder="Enter your email"
+                  prefix={<MailOutlined style={{ color: "#767676" }} />}
                 />
               </Form.Item>
 
               <Form.Item
                 name="password"
-                rules={[{ required: true, message: "Password is not empty!" }]}
+                rules={[
+                  { required: true, message: "Password is not empty!" },
+                  {
+                    min: 6,
+                    message: "Password must be at least 6 characters.",
+                  },
+                ]}
               >
                 <Input.Password
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   style={{ height: "40px", fontWeight: 600 }}
-                  placeholder={password ? "" : "Enter your password"}
-                  prefix={
-                    !password && <LockOutlined style={{ color: "#767676" }} />
-                  }
+                  placeholder="Enter your password"
+                  prefix={<LockOutlined style={{ color: "#767676" }} />}
                   iconRender={(visible) =>
                     visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
                   }
+                  onChange={() => setMessage("")}
                 />
               </Form.Item>
 
+              {error === "Tài khoản không tồn tại" && (
+                <>
+                  <p className="text-red-500 font-serif relative bottom-3">
+                    Account has not exised!
+                  </p>
+                </>
+              )}
+              {message === "Mật khẩu không đúng " &&
+                form.getFieldError("password").length === 0 && (
+                  <p className="text-red-500 font-serif relative bottom-3">
+                    Password is not correct!
+                  </p>
+                )}
+
               <Button
                 style={{ height: "40px", fontWeight: 300 }}
-                className="!w-full !bg-[#34A0B5] !text-white !text-2xl !font-serif hover:!bg-[#1c606d] "
+                className="!w-full !bg-[#34A0B5] !text-white !text-2xl !font-serif hover:!bg-[#1c606d]"
                 type="secondary"
+                onClick={handleLogin}
               >
                 Login
               </Button>
@@ -99,7 +150,7 @@ function Login() {
           </div>
         </div>
 
-        <div className="w-[45%] h-auto items-center justify-center text-left text-[#252424]  m-auto mt-[12%]">
+        <div className="w-[45%] h-auto items-center justify-center text-left text-[#252424] m-auto mt-[12%]">
           <h1 className="font-serif text-[30px]">
             School health team – Accompanying students' health
           </h1>
