@@ -1,13 +1,13 @@
 import { Layout } from "antd";
 import bs from "../../img/bs.png";
 const { Footer } = Layout;
-  
+
 export const AppFooter = () => {
   return (
     <Footer className="bg-[#B6C2CA] bg-opacity-5 h-[140px] w-full relative pl-[5%] pr-[5%] font-serif text-[#252424] flex gap-2 ">
       <div className="w-[33%] text-left justify-center pl-[3%] mb-10">
         <h1 className="text-3xl">Introduction</h1>
-        <p className="text-sm mt-2 w-[90%]">
+        <p className="text-[12px] mt-2 w-[90%]">
           The School Health Website is a place to provide information, support
           management and connect schools, parents and medical staff to
           effectively care for and monitor student health.
@@ -28,7 +28,7 @@ export const AppFooter = () => {
               d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7"
             />
           </svg>
-          <p className="text">
+          <p className="text-[12px]">
             No. 123, Hoa Binh Street, Thu Duc City, Ho Chi Minh City
           </p>
         </div>
@@ -44,7 +44,7 @@ export const AppFooter = () => {
               d="M15 12h2a5 5 0 0 0-5-5v2a3 3 0 0 1 3 3m4 0h2c0-5-4.03-9-9-9v2c3.86 0 7 3.13 7 7m1 3.5c-1.25 0-2.45-.2-3.57-.57c-.35-.11-.74-.03-1.02.25l-2.2 2.2a15.1 15.1 0 0 1-6.59-6.59l2.2-2.2c.28-.28.36-.67.25-1.02A11.4 11.4 0 0 1 8.5 4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1a17 17 0 0 0 17 17a1 1 0 0 0 1-1v-3.5a1 1 0 0 0-1-1"
             />
           </svg>
-          <p className="text">Phone: (0339) 099 12 67 899</p>
+          <p className="text-[12px]">Phone: (0339) 099 12 67 899</p>
         </div>
 
         <div className="flex gap-1">
@@ -59,7 +59,7 @@ export const AppFooter = () => {
               d="m20 8l-8 5l-8-5V6l8 5l8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"
             />
           </svg>
-          <p className="text"> Email: ytehocduong@gmail.com</p>
+          <p className="text-[12px]"> Email: ytehocduong@gmail.com</p>
         </div>
       </div>
 
@@ -118,7 +118,7 @@ export const AppFooter = () => {
 
       <img
         src={bs}
-        width={300}
+        width={250}
         className="absolute bottom-0 left-[78%]  z-10"
       />
     </Footer>

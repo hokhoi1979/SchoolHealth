@@ -182,7 +182,7 @@ const StudentProfile = () => {
           </div>
           <Table className="mt-5" columns={columns} dataSource={dataSource} />
         </div>
-
+        <div className="h-30"></div>
         {/* Footer nằm dưới cùng */}
         <AppFooter />
       </div>
