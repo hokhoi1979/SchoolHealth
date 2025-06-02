@@ -43,32 +43,23 @@ function VaccineResult() {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.status?.toLowerCase() === "injected" ? (
+          {record.status?.toLowerCase() === "attended" ? (
             <p
               type="secondary"
               className="rounded-xl w-[80px] p-1  bg-[#6CC76F] text-white "
             >
-              Injured
+              Attended
             </p>
           ) : (
             <p
               type="secondary"
               className="rounded-xl w-[80px] p-1  bg-[#E26666] text-white "
             >
-              Not injure
+              Absent
             </p>
           )}
         </Space>
       ),
-    },
-  ];
-
-  const dataStudent = [
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      status: "injected",
     },
   ];
 
@@ -104,19 +95,19 @@ function VaccineResult() {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.status?.toLowerCase() === "participate" ? (
+          {record.status?.toLowerCase() === "attended" ? (
             <p
               type="secondary"
               className="rounded-2xl w-[80px] text-[#0CC912] font-bold "
             >
-              Participate
+              Attended
             </p>
           ) : (
             <p
               type="secondary"
               className="rounded-2xl w-[80px] text-[#EE3B3B] font-bold"
             >
-              Don't Participate
+              Absented
             </p>
           )}
         </Space>
@@ -142,58 +133,12 @@ function VaccineResult() {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.send?.toLowerCase() === "sended" ? (
-            <p
-              type="secondary"
-              className="rounded-2xl w-[80px] p-1  bg-[#6CC76F] text-white "
-            >
-              Sended
-            </p>
-          ) : (
-            <p
-              type="secondary"
-              className="rounded-2xl w-[80px] p-1  bg-[#E26666] text-white "
-            >
-              Not send
-            </p>
-          )}
-        </Space>
-      ),
-    },
-    {
-      title: "Action",
-      key: "action",
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          <Tooltip
-            placement="bottom"
-            title="View"
-            overlayInnerStyle={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "12px",
-            }}
+          <p
+            type="secondary"
+            className="rounded-2xl w-[80px] p-1  bg-[#E26666] text-white "
           >
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                setSelectedRecord(record);
-                setOpen(true);
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
-                ></path>
-              </svg>
-            </div>
-          </Tooltip>
+            Not send
+          </p>
         </Space>
       ),
     },
@@ -207,7 +152,7 @@ function VaccineResult() {
       grade: "12A3",
       parent: "Elon Musk",
       phone: "0997899689",
-      status: "Participate",
+      status: "Attended",
       react: "Không",
       note: "Tiêm bình thường",
       send: "Not send",
@@ -219,7 +164,7 @@ function VaccineResult() {
       grade: "12A3",
       parent: "Elon Musk",
       phone: "0997899689",
-      status: "Participate",
+      status: "Attended",
       react: "Không",
       note: "Tiêm bình thường",
       send: "Not send",
@@ -231,7 +176,7 @@ function VaccineResult() {
       grade: "12A3",
       parent: "Elon Musk",
       phone: "0997899689",
-      status: "Participate",
+      status: "Attended",
       react: "Không",
       note: "Tiêm bình thường",
       send: "Not send",
@@ -255,7 +200,7 @@ function VaccineResult() {
       grade: "12A3",
       parent: "Elon Musk",
       phone: "0997899689",
-      status: "Participate",
+      status: "Attended",
       react: "Không",
       note: "Tiêm bình thường",
       send: "Not send",
@@ -264,10 +209,13 @@ function VaccineResult() {
 
   const columnsRecord = [
     {
-      title: <Checkbox />,
-      dataIndex: "selected",
-      render: (_, record) => <Checkbox />,
-      width: 50,
+      title: "ID",
+      dataIndex: "id",
+      render: (text, record) => (
+        <div>
+          <p className="font-semibold">{record.id}</p>
+        </div>
+      ),
     },
     {
       title: "Student",
@@ -283,10 +231,9 @@ function VaccineResult() {
       title: "Status",
       dataIndex: "status",
       render: () => (
-        <Select defaultValue="Đã tiêm" className="w-full">
-          <Option value="Đã tiêm">Đã tiêm</Option>
-          <Option value="Chưa tiêm">Chưa tiêm</Option>
-        </Select>
+        <>
+          <p className="text-[#6CC76F] font-medium">Đã tiêm</p>
+        </>
       ),
     },
     {
@@ -311,12 +258,14 @@ function VaccineResult() {
 
   const dataRecord = [
     {
+      id: "SE182629",
       key: "1",
       name: "Nguyễn Văn An",
       class: "Lớp 1A",
       note: "Tiêm bình thường",
     },
     {
+      id: "SE182629",
       key: "2",
       name: "Trần Thị Bình",
       class: "Lớp 1A",
@@ -326,20 +275,68 @@ function VaccineResult() {
   return (
     <div>
       {" "}
-      <div className="pl-5">
-        <Select
-          placeholder="Select action"
-          style={{ width: 250 }}
-          value={selectedOption}
-          onChange={(value) => setSelectedOption(value)}
-        >
-          <Option value="result">Vaccine Result</Option>
-          <Option value="record">Recording Vaccination Results</Option>
-        </Select>
+      <div className="flex justify-between">
+        {selectedOption === "result" ? (
+          <div className="flex gap-5 pl-5">
+            <Input
+              style={{ borderRadius: "7px", width: "300px" }}
+              placeholder="Search vaccination"
+            />
+            <Button
+              className="!bg-[#90A8B0] !hover:bg-gray-600"
+              type="secondary"
+            >
+              <p className="text-white font-kameron"> Search</p>
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div></div>
+          </>
+        )}
+
+        <div className="">
+          <Select
+            placeholder="Select action"
+            style={{ width: 250 }}
+            value={selectedOption}
+            onChange={(value) => setSelectedOption(value)}
+            className="!w-[255px]"
+          >
+            <Option value="result">Vaccine Result</Option>
+            <Option value="record">Recording Vaccination Results</Option>
+          </Select>
+        </div>
       </div>
       {selectedOption === "result" ? (
         <>
           {" "}
+          <div className="flex justify-between mt-3 ">
+            <div></div>
+            <div className="">
+              <Button
+                type="secondary"
+                className="!bg-black hover:!bg-gray-600 w-[255px]"
+                onClick={() => setOpen(true)}
+              >
+                {" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="#fff"
+                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634L21.044 2.32c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8l-8 6z"
+                  />
+                </svg>
+                <p className="text-white font-serif">
+                  Send student's result to parent
+                </p>
+              </Button>
+            </div>
+          </div>
           <Table className="mt-5" columns={columns} dataSource={dataSource} />
         </>
       ) : (
@@ -357,20 +354,11 @@ function VaccineResult() {
             </div>
 
             <div className="mt-5 space-y-4">
-              <div>
-                <p className="font-serif text-sm">Vaccination day</p>
-                <Select placeholder="Chọn đợt" className="w-full">
-                  <Option value="flu">Flu vaccination (15/06/2025)</Option>
-                  <Option value="hiv">HIV (15/06/2025)</Option>
-                </Select>
-              </div>
-
-              <div>
-                <p className="font-serif text-sm">Grade</p>
-                <Select placeholder="Chọn lớp" className="w-full">
-                  <Option value="1A">Grade 1A</Option>
-                  <Option value="1B">Grade 1B</Option>
-                </Select>
+              <div className="flex gap-2">
+                <p className="font-serif text-sm">Vaccination day:</p>
+                <p className="text-gray-500 text-sm">
+                  Flu vaccination (15/06/2025)
+                </p>
               </div>
 
               <Table
@@ -410,21 +398,7 @@ function VaccineResult() {
         </p>
 
         <Table
-          dataSource={
-            selectedRecord
-              ? [
-                  {
-                    id: selectedRecord.id,
-                    name: selectedRecord.name,
-                    grade: selectedRecord.grade,
-                    status:
-                      selectedRecord.status === "Participate"
-                        ? "injected"
-                        : "not injected",
-                  },
-                ]
-              : []
-          }
+          dataSource={dataSource}
           columns={columnStudent}
           pagination={false}
         />

@@ -1,7 +1,7 @@
 import { Button, Space, Table, Tooltip } from "antd";
 import React from "react";
 
-function StudentList() {
+function StudentListMedical() {
   const columns = [
     {
       title: "ID",
@@ -43,14 +43,14 @@ function StudentList() {
           {record.status?.toLowerCase() === "confirm" ? (
             <p
               type="secondary"
-              className="rounded-2xl w-[80px] text-[#0CC912] font-bold "
+              className="rounded-2xl w-[80px] text-[#6CC76F] font-medium "
             >
               Confirm
             </p>
           ) : (
             <p
               type="secondary"
-              className="rounded-2xl w-[80px] text-[#EE3B3B] font-bold"
+              className="rounded-2xl w-[80px] text-[#E26666] font-medium"
             >
               Refuse
             </p>
@@ -153,4 +153,4 @@ function StudentList() {
   );
 }
 
-export default StudentList;
+export default StudentListMedical;

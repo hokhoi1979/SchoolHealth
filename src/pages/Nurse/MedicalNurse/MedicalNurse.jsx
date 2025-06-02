@@ -5,10 +5,10 @@ import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { Link, Outlet } from "react-router";
 
-const MedicalEvent = () => {
+const MedicalNurse = () => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [click, setClick] = useState("vaccineDay");
+  const [click, setClick] = useState("medicalDay");
   const showModal = () => {
     setOpen(true);
   };
@@ -32,7 +32,7 @@ const MedicalEvent = () => {
       <div className="flex flex-col min-h-screen">
         <div className="p-6 flex flex-col flex-1">
           <h1 className="text-xl font-inria font-medium mb-4">
-            <CommonBreadcrumb role={"Nurse"} page={"medicalEvent"} />
+            <CommonBreadcrumb role={"Nurse"} page={"medicalCheckup"} />
           </h1>
 
           <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
@@ -52,15 +52,15 @@ const MedicalEvent = () => {
             </div>
           </div>
 
-          <div className="flex bg-[#F3F3F3] font-kameron w-[570px] h-10 items-center rounded-md ml-5 mt-5">
+          <div className="flex bg-[#F3F3F3] font-kameron w-[500px] h-10 items-center rounded-md ml-5 mt-5">
             <div className="m-auto flex gap-5">
               <div
                 className={`hover:bg-white p-1 rounded-md ${
-                  click === "vaccineDay" ? "bg-white rounded-md text-black" : ""
+                  click === "medicalDay" ? "bg-white rounded-md text-black" : ""
                 }`}
               >
-                <Link onClick={() => setClick("vaccineDay")} to={""}>
-                  Vaccination day
+                <Link onClick={() => setClick("medicalDay")} to={""}>
+                  Medical day
                 </Link>
               </div>
               <div
@@ -80,48 +80,36 @@ const MedicalEvent = () => {
 
               <div
                 className={`hover:bg-white p-1 rounded-md ${
-                  click === "vaccineHistory"
+                  click === "medicalHistory"
                     ? "bg-white rounded-md text-black"
                     : ""
                 }`}
               >
                 <Link
-                  onClick={() => setClick("vaccineHistory")}
-                  to={"vaccineHistory"}
+                  onClick={() => setClick("medicalHistory")}
+                  to={"medicalHistory"}
                 >
-                  Vaccination history
+                  Medical history
                 </Link>
               </div>
 
               <div
                 className={`hover:bg-white p-1 rounded-md ${
-                  click === "vaccineResult"
+                  click === "medicalResult"
                     ? "bg-white rounded-md text-black"
                     : ""
                 }`}
               >
                 <Link
-                  onClick={() => setClick("vaccineResult")}
-                  to={"vaccineResult"}
+                  onClick={() => setClick("medicalResult")}
+                  to={"medicalResult"}
                 >
-                  Vaccination result
+                  Medical result
                 </Link>
               </div>
             </div>
           </div>
 
-          <div className="pl-5 mt-5 flex gap-5">
-            <Input
-              style={{ borderRadius: "7px", width: "300px" }}
-              placeholder="Search vaccination"
-            />
-            <Button
-              className="!bg-[#90A8B0] !hover:bg-gray-600"
-              type="secondary"
-            >
-              <p className="text-white font-kameron"> Search</p>
-            </Button>
-          </div>
           <div className="flex-1 overflow-auto mr-5 mt-5 mb-10">
             <Outlet />
           </div>
@@ -147,4 +135,4 @@ const MedicalEvent = () => {
   );
 };
 
-export default MedicalEvent;
+export default MedicalNurse;
