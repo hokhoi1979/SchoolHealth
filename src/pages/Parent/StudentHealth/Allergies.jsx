@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Card, Input, Radio, Checkbox, Alert } from "antd";
 import { SaveOutlined, CheckCircleOutlined } from "@ant-design/icons";
 
@@ -7,10 +6,17 @@ const { TextArea } = Input;
 
 const Allergies = () => {
   const [saved, setSaved] = useState(false);
+  const [hasAllergy, setHasAllergy] = useState("no");
+
   const handleSave = () => {
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
+
+  const onAllergyChange = (e) => {
+    setHasAllergy(e.target.value);
+  };
+
   return (
     <div>
       {saved && (
@@ -20,7 +26,7 @@ const Allergies = () => {
           type="success"
           showIcon
           icon={<CheckCircleOutlined />}
-        ></Alert>
+        />
       )}
       <Card
         title="Allergies Information"
@@ -30,7 +36,11 @@ const Allergies = () => {
           <label className="block text-base">
             Does the student have allergies?
           </label>
-          <Radio.Group defaultValue="no" className="mt-2">
+          <Radio.Group
+            onChange={onAllergyChange}
+            value={hasAllergy}
+            className="mt-2"
+          >
             <Radio value="yes" className="mb-3" style={{ display: "block" }}>
               Yes
             </Radio>
@@ -39,49 +49,55 @@ const Allergies = () => {
             </Radio>
           </Radio.Group>
         </div>
-        <div className="mt-4">
-          <label className="block text-base">Type of allergies</label>
-          <div className="grid grid-cols-3 md:grid-cols-2 mt-2">
-            <Checkbox id="food-allery" className="mb-2">
-              Food Allery
-            </Checkbox>
-            <Checkbox id="drug-allery" className="mb-2">
-              Drug Allery
-            </Checkbox>
-            <Checkbox id="insect-allery" className="mb-2">
-              Insect Allery
-            </Checkbox>
-            <Checkbox id="pollen-allery" className="mb-2">
-              Pollen Allery
-            </Checkbox>
-            <Checkbox id="dust-allery" className="mb-2">
-              Dust Allery
-            </Checkbox>
-            <Checkbox id="other-allery" className="mb-2">
-              Others
-            </Checkbox>
-          </div>
-        </div>
-        <div className="mt-4">
-          <label htmlFor="allery-details" className="block mb-1 text-base">
-            Allery Detail
-          </label>
-          <TextArea
-            id="allery-details"
-            placeholder="Detailed description of allergies, including symptoms and severity"
-            rows={4}
-          />
-        </div>
-        <div className="mt-4 text-base">
-          <label htmlFor="allergy-treatment" className="block mb-1">
-            Allery Treatment
-          </label>
-          <TextArea
-            id="allergy-treatment"
-            placeholder="Describe treatments for allergic reactions"
-            rows={4}
-          />
-        </div>
+
+        {hasAllergy === "yes" && (
+          <>
+            <div className="mt-4">
+              <label className="block text-base">Type of allergies</label>
+              <div className="grid grid-cols-3 md:grid-cols-2 mt-2">
+                <Checkbox id="food-allergy" className="mb-2">
+                  Food Allergy
+                </Checkbox>
+                <Checkbox id="drug-allergy" className="mb-2">
+                  Drug Allergy
+                </Checkbox>
+                <Checkbox id="insect-allergy" className="mb-2">
+                  Insect Allergy
+                </Checkbox>
+                <Checkbox id="pollen-allergy" className="mb-2">
+                  Pollen Allergy
+                </Checkbox>
+                <Checkbox id="dust-allergy" className="mb-2">
+                  Dust Allergy
+                </Checkbox>
+                <Checkbox id="other-allergy" className="mb-2">
+                  Others
+                </Checkbox>
+              </div>
+            </div>
+            <div className="mt-4">
+              <label htmlFor="allergy-details" className="block mb-1 text-base">
+                Allergy Detail
+              </label>
+              <TextArea
+                id="allergy-details"
+                placeholder="Detailed description of allergies, including symptoms and severity"
+                rows={4}
+              />
+            </div>
+            <div className="mt-4 text-base">
+              <label htmlFor="allergy-treatment" className="block mb-1">
+                Allergy Treatment
+              </label>
+              <TextArea
+                id="allergy-treatment"
+                placeholder="Describe treatments for allergic reactions"
+                rows={4}
+              />
+            </div>
+          </>
+        )}
+
         <div className="text-right mt-6">
           <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>
             Lưu thông tin
@@ -91,4 +107,5 @@ const Allergies = () => {
     </div>
   );
 };
+
 export default Allergies;

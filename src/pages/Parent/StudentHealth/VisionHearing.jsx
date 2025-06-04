@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Card, Input, Radio, Select, Alert } from "antd";
 import { SaveOutlined, CheckCircleOutlined } from "@ant-design/icons";
 
@@ -8,10 +7,14 @@ const { Option } = Select;
 
 const VisionHear = () => {
   const [saved, setSaved] = useState(false);
+  const [wearGlasses, setWearGlasses] = useState("no");
+  const [useHearingAids, setUseHearingAids] = useState("no");
+
   const handleSave = () => {
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
+
   return (
     <div>
       {saved && (
@@ -21,7 +24,7 @@ const VisionHear = () => {
           type="success"
           showIcon
           icon={<CheckCircleOutlined />}
-        ></Alert>
+        />
       )}
       <Card
         title="Vision & Hearing"
@@ -53,7 +56,11 @@ const VisionHear = () => {
         </div>
         <div className="mt-4">
           <label className="block text-base">Do students wear glasses?</label>
-          <Radio.Group defaultValue="no" className="mt-2">
+          <Radio.Group
+            onChange={(e) => setWearGlasses(e.target.value)}
+            value={wearGlasses}
+            className="mt-2"
+          >
             <Radio value="yes" className="mb-3" style={{ display: "block" }}>
               Yes
             </Radio>
@@ -62,16 +69,20 @@ const VisionHear = () => {
             </Radio>
           </Radio.Group>
         </div>
-        <div className="mt-4">
-          <label htmlFor="vision-notes" className="block mb-1 text-base">
-            Vision Notes
-          </label>
-          <TextArea
-            id="vision-notes"
-            placeholder="Enter student vision notes"
-            rows={4}
-          />
-        </div>
+
+        {wearGlasses === "yes" && (
+          <div className="mt-4">
+            <label htmlFor="vision-notes" className="block mb-1 text-base">
+              Vision Notes
+            </label>
+            <TextArea
+              id="vision-notes"
+              placeholder="Enter student vision notes"
+              rows={4}
+            />
+          </div>
+        )}
+
         <div className="mt-6">
           <label className="block text-lg">Hearing</label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-7">
@@ -110,7 +121,11 @@ const VisionHear = () => {
             <label className="block text-base">
               Do students use hearing aids?
             </label>
-            <Radio.Group defaultValue="no" className="mt-2">
+            <Radio.Group
+              onChange={(e) => setUseHearingAids(e.target.value)}
+              value={useHearingAids}
+              className="mt-2"
+            >
               <Radio value="yes" className="mb-3" style={{ display: "block" }}>
                 Yes
               </Radio>
@@ -119,16 +134,19 @@ const VisionHear = () => {
               </Radio>
             </Radio.Group>
           </div>
-          <div className="mt-4">
-            <label htmlFor="hearing-notes" className="block mb-1 text-base">
-              Hearing Notes
-            </label>
-            <TextArea
-              id="hearing-notes"
-              placeholder="Enter student hearing notes"
-              rows={4}
-            />
-          </div>
+
+          {useHearingAids === "yes" && (
+            <div className="mt-4">
+              <label htmlFor="hearing-notes" className="block mb-1 text-base">
+                Hearing Notes
+              </label>
+              <TextArea
+                id="hearing-notes"
+                placeholder="Enter student hearing notes"
+                rows={4}
+              />
+            </div>
+          )}
 
           <div className="text-right mt-6">
             <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>

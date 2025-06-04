@@ -42,6 +42,12 @@ import CheckUpParentFunction from "../pages/Parent/CheckUp/CheckUp";
 import CheckUpPending from "../pages/Parent/CheckUp/Pending";
 import CheckUpCompleted from "../pages/Parent/CheckUp/CheckUp";
 import CheckUpRejected from "../pages/Parent/CheckUp/Rejected";
+
+import HistoryParent from "../pages/Parent/StudentHistory/History";
+import AllRecord from "../pages/Parent/StudentHistory/AllRecord";
+import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
+import SendResult from "../pages/Parent/StudentHistory/SendResult";
+import Notification from "../pages/Parent/StudentHistory/Notification";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -125,6 +131,19 @@ const router = createBrowserRouter([
               { path: "", element: <CheckUpPending /> },
               { path: "completed", element: <CheckUpCompleted /> },
               { path: "rejected", element: <CheckUpRejected /> },
+            ],
+          },
+          {
+            path: "history",
+            element: <HistoryParent />,
+            children: [
+              {
+                path: "",
+                element: <AllRecord />,
+              },
+              { path: "health_infor", element: <HealthInfor /> },
+              { path: "send_result", element: <SendResult /> },
+              { path: "notification", element: <Notification /> },
             ],
           },
         ],

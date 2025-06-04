@@ -1,26 +1,18 @@
-import React from "react";
-import { useState } from "react";
-import {
-  Button,
-  Card,
-  Input,
-  Tabs,
-  Radio,
-  Checkbox,
-  Select,
-  Alert,
-} from "antd";
+import React, { useState } from "react";
+import { Button, Card, Input, Radio, Checkbox, Alert } from "antd";
 import { SaveOutlined, CheckCircleOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 const Vaccination = () => {
   const [saved, setSaved] = useState(false);
+  const [hadSideEffects, setHadSideEffects] = useState("no");
+
   const handleSave = () => {
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
+
   return (
     <div>
       {saved && (
@@ -30,7 +22,7 @@ const Vaccination = () => {
           type="success"
           showIcon
           icon={<CheckCircleOutlined />}
-        ></Alert>
+        />
       )}
       <Card
         title="Vaccination"
@@ -58,6 +50,7 @@ const Vaccination = () => {
             <Checkbox id="other-vaccine">Other</Checkbox>
           </div>
         </div>
+
         <div className="mt-4">
           <label htmlFor="vaccination-history" className="block mb-1 text-base">
             Vaccination History
@@ -68,11 +61,16 @@ const Vaccination = () => {
             rows={4}
           />
         </div>
+
         <div className="mt-4">
           <label className="block text-base">
             Has the student ever had side effects after vaccination?
           </label>
-          <Radio.Group defaultValue="no" className="mt-2">
+          <Radio.Group
+            onChange={(e) => setHadSideEffects(e.target.value)}
+            value={hadSideEffects}
+            className="mt-2"
+          >
             <Radio value="yes" className="mb-3" style={{ display: "block" }}>
               Yes
             </Radio>
@@ -81,19 +79,22 @@ const Vaccination = () => {
             </Radio>
           </Radio.Group>
         </div>
-        <div className="mt-4">
-          <label
-            htmlFor="vaccine-reaction-details"
-            className="block mb-1 text-base"
-          >
-            Adverse reaction details
-          </label>
-          <TextArea
-            id="vaccine-reaction-details"
-            placeholder="Detailed description of adverse reactions after vaccination (if any)"
-            rows={4}
-          />
-        </div>
+
+        {hadSideEffects === "yes" && (
+          <div className="mt-4">
+            <label
+              htmlFor="vaccine-reaction-details"
+              className="block mb-1 text-base"
+            >
+              Adverse reaction details
+            </label>
+            <TextArea
+              id="vaccine-reaction-details"
+              placeholder="Detailed description of adverse reactions after vaccination (if any)"
+              rows={4}
+            />
+          </div>
+        )}
 
         <div className="text-right mt-6">
           <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>
