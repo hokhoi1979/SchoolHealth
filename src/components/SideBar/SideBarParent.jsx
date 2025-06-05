@@ -155,7 +155,7 @@ const SideBar = () => {
           {!toggle && (
             <Link
               onClick={() => setClick("vaccination")}
-              to={"/parent/vaccination"}
+              to={"/parent/vaccination_confirm"}
               className="text-[18px]"
             >
               Vaccination
@@ -183,7 +183,7 @@ const SideBar = () => {
           {!toggle && (
             <Link
               onClick={() => setClick("check_up")}
-              to={"/parent/check_up"}
+              to={"/parent/check_up_confirm"}
               className="text-[18px]"
             >
               Check Up
