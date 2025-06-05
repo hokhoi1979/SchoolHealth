@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Space, Typography } from "antd";
-import { MedicineBoxOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { CloseCircleOutlined } from "@ant-design/icons";
+import { Activity } from "lucide-react";
 
 const { Title, Paragraph } = Typography;
 
@@ -37,7 +38,7 @@ const Rejected = ({ notifications }) => {
         <Card key={notification.id} style={{ borderLeft: `4px solid #00FF00` }}>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <MedicineBoxOutlined style={{ fontSize: 20, color: "#00FF00" }} />
+              <Activity style={{ fontSize: 20, color: "#00FF00" }} />
               <Title level={5} style={{ margin: 0 }}>
                 {notification.title}
               </Title>

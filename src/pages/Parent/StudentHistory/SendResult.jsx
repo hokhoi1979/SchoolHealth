@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Card, Table, Tag, Modal, Descriptions } from "antd";
-import { MedicineBoxOutlined } from "@ant-design/icons";
+import { Pill } from "lucide-react";
+import { EyeOutlined } from "@ant-design/icons";
 
 const SendResult = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -13,7 +14,7 @@ const SendResult = () => {
 
   const typeConfig = {
     medication: {
-      icon: <MedicineBoxOutlined />,
+      icon: <Pill className="h-3 w-3" />,
       text: "Send Result",
       color: "bg-green-100 text-green-700 border-green-300",
     },
@@ -31,9 +32,11 @@ const SendResult = () => {
       key: "type",
       width: 150,
       render: (type) => (
-        <Tag className={`flex items-center gap-1 ${typeConfig[type].color}`}>
-          {typeConfig[type].icon}
-          {typeConfig[type].text}
+        <Tag className={`${typeConfig[type].color}`}>
+          <span className="flex items-center gap-1">
+            {typeConfig[type].icon}
+            {typeConfig[type].text}
+          </span>
         </Tag>
       ),
     },
@@ -71,9 +74,11 @@ const SendResult = () => {
       key: "action",
       width: 120,
       render: (_, record) => (
-        <Button type="link" onClick={() => handleViewDetails(record)}>
-          View Details
-        </Button>
+        <Button
+          type="text"
+          icon={<EyeOutlined />}
+          onClick={() => handleViewDetails(record)}
+        />
       ),
       align: "center",
     },
