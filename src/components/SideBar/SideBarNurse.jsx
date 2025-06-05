@@ -1,43 +1,61 @@
-import React, { useState } from "react";
-import logo from "../../img/logo.png";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import logo from "../../img/icon.png";
+import { Link, useNavigate } from "react-router";
 import bs from "../../img/bs.png";
+import { useDispatch, useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import { fetchSuccess, logout } from "../../redux/auth/authSlice";
 const SideBar = () => {
   const [click, setClick] = useState("");
   const [toggle, setToggle] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { token } = useSelector((state) => state.account);
 
   const handleToggle = () => {
     setToggle((pre) => !pre);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    dispatch(logout());
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    if (token) {
+      const decode = jwtDecode(token);
+      dispatch(fetchSuccess({ user: decode, token: token }));
+    }
+  }, [dispatch]);
   return (
     <>
       <div
         className={` h-full bg-white pt-2 pb-2 font-inria flex flex-col ${
-          toggle ? "w-[7%] " : "w-[18%]"
+          toggle ? "w-[8%] " : "w-[18%]"
         }  transition-all duration-400 ease-in-out overflow-hidden`}
       >
         <div className="flex items-center pt-2 pb-2  pl-1 pr-1 gap-3">
           <div className="flex items-center">
-            <div className="w-[80px]">
-              <img
-                src={logo}
-                className="flex text-center justify-center"
-                width="120%"
-                alt=""
-              />
-              <p className="font-inria text-center justify-center text-[13px] font-medium text-[#040404] font-kameron">
+            <div className="w-[70px]">
+              <img src={logo} className="flex m-auto" width="60%" alt="" />
+              <p className="font-inria text-center justify-center text-[10px] font-medium text-[#040404] font-kameron">
                 Heath Care
               </p>
             </div>
             {!toggle && (
-              <h1 className="font-inria text-xl pl-2 font-medium text-center justify-center items-center">
-                School Health Care
-              </h1>
+              <div className="w-[127px]">
+                {" "}
+                <h1 className="font-inria text-[16px] pl-6 font-medium text-center justify-center items-center">
+                  School Health
+                </h1>
+              </div>
             )}
           </div>
           {!toggle && (
             <div
-              style={{ cursor: "pointer", marginLeft: 30 }}
+              style={{ cursor: "pointer", marginLeft: 10 }}
               onClick={handleToggle}
             >
               <svg
@@ -190,7 +208,7 @@ const SideBar = () => {
             {!toggle && (
               <Link
                 onClick={() => setClick("medical")}
-                to={"/nurse/medical"}
+                to={"/nurse/medicalEvent"}
                 className="text-[18px]"
               >
                 Medical Event
@@ -254,7 +272,7 @@ const SideBar = () => {
             {!toggle && (
               <Link
                 onClick={() => setClick("checkup")}
-                to={"/nurse/checkup"}
+                to={"/nurse/medical"}
                 className="text-[18px]"
               >
                 Medical Checkup
@@ -313,6 +331,12 @@ const SideBar = () => {
               toggle && "justify-center w-full"
             } hover:bg-[#EFEEEE] `}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              const confirmed = window.confirm("Do you want to logout?");
+              if (confirmed) {
+                handleLogout();
+              }
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
