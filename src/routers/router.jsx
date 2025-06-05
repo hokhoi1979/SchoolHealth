@@ -39,7 +39,6 @@ import StudentListMedical from "../pages/Nurse/MedicalNurse/StudentListMedical";
 import MedicalHistory from "../pages/Nurse/MedicalNurse/MedicalHistory";
 import MedicalResult from "../pages/Nurse/MedicalNurse/MedicalResult";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -84,7 +83,7 @@ const router = createBrowserRouter([
             element: <VaccineNurse />,
             children: [
               { path: "", element: <VaccineDay /> },
-              { path: "studentList", element: <StudentList /> },
+              { path: "studentList/:id", element: <StudentList /> },
               { path: "vaccineHistory", element: <VaccineHistory /> },
               { path: "vaccineResult", element: <VaccineResult /> },
             ],
@@ -151,5 +150,5 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-  
+
 export default router;

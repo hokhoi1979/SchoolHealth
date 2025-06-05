@@ -1,5 +1,5 @@
 import { Button, Input, Modal, Space, Table, Tooltip } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
@@ -8,7 +8,9 @@ import { Link, Outlet } from "react-router";
 const VaccineNurse = () => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
   const [click, setClick] = useState("vaccineDay");
+
   const showModal = () => {
     setOpen(true);
   };
@@ -63,20 +65,6 @@ const VaccineNurse = () => {
                   Vaccination day
                 </Link>
               </div>
-              {/* <div
-                className={`hover:bg-white p-1 rounded-md ${
-                  click === "studentList"
-                    ? "bg-white rounded-md text-black"
-                    : ""
-                }`}
-              >
-                <Link
-                  onClick={() => setClick("studentList")}
-                  to={"studentList"}
-                >
-                  Student list
-                </Link>
-              </div> */}
 
               <div
                 className={`hover:bg-white p-1 rounded-md ${
@@ -92,21 +80,6 @@ const VaccineNurse = () => {
                   Vaccination history
                 </Link>
               </div>
-
-              {/* <div
-                className={`hover:bg-white p-1 rounded-md ${
-                  click === "vaccineResult"
-                    ? "bg-white rounded-md text-black"
-                    : ""
-                }`}
-              >
-                <Link
-                  onClick={() => setClick("vaccineResult")}
-                  to={"vaccineResult"}
-                >
-                  Vaccination result
-                </Link>
-              </div> */}
             </div>
           </div>
 
