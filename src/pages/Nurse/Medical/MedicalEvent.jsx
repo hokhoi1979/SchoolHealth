@@ -1,54 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { Button, Input, Space, Table, Tooltip } from "antd";
+import React from "react";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
-import { Link } from "react-router-dom";
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile } from "../../../redux/profileNurse/profileSlice";
-const StudentProfile = () => {
-  const dispatch = useDispatch();
-  const [data, setData] = useState([]);
-  const {
-    student = [],
-    loading,
-    error,
-  } = useSelector((state) => state.profile);
 
-  const fetchData = () => {
-    dispatch(fetchProfile());
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  console.log(student);
-
-  const formatData = () => {
-    if (
-      student?.listHealthProfiles &&
-      Array.isArray(student.listHealthProfiles)
-    ) {
-      const formatted = student.listHealthProfiles.map((item) => {
-        const save = item.student;
-        return {
-          id: save?.student_code,
-          name: save?.account?.fullname,
-          grade: save?.classAssignments?.[0]?.class?.name ?? "Chưa rõ",
-          gender: save?.gender,
-          date: save?.dateOfBirth?.split("T")[0],
-          parent: save?.ParentInfo?.fullname,
-          phone: save?.ParentInfo?.phone,
-          email: save?.ParentInfo?.email,
-        };
-      });
-      setData(formatted);
-    }
-  };
-
-  useEffect(() => {
-    formatData();
-  }, [student]);
-
+const MedicalEvent = () => {
   const columns = [
     {
       title: "ID",
@@ -68,35 +23,30 @@ const StudentProfile = () => {
       key: "grade",
       align: "center",
     },
+
     {
-      title: "Date of Birth",
-      dataIndex: "date",
-      key: "date",
-      align: "center",
-    },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "gender",
+      title: "Accident",
+      dataIndex: "accident",
+      key: "accident",
       align: "center",
     },
 
     {
-      title: "Parent",
-      dataIndex: "parent",
-      key: "parent",
+      title: "Disease",
+      dataIndex: "disease",
+      key: "disease",
       align: "center",
     },
     {
-      title: "Phone",
-      dataIndex: "phone",
-      key: "phone",
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
       align: "center",
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Time",
+      dataIndex: "time",
+      key: "time",
       align: "center",
     },
     {
@@ -108,7 +58,7 @@ const StudentProfile = () => {
           <Tooltip
             placement="bottom"
             title="View"
-            styles={{
+            overlayInnerStyle={{
               fontFamily: "Poppins, sans-serif",
               fontSize: "12px",
             }}
@@ -132,32 +82,89 @@ const StudentProfile = () => {
     },
   ];
 
+  const dataSource = [
+    {
+      id: "SE182629",
+      name: "Ho Khoi",
+      grade: "12A3",
+      accident: "Fall",
+      disease: "Fever",
+      nameMedicine: "Paracetamol",
+      dosage: "1 tablet 500mg",
+      description: "Bị té lầu",
+      time: "10:20 - 04/10/2004",
+    },
+    {
+      id: "SE182629",
+      name: "Ho Khoi",
+      grade: "12A3",
+      accident: "Fall",
+      disease: "Fever",
+      nameMedicine: "Amoxicillin",
+      dosage: "1 tablet 500mg",
+      description: "	Sốt 38.5°C, đau đầu",
+      time: "10:20 - 04/10/2004",
+    },
+    {
+      id: "SE182629",
+      name: "Ho Khoi",
+      grade: "12A3",
+      accident: "Fall",
+      disease: "Fever",
+      nameMedicine: "Syringe 5ml",
+      dosage: "1 tablet 500mg",
+      description: "	Đau bụng sau giờ ăn trưa",
+      time: "10:20 - 04/10/2004",
+    },
+    {
+      id: "SE182629",
+      name: "Ho Khoi",
+      grade: "12A3",
+      accident: "Fall",
+      disease: "Fever",
+      nameMedicine: "Vitamin C",
+      dosage: "1 tablet 500mg",
+      description: "	Sốt nhẹ 37.8°C, mệt mỏi",
+      time: "10:20 - 04/10/2004",
+    },
+    {
+      id: "SE182629",
+      name: "Ho Khoi",
+      grade: "12A3",
+      accident: "Fall",
+      disease: "Fever",
+      nameMedicine: "Syringe 5ml",
+      dosage: "1 tablet 500mg",
+      description: "	Sốt nhẹ 37.8°C, mệt mỏi",
+      time: "10:20 - 04/10/2004",
+    },
+  ];
   return (
     <>
       {" "}
       <div className="flex flex-col min-h-screen">
         <div className="p-6 flex flex-col flex-1">
           <h1 className="text-xl font-inria font-medium mb-4">
-            <CommonBreadcrumb role={"Nurse"} page={"student"} />
+            <CommonBreadcrumb role={"Nurse"} page={"medicalEvent"} />
           </h1>
 
           <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
             <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total Student</p>
-              <p className="flex justify-center text-[50px]">800</p>
+              <p className="flex justify-center mt-5">Total Event</p>
+              <p className="flex justify-center text-[50px]">40</p>
             </div>
             <div className="h-[120px] bg-white rounded-2xl">
               <p className="flex justify-center mt-5">Sick student</p>
               <p className="flex justify-center text-[50px]">12</p>
             </div>
             <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">
-                Students needing special attention
-              </p>
+              <p className="flex justify-center mt-5">Injure</p>
               <p className="flex justify-center text-[50px]">7</p>
             </div>
             <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Out of Stock</p>
+              <p className="flex justify-center mt-5">
+                Students needing special attention
+              </p>
               <p className="flex justify-center text-[50px]">12</p>
             </div>
           </div>
@@ -173,10 +180,8 @@ const StudentProfile = () => {
               <p className="text-white font-kameron"> Search</p>
             </Button>
           </div>
-          <Table className="mt-5" columns={columns} dataSource={data} />
+          <Table className="mt-5" columns={columns} dataSource={dataSource} />
         </div>
-
-        <div className="h-30"></div>
 
         {/* Footer nằm dưới cùng */}
         <AppFooter />
@@ -185,4 +190,4 @@ const StudentProfile = () => {
   );
 };
 
-export default StudentProfile;
+export default MedicalEvent;

@@ -9,6 +9,7 @@
             "medicalEvent": "Medical Event",
             "medicalCheckup": "Medical Checkup",
             "vaccineManagement":"Vaccine Management"
+
         }
     },
     "Manager": {
@@ -19,5 +20,6 @@
             "student": "Student Profile",
             "medicalEvent": "Medical Event"
         }
+
     }
 }
