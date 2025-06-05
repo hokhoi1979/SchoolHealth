@@ -7,7 +7,8 @@
             "materials": "Materials",
             "student": "Student Profile",
             "medicalEvent": "Medical Event",
-            "medicalCheckup": "Medical Checkup"
+            "medicalCheckup": "Medical Checkup",
+            "vaccineManagement":"Vaccine Management"
         }
     },
     "Manager": {

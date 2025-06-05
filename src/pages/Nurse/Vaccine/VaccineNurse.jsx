@@ -32,7 +32,7 @@ const VaccineNurse = () => {
       <div className="flex flex-col min-h-screen">
         <div className="p-6 flex flex-col flex-1">
           <h1 className="text-xl font-inria font-medium mb-4">
-            <CommonBreadcrumb role={"Nurse"} page={"medicalCheckup"} />
+            <CommonBreadcrumb role={"Nurse"} page={"vaccineManagement"} />
           </h1>
 
           <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
@@ -52,7 +52,7 @@ const VaccineNurse = () => {
             </div>
           </div>
 
-          <div className="flex bg-[#F3F3F3] font-kameron w-[570px] h-10 items-center rounded-md ml-5 mt-5">
+          <div className="flex bg-[#F3F3F3] font-kameron w-[300px] h-10 items-center rounded-md ml-5 mt-5">
             <div className="m-auto flex gap-5">
               <div
                 className={`hover:bg-white p-1 rounded-md ${
@@ -63,7 +63,7 @@ const VaccineNurse = () => {
                   Vaccination day
                 </Link>
               </div>
-              <div
+              {/* <div
                 className={`hover:bg-white p-1 rounded-md ${
                   click === "studentList"
                     ? "bg-white rounded-md text-black"
@@ -76,7 +76,7 @@ const VaccineNurse = () => {
                 >
                   Student list
                 </Link>
-              </div>
+              </div> */}
 
               <div
                 className={`hover:bg-white p-1 rounded-md ${
@@ -93,7 +93,7 @@ const VaccineNurse = () => {
                 </Link>
               </div>
 
-              <div
+              {/* <div
                 className={`hover:bg-white p-1 rounded-md ${
                   click === "vaccineResult"
                     ? "bg-white rounded-md text-black"
@@ -106,7 +106,7 @@ const VaccineNurse = () => {
                 >
                   Vaccination result
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
 

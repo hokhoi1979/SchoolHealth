@@ -1,7 +1,9 @@
 import { Button } from "antd";
 import React from "react";
+import { useNavigate } from "react-router";
 
 function VaccineDay() {
+  const navigate = useNavigate();
   let vaccineDate = [
     {
       status: "Scheduled",
@@ -42,9 +44,13 @@ function VaccineDay() {
   ];
   return (
     <div>
-      <div className="grid grid-cols-3 pl-5 gap-5.5 h-auto">
+      <div className="grid grid-cols-3 pl-5 gap-5.5 h-auto ">
         {vaccineDate.map((item) => (
-          <div className="bg-white p-6 rounded-2xl">
+          <div
+            className="bg-white p-6 rounded-2xl hover:bg-gray-100"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("studentList", { item })}
+          >
             <div className="flex justify-between">
               {item.status === "Scheduled" ? (
                 <>
