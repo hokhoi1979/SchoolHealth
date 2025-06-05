@@ -6,7 +6,6 @@
             "dashboard": "Dashboard",
             "materials": "Materials",
             "student": "Student Profile",
-            "medicalEvent": "Medical Event"
             "medicalEvent": "Medical Event",
             "medicalCheckup": "Medical Checkup",
             "vaccineManagement":"Vaccine Management"

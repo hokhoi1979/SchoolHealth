@@ -63,6 +63,7 @@ import AllRecord from "../pages/Parent/StudentHistory/AllRecord";
 import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
 import SendResult from "../pages/Parent/StudentHistory/SendResult";
 import Notification from "../pages/Parent/StudentHistory/Notification";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -107,7 +108,7 @@ const router = createBrowserRouter([
             element: <VaccineNurse />,
             children: [
               { path: "", element: <VaccineDay /> },
-              { path: "studentList", element: <StudentList /> },
+              { path: "studentList/:id", element: <StudentList /> },
               { path: "vaccineHistory", element: <VaccineHistory /> },
               { path: "vaccineResult", element: <VaccineResult /> },
             ],

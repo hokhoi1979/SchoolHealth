@@ -1,10 +1,61 @@
 import { Button, Input, Select, Space, Table, Tooltip } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import VaccineResult from "./VaccineResult";
 import SentParents from "./SentParents";
+import { useLocation, useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVaccineStudent } from "../../../redux/vaccine/vaccineByIdSlice";
 
 function StudentList() {
+  // const location = useLocation();
+  // const id = location.state?.item?.id;
+  const { id } = useParams();
   const [selectedOption, setSelectedOption] = useState("student");
+  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  const {
+    student = [],
+    loading,
+    error,
+  } = useSelector((state) => state.vaccineStudent);
+
+  const fetchData = () => {
+    dispatch(fetchVaccineStudent(id));
+    console.log("STUDENT", student);
+  };
+
+  useEffect(() => {
+    console.log("ID", id);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const formatData = () => {
+    if (
+      student?.data?.studentResponseEntity &&
+      Array.isArray(student?.data?.studentResponseEntity)
+    ) {
+      const format = student?.data?.studentResponseEntity.map((item) => {
+        return {
+          id: item?.student?.student_code,
+          student: item?.student?.account?.fullname,
+          parent: item?.student?.ParentInfo?.fullname,
+          phone: item?.student?.ParentInfo?.phone,
+          status: item?.status,
+          note: item?.note || "No comment",
+          grade: item?.student?.classAssignments?.[0]?.class?.name || "N/A",
+        };
+      });
+      setData(format);
+      console.log("FORMAT", data);
+    }
+  };
+
+  useEffect(() => {
+    formatData();
+  }, [student]);
 
   const columns = [
     {
@@ -15,8 +66,8 @@ function StudentList() {
     },
     {
       title: "Student",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "student",
+      key: "student",
       align: "center",
     },
     {
@@ -101,53 +152,6 @@ function StudentList() {
     },
   ];
 
-  const dataSource = [
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "Confirm",
-      note: "dong y",
-    },
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "Refuse",
-      note: "dong y",
-    },
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "Confirm",
-      note: "dong y",
-    },
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "Special tracking",
-      note: "Refuse",
-    },
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "confirm",
-      note: "dong y",
-    },
-  ];
   return (
     <div>
       {" "}
@@ -187,7 +191,7 @@ function StudentList() {
       </div>
       {selectedOption === "student" && (
         <>
-          <Table className="mt-5" columns={columns} dataSource={dataSource} />
+          <Table className="mt-5" columns={columns} dataSource={data} />
         </>
       )}
       {selectedOption === "record" && (
