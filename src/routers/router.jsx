@@ -39,7 +39,30 @@ import StudentListMedical from "../pages/Nurse/MedicalNurse/StudentListMedical";
 import MedicalHistory from "../pages/Nurse/MedicalNurse/MedicalHistory";
 import MedicalResult from "../pages/Nurse/MedicalNurse/MedicalResult";
 
-
+// Parents import
+import ParentLayout from "../pages/Parent/ParentLayout";
+import StudentHealth from "../pages/Parent/StudentHealth/StudentHealth";
+import GeneralInformation from "../pages/Parent/StudentHealth/Information";
+import Allergies from "../pages/Parent/StudentHealth/Allergies";
+import Chronic from "../pages/Parent/StudentHealth/Chronic";
+import VisionHearing from "../pages/Parent/StudentHealth/VisionHearing";
+import VaccinationParent from "../pages/Parent/StudentHealth/Vacciation";
+import MedicalRequest from "../pages/Parent/MedicalRequest/MedicalRequest";
+import MedicalUsing from "../pages/Parent/MedicalRequest/MedicationUsing";
+import MedicalHistoryParent from "../pages/Parent/MedicalRequest/MedicationHistory";
+import VaccinationConfirm from "../pages/Parent/Vaccination/Vaccination";
+import PendingVaccination from "../pages/Parent/Vaccination/Pending";
+import CompletedVaccination from "../pages/Parent/Vaccination/Completed";
+import RejectedVaccination from "../pages/Parent/Vaccination/Rejected";
+import CheckUpConfirm from "../pages/Parent/CheckUp/CheckUp";
+import PendingCheckUp from "../pages/Parent/CheckUp/Pending";
+import CompletedCheckUp from "../pages/Parent/CheckUp/Completed";
+import RejectedCheckUp from "../pages/Parent/CheckUp/Rejected";
+import StudentHistory from "../pages/Parent/StudentHistory/History";
+import AllRecord from "../pages/Parent/StudentHistory/AllRecord";
+import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
+import SendResult from "../pages/Parent/StudentHistory/SendResult";
+import Notification from "../pages/Parent/StudentHistory/Notification";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -148,8 +171,63 @@ const router = createBrowserRouter([
           },
         ],
       },
+      //Parents route
+      {
+        path: "parent",
+        element: <ParentLayout />,
+        children: [
+          { path: "", element: <Navigate to="student_health" /> },
+          {
+            path: "student_health",
+            element: <StudentHealth />,
+            children: [
+              { path: "", element: <GeneralInformation /> },
+              { path: "allergies", element: <Allergies /> },
+              { path: "chronic", element: <Chronic /> },
+              { path: "vision_hearing", element: <VisionHearing /> },
+              { path: "vaccination", element: <VaccinationParent /> },
+            ],
+          },
+          {
+            path: "medical_request",
+            element: <MedicalRequest />,
+            children: [
+              { path: "", element: <MedicalUsing /> },
+              { path: "medication_history", element: <MedicalHistoryParent /> },
+            ],
+          },
+          {
+            path: "vaccination_confirm",
+            element: <VaccinationConfirm />,
+            children: [
+              { path: "", element: <PendingVaccination /> },
+              { path: "completed", element: <CompletedVaccination /> },
+              { path: "rejected", element: <RejectedVaccination /> },
+            ],
+          },
+          {
+            path: "check_up_confirm",
+            element: <CheckUpConfirm />,
+            children: [
+              { path: "", element: <PendingCheckUp /> },
+              { path: "completed", element: <CompletedCheckUp /> },
+              { path: "rejected", element: <RejectedCheckUp /> },
+            ],
+          },
+          {
+            path: "history",
+            element: <StudentHistory />,
+            children: [
+              { path: "", element: <AllRecord /> },
+              { path: "health_infor", element: <HealthInfor /> },
+              { path: "send_result", element: <SendResult /> },
+              { path: "notification", element: <Notification /> },
+            ],
+          },
+        ],
+      },
     ],
   },
 ]);
-  
+
 export default router;

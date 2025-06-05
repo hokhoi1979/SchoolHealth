@@ -1,15 +1,11 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import SideBar from "../../components/SideBar/SideBarNurse";
+import SideBar from "../../components/SideBar/SideBarParent";
 
-import { toast } from "react-toastify";
-
-const NurseLayout = () => {
-  toast.success("Login successful!");
+const ParentLayout = () => {
   return (
     <div className="flex h-screen">
       <SideBar />
-
       <div className="flex-1 overflow-auto">
         <Outlet />
       </div>
@@ -17,4 +13,4 @@ const NurseLayout = () => {
   );
 };
 
-export default NurseLayout;
+export default ParentLayout;

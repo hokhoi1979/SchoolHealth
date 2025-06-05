@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+
 import { Link, Outlet } from "react-router-dom";
 import { Button, Input, Modal, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
@@ -18,6 +19,7 @@ function Materials() {
   useEffect(() => {
     console.log(material);
   }, []);
+
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -29,6 +31,13 @@ function Materials() {
           <div className="grid grid-cols-2 gap-5 mt-5 w-[50%] pl-5 pr-5 font-kameron ">
             <div className="h-[120px] bg-white rounded-2xl">
               <p className="flex justify-center mt-5">Total Medicine</p>
+
+              <p className="flex justify-center text-[50px]">7</p>
+            </div>
+            <div className="h-[120px] bg-white rounded-2xl">
+              <p className="flex justify-center mt-5">Out of Stock</p>
+              <p className="flex justify-center text-[50px]">12</p>
+
               <p className="flex justify-center text-[50px]">99</p>
             </div>
             <div className="h-[120px] bg-white rounded-2xl">
@@ -60,6 +69,16 @@ function Materials() {
                     Import
                   </Link>
                 </div>
+
+                {/* <div
+                  className={`hover:bg-white p-1 rounded-md ${
+                    click === "export" ? "bg-white rounded-md text-black" : ""
+                  }`}
+                >
+                  <Link onClick={() => setClick("export")} to={"export"}>
+                    Export
+                  </Link>
+                </div> */}
 
                 <div
                   className={`hover:bg-white p-1 rounded-md ${
