@@ -41,11 +41,7 @@ const StudentProfile = () => {
           email: save?.ParentInfo?.email,
         };
       });
-
-      console.log("✅ Đã format:", formatted);
       setData(formatted);
-    } else {
-      console.log("❌ Không có listHealthProfiles:", student);
     }
   };
 
