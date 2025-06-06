@@ -1,7 +1,11 @@
-import { Button, Space, Table, Tooltip } from "antd";
-import React from "react";
+import { Button, Input, Select, Space, Table, Tooltip } from "antd";
+import React, { useState } from "react";
+import MedicalResult from "./MedicalResult";
+import SentMedicalToParents from "./SentMedicalToParents";
 
-function StudentList() {
+function StudentListMedical() {
+  const [selectedOption, setSelectedOption] = useState("student");
+
   const columns = [
     {
       title: "ID",
@@ -43,14 +47,14 @@ function StudentList() {
           {record.status?.toLowerCase() === "confirm" ? (
             <p
               type="secondary"
-              className="rounded-2xl w-[80px] text-[#0CC912] font-bold "
+              className="rounded-2xl w-[80px] text-[#6CC76F] font-medium "
             >
               Confirm
             </p>
           ) : (
             <p
               type="secondary"
-              className="rounded-2xl w-[80px] text-[#EE3B3B] font-bold"
+              className="rounded-2xl w-[80px] text-[#E26666] font-medium"
             >
               Refuse
             </p>
@@ -147,10 +151,58 @@ function StudentList() {
   return (
     <div>
       {" "}
-      <Table className="mt-5" columns={columns} dataSource={dataSource} />
+      <div className="flex justify-between">
+        {selectedOption === "student" ? (
+          <div className="flex gap-5 pl-5">
+            <Input
+              style={{ borderRadius: "7px", width: "300px" }}
+              placeholder="Search vaccination"
+            />
+            <Button
+              className="!bg-[#90A8B0] !hover:bg-gray-600"
+              type="secondary"
+            >
+              <p className="text-white font-kameron"> Search</p>
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div></div>
+          </>
+        )}
+
+        <div className="">
+          <Select
+            placeholder="Select action"
+            style={{ width: 250 }}
+            value={selectedOption}
+            onChange={(value) => setSelectedOption(value)}
+            className="!w-[255px]"
+          >
+            <Option value="student">Student List</Option>
+            <Option value="record">Recording Vaccination Results</Option>
+            <Option value="send">Send to Vaccination Results</Option>
+          </Select>
+        </div>
+      </div>
+      {selectedOption === "student" && (
+        <>
+          <Table className="mt-5" columns={columns} dataSource={dataSource} />
+        </>
+      )}
+      {selectedOption === "record" && (
+        <div className="flex gap-5 pl-5">
+          <MedicalResult />
+        </div>
+      )}
+      {selectedOption === "send" && (
+        <div className="flex gap-5 pl-5">
+          <SentMedicalToParents />
+        </div>
+      )}
       <div className="h-20"></div>
     </div>
   );
 }
 
-export default StudentList;
+export default StudentListMedical;

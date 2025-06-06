@@ -1,5 +1,4 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import MedicalEvent from "../pages/Nurse/Medical/MedicalEvent";
 import NurseLayout from "../pages/Nurse/NurseLayout";
 import RootLayout from "../layout/RootLayout";
 import Login from "../pages/Login/Login";
@@ -7,11 +6,8 @@ import Register from "../pages/Register/Register";
 import StudentProfile from "../pages/Nurse/StudentProfile/StudentProfile";
 
 // Nurse imports
-import VaccineDay from "../pages/Nurse/Medical/VaccineDay";
-import StudentList from "../pages/Nurse/Medical/StudentList";
-import VaccineHistory from "../pages/Nurse/Medical/VaccineHistory";
+
 import DashboardNurse from "../pages/Nurse/Dashboard/DashboardNurse";
-import Medical from "../pages/Nurse/Dashboard/Medical";
 import Vaccination from "../pages/Nurse/Dashboard/Vaccination";
 import Checkup from "../pages/Nurse/Dashboard/Checkup";
 import Trend from "../pages/Nurse/Dashboard/Trend";
@@ -20,8 +16,6 @@ import Inventory from "../pages/Nurse/Materials/Inventory";
 import Import from "../pages/Nurse/Materials/Import";
 import Export from "../pages/Nurse/Materials/Export";
 import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
-
-import VaccineResult from "../pages/Nurse/Medical/VaccineResult";
 
 // Manager imports
 import Home from "../pages/Home/Home";
@@ -33,9 +27,45 @@ import MedicalManager from "../pages/Manager/Dashboard/MedicalManager";
 import DashboardManager from "../pages/Manager/Dashboard/dashboardManager";
 import VaccinationManager from "../pages/Manager/Dashboard/VaccinationManager";
 import ImportManager from "../pages/Manager/MaterialManagement/ImportManager";
-
 import MaterialManage from "../pages/Manager/MaterialManagement/MaterialManage";
 import InventoryManager from "../pages/Manager/MaterialManagement/InventoryManager";
+import MedicalEvent from "../pages/Nurse/MedicalEvent/MedicalEvent";
+import VaccineNurse from "../pages/Nurse/Vaccine/VaccineNurse";
+import VaccineDay from "../pages/Nurse/Vaccine/VaccineDay";
+import VaccineHistory from "../pages/Nurse/Vaccine/VaccineHistory";
+import VaccineResult from "../pages/Nurse/Vaccine/VaccineResult";
+import Medical from "../pages/Nurse/Dashboard/Medical";
+import StudentList from "../pages/Nurse/Vaccine/StudentList";
+import MedicalNurse from "../pages/Nurse/MedicalNurse/MedicalNurse";
+import MedicalDay from "../pages/Nurse/MedicalNurse/MedicalDay";
+import StudentListMedical from "../pages/Nurse/MedicalNurse/StudentListMedical";
+import MedicalHistory from "../pages/Nurse/MedicalNurse/MedicalHistory";
+import MedicalResult from "../pages/Nurse/MedicalNurse/MedicalResult";
+
+// Parents import
+import ParentLayout from "../pages/Parent/ParentLayout";
+import StudentHealth from "../pages/Parent/StudentHealth/StudentHealth";
+import GeneralInformation from "../pages/Parent/StudentHealth/Information";
+import Allergies from "../pages/Parent/StudentHealth/Allergies";
+import Chronic from "../pages/Parent/StudentHealth/Chronic";
+import VisionHearing from "../pages/Parent/StudentHealth/VisionHearing";
+import VaccinationParent from "../pages/Parent/StudentHealth/Vacciation";
+import MedicalRequest from "../pages/Parent/MedicalRequest/MedicalRequest";
+import MedicalUsing from "../pages/Parent/MedicalRequest/MedicationUsing";
+import MedicalHistoryParent from "../pages/Parent/MedicalRequest/MedicationHistory";
+import VaccinationConfirm from "../pages/Parent/Vaccination/Vaccination";
+import PendingVaccination from "../pages/Parent/Vaccination/Pending";
+import CompletedVaccination from "../pages/Parent/Vaccination/Completed";
+import RejectedVaccination from "../pages/Parent/Vaccination/Rejected";
+import CheckUpConfirm from "../pages/Parent/CheckUp/CheckUp";
+import PendingCheckUp from "../pages/Parent/CheckUp/Pending";
+import CompletedCheckUp from "../pages/Parent/CheckUp/Completed";
+import RejectedCheckUp from "../pages/Parent/CheckUp/Rejected";
+import StudentHistory from "../pages/Parent/StudentHistory/History";
+import AllRecord from "../pages/Parent/StudentHistory/AllRecord";
+import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
+import SendResult from "../pages/Parent/StudentHistory/SendResult";
+import Notification from "../pages/Parent/StudentHistory/Notification";
 
 const router = createBrowserRouter([
   {
@@ -77,14 +107,28 @@ const router = createBrowserRouter([
             element: <StudentProfile />,
           },
           {
-            path: "medical",
-            element: <MedicalEvent />,
+            path: "vaccine",
+            element: <VaccineNurse />,
             children: [
               { path: "", element: <VaccineDay /> },
-              { path: "studentList", element: <StudentList /> },
+              { path: "studentList/:id", element: <StudentList /> },
               { path: "vaccineHistory", element: <VaccineHistory /> },
               { path: "vaccineResult", element: <VaccineResult /> },
             ],
+          },
+          {
+            path: "medical",
+            element: <MedicalNurse />,
+            children: [
+              { path: "", element: <MedicalDay /> },
+              { path: "studentList", element: <StudentListMedical /> },
+              { path: "medicalHistory", element: <MedicalHistory /> },
+              { path: "medicalResult", element: <MedicalResult /> },
+            ],
+          },
+          {
+            path: "medicalEvent",
+            element: <MedicalEvent />,
           },
         ],
       },
@@ -128,6 +172,61 @@ const router = createBrowserRouter([
               { path: "vaccination", element: <Vaccination /> },
               { path: "checkup", element: <Checkup /> },
               { path: "trend", element: <Trend /> },
+            ],
+          },
+        ],
+      },
+      //Parents route
+      {
+        path: "parent",
+        element: <ParentLayout />,
+        children: [
+          { path: "", element: <Navigate to="student_health" /> },
+          {
+            path: "student_health",
+            element: <StudentHealth />,
+            children: [
+              { path: "", element: <GeneralInformation /> },
+              { path: "allergies", element: <Allergies /> },
+              { path: "chronic", element: <Chronic /> },
+              { path: "vision_hearing", element: <VisionHearing /> },
+              { path: "vaccination", element: <VaccinationParent /> },
+            ],
+          },
+          {
+            path: "medical_request",
+            element: <MedicalRequest />,
+            children: [
+              { path: "", element: <MedicalUsing /> },
+              { path: "medication_history", element: <MedicalHistoryParent /> },
+            ],
+          },
+          {
+            path: "vaccination_confirm",
+            element: <VaccinationConfirm />,
+            children: [
+              { path: "", element: <PendingVaccination /> },
+              { path: "completed", element: <CompletedVaccination /> },
+              { path: "rejected", element: <RejectedVaccination /> },
+            ],
+          },
+          {
+            path: "check_up_confirm",
+            element: <CheckUpConfirm />,
+            children: [
+              { path: "", element: <PendingCheckUp /> },
+              { path: "completed", element: <CompletedCheckUp /> },
+              { path: "rejected", element: <RejectedCheckUp /> },
+            ],
+          },
+          {
+            path: "history",
+            element: <StudentHistory />,
+            children: [
+              { path: "", element: <AllRecord /> },
+              { path: "health_infor", element: <HealthInfor /> },
+              { path: "send_result", element: <SendResult /> },
+              { path: "notification", element: <Notification /> },
             ],
           },
         ],

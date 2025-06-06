@@ -1,7 +1,9 @@
 import { Button } from "antd";
 import React from "react";
+import { useNavigate } from "react-router";
 
-function VaccineDay() {
+function MedicalDay() {
+  const navigate = useNavigate();
   let vaccineDate = [
     {
       status: "Scheduled",
@@ -9,7 +11,8 @@ function VaccineDay() {
       grade: "12A3, 12A5, 12A6, 12T1",
       date: "15//6/2025",
       place: "District 1 Medical Center",
-      participate: "62/80",
+      participate: "62/80 Student",
+      time: "8:00-11:30 am",
     },
     {
       status: "Waiting for confirm",
@@ -17,7 +20,8 @@ function VaccineDay() {
       grade: "12A3, 12A5, 12A6, 12T1",
       date: "15//6/2025",
       place: "District 1 Medical Center",
-      participate: "50/80",
+      participate: "50/80 Student",
+      time: "8:00-11:30 am",
     },
     {
       status: "Scheduled",
@@ -25,7 +29,8 @@ function VaccineDay() {
       grade: "12A3, 12A5, 12A6, 12T1",
       date: "15//6/2025",
       place: "District 1 Medical Center",
-      participate: "62/80",
+      participate: "62/80 Student",
+      time: "8:00-11:30 am",
     },
     {
       status: "Scheduled",
@@ -33,14 +38,19 @@ function VaccineDay() {
       grade: "12A3, 12A5, 12A6, 12T1",
       date: "15//6/2025",
       place: "District 1 Medical Center",
-      participate: "62/80",
+      participate: "62/80 Student",
+      time: "8:00-11:30 am",
     },
   ];
   return (
     <div>
-      <div className="grid grid-cols-3 pl-5 gap-5.5 h-auto">
+      <div className="grid grid-cols-3 pl-5 gap-5.5 h-auto ">
         {vaccineDate.map((item) => (
-          <div className="bg-white p-6 rounded-2xl">
+          <div
+            className="bg-white p-6 rounded-2xl hover:bg-gray-100"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("studentList", { item })}
+          >
             <div className="flex justify-between">
               {item.status === "Scheduled" ? (
                 <>
@@ -66,6 +76,7 @@ function VaccineDay() {
               </svg>
             </div>
             <h1 className="mt-2 text-2xl">{item.name}</h1>
+            <p className="text-gray-500">{item.grade}</p>
             <p className="text-gray-500">{item.participate}</p>
 
             <div className="flex gap-2.5 mt-3">
@@ -103,6 +114,22 @@ function VaccineDay() {
               </svg>
               <p>{item.place}</p>
             </div>
+
+            <div className="flex gap-2.5 mt-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="gray"
+                  d="M16.95 15.95a7 7 0 1 0-9.9 0L12 20.9zM12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0zM13 11h4v2h-6V6h2z"
+                />
+              </svg>
+              <p>{item.time}</p>
+            </div>
+
             <div className="mt-3">
               <div className="flex justify-between mb-1 text-sm text-gray-600">
                 <span>Xác nhận tham gia:</span>
@@ -126,4 +153,4 @@ function VaccineDay() {
   );
 }
 
-export default VaccineDay;
+export default MedicalDay;

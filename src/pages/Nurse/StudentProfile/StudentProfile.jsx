@@ -1,10 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { Link } from "react-router-dom";
 import { Button, Input, Space, Table, Tooltip } from "antd";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProfile } from "../../../redux/profileNurse/profileSlice";
 const StudentProfile = () => {
+  const dispatch = useDispatch();
+  const [data, setData] = useState([]);
+  const {
+    student = [],
+    loading,
+    error,
+  } = useSelector((state) => state.profile);
+
+  const fetchData = () => {
+    dispatch(fetchProfile());
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(student);
+
+  const formatData = () => {
+    if (
+      student?.listHealthProfiles &&
+      Array.isArray(student.listHealthProfiles)
+    ) {
+      const formatted = student.listHealthProfiles.map((item) => {
+        const save = item.student;
+        return {
+          id: save?.student_code,
+          name: save?.account?.fullname,
+          grade: save?.classAssignments?.[0]?.class?.name ?? "Chưa rõ",
+          gender: save?.gender,
+          date: save?.dateOfBirth?.split("T")[0],
+          parent: save?.ParentInfo?.fullname,
+          phone: save?.ParentInfo?.phone,
+          email: save?.ParentInfo?.email,
+        };
+      });
+      setData(formatted);
+    }
+  };
+
+  useEffect(() => {
+    formatData();
+  }, [student]);
+
   const columns = [
     {
       title: "ID",
@@ -31,22 +75,28 @@ const StudentProfile = () => {
       align: "center",
     },
     {
-      title: "Accident",
-      dataIndex: "accident",
-      key: "accident",
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
       align: "center",
     },
 
     {
-      title: "Disease",
-      dataIndex: "disease",
-      key: "disease",
+      title: "Parent",
+      dataIndex: "parent",
+      key: "parent",
       align: "center",
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+      align: "center",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
       align: "center",
     },
     {
@@ -58,7 +108,7 @@ const StudentProfile = () => {
           <Tooltip
             placement="bottom"
             title="View"
-            overlayInnerStyle={{
+            styles={{
               fontFamily: "Poppins, sans-serif",
               fontSize: "12px",
             }}
@@ -82,63 +132,6 @@ const StudentProfile = () => {
     },
   ];
 
-  const dataSource = [
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      date: "04/10/2004",
-      accident: "Fall",
-      disease: "Fever",
-      nameMedicine: "Paracetamol",
-      dosage: "1 tablet 500mg",
-      status: "Normal",
-    },
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      date: "04/10/2004",
-      accident: "Fall",
-      disease: "Fever",
-      nameMedicine: "Amoxicillin",
-      dosage: "1 tablet 500mg",
-      status: "Normal",
-    },
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      date: "04/10/2004",
-      accident: "Fall",
-      disease: "Fever",
-      nameMedicine: "Syringe 5ml",
-      dosage: "1 tablet 500mg",
-      status: "Special tracking",
-    },
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      date: "04/10/2004",
-      accident: "Fall",
-      disease: "Fever",
-      nameMedicine: "Vitamin C",
-      dosage: "1 tablet 500mg",
-      status: "Special tracking",
-    },
-    {
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      date: "04/10/2004",
-      accident: "Fall",
-      disease: "Fever",
-      nameMedicine: "Syringe 5ml",
-      dosage: "1 tablet 500mg",
-      status: "Special tracking",
-    },
-  ];
   return (
     <>
       {" "}
@@ -180,8 +173,10 @@ const StudentProfile = () => {
               <p className="text-white font-kameron"> Search</p>
             </Button>
           </div>
-          <Table className="mt-5" columns={columns} dataSource={dataSource} />
+          <Table className="mt-5" columns={columns} dataSource={data} />
         </div>
+
+        <div className="h-30"></div>
 
         {/* Footer nằm dưới cùng */}
         <AppFooter />
