@@ -1,7 +1,7 @@
 import React from "react";
 
-function Export() {
+function ExportManager() {
   return <div>Export</div>;
 }
 
-export default Export;
+export default ExportManager;
