@@ -14,7 +14,7 @@ const StudentHealth = () => {
           Declare student health information so the school can provide the best
           care.
         </p>
-        <div className="flex mt-5 bg-[#F3F3F3] font-kameron w-[500px] h-10 items-center rounded-xl ml-5">
+        <div className="flex mt-5 bg-[#F3F3F3] font-kameron w-[500px] h-10 items-center rounded-xl ml-5 font-kameron">
           <div className="m-auto flex gap-5">
             <div className="hover:bg-white p-1 rounded-lg w-50">
               <Link to={""}>General Information</Link>
@@ -28,7 +28,7 @@ const StudentHealth = () => {
             <div className="hover:bg-white p-1 rounded-lg w-50">
               <Link to={"vision_hearing"}>Vision and Hearing</Link>
             </div>
-            <div className="hover:bg-white p-1 rounded-lg">
+            <div className="hover:bg-white p-1 rounded-lg w-50">
               <Link to={"vaccination"}>Vaccination</Link>
             </div>
           </div>
