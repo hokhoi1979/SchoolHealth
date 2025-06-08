@@ -52,7 +52,7 @@ const MedicalNurse = () => {
             </div>
           </div>
 
-          <div className="flex bg-[#F3F3F3] font-kameron w-[500px] h-10 items-center rounded-md ml-5 mt-5">
+          <div className="flex bg-[#F3F3F3] font-kameron w-[250px] h-10 items-center rounded-md ml-5 mt-5">
             <div className="m-auto flex gap-5">
               <div
                 className={`hover:bg-white p-1 rounded-md ${
@@ -61,20 +61,6 @@ const MedicalNurse = () => {
               >
                 <Link onClick={() => setClick("medicalDay")} to={""}>
                   Medical day
-                </Link>
-              </div>
-              <div
-                className={`hover:bg-white p-1 rounded-md ${
-                  click === "studentList"
-                    ? "bg-white rounded-md text-black"
-                    : ""
-                }`}
-              >
-                <Link
-                  onClick={() => setClick("studentList")}
-                  to={"studentList"}
-                >
-                  Student list
                 </Link>
               </div>
 
@@ -90,21 +76,6 @@ const MedicalNurse = () => {
                   to={"medicalHistory"}
                 >
                   Medical history
-                </Link>
-              </div>
-
-              <div
-                className={`hover:bg-white p-1 rounded-md ${
-                  click === "medicalResult"
-                    ? "bg-white rounded-md text-black"
-                    : ""
-                }`}
-              >
-                <Link
-                  onClick={() => setClick("medicalResult")}
-                  to={"medicalResult"}
-                >
-                  Medical result
                 </Link>
               </div>
             </div>

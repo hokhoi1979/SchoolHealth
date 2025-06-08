@@ -1,40 +1,606 @@
-import React from "react";
+import React, { useState } from "react";
+import { Button, Card, Input, Select, Radio, Checkbox, Alert } from "antd";
+import { SaveOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
-import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 
+const { TextArea } = Input;
+const { Option } = Select;
+
 const StudentHealth = () => {
+  // State for save status
+  const [saved, setSaved] = useState(false);
+  // State for Allergies
+  const [hasAllergy, setHasAllergy] = useState("no");
+  // State for Chronic
+  const [hasChronic, setHasChronic] = useState("no");
+  // State for Vaccination
+  const [hadSideEffects, setHadSideEffects] = useState("no");
+  // State for Vision & Hearing
+  const [wearGlasses, setWearGlasses] = useState("no");
+  const [useHearingAids, setUseHearingAids] = useState("no");
+
+  // Single save handler
+  const handleSave = () => {
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <h1 className="pl-10 pt-5 text-xl font-inria font-medium mb-4">
+        <CommonBreadcrumb role={"Parent"} page={"student"} />
+      </h1>
       <div className="p-6 flex flex-col flex-1">
-        <h1 className="text-3xl font-bold text-blue-400 ml-5">
+        <h1 className="text-3xl font-bold text-blue-600 ml-5">
           STUDENT HEALTH RECORD
         </h1>
-        <p className="pt-5 ml-5 text-blue-400">
+        <p className="pt-5 ml-5 text-blue-500 font-medium">
           Declare student health information so the school can provide the best
           care.
         </p>
-        <div className="flex mt-5 bg-[#F3F3F3] font-kameron w-[500px] h-10 items-center rounded-xl ml-5 font-kameron">
-          <div className="m-auto flex gap-5">
-            <div className="hover:bg-white p-1 rounded-lg w-50">
-              <Link to={""}>General Information</Link>
+        {saved && (
+          <Alert
+            message="Success"
+            description="Health record information has been saved successfully"
+            type="success"
+            showIcon
+            icon={<CheckCircleOutlined />}
+            className="mt-5 ml-5 mr-5 mb-6 rounded-lg shadow-sm"
+          />
+        )}
+        <div className="flex-1 overflow-auto mt-5 ml-5 mr-5 space-y-6">
+          {/* General Information Card */}
+          <Card
+            title="General Information"
+            extra="Basic information about student health"
+            className="rounded-lg shadow-md border-none"
+          >
+            <div className="mb-5">
+              <label
+                htmlFor="student"
+                className="block mb-1 text-base font-medium text-gray-700"
+              >
+                Student
+              </label>
+              <Select
+                id="student"
+                placeholder="Choose your student"
+                className="w-full"
+              >
+                <Option value="1">
+                  <div className="flex gap-4">
+                    <p>SE12</p>
+                    <p>Ngo Phung Gia Khanh</p>
+                    <p>123</p>
+                  </div>
+                </Option>
+                <Option value="2">
+                  <div className="flex gap-4">
+                    <p>SE14</p>
+                    <p>Vu Minh Duc</p>
+                    <p className="ml-14">123</p>
+                  </div>
+                </Option>
+                <Option value="3">
+                  <div className="flex gap-4">
+                    <p>SE15</p>
+                    <p>Ho Vu Khoi</p>
+                    <p className="ml-17">123</p>
+                  </div>
+                </Option>
+                <Option value="4">
+                  <div className="flex gap-4">
+                    <p>SE16</p>
+                    <p>Pham Nguyen Khoa</p>
+                    <p className="ml-4">123</p>
+                  </div>
+                </Option>
+              </Select>
             </div>
-            <div className="hover:bg-white p-1 rounded-lg w-50">
-              <Link to={"allergies"}>Allergies</Link>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+              <div>
+                <label
+                  htmlFor="height"
+                  className="block mb-1 text-base font-medium text-gray-700"
+                >
+                  Height (cm)
+                </label>
+                <Input
+                  id="height"
+                  type="number"
+                  placeholder="Enter your height"
+                  className="rounded-md"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="weight"
+                  className="block mb-1 text-base font-medium text-gray-700"
+                >
+                  Weight (kg)
+                </label>
+                <Input
+                  id="weight"
+                  type="number"
+                  placeholder="Enter your weight"
+                  className="rounded-md"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="blood-type"
+                  className="block mb-1 text-base font-medium text-gray-700"
+                >
+                  Blood Type
+                </label>
+                <Select
+                  id="blood-type"
+                  placeholder="Enter your blood type"
+                  className="w-full"
+                >
+                  <Option value="a">A</Option>
+                  <Option value="b">B</Option>
+                  <Option value="ab">AB</Option>
+                  <Option value="o">O</Option>
+                  <Option value="unknown">Unknown</Option>
+                </Select>
+              </div>
             </div>
-            <div className="hover:bg-white p-1 rounded-lg w-50">
-              <Link to={"chronic"}>Chronic</Link>
+            <div className="mt-4">
+              <label
+                htmlFor="medical-history"
+                className="block mb-1 text-base font-medium text-gray-700"
+              >
+                Treatment history
+              </label>
+              <TextArea
+                id="medical-history"
+                placeholder="Enter information about previously treated diseases"
+                rows={4}
+                className="rounded-md"
+              />
             </div>
-            <div className="hover:bg-white p-1 rounded-lg w-50">
-              <Link to={"vision_hearing"}>Vision and Hearing</Link>
+            <div className="mt-4">
+              <label
+                htmlFor="special-notes"
+                className="block mb-1 text-base font-medium text-gray-700"
+              >
+                Notes
+              </label>
+              <TextArea
+                id="special-notes"
+                placeholder="Enter special notes about student health"
+                rows={4}
+                className="rounded-md"
+              />
             </div>
-            <div className="hover:bg-white p-1 rounded-lg w-50">
-              <Link to={"vaccination"}>Vaccination</Link>
+          </Card>
+
+          {/* Allergies Card */}
+          <Card
+            title="Allergies Information"
+            extra="Declare information about student allergies"
+            className="rounded-lg shadow-md border-none"
+          >
+            <div>
+              <label className="block text-base font-medium text-gray-700">
+                Does the student have allergies?
+              </label>
+              <Radio.Group
+                onChange={(e) => setHasAllergy(e.target.value)}
+                value={hasAllergy}
+                className="mt-2"
+              >
+                <Radio
+                  value="yes"
+                  className="mb-3"
+                  style={{ display: "block" }}
+                >
+                  Yes
+                </Radio>
+                <Radio value="no" style={{ display: "block" }}>
+                  No
+                </Radio>
+              </Radio.Group>
             </div>
+            {hasAllergy === "yes" && (
+              <>
+                <div className="mt-4">
+                  <label className="block text-base font-medium text-gray-700">
+                    Type of allergies
+                  </label>
+                  <div className="grid grid-cols-3 md:grid-cols-2 mt-2 gap-2">
+                    <Checkbox id="food-allergy" className="mb-2">
+                      Food Allergy
+                    </Checkbox>
+                    <Checkbox id="drug-allergy" className="mb-2">
+                      Drug Allergy
+                    </Checkbox>
+                    <Checkbox id="insect-allergy" className="mb-2">
+                      Insect Allergy
+                    </Checkbox>
+                    <Checkbox id="pollen-allergy" className="mb-2">
+                      Pollen Allergy
+                    </Checkbox>
+                    <Checkbox id="dust-allergy" className="mb-2">
+                      Dust Allergy
+                    </Checkbox>
+                    <Checkbox id="other-allergy" className="mb-2">
+                      Others
+                    </Checkbox>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="allergy-details"
+                    className="block mb-1 text-base font-medium text-gray-700"
+                  >
+                    Allergy Detail
+                  </label>
+                  <TextArea
+                    id="allergy-details"
+                    placeholder="Detailed description of allergies, including symptoms and severity"
+                    rows={4}
+                    className="rounded-md"
+                  />
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="allergy-treatment"
+                    className="block mb-1 text-base font-medium text-gray-700"
+                  >
+                    Allergy Treatment
+                  </label>
+                  <TextArea
+                    id="allergy-treatment"
+                    placeholder="Describe treatments for allergic reactions"
+                    rows={4}
+                    className="rounded-md"
+                  />
+                </div>
+              </>
+            )}
+          </Card>
+
+          {/* Chronic Card */}
+          <Card
+            title="Chronic"
+            extra="Declaration of information about students' chronic diseases"
+            className="rounded-lg shadow-md border-none"
+          >
+            <div>
+              <label className="block text-base font-medium text-gray-700">
+                Does the student have chronic?
+              </label>
+              <Radio.Group
+                onChange={(e) => setHasChronic(e.target.value)}
+                value={hasChronic}
+                className="mt-2"
+              >
+                <Radio
+                  value="yes"
+                  className="mb-3"
+                  style={{ display: "block" }}
+                >
+                  Yes
+                </Radio>
+                <Radio value="no" style={{ display: "block" }}>
+                  No
+                </Radio>
+              </Radio.Group>
+            </div>
+            {hasChronic === "yes" && (
+              <>
+                <div className="mt-4">
+                  <label className="block text-base font-medium text-gray-700">
+                    Type of chronic
+                  </label>
+                  <div className="grid grid-cols-3 md:grid-cols-2 mt-2 gap-2">
+                    <Checkbox id="asthma">Asthma</Checkbox>
+                    <Checkbox id="diabetes">Diabetes</Checkbox>
+                    <Checkbox id="epilepsy">Epilepsy</Checkbox>
+                    <Checkbox id="heart-disease">Heart Disease</Checkbox>
+                    <Checkbox id="other-chronic">Others</Checkbox>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="chronic-details"
+                    className="block mb-1 text-base font-medium text-gray-700"
+                  >
+                    Chronic disease details
+                  </label>
+                  <TextArea
+                    id="chronic-details"
+                    placeholder="Detailed description of chronic diseases, including duration and severity"
+                    rows={4}
+                    className="rounded-md"
+                  />
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="chronic-treatment"
+                    className="block mb-1 text-base font-medium text-gray-700"
+                  >
+                    Treatment
+                  </label>
+                  <TextArea
+                    id="chronic-treatment"
+                    placeholder="Describe current treatments for chronic conditions"
+                    rows={4}
+                    class四大
+                  />
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="medication"
+                    className="block mb-1 text-base font-medium text-gray-700"
+                  >
+                    Current medications
+                  </label>
+                  <TextArea
+                    id="medication"
+                    placeholder="List current medications, dosages, and frequency"
+                    rows={4}
+                    className="rounded-md"
+                  />
+                </div>
+              </>
+            )}
+          </Card>
+
+          {/* Vaccination Card */}
+          <Card
+            title="Vaccination"
+            extra="Declare information about student's vaccination history"
+            className="rounded-lg shadow-md border-none"
+          >
+            <div>
+              <label className="block text-base font-medium text-gray-700">
+                Vaccines given
+              </label>
+              <div className="grid grid-cols-6 md:grid-cols-2 mt-2 gap-2">
+                <Checkbox id="bcg">BCG (Tuberculosis)</Checkbox>
+                <Checkbox id="hepatitis-b">Hepatitis B</Checkbox>
+                <Checkbox id="dpt">
+                  DPT (Diphtheria, Whooping Cough, Tetanus)
+                </Checkbox>
+                <Checkbox id="polio">Polio</Checkbox>
+                <Checkbox id="mmr">MMR (Measles, Mumps, Rubella)</Checkbox>
+                <Checkbox id="hib">Hib (Meningitis, Pneumonia)</Checkbox>
+                <Checkbox id="chickenpox">Chickenpox</Checkbox>
+                <Checkbox id="japanese-encephalitis">
+                  Japanese encephalitis
+                </Checkbox>
+                <Checkbox id="rotavirus">Rotavirus</Checkbox>
+                <Checkbox id="hpv">HPV</Checkbox>
+                <Checkbox id="flu">Influenza</Checkbox>
+                <Checkbox id="other-vaccine">Other</Checkbox>
+              </div>
+            </div>
+            <div className="mt-4">
+              <label
+                htmlFor="vaccination-history"
+                className="block mb-1 text-base font-medium text-gray-700"
+              >
+                Vaccination History
+              </label>
+              <TextArea
+                id="vaccination-history"
+                placeholder="Enter details about your vaccination history, including vaccination date and post-vaccination reaction (if any)"
+                rows={4}
+                className="rounded-md"
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block text-base font-medium text-gray-700">
+                Has the student ever had side effects after vaccination?
+              </label>
+              <Radio.Group
+                onChange={(e) => setHadSideEffects(e.target.value)}
+                value={hadSideEffects}
+                className="mt-2"
+              >
+                <Radio
+                  value="yes"
+                  className="mb-3"
+                  style={{ display: "block" }}
+                >
+                  Yes
+                </Radio>
+                <Radio value="no" style={{ display: "block" }}>
+                  No
+                </Radio>
+              </Radio.Group>
+            </div>
+            {hadSideEffects === "yes" && (
+              <div className="mt-4">
+                <label
+                  htmlFor="vaccine-reaction-details"
+                  className="block mb-1 text-base font-medium text-gray-700"
+                >
+                  Adverse reaction details
+                </label>
+                <TextArea
+                  id="vaccine-reaction-details"
+                  placeholder="Detailed description of adverse reactions after vaccination (if any)"
+                  rows={4}
+                  className="rounded-md"
+                />
+              </div>
+            )}
+          </Card>
+
+          {/* Vision & Hearing Card */}
+          <Card
+            title="Vision & Hearing"
+            extra="Declare information about students' vision and hearing"
+            className="rounded-lg shadow-md border-none"
+          >
+            <div>
+              <label className="block text-lg font-medium text-gray-700">
+                Vision
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-7">
+                <div>
+                  <label
+                    htmlFor="left-eye"
+                    className="block mb-1 text-base font-medium text-gray-700"
+                  >
+                    Left Eye
+                  </label>
+                  <Input
+                    id="left-eye"
+                    placeholder="Enter left eye vision (eg 10/10)"
+                    className="rounded-md"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="right-eye"
+                    className="block mb-1 text-base font-medium text-gray-700"
+                  >
+                    Right Eye
+                  </label>
+                  <Input
+                    id="right-eye"
+                    placeholder="Enter right eye vision (eg 10/10)"
+                    className="rounded-md"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="mt-4">
+              <label className="block text-base font-medium text-gray-700">
+                Do students wear glasses?
+              </label>
+              <Radio.Group
+                onChange={(e) => setWearGlasses(e.target.value)}
+                value={wearGlasses}
+                className="mt-2"
+              >
+                <Radio
+                  value="yes"
+                  className="mb-3"
+                  style={{ display: "block" }}
+                >
+                  Yes
+                </Radio>
+                <Radio value="no" style={{ display: "block" }}>
+                  No
+                </Radio>
+              </Radio.Group>
+            </div>
+            {wearGlasses === "yes" && (
+              <div className="mt-4">
+                <label
+                  htmlFor="vision-notes"
+                  className="block mb-1 text-base font-medium text-gray-700"
+                >
+                  Vision Notes
+                </label>
+                <TextArea
+                  id="vision-notes"
+                  placeholder="Enter student vision notes"
+                  rows={4}
+                  className="rounded-md"
+                />
+              </div>
+            )}
+            <div className="mt-6">
+              <label className="block text-lg font-medium text-gray-700">
+                Hearing
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-7">
+                <div>
+                  <label
+                    htmlFor="left-ear"
+                    className="block mb-1 text-base font-medium text-gray-700"
+                  >
+                    Left Ear
+                  </label>
+                  <Select
+                    id="left-ear"
+                    placeholder="Select hearing level"
+                    className="w-full"
+                  >
+                    <Option value="normal">Normal</Option>
+                    <Option value="mild">Mild</Option>
+                    <Option value="moderate">Moderate</Option>
+                    <Option value="severe">Severe</Option>
+                  </Select>
+                </div>
+                <div>
+                  <label
+                    htmlFor="right-ear"
+                    className="block mb-1 text-base font-medium text-gray-700"
+                  >
+                    Right Ear
+                  </label>
+                  <Select
+                    id="right-ear"
+                    placeholder="Select hearing level"
+                    className="w-full"
+                  >
+                    <Option value="normal">Normal</Option>
+                    <Option value="mild">Mild</Option>
+                    <Option value="moderate">Moderate</Option>
+                    <Option value="severe">Severe</Option>
+                  </Select>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4">
+              <label className="block text-base font-medium text-gray-700">
+                Do students use hearing aids?
+              </label>
+              <Radio.Group
+                onChange={(e) => setUseHearingAids(e.target.value)}
+                value={useHearingAids}
+                className="mt-2"
+              >
+                <Radio
+                  value="yes"
+                  className="mb-3"
+                  style={{ display: "block" }}
+                >
+                  Yes
+                </Radio>
+                <Radio value="no" style={{ display: "block" }}>
+                  No
+                </Radio>
+              </Radio.Group>
+            </div>
+            {useHearingAids === "yes" && (
+              <div className="mt-4">
+                <label
+                  htmlFor="hearing-notes"
+                  className="block mb-1 text-base font-medium text-gray-700"
+                >
+                  Hearing Notes
+                </label>
+                <TextArea
+                  id="hearing-notes"
+                  placeholder="Enter student hearing notes"
+                  rows={4}
+                  className="rounded-md"
+                />
+              </div>
+            )}
+          </Card>
+
+          {/* Single Save Button */}
+          <div className="text-center mt-8">
+            <Button
+              type="primary"
+              icon={<SaveOutlined />}
+              onClick={handleSave}
+              className="w-full md:w-1/3 h-12 text-lg font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg transform transition-transform hover:scale-105"
+            >
+              Save All Information
+            </Button>
           </div>
-        </div>
-        <div className="flex-1 overflow-auto mt-5 ml-5 mr-5">
-          <Outlet />
         </div>
         <div className="h-[160px] w-full"></div>
       </div>
