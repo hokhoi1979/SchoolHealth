@@ -100,19 +100,29 @@ function StudentList() {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.status?.toLowerCase() === "confirm" ? (
+          {record.status?.toLowerCase() === "accepted" && (
             <p
               type="secondary"
               className="rounded-2xl w-[80px] text-[#6CC76F] font-medium "
             >
-              Confirm
+              Accept
             </p>
-          ) : (
+          )}
+          {record.status?.toLowerCase() === "pending" && (
             <p
               type="secondary"
-              className="rounded-2xl w-[80px] text-[#E26666] font-medium"
+              className="rounded-2xl w-[80px] text-[#abc600] font-medium"
             >
-              Refuse
+              Pending
+            </p>
+          )}
+
+          {record.status?.toLowerCase() === "declined" && (
+            <p
+              type="secondary"
+              className="rounded-2xl w-[80px] text-[#c93f0c] font-medium"
+            >
+              Declined
             </p>
           )}
         </Space>
