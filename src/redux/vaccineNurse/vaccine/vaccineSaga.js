@@ -2,6 +2,7 @@ import axios from "axios";
 import { call, put, takeLatest } from "redux-saga/effects";
 import { FETCH__VACCINE, fetchVaccineFail, fetchVaccineSuccess } from "./vaccineSlice";
 
+
 const URL_API=import.meta.env.VITE_API_URL;
 
 function* vaccineSaga () {

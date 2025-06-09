@@ -105,6 +105,7 @@ const SideBar = () => {
               height="30"
               viewBox="0 0 24 24"
               className="text-[#5B5454]"
+              onClick={() => navigate("/nurse")}
             >
               <path
                 fill="#5B5454"
@@ -135,6 +136,7 @@ const SideBar = () => {
               width="30"
               height="30"
               viewBox="0 0 24 24"
+              onClick={() => navigate("/nurse/materials")}
             >
               <path
                 fill="none"
@@ -169,6 +171,7 @@ const SideBar = () => {
               width="30"
               height="30"
               viewBox="0 0 24 24"
+              onClick={() => navigate("/nurse/student")}
             >
               <path
                 fill="#5B5454"
@@ -199,6 +202,7 @@ const SideBar = () => {
               width="30"
               height="30"
               viewBox="0 0 24 24"
+              onClick={() => navigate("/nurse/medicalEvent")}
             >
               <path
                 fill="#5B5454"
@@ -229,6 +233,7 @@ const SideBar = () => {
               width="30"
               height="30"
               viewBox="0 0 24 24"
+              onClick={() => navigate("/nurse/vaccine")}
             >
               <path
                 fill="none"
@@ -263,6 +268,7 @@ const SideBar = () => {
               width="30"
               height="30"
               viewBox="0 0 24 24"
+              onClick={() => navigate("/nurse/medical")}
             >
               <path
                 fill="#5B5454"

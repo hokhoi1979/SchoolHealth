@@ -4,7 +4,7 @@ import VaccineResult from "./VaccineResult";
 import SentParents from "./SentParents";
 import { useLocation, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchVaccineStudent } from "../../../redux/vaccine/vaccineByIdSlice";
+import { fetchVaccineStudent } from "../../../redux/vaccineNurse/vaccineById/vaccineByIdSlice";
 
 function StudentList() {
   // const location = useLocation();
@@ -13,11 +13,16 @@ function StudentList() {
   const [selectedOption, setSelectedOption] = useState("student");
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
+  const [healthId, setHealthId] = useState(null);
   const {
     student = [],
     loading,
     error,
   } = useSelector((state) => state.vaccineStudent);
+
+  const { profileStudent = [] } = useSelector(
+    (state) => state.fetchProfileDetail
+  );
 
   const fetchData = () => {
     dispatch(fetchVaccineStudent(id));
