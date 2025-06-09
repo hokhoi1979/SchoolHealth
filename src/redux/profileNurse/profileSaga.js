@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { FETCH__PROFILE, FETCH__PROFILE__SUCCESS, fetchProfile, fetchProfileFail, fetchProfileSuccess } from "./profileSlice";
+import { FETCH__PROFILE, fetchProfileFail, fetchProfileSuccess } from "./profileSlice";
 import axios from "axios";
 const URL_API = import.meta.env.VITE_API_URL;
 
