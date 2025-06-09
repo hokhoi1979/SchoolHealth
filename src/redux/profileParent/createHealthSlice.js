@@ -1,3 +1,4 @@
+// actions
 export const FETCH__CREATE__HEALTH = "FETCH__CREATE__HEALTH";
 export const FETCH__CREATE__HEALTH__SUCCESS = "FETCH__CREATE__HEALTH__SUCCESS";
 export const FETCH__CREATE__HEALTH__FAIL = "FETCH__CREATE__HEALTH__FAIL";
@@ -17,8 +18,9 @@ export const fetchCreateHealthFail = (error) => ({
   payload: error,
 });
 
+// reducer
 const initialState = {
-  parent: [],
+  data: null,
   loading: false,
   error: null,
 };
@@ -28,7 +30,7 @@ const createHealthReducer = (state = initialState, action) => {
     case FETCH__CREATE__HEALTH:
       return { ...state, loading: true, error: null };
     case FETCH__CREATE__HEALTH__SUCCESS:
-      return { ...state, loading: false, student: action.payload };
+      return { ...state, loading: false, data: action.payload };
     case FETCH__CREATE__HEALTH__FAIL:
       return { ...state, loading: false, error: action.payload };
     default:

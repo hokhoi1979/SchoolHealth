@@ -1,24 +1,23 @@
-export const FETCH__FORM = "FETCH_FORM";
-export const FETCH__FORM__SUCCESS = "FETCH_FORM_SUCCESS";
-export const FETCH__FORM__FAIL = "FETCH_FORM_FAIL";
+// actions
+export const FETCH__FORM = "FETCH__FORM";
+export const FETCH__FORM__SUCCESS = "FETCH__FORM__SUCCESS";
+export const FETCH__FORM__FAIL = "FETCH__FORM__FAIL";
 
-export const fetchForm = (data) => ({
-  type: FETCH__FORM,
-  payload: data,
-});
+export const fetchForm = () => ({ type: FETCH__FORM });
 
 export const fetchFormSuccess = (data) => ({
   type: FETCH__FORM__SUCCESS,
   payload: data,
 });
 
-export const fetchFormFail = (data) => ({
+export const fetchFormFail = (error) => ({
   type: FETCH__FORM__FAIL,
-  payload: data,
+  payload: error,
 });
 
+// reducer
 const initialState = {
-  parent: [],
+  formData: {},
   loading: false,
   error: null,
 };
@@ -28,11 +27,12 @@ const formReducer = (state = initialState, action) => {
     case FETCH__FORM:
       return { ...state, loading: true, error: null };
     case FETCH__FORM__SUCCESS:
-      return { ...state, loading: false, student: action.payload };
+      return { ...state, loading: false, formData: action.payload };
     case FETCH__FORM__FAIL:
       return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
 };
+
 export default formReducer;

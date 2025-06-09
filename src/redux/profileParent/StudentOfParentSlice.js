@@ -18,7 +18,7 @@ export const fetchStudentFail = (data) => ({
 });
 
 const initialState = {
-  parent: [],
+  student: [],
   loading: false,
   error: null,
 };

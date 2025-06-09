@@ -3,25 +3,116 @@ import { Button, Card, Input, Select, Radio, Checkbox, Alert } from "antd";
 import { SaveOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { AppFooter } from "../../../components/Footer/AppFooter";
-
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchStudent } from "../../../redux/profileParent/StudentOfParentSlice";
+import { fetchCreateHealth } from "../../../redux/profileParent/createHealthSlice";
+import { fetchForm } from "../../../redux/profileParent/formSlice";
+import e from "cors";
 const { TextArea } = Input;
 const { Option } = Select;
 
 const StudentHealth = () => {
+  const dispatch = useDispatch();
+
+  //API get information student
+  const { student, loading } = useSelector((state) => state.studentOfParent);
+  //API get detail form
+  const { formData, loading: formLoading } = useSelector(
+    (state) => state.formParent
+  );
+  const allergiesDetail = Array.isArray(formData?.Allergies)
+    ? formData.Allergies
+    : [];
+  const chronicDetail = Array.isArray(formData?.ChronicDiseases)
+    ? formData.ChronicDiseases
+    : [];
+  const vaccinationList = Array.isArray(formData?.Vaccination)
+    ? formData.Vaccination
+    : [];
+
+  const fetchData = () => {
+    dispatch(fetchStudent());
+    dispatch(fetchForm());
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(student);
+
   // State for save status
   const [saved, setSaved] = useState(false);
+  // State for information health
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [bloodGroup, setBloodGroup] = useState("");
+  const [treatmentHistory, setTreatmentHistory] = useState("");
+  const [additionalNote, setAddtionalNote] = useState("");
+
   // State for Allergies
   const [hasAllergy, setHasAllergy] = useState("no");
+  const [allergies, setAllergies] = useState([]);
+  const [detailAllergies, setDetailAllergies] = useState("");
+  const [methodAllergies, setMethodAllergies] = useState("");
+
   // State for Chronic
   const [hasChronic, setHasChronic] = useState("no");
-  // State for Vaccination
-  const [hadSideEffects, setHadSideEffects] = useState("no");
-  // State for Vision & Hearing
-  const [wearGlasses, setWearGlasses] = useState("no");
-  const [useHearingAids, setUseHearingAids] = useState("no");
+  const [chronicDiseases, setChronicDiseases] = useState([]);
+  const [detailChronicDiseases, setDetailChronicDiseases] = useState("");
+  const [methodChronicDiseases, setMethodChronicDiseases] = useState("");
+  const [medicationNote, setMedicationNote] = useState("");
 
-  // Single save handler
+  // State for Vaccination
+  const [selectedVaccinations, setSelectedVaccinations] = useState([]);
+  const [vaccinationHistory, setVaccinationHistory] = useState("");
+  const [hadSideEffects, setHadSideEffects] = useState("no");
+  const [detailSideEffect, setDetailSideEffect] = useState("");
+
+  // State for Vision & Hearing
+  const [visionLeft, setVisionLeft] = useState("");
+  const [visionRight, setVisionRight] = useState("");
+  const [wearGlasses, setWearGlasses] = useState("no");
+  const [noteVision, setNoteVision] = useState("");
+  const [hearingLeft, setHearingLeft] = useState("");
+  const [hearingRight, setHearingRight] = useState("");
+  const [useHearingAids, setUseHearingAids] = useState("no");
+  const [noteHearing, setNoteHearing] = useState("");
+
+  //Save function
   const handleSave = () => {
+    const payload = {
+      studentID: selectedStudent,
+      height,
+      weight,
+      bloodGroup: bloodGroup?.toUpperCase(),
+      treatmentHistory,
+      additionalNote,
+      hasNoAllergies: hasAllergy === "no",
+      selectedAllergyIds: allergies,
+      detailAllergies,
+      methodAllergies,
+      hasNochronicDiseases: hasChronic === "no",
+      selectedChronicDiseases: chronicDiseases,
+      detailChronicDiseases,
+      methodChronicDiseases,
+      medicationNote,
+      visionLeft,
+      visionRight,
+      wearGlasses: wearGlasses === "yes",
+      noteVision,
+      hearingLeft,
+      hearingRight,
+      hearingAid: useHearingAids === "yes", // CHỈNH CHỮ BOOLEAN
+      noteHearing,
+      selectedVaccinations,
+      vaccinationHistory,
+      sideEffect: hadSideEffects === "yes",
+      detailSideEffect,
+    };
+    dispatch(fetchCreateHealth(payload));
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
@@ -67,35 +158,16 @@ const StudentHealth = () => {
                 id="student"
                 placeholder="Choose your student"
                 className="w-full"
+                loading={loading}
+                onChange={(v) => setSelectedStudent(v)}
               >
-                <Option value="1">
-                  <div className="flex gap-4">
-                    <p>SE12</p>
-                    <p>Ngo Phung Gia Khanh</p>
-                    <p>123</p>
-                  </div>
-                </Option>
-                <Option value="2">
-                  <div className="flex gap-4">
-                    <p>SE14</p>
-                    <p>Vu Minh Duc</p>
-                    <p className="ml-14">123</p>
-                  </div>
-                </Option>
-                <Option value="3">
-                  <div className="flex gap-4">
-                    <p>SE15</p>
-                    <p>Ho Vu Khoi</p>
-                    <p className="ml-17">123</p>
-                  </div>
-                </Option>
-                <Option value="4">
-                  <div className="flex gap-4">
-                    <p>SE16</p>
-                    <p>Pham Nguyen Khoa</p>
-                    <p className="ml-4">123</p>
-                  </div>
-                </Option>
+                {student?.map((s) => (
+                  <Option key={s.id} value={s.id}>
+                    {`${s.account?.fullname} - ${s.student_code} (${
+                      s.classAssignments?.[0]?.class?.name || "No Class"
+                    })`}
+                  </Option>
+                ))}
               </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
@@ -107,9 +179,9 @@ const StudentHealth = () => {
                   Height (cm)
                 </label>
                 <Input
-                  id="height"
-                  type="number"
                   placeholder="Enter your height"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
                   className="rounded-md"
                 />
               </div>
@@ -121,9 +193,9 @@ const StudentHealth = () => {
                   Weight (kg)
                 </label>
                 <Input
-                  id="weight"
-                  type="number"
                   placeholder="Enter your weight"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
                   className="rounded-md"
                 />
               </div>
@@ -135,8 +207,9 @@ const StudentHealth = () => {
                   Blood Type
                 </label>
                 <Select
-                  id="blood-type"
                   placeholder="Enter your blood type"
+                  value={bloodGroup}
+                  onChange={setBloodGroup}
                   className="w-full"
                 >
                   <Option value="a">A</Option>
@@ -155,8 +228,9 @@ const StudentHealth = () => {
                 Treatment history
               </label>
               <TextArea
-                id="medical-history"
                 placeholder="Enter information about previously treated diseases"
+                value={treatmentHistory}
+                onChange={(e) => setTreatmentHistory(e.target.value)}
                 rows={4}
                 className="rounded-md"
               />
@@ -169,8 +243,9 @@ const StudentHealth = () => {
                 Notes
               </label>
               <TextArea
-                id="special-notes"
                 placeholder="Enter special notes about student health"
+                value={additionalNote}
+                onChange={(e) => setAddtionalNote(e.target.value)}
                 rows={4}
                 className="rounded-md"
               />
@@ -211,24 +286,29 @@ const StudentHealth = () => {
                     Type of allergies
                   </label>
                   <div className="grid grid-cols-3 md:grid-cols-2 mt-2 gap-2">
-                    <Checkbox id="food-allergy" className="mb-2">
-                      Food Allergy
-                    </Checkbox>
-                    <Checkbox id="drug-allergy" className="mb-2">
-                      Drug Allergy
-                    </Checkbox>
-                    <Checkbox id="insect-allergy" className="mb-2">
-                      Insect Allergy
-                    </Checkbox>
-                    <Checkbox id="pollen-allergy" className="mb-2">
-                      Pollen Allergy
-                    </Checkbox>
-                    <Checkbox id="dust-allergy" className="mb-2">
-                      Dust Allergy
-                    </Checkbox>
-                    <Checkbox id="other-allergy" className="mb-2">
-                      Others
-                    </Checkbox>
+                    {formLoading ? (
+                      <p className="text-gray-500">
+                        Loading allergy options...
+                      </p>
+                    ) : (
+                      <Checkbox.Group
+                        value={allergies}
+                        onChange={setAllergies}
+                        className="mb-2"
+                      >
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
+                          {allergiesDetail.map((item) => (
+                            <Checkbox
+                              key={item.id}
+                              value={item.id}
+                              className="text-gray-800"
+                            >
+                              {item.name}
+                            </Checkbox>
+                          ))}
+                        </div>
+                      </Checkbox.Group>
+                    )}
                   </div>
                 </div>
                 <div className="mt-4">
@@ -239,8 +319,9 @@ const StudentHealth = () => {
                     Allergy Detail
                   </label>
                   <TextArea
-                    id="allergy-details"
                     placeholder="Detailed description of allergies, including symptoms and severity"
+                    value={detailAllergies}
+                    onChange={(e) => setDetailAllergies(e.target.value)}
                     rows={4}
                     className="rounded-md"
                   />
@@ -253,8 +334,9 @@ const StudentHealth = () => {
                     Allergy Treatment
                   </label>
                   <TextArea
-                    id="allergy-treatment"
                     placeholder="Describe treatments for allergic reactions"
+                    value={methodAllergies}
+                    onChange={(e) => setMethodAllergies(e.target.value)}
                     rows={4}
                     className="rounded-md"
                   />
@@ -297,11 +379,29 @@ const StudentHealth = () => {
                     Type of chronic
                   </label>
                   <div className="grid grid-cols-3 md:grid-cols-2 mt-2 gap-2">
-                    <Checkbox id="asthma">Asthma</Checkbox>
-                    <Checkbox id="diabetes">Diabetes</Checkbox>
-                    <Checkbox id="epilepsy">Epilepsy</Checkbox>
-                    <Checkbox id="heart-disease">Heart Disease</Checkbox>
-                    <Checkbox id="other-chronic">Others</Checkbox>
+                    {formLoading ? (
+                      <p className="text-gray-500">
+                        Loading allergy options...
+                      </p>
+                    ) : (
+                      <Checkbox.Group
+                        value={chronicDiseases}
+                        onChange={setChronicDiseases}
+                        className="mb-2"
+                      >
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
+                          {chronicDetail.map((item) => (
+                            <Checkbox
+                              key={item.id}
+                              value={item.id}
+                              className="text-gray-800"
+                            >
+                              {item.name}
+                            </Checkbox>
+                          ))}
+                        </div>
+                      </Checkbox.Group>
+                    )}
                   </div>
                 </div>
                 <div className="mt-4">
@@ -312,8 +412,9 @@ const StudentHealth = () => {
                     Chronic disease details
                   </label>
                   <TextArea
-                    id="chronic-details"
                     placeholder="Detailed description of chronic diseases, including duration and severity"
+                    value={detailChronicDiseases}
+                    onChange={(e) => setDetailChronicDiseases(e.target.value)}
                     rows={4}
                     className="rounded-md"
                   />
@@ -326,10 +427,10 @@ const StudentHealth = () => {
                     Treatment
                   </label>
                   <TextArea
-                    id="chronic-treatment"
                     placeholder="Describe current treatments for chronic conditions"
+                    value={methodChronicDiseases}
+                    onChange={(e) => setMethodChronicDiseases(e.target.value)}
                     rows={4}
-                    class四大
                   />
                 </div>
                 <div className="mt-4">
@@ -340,8 +441,9 @@ const StudentHealth = () => {
                     Current medications
                   </label>
                   <TextArea
-                    id="medication"
                     placeholder="List current medications, dosages, and frequency"
+                    value={medicationNote}
+                    onChange={(e) => setMedicationNote(e.target.value)}
                     rows={4}
                     className="rounded-md"
                   />
@@ -361,22 +463,29 @@ const StudentHealth = () => {
                 Vaccines given
               </label>
               <div className="grid grid-cols-6 md:grid-cols-2 mt-2 gap-2">
-                <Checkbox id="bcg">BCG (Tuberculosis)</Checkbox>
-                <Checkbox id="hepatitis-b">Hepatitis B</Checkbox>
-                <Checkbox id="dpt">
-                  DPT (Diphtheria, Whooping Cough, Tetanus)
-                </Checkbox>
-                <Checkbox id="polio">Polio</Checkbox>
-                <Checkbox id="mmr">MMR (Measles, Mumps, Rubella)</Checkbox>
-                <Checkbox id="hib">Hib (Meningitis, Pneumonia)</Checkbox>
-                <Checkbox id="chickenpox">Chickenpox</Checkbox>
-                <Checkbox id="japanese-encephalitis">
-                  Japanese encephalitis
-                </Checkbox>
-                <Checkbox id="rotavirus">Rotavirus</Checkbox>
-                <Checkbox id="hpv">HPV</Checkbox>
-                <Checkbox id="flu">Influenza</Checkbox>
-                <Checkbox id="other-vaccine">Other</Checkbox>
+                {formLoading ? (
+                  <p className="text-gray-500">
+                    Loading vaccination options...
+                  </p>
+                ) : (
+                  <Checkbox.Group
+                    value={selectedVaccinations}
+                    onChange={setSelectedVaccinations}
+                    className="mb-2"
+                  >
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
+                      {vaccinationList.map((item) => (
+                        <Checkbox
+                          key={item.id}
+                          value={item.id}
+                          className="text-gray-800"
+                        >
+                          {item.name}
+                        </Checkbox>
+                      ))}
+                    </div>
+                  </Checkbox.Group>
+                )}
               </div>
             </div>
             <div className="mt-4">
@@ -387,8 +496,9 @@ const StudentHealth = () => {
                 Vaccination History
               </label>
               <TextArea
-                id="vaccination-history"
                 placeholder="Enter details about your vaccination history, including vaccination date and post-vaccination reaction (if any)"
+                value={vaccinationHistory}
+                onChange={(e) => setVaccinationHistory(e.target.value)}
                 rows={4}
                 className="rounded-md"
               />
@@ -423,8 +533,9 @@ const StudentHealth = () => {
                   Adverse reaction details
                 </label>
                 <TextArea
-                  id="vaccine-reaction-details"
                   placeholder="Detailed description of adverse reactions after vaccination (if any)"
+                  value={detailSideEffect}
+                  onChange={(e) => setDetailSideEffect(e.target.value)}
                   rows={4}
                   className="rounded-md"
                 />
@@ -451,8 +562,9 @@ const StudentHealth = () => {
                     Left Eye
                   </label>
                   <Input
-                    id="left-eye"
                     placeholder="Enter left eye vision (eg 10/10)"
+                    value={visionLeft}
+                    onChange={(e) => setVisionLeft(e.target.value)}
                     className="rounded-md"
                   />
                 </div>
@@ -464,8 +576,9 @@ const StudentHealth = () => {
                     Right Eye
                   </label>
                   <Input
-                    id="right-eye"
                     placeholder="Enter right eye vision (eg 10/10)"
+                    value={visionRight}
+                    onChange={(e) => setVisionRight(e.target.value)}
                     className="rounded-md"
                   />
                 </div>
@@ -501,8 +614,9 @@ const StudentHealth = () => {
                   Vision Notes
                 </label>
                 <TextArea
-                  id="vision-notes"
                   placeholder="Enter student vision notes"
+                  value={noteVision}
+                  onChange={(e) => setNoteVision(e.target.value)}
                   rows={4}
                   className="rounded-md"
                 />
@@ -521,8 +635,9 @@ const StudentHealth = () => {
                     Left Ear
                   </label>
                   <Select
-                    id="left-ear"
                     placeholder="Select hearing level"
+                    value={hearingLeft}
+                    onChange={(e) => setHearingLeft(e.target.value)}
                     className="w-full"
                   >
                     <Option value="normal">Normal</Option>
@@ -539,8 +654,9 @@ const StudentHealth = () => {
                     Right Ear
                   </label>
                   <Select
-                    id="right-ear"
                     placeholder="Select hearing level"
+                    value={hearingRight}
+                    onChange={(e) => setHearingRight(e.target.value)}
                     className="w-full"
                   >
                     <Option value="normal">Normal</Option>
@@ -581,8 +697,9 @@ const StudentHealth = () => {
                   Hearing Notes
                 </label>
                 <TextArea
-                  id="hearing-notes"
                   placeholder="Enter student hearing notes"
+                  value={noteHearing}
+                  onChange={(e) => setNoteHearing(e.target.value)}
                   rows={4}
                   className="rounded-md"
                 />

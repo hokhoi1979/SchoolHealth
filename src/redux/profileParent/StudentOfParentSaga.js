@@ -12,12 +12,12 @@ function* StudentOfParentSaga() {
     const token = localStorage.getItem("accessToken");
     const response = yield call(axios.get, `${URL_API}/parent/v1/student`, {
       headers: {
-        Authorization: `${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
     if (response.status === 200 || response.status === 201) {
-      yield put(fetchStudentSuccess(response.data.result));
+      yield put(fetchStudentSuccess(response.data.data));
     } else {
       yield put(fetchStudentFail(`API Error: ${response.status}`));
     }
