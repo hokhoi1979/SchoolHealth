@@ -4,12 +4,35 @@ import React, { useEffect, useState } from "react";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { Link, Outlet } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVaccine } from "../../../redux/vaccineNurse/vaccine/vaccineSlice";
 
 const VaccineNurse = () => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const [click, setClick] = useState("vaccineDay");
+  const [event, setEvent] = useState(null);
+  const dispatch = useDispatch();
+  const { vaccine = [], error } = useSelector((state) => state.vaccine);
+
+  useEffect(() => {
+    dispatch(fetchVaccine());
+  }, [dispatch]);
+
+  useEffect(() => {
+    formatData();
+  }, [vaccine]);
+
+  const formatData = () => {
+    if (
+      vaccine?.data?.vaccinationEvents &&
+      Array.isArray(vaccine?.data?.vaccinationEvents)
+    ) {
+      const length = vaccine.data.vaccinationEvents.length;
+      setEvent(length);
+    }
+  };
 
   const showModal = () => {
     setOpen(true);
@@ -40,7 +63,7 @@ const VaccineNurse = () => {
           <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
             <div className="h-[120px] bg-white rounded-2xl">
               <p className="flex justify-center mt-5">Total Vaccination</p>
-              <p className="flex justify-center text-[50px]">40</p>
+              <p className="flex justify-center text-[50px]">{event}</p>
             </div>
             <div className="h-[120px] bg-white rounded-2xl">
               <p className="flex justify-center mt-5">Sick student</p>

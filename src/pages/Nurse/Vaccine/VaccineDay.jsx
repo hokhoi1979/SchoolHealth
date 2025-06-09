@@ -1,10 +1,12 @@
 import { Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { fetchVaccine } from "../../../redux/vaccine/vaccineSlice";
+
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import Item from "antd/es/list/Item";
+import { fetchVaccine } from "../../../redux/vaccineNurse/vaccine/vaccineSlice";
+
 function VaccineDay() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);

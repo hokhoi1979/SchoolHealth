@@ -2,7 +2,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { FETCH__VACCINE__STUDENT, fetchVaccineStudentFail, fetchVaccineStudentSucess } from "./vaccineByIdSlice";
 import axios from "axios";
 
-const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const URL_API = import.meta.env.VITE_API_URL;
 
 
 function* vaccineStudentSaga (action){
@@ -17,8 +17,6 @@ function* vaccineStudentSaga (action){
         });
 
         if(response.status === 200 || response.status === 201){
-            console.log(response.data); 
-
             yield put(fetchVaccineStudentSucess(response.data))
         }
         else{

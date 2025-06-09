@@ -36,6 +36,8 @@ function Login() {
         navigate("/manager");
       } else if (user?.roleID === 1) {
         navigate("");
+      } else {
+        navigate("/parent");
       }
     }
   }, [user]);
