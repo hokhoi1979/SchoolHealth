@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import logo from "../../img/icon.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import bs from "../../img/bs.png";
+import { logout } from "../../redux/auth/authSlice";
+import { useDispatch } from "react-redux";
 const SideBarManager = () => {
   const [click, setClick] = useState("");
   const [toggle, setToggle] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleToggle = () => {
     setToggle((pre) => !pre);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    dispatch(logout());
+    navigate("/login");
   };
   return (
     <>
@@ -276,6 +285,12 @@ const SideBarManager = () => {
               toggle && "justify-center w-full"
             } hover:bg-[#EFEEEE] `}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              const confirmed = window.confirm("Do you want to logout?");
+              if (confirmed) {
+                handleLogout();
+              }
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
