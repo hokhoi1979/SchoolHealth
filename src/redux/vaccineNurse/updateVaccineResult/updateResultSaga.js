@@ -3,12 +3,11 @@ import { UPDATE__RESULT__VACCINE, updateVaccineResultFail, updateVaccineResultSu
 import axios from "axios";
 
 const URL_API = import.meta.env.VITE_API_URL;
-function* updateVaccineSaga ({IdVaccine, bodyVaccine}){
+function* updateVaccineSaga(action) {
     try {
         const token = localStorage.getItem("accessToken");
-        const id = IdVaccine;
-        const body =bodyVaccine;
-        const response = yield call(axios.post,`${URL_API}/nurse/v1/${id}/result`,body,
+        const { IdVaccine, bodyVaccine } = action.payload;
+        const response = yield call(axios.post,`${URL_API}/nurse/v1/${IdVaccine}/result`,bodyVaccine,
             {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -24,7 +23,7 @@ function* updateVaccineSaga ({IdVaccine, bodyVaccine}){
         }
     } catch (error) {
         yield put(updateVaccineResultFail(error?.response?.data?.message || error.message || "Unknown error"))
-        console.log("Chưa đến thời gian tiêm chủng, không thể ghi nhận kết quả.")
+
     }
 }
 

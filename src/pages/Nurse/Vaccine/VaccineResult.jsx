@@ -1,34 +1,40 @@
 import { Button, Checkbox, Input, Select, Table } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import { Option } from "antd/es/mentions";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateVaccineResult } from "../../../redux/vaccineNurse/updateVaccineResult/updateResultSlice";
 
-function VaccineResult() {
+const { Option } = Select;
+
+function VaccineResult({ studentList }) {
   const [start, setStart] = useState(true);
+  const [dataRecord, setDataRecord] = useState([]);
   const dispatch = useDispatch();
   const { updateVaccine = [], error } = useSelector(
     (state) => state.updateVaccineResult
   );
 
-  const [dataRecord, setDataRecord] = useState([
-    {
-      id: "102",
-      key: "1",
-      note: "Tiêm bình thường",
-      result: "Không có",
-      status: true,
-    },
-    {
-      id: "103",
-      key: "2",
-      note: "Sốt nhẹ sau tiêm, đã hạ sốt",
-      result: "Nhẹ",
-      status: true,
-    },
-  ]);
+  useEffect(() => {
+    if (studentList && Array.isArray(studentList)) {
+      const filtered = studentList.filter(
+        (item) => item.status?.toUpperCase() === "ACCEPTED"
+      );
 
+      const formatted = filtered.map((item, index) => ({
+        key: index.toString(),
+        idStudent: item.studentId,
+        idVaccine: item?.idVaccine,
+        id: item?.id,
+        name: item.student,
+        grade: item.grade,
+        vaccinated: false,
+        result: "Tốt",
+        note: "",
+      }));
+
+      setDataRecord(formatted);
+    }
+  }, [studentList]);
+  console.log("DATA", dataRecord);
   const handleCheckboxChange = (key, checked) => {
     setDataRecord((prev) =>
       prev.map((item) =>
@@ -37,25 +43,71 @@ function VaccineResult() {
     );
   };
 
+  const handleNoteChange = (key, value) => {
+    setDataRecord((prev) =>
+      prev.map((item) => (item.key === key ? { ...item, note: value } : item))
+    );
+  };
+
+  const handleResultChange = (key, value) => {
+    setDataRecord((prev) =>
+      prev.map((item) => (item.key === key ? { ...item, result: value } : item))
+    );
+  };
+
+  const handleSendResult = () => {
+    const resultMap = {
+      Tốt: "GOOD",
+      Nhẹ: "MILD",
+      Nặng: "SEVERE",
+    };
+
+    if (dataRecord.length === 0) {
+      console.error("Không có dữ liệu để gửi");
+      return;
+    }
+
+    const idVaccine = dataRecord[0]?.idVaccine;
+
+    if (!idVaccine) {
+      console.error("Không tìm thấy idVaccine");
+      return;
+    }
+
+    const format = dataRecord.map((item) => ({
+      id: item.id,
+      status: item.vaccinated ? "SUCCESS" : "FAILED",
+      note: item.note,
+      result: resultMap[item.result] || "GOOD",
+    }));
+
+    console.log("Gửi dữ liệu POST:", format);
+    console.log("ID Vaccine:", idVaccine);
+
+    dispatch(
+      updateVaccineResult({ IdVaccine: idVaccine, bodyVaccine: format })
+    );
+  };
+
   const columnsRecord = [
     {
-      title: "studentID",
-      dataIndex: "id",
-      render: (text, record) => <p className="font-semibold">{record.id}</p>,
+      title: "Student ID",
+      dataIndex: "idStudent",
+      render: (text) => <p className="font-semibold">{text}</p>,
     },
-    // {
-    //   title: "Student",
-    //   dataIndex: "name",
-    //   render: (text, record) => (
-    //     <div>
-    //       <p className="font-semibold">{record.name}</p>
-    //       <p className="text-xs text-gray-500">{record.class}</p>
-    //     </div>
-    //   ),
-    // },
+    {
+      title: "Student Name",
+      dataIndex: "name",
+      render: (text) => <p>{text}</p>,
+    },
+    {
+      title: "Grade",
+      dataIndex: "grade",
+      render: (text) => <p>{text}</p>,
+    },
     {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "vaccinated",
       render: (text, record) => (
         <Checkbox
           checked={record.vaccinated}
@@ -74,7 +126,7 @@ function VaccineResult() {
           className="w-full"
           onChange={(value) => handleResultChange(record.key, value)}
         >
-          <Option value="Không có">Không có</Option>
+          <Option value="Tốt">Tốt</Option>
           <Option value="Nhẹ">Nhẹ</Option>
           <Option value="Nặng">Nặng</Option>
         </Select>
@@ -85,7 +137,6 @@ function VaccineResult() {
       dataIndex: "note",
       render: (text, record) => (
         <Input
-          defaultValue={text}
           placeholder="Nhập ghi chú"
           value={record.note}
           onChange={(e) => handleNoteChange(record.key, e.target.value)}
@@ -94,61 +145,28 @@ function VaccineResult() {
     },
   ];
 
-  const handleNoteChange = (key, value) => {
-    setDataRecord((prev) =>
-      prev.map((item) => (item.key === key ? { ...item, note: value } : item))
-    );
-  };
-
-  const handleResultChange = (key, value) => {
-    setDataRecord((prev) =>
-      prev.map((item) => (item.key === key ? { ...item, result: value } : item))
-    );
-  };
-
-  const handleSendResult = () => {
-    const format = dataRecord.map((item) => {
-      return {
-        studentID: item.id,
-        status: item.status,
-        note: item.note,
-        result: item.result,
-      };
-    });
-    dispatch(updateVaccineResult({ IdVaccine: 1, bodyVaccine: format }));
-    console.log("HOHO", format);
-  };
-
-  useEffect(() => {
-    console.log("KHOIIOIO", updateVaccine);
-  }, []);
-
   return (
     <div className="w-full">
       <div className="flex justify-between mt-2">
         <div></div>
-        <div className="">
+        <div>
           <Button
             type="secondary"
-            className="!bg-black hover:!bg-gray-600  !text-white"
+            className="!bg-black hover:!bg-gray-600 !text-white"
             onClick={() => setStart(true)}
           >
             Start Vaccination
           </Button>
         </div>
       </div>
-      {error && (
-        <>
-          <p className="text-red-500">{error}</p>
-        </>
-      )}
+
+      {error && <p className="text-red-500">{error}</p>}
+
       <div className="w-full bg-white rounded-xl p-5 mt-5">
-        <div>
-          <h1 className="font-serif text-2xl">Recording Vaccination Results</h1>
-          <p className="font-serif text-[12px] text-gray-500">
-            Update vaccination results and monitor post-vaccination reactions
-          </p>
-        </div>
+        <h1 className="font-serif text-2xl">Recording Vaccination Results</h1>
+        <p className="font-serif text-sm text-gray-500">
+          Update vaccination results and monitor post-vaccination reactions
+        </p>
 
         {start ? (
           <>
@@ -167,31 +185,27 @@ function VaccineResult() {
                 className="mt-2"
               />
             </div>
-            <div className="flex justify-between mt-5">
-              <div></div>
-              <div className="flex gap-5">
-                <Button
-                  className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif "
-                  type="secondary"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className="!bg-[#6CC76F] !p-2 w-[100px] hover:!bg-[#3BB32B] !text-white !font-serif "
-                  type="secondary"
-                  onClick={handleSendResult}
-                >
-                  Send Result
-                </Button>
-              </div>
+
+            <div className="flex justify-end mt-5 gap-5">
+              <Button
+                className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
+                type="secondary"
+              >
+                Cancel
+              </Button>
+              <Button
+                className="!bg-[#6CC76F] w-[100px] !p-2 hover:!bg-[#3BB32B] !text-white !font-serif"
+                type="secondary"
+                onClick={handleSendResult}
+              >
+                Send Result
+              </Button>
             </div>
           </>
         ) : (
-          <>
-            <div className="flex justify-center">
-              <p className="text-3xl text-gray-500">No Data</p>
-            </div>
-          </>
+          <div className="flex justify-center mt-10">
+            <p className="text-3xl text-gray-500">No Data</p>
+          </div>
         )}
       </div>
     </div>

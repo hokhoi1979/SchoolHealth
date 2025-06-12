@@ -17,6 +17,7 @@ function* vaccineStudentSaga (action){
         });
 
         if(response.status === 200 || response.status === 201){
+            console.log("BYID",response.data)
             yield put(fetchVaccineStudentSucess(response.data))
         }
         else{

@@ -1,24 +1,28 @@
 import { Button, Modal, Space, Table } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVaccineResult } from "../../../redux/vaccineNurse/vaccineResult/vaccineResultSlice";
 import { postResultVaccine } from "../../../redux/vaccineNurse/sendResult/sendResultSlice";
 
-function SentParents() {
+function SentParents({ studentList }) {
+  const [idVaccine, setIdVaccine] = useState(null);
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
+  const [mainData, setMainData] = useState([]); // Dữ liệu bảng chính
+  const [modalData, setModalData] = useState([]); // Dữ liệu trong modal
+  const [sending, setSending] = useState(false); // loading gửi
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (studentList && studentList.length > 0) {
+      setIdVaccine(studentList[0].idVaccine);
+    }
+  }, [studentList]);
 
   const {
     result = [],
     loading,
     error,
   } = useSelector((state) => state.vaccineResult);
-
-  const { resultVaccine = [] } = useSelector(
-    (state) => state.sendVaccineResult
-  );
 
   useEffect(() => {
     dispatch(fetchVaccineResult(1));
@@ -35,14 +39,34 @@ function SentParents() {
         kq: item?.result,
         updatedAt: item?.updatedAt,
         note: item?.note,
+        sent: item?.status?.toLowerCase() === "success", // hoặc nếu có field "sent" từ backend thì dùng item.sent
       }));
-      setData(formatted);
+      setMainData(formatted);
     }
   }, [result]);
 
-  const handleSendResult = () => {
-    dispatch(postResultVaccine(1));
-    console.log("POST", resultVaccine);
+  const handleOpenModal = () => {
+    setModalData(mainData);
+    setOpen(true);
+  };
+
+  const handleSendResult = async () => {
+    if (!idVaccine) return;
+    setSending(true);
+    try {
+      await dispatch(postResultVaccine(idVaccine));
+      await dispatch(fetchVaccineResult(1));
+      setOpen(false); // đóng modal sau khi gửi xong
+    } catch (error) {
+      console.error("Send failed", error);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+    setModalData([]);
   };
 
   const columnStudent = [
@@ -149,14 +173,20 @@ function SentParents() {
     },
     {
       title: "Send result",
-      dataIndex: "send",
-      key: "send",
+      dataIndex: "sent",
+      key: "sent",
       align: "center",
-      render: () => (
+      render: (sent) => (
         <Space>
-          <p className="rounded-2xl w-[80px] p-1 bg-[#E26666] text-white">
-            Not sent
-          </p>
+          {sent ? (
+            <p className="rounded-2xl w-[80px] p-1 bg-[#6CC76F] text-white">
+              Sent
+            </p>
+          ) : (
+            <p className="rounded-2xl w-[80px] p-1 bg-[#E26666] text-white">
+              Not sent
+            </p>
+          )}
         </Space>
       ),
     },
@@ -170,7 +200,7 @@ function SentParents() {
           <Button
             type="secondary"
             className="!bg-black hover:!bg-gray-600 w-[255px]"
-            onClick={() => setOpen(true)}
+            onClick={handleOpenModal}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -192,17 +222,13 @@ function SentParents() {
         <Table
           className="mt-5 w-full"
           columns={columns}
-          dataSource={data}
+          dataSource={mainData}
           loading={loading}
+          rowKey="id"
         />
       </div>
 
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        footer={null}
-        width="60%"
-      >
+      <Modal open={open} onCancel={handleCancel} footer={null} width="60%">
         <h1 className="text-2xl font-serif flex justify-center">
           Send Vaccination Results
         </h1>
@@ -210,22 +236,29 @@ function SentParents() {
           Send vaccination results to parents
         </p>
 
-        <Table dataSource={data} columns={columnStudent} pagination={false} />
+        <Table
+          dataSource={modalData}
+          columns={columnStudent}
+          pagination={false}
+          rowKey="id"
+        />
 
         <div className="flex justify-between mt-5">
           <div></div>
           <div className="flex gap-5">
             <Button
               className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
-              onClick={() => setOpen(false)}
+              onClick={handleCancel}
             >
               Cancel
             </Button>
             <Button
-              className="!bg-[#6CC76F] !p-2 w-[100px] hover:!bg-[#3BB32B] !text-white !font-serif"
+              className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
               onClick={handleSendResult}
+              loading={sending}
+              disabled={sending}
             >
-              Send Result
+              {sending ? "Sending..." : "Send Result"}
             </Button>
           </div>
         </div>
