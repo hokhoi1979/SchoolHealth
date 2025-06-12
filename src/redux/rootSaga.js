@@ -1,8 +1,6 @@
 import { all } from "redux-saga/effects";
 import watchFetchLogin from "./auth/authSaga";
 import watchFetchProfile from "./profileNurse/profileSaga";
-import watchFetchVaccine from "./vaccine/vaccineSaga";
-import watchFetchVaccineStudent from "./vaccine/vaccineByIdSaga";
 import watchFetchParentProfile from "./profileParent/profileSaga";
 import watchFetchStudentOfParent from "./profileParent/StudentOfParentSaga";
 import watchFetchParentForm from "./profileParent/formSaga";
@@ -26,5 +24,19 @@ export default function* rootSaga() {
     watchFetchUpdateHealth(),
     watchFetchVaccineParent(),
     watchFetchVaccineParentResult(),
+    //Manager
+    watchFetchManagerMedical(),
+    watchPostManagerVaccine(),
+    watchFetchVaccineManager(),
+    watchPutVaccineManager(),
+    watchFetchClassManager(),
+    watchPatchVaccineManager(),
+
+    // watchFetchVaccineResult(),
+    watchFetchVaccineResult(),
+    watchPostResultSaga(),
+    watchFetchCheckup(),
+    watchUpdateVaccineResult(),
+    watchFetchProfileDetail(),
   ]);
 }

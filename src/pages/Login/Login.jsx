@@ -38,6 +38,8 @@ function Login() {
         navigate("/admin");
       }
       if (user?.roleID === 4) {
+        navigate("");
+      } else {
         navigate("/parent");
       }
     }

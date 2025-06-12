@@ -1,26 +1,31 @@
 import { Button, Checkbox, Input, Select, Table } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateVaccineResult } from "../../../redux/vaccineNurse/updateVaccineResult/updateResultSlice";
 
 function VaccineResult() {
-  const [start, setStart] = useState(false);
+  const [start, setStart] = useState(true);
+  const dispatch = useDispatch();
+  const { updateVaccine = [], error } = useSelector(
+    (state) => state.updateVaccineResult
+  );
+
   const [dataRecord, setDataRecord] = useState([
     {
-      id: "SE182629",
+      id: "102",
       key: "1",
-      name: "Nguyễn Văn An",
-      class: "Lớp 1A",
       note: "Tiêm bình thường",
-      vaccinated: true,
+      result: "Không có",
+      status: true,
     },
     {
-      id: "SE182630",
+      id: "103",
       key: "2",
-      name: "Trần Thị Bình",
-      class: "Lớp 1A",
       note: "Sốt nhẹ sau tiêm, đã hạ sốt",
-      vaccinated: true,
+      result: "Nhẹ",
+      status: true,
     },
   ]);
 
@@ -34,23 +39,23 @@ function VaccineResult() {
 
   const columnsRecord = [
     {
-      title: "ID",
+      title: "studentID",
       dataIndex: "id",
       render: (text, record) => <p className="font-semibold">{record.id}</p>,
     },
-    {
-      title: "Student",
-      dataIndex: "name",
-      render: (text, record) => (
-        <div>
-          <p className="font-semibold">{record.name}</p>
-          <p className="text-xs text-gray-500">{record.class}</p>
-        </div>
-      ),
-    },
+    // {
+    //   title: "Student",
+    //   dataIndex: "name",
+    //   render: (text, record) => (
+    //     <div>
+    //       <p className="font-semibold">{record.name}</p>
+    //       <p className="text-xs text-gray-500">{record.class}</p>
+    //     </div>
+    //   ),
+    // },
     {
       title: "Status",
-      dataIndex: "vaccinated",
+      dataIndex: "status",
       render: (text, record) => (
         <Checkbox
           checked={record.vaccinated}
@@ -61,10 +66,14 @@ function VaccineResult() {
       ),
     },
     {
-      title: "React",
-      dataIndex: "reaction",
-      render: () => (
-        <Select defaultValue="Không có" className="w-full">
+      title: "Result",
+      dataIndex: "result",
+      render: (text, record) => (
+        <Select
+          value={record.result}
+          className="w-full"
+          onChange={(value) => handleResultChange(record.key, value)}
+        >
           <Option value="Không có">Không có</Option>
           <Option value="Nhẹ">Nhẹ</Option>
           <Option value="Nặng">Nặng</Option>
@@ -75,10 +84,44 @@ function VaccineResult() {
       title: "Note",
       dataIndex: "note",
       render: (text, record) => (
-        <Input defaultValue={text} placeholder="Nhập ghi chú" />
+        <Input
+          defaultValue={text}
+          placeholder="Nhập ghi chú"
+          value={record.note}
+          onChange={(e) => handleNoteChange(record.key, e.target.value)}
+        />
       ),
     },
   ];
+
+  const handleNoteChange = (key, value) => {
+    setDataRecord((prev) =>
+      prev.map((item) => (item.key === key ? { ...item, note: value } : item))
+    );
+  };
+
+  const handleResultChange = (key, value) => {
+    setDataRecord((prev) =>
+      prev.map((item) => (item.key === key ? { ...item, result: value } : item))
+    );
+  };
+
+  const handleSendResult = () => {
+    const format = dataRecord.map((item) => {
+      return {
+        studentID: item.id,
+        status: item.status,
+        note: item.note,
+        result: item.result,
+      };
+    });
+    dispatch(updateVaccineResult({ IdVaccine: 1, bodyVaccine: format }));
+    console.log("HOHO", format);
+  };
+
+  useEffect(() => {
+    console.log("KHOIIOIO", updateVaccine);
+  }, []);
 
   return (
     <div className="w-full">
@@ -94,6 +137,11 @@ function VaccineResult() {
           </Button>
         </div>
       </div>
+      {error && (
+        <>
+          <p className="text-red-500">{error}</p>
+        </>
+      )}
       <div className="w-full bg-white rounded-xl p-5 mt-5">
         <div>
           <h1 className="font-serif text-2xl">Recording Vaccination Results</h1>
@@ -131,6 +179,7 @@ function VaccineResult() {
                 <Button
                   className="!bg-[#6CC76F] !p-2 w-[100px] hover:!bg-[#3BB32B] !text-white !font-serif "
                   type="secondary"
+                  onClick={handleSendResult}
                 >
                   Send Result
                 </Button>

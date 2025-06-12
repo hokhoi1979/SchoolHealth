@@ -20,12 +20,15 @@ import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
 // Manager imports
 import Home from "../pages/Home/Home";
 import ManagerLayout from "../pages/Manager/ManagerLayout";
-import Dashboard from "../pages/Nurse/Dashboard/DashboardNurse"; // Nếu bạn có Dashboard riêng cho Manager, nên thay lại path cho đúng
+import Dashboard from "../pages/Nurse/Dashboard/DashboardNurse";
 import MedicalCheckup from "../pages/Manager/MedicalCheckup/MedicalCheckupManager";
 import VaccineManager from "../pages/Manager/vaccine/VaccineManager";
 import MedicalManager from "../pages/Manager/Dashboard/MedicalManager";
 import DashboardManager from "../pages/Manager/Dashboard/dashboardManager";
 import VaccinationManager from "../pages/Manager/Dashboard/VaccinationManager";
+import ImportManager from "../pages/Manager/MaterialManagement/ImportManager";
+import MaterialManage from "../pages/Manager/MaterialManagement/MaterialManage";
+import InventoryManager from "../pages/Manager/MaterialManagement/InventoryManager";
 import MedicalEvent from "../pages/Nurse/MedicalEvent/MedicalEvent";
 import VaccineNurse from "../pages/Nurse/Vaccine/VaccineNurse";
 import VaccineDay from "../pages/Nurse/Vaccine/VaccineDay";
@@ -143,12 +146,13 @@ const router = createBrowserRouter([
           },
           {
             path: "materials",
-            element: <Materials />,
+            element: <MaterialManage />,
             children: [
-              { path: "", element: <Inventory /> },
-              { path: "import", element: <Import /> },
-              { path: "export", element: <Export /> },
-              { path: "medicine", element: <MedicineForStudent /> },
+              { path: "inventoryManager", element: <InventoryManager /> },
+              { path: "importManager", element: <ImportManager /> },
+              { path: "exportManager", element: <VaccinationManager /> },
+
+              { path: "medicineManager", element: <Trend /> },
             ],
           },
           {
