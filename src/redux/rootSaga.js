@@ -17,6 +17,15 @@ import watchFetchVaccine from "./vaccineNurse/vaccine/vaccineSaga";
 import watchFetchCheckup from "./checkupNurse/checkupSaga";
 import watchFetchProfileDetail from "./vaccineNurse/profileDetail/profileStudentSaga";
 import watchPatchVaccineConfirmManager from "./manager/ConfirmVaccineManager/ConfirmVaccineManagerSaga";
+import watchFetchParentProfile from "./profileParent/profileSaga";
+import watchFetchStudentOfParent from "./profileParent/StudentOfParentSaga";
+import watchFetchParentForm from "./profileParent/formSaga";
+import watchFetchHealthStudent from "./profileParent/HealthByIdSaga";
+import watchFetchCreateHealth from "./profileParent/createHealthSaga";
+import watchFetchUpdateHealth from "./profileParent/profileSaga";
+import watchFetchVaccineParent from "./getVaccineParent/getVaccineParentSaga";
+import watchFetchVaccineParentResult from "./getVaccineParent/getVaccineParentResultSaga";
+import watchHealthProfileSaga from "./profileParent/profileSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -24,6 +33,14 @@ export default function* rootSaga() {
     watchFetchLogin(),
     watchFetchProfile(),
     watchFetchVaccineStudent(),
+    watchFetchParentProfile(),
+    watchFetchStudentOfParent(),
+    watchFetchParentForm(),
+    watchFetchHealthStudent(),
+    watchFetchCreateHealth(),
+    watchFetchUpdateHealth(),
+    watchFetchVaccineParent(),
+    watchFetchVaccineParentResult(),
     //Manager
     watchFetchManagerMedical(),
     watchPostManagerVaccine(),
@@ -39,5 +56,6 @@ export default function* rootSaga() {
     watchUpdateVaccineResult(),
     watchFetchProfileDetail(),
     watchPatchVaccineConfirmManager(),
+    watchHealthProfileSaga(),
   ]);
 }

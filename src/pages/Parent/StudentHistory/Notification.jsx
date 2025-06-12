@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Card, Table, Tag, Modal, Descriptions } from "antd";
-import { MedicineBoxOutlined, HeartOutlined } from "@ant-design/icons";
+import { Activity, Syringe } from "lucide-react";
+import { EyeOutlined } from "@ant-design/icons";
 
 const Notification = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -13,12 +14,12 @@ const Notification = () => {
 
   const typeConfig = {
     vaccination: {
-      icon: <MedicineBoxOutlined />,
+      icon: <Syringe className="h-3 w-3" />,
       text: "Vaccination",
       color: "bg-amber-100 text-amber-700 border-amber-300",
     },
     checkup: {
-      icon: <HeartOutlined />,
+      icon: <Activity className="h-3 w-3" />,
       text: "Check Up",
       color: "bg-purple-100 text-purple-700 border-purple-300",
     },
@@ -42,9 +43,11 @@ const Notification = () => {
       key: "type",
       width: 150,
       render: (type) => (
-        <Tag className={`flex items-center gap-1 ${typeConfig[type].color}`}>
-          {typeConfig[type].icon}
-          {typeConfig[type].text}
+        <Tag className={`${typeConfig[type].color}`}>
+          <span className="flex items-center gap-1">
+            {typeConfig[type].icon}
+            {typeConfig[type].text}
+          </span>
         </Tag>
       ),
     },
@@ -70,9 +73,11 @@ const Notification = () => {
       key: "action",
       width: 120,
       render: (_, record) => (
-        <Button type="link" onClick={() => handleViewDetails(record)}>
-          View Details
-        </Button>
+        <Button
+          type="text"
+          icon={<EyeOutlined />}
+          onClick={() => handleViewDetails(record)}
+        />
       ),
       align: "center",
     },

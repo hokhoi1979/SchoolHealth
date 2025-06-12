@@ -35,8 +35,8 @@ function Login() {
       } else if (user?.roleID === 2) {
         navigate("/manager");
       } else if (user?.roleID === 1) {
-        navigate("");
-      } else {
+        navigate("/admin");
+      } else if (user?.roleID === 4) {
         navigate("/parent");
       }
     }

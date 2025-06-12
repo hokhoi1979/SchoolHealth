@@ -45,11 +45,6 @@ import MedicalResult from "../pages/Nurse/MedicalNurse/MedicalResult";
 // Parents import
 import ParentLayout from "../pages/Parent/ParentLayout";
 import StudentHealth from "../pages/Parent/StudentHealth/StudentHealth";
-import GeneralInformation from "../pages/Parent/StudentHealth/Information";
-import Allergies from "../pages/Parent/StudentHealth/Allergies";
-import Chronic from "../pages/Parent/StudentHealth/Chronic";
-import VisionHearing from "../pages/Parent/StudentHealth/VisionHearing";
-import VaccinationParent from "../pages/Parent/StudentHealth/Vacciation";
 import MedicalRequest from "../pages/Parent/MedicalRequest/MedicalRequest";
 import MedicalUsing from "../pages/Parent/MedicalRequest/MedicationUsing";
 import MedicalHistoryParent from "../pages/Parent/MedicalRequest/MedicationHistory";
@@ -185,13 +180,6 @@ const router = createBrowserRouter([
           {
             path: "student_health",
             element: <StudentHealth />,
-            children: [
-              { path: "", element: <GeneralInformation /> },
-              { path: "allergies", element: <Allergies /> },
-              { path: "chronic", element: <Chronic /> },
-              { path: "vision_hearing", element: <VisionHearing /> },
-              { path: "vaccination", element: <VaccinationParent /> },
-            ],
           },
           {
             path: "medical_request",
