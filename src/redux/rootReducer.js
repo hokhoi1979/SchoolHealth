@@ -21,8 +21,12 @@ import sendResultVaccineReducer from "./vaccineNurse/sendResult/sendResultSlice"
 import updateVaccineReducer from "./vaccineNurse/updateVaccineResult/updateResultSlice";
 import checkupReducer from "./checkupNurse/checkupSlice";
 import profileDetailReducer from "./vaccineNurse/profileDetail/profileStudentSlice";
+import patchManagerConfirmVaccineReducer, {
+  patchManagerConfirmVaccine,
+} from "./manager/ConfirmVaccineManager/ConfirmVaccineManagerSlice";
 import vaccineStudentReducer from "./vaccineNurse/vaccineById/vaccineByIdSlice";
 import vaccineReducer from "./vaccineNurse/vaccine/vaccineSlice";
+import healthProfileReducer from "./profileParent/profileSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -50,6 +54,8 @@ const rootReducer = combineReducers({
   putManagerVaccine: managerUpdateMedicalReducer,
   getManagerClass: getClassManagerReducer,
   patchManagerVaccine: patchManagerVaccineReducer,
+  patchManagerConfirmVaccine: patchManagerConfirmVaccineReducer,
+  parentProfileHealth: healthProfileReducer,
 });
 
 export default rootReducer;

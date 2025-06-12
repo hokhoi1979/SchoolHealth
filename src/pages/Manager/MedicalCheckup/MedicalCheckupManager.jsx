@@ -354,6 +354,18 @@ function MedicalCheckup() {
                   <strong>{schedule.students}</strong>
                   <span>students</span>
                 </p>
+                {/* <div className="w-full bg-gray-200 rounded-full h-2.5 mt-3">
+                  <div
+                    className="bg-teal-500 h-2.5 rounded-full"
+                    style={{
+                      width: `${
+                        item.total && item.total > 0
+                          ? ((item.participate / item.total) * 100).toFixed(0)
+                          : 0
+                      }%`,
+                    }}
+                  ></div>
+                </div> */}
                 <div className="flex mt-5 gap-10  h-full w-full ">
                   <div className="w-1/3">
                     <button

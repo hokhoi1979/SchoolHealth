@@ -1,55 +1,183 @@
-import { Space, Table, Tooltip, Tag } from "antd";
-import React from "react";
+import React, { useState } from "react";
+import {
+  Modal,
+  Button,
+  Input,
+  Table,
+  Space,
+  Tooltip,
+  Upload,
+  Select,
+} from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import TextArea from "antd/es/input/TextArea";
 
 function ImportManager() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedMedicine, setSelectedMedicine] = useState(null);
+  const [updatedStock, setUpdatedStock] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Sample category and medicine data
+  const categories = [
+    {
+      id: 1,
+      name: "Antipyretics",
+      description: "Medicines used to reduce fever",
+      medicines: [
+        {
+          id: "ST001",
+          name: "Paracetamol 500mg",
+          usage: "Take 1 pill daily",
+          stock: 150,
+          status: "Normal",
+          description: "Pain relief and fever reduction",
+          image: null,
+        },
+        {
+          id: "ST003",
+          name: "Aspirin 100mg",
+          usage: "Take 1 pill daily",
+          stock: 10,
+          status: "Needs Restocking",
+          description: "Pain relief and anti-inflammatory",
+          image: null,
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "Vaccines",
+      description: "Vaccines for disease prevention",
+      medicines: [
+        {
+          id: "ST002",
+          name: "COVID-19 Vaccine",
+          usage: "Single shot",
+          stock: 20,
+          status: "Needs Restocking",
+          description: "COVID-19 prevention vaccine",
+          image: null,
+        },
+      ],
+    },
+  ];
+
+  const showModal = (category) => {
+    setSelectedCategory(category);
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setSelectedCategory(null);
+    setSelectedMedicine(null);
+    setUpdatedStock("");
+  };
+
+  const updateStatus = (stock) => {
+    if (stock > 50) return "Normal";
+    if (stock <= 50 && stock > 20) return "Needs Restocking";
+    if (stock <= 20) return "Running Low";
+  };
+
+  const handleUpdateStock = () => {
+    if (selectedMedicine && updatedStock !== "") {
+      const newStock = parseInt(updatedStock, 10);
+      if (!isNaN(newStock) && newStock >= 0) {
+        const updatedData = selectedCategory.medicines.map((medicine) => {
+          if (medicine.id === selectedMedicine.id) {
+            medicine.stock = newStock;
+            medicine.status = updateStatus(newStock);
+          }
+          return medicine;
+        });
+        setSelectedCategory({ ...selectedCategory, medicines: updatedData });
+        setUpdatedStock("");
+        setIsModalVisible(false);
+        setSelectedMedicine(null);
+      }
+    }
+  };
+
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      align: "center",
+      render: (image, record) => (
+        <Upload
+          showUploadList={false}
+          beforeUpload={(file) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const newImage = e.target.result;
+              const updatedData = selectedCategory.medicines.map((med) =>
+                med.id === record.id ? { ...med, image: newImage } : med
+              );
+              setSelectedCategory({
+                ...selectedCategory,
+                medicines: updatedData,
+              });
+            };
+            reader.readAsDataURL(file);
+            return false;
+          }}
+        >
+          {image ? (
+            <img src={image} alt="medicine" style={{ width: 50, height: 50 }} />
+          ) : (
+            <Button icon={<PlusOutlined />}>Upload</Button>
+          )}
+        </Upload>
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
       align: "center",
     },
     {
-      title: "Mặt hàng",
-      dataIndex: "nameMedicine",
-      key: "nameMedicine",
+      title: "Usage",
+      dataIndex: "usage",
+      key: "usage",
       align: "center",
-    },
-    {
-      title: "Danh mục",
-      dataIndex: "category",
-      key: "category",
-      align: "center",
-    },
-    {
-      title: "Tồn kho",
-      dataIndex: "stock",
-      key: "stock",
-      align: "center",
-      render: (stock) => `${stock} viên`,
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
       align: "center",
-      render: (status) => {
-        let color;
-        if (status === "Bình thường") {
-          color = "bg-green-500";
-        } else if (status === "Cần bổ sung") {
-          color = "bg-pink-300";
-        } else if (status === "Sắp hết") {
-          color = "bg-yellow-300";
-        }
-        return (
-          <span
-            className={`inline-block px-2 py-1 rounded text-white text-xs ${color}`}
-          >
-            {status}
-          </span>
-        );
-      },
+      render: (status) => (
+        <span
+          className={`inline-block px-2 py-1 rounded text-white text-xs ${
+            status === "Normal"
+              ? "bg-green-500"
+              : status === "Needs Restocking"
+              ? "bg-pink-400"
+              : "bg-yellow-400"
+          }`}
+        >
+          {status}
+        </span>
+      ),
+    },
+    {
+      title: "Stock",
+      dataIndex: "stock",
+      key: "stock",
+      align: "center",
+      render: (stock) => <span>{stock} pills</span>,
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      align: "center",
+      width: 200,
     },
     {
       title: "Action",
@@ -57,96 +185,145 @@ function ImportManager() {
       align: "center",
       render: (_, record) => (
         <Space>
-          <Tooltip
-            placement="bottom"
-            title="View"
-            overlayInnerStyle={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "12px",
-            }}
-          >
-            <div className="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 1-5-5a5 5 0 1 5-5a5 5 0 1 5 5a5 5 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
-                />
-              </svg>
-            </div>
+          <Tooltip title="Update stock">
+            <Button
+              className="bg-blue-500 text-white hover:bg-blue-600"
+              onClick={() => {
+                setSelectedMedicine(record);
+                setUpdatedStock(record.stock);
+              }}
+            >
+              Update
+            </Button>
           </Tooltip>
         </Space>
       ),
     },
   ];
 
-  const dataSource = [
-    {
-      id: "ST001",
-      nameMedicine: "Paracetamol 500mg",
-      category: "Thuốc hạ sốt",
-      stock: 150,
-      status: "Bình thường",
-    },
-    {
-      id: "ST002",
-      nameMedicine: "Vaccine COVID-19",
-      category: "Vaccine",
-      stock: 5,
-      status: "Cần bổ sung",
-    },
-    {
-      id: "ST003",
-      nameMedicine: "Băng gạc y tế",
-      category: "Vật tư y tế",
-      stock: 150,
-      status: "Sắp hết",
-    },
-    {
-      id: "ST004",
-      nameMedicine: "Nhiết kế điện tử",
-      category: "Thiết bị y tế",
-      stock: 150,
-      status: "Bình thường",
-    },
-    {
-      id: "ST005",
-      nameMedicine: "Aspirin 100mg",
-      category: "Thuốc tim mạch",
-      stock: 150,
-      status: "Bình thường",
-    },
-  ];
-
   return (
-    <>
-      <div>
-        <Table
-          className="mt-5"
-          columns={columns}
-          dataSource={dataSource}
-          rowClassName="text-center text-sm"
-          bordered
-          components={{
-            header: {
-              cell: (props) => (
-                <th
-                  {...props}
-                  className="bg-gray-200 font-semibold text-center text-sm py-3"
-                />
-              ),
-            },
-          }}
-        />
+    <div>
+      <div className="grid grid-cols-4 gap-5 mt-5 w-full px-5 font-kameron">
+        {categories.map((category) => (
+          <div
+            key={category.id}
+            className="h-[120px] bg-white rounded-2xl shadow-md cursor-pointer"
+            onClick={() => showModal(category)}
+          >
+            <p className="flex justify-center mt-5 text-lg font-semibold">
+              {category.name}
+            </p>
+            <p className="flex justify-center text-[50px] font-bold">
+              {category.medicines.length}
+            </p>
+          </div>
+        ))}
       </div>
-    </>
+
+      {/* Medicine Modal */}
+      <Modal
+        title={`Medicines in ${selectedCategory?.name}`}
+        open={isModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+        width={900}
+      >
+        <Input
+          placeholder="Search medicine by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="mb-4"
+        />
+        <Table
+          columns={columns}
+          dataSource={selectedCategory?.medicines.filter((medicine) =>
+            medicine.name.toLowerCase().includes(searchQuery.toLowerCase())
+          )}
+          rowKey="id"
+          pagination={false}
+          bordered
+        />
+      </Modal>
+
+      {/* Update Stock Modal */}
+      {selectedMedicine && (
+        <Modal
+          title={`Update medicine: ${selectedMedicine?.name}`}
+          open={selectedMedicine}
+          onCancel={handleCancel}
+          footer={[
+            <Button
+              key="cancel"
+              className="bg-red-500 text-white hover:bg-red-600"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>,
+            <Button
+              key="update"
+              className="bg-blue-500 text-white hover:bg-blue-600"
+              onClick={() => handleUpdate(selectedMedicine)}
+            >
+              Update
+            </Button>,
+          ]}
+        >
+          <div className="grid grid-cols-2 gap-4 mt-2">
+            <div>
+              <label className="block mb-1 font-medium">Name</label>
+              <Input
+                value={selectedMedicine?.name}
+                onChange={(e) => handleFieldChange("name", e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Stock</label>
+              <Input
+                type="number"
+                value={selectedMedicine?.stock}
+                onChange={(e) =>
+                  handleFieldChange("stock", parseInt(e.target.value) || 0)
+                }
+                min={0}
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="block mb-1 font-medium">Usage</label>
+              <Input
+                value={selectedMedicine?.usage}
+                onChange={(e) => handleFieldChange("usage", e.target.value)}
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="block mb-1 font-medium">Description</label>
+              <TextArea
+                value={selectedMedicine?.description}
+                onChange={(e) =>
+                  handleFieldChange("description", e.target.value)
+                }
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="block mb-1 font-medium">Type</label>
+              <Select
+                className="w-full"
+                value={selectedMedicine?.type || "PELLETS"}
+                onChange={(value) => handleFieldChange("type", value)}
+              >
+                <Option value="PELLETS">Pellets</Option>
+                <Option value="BOTTLE">Bottle</Option>
+                <Option value="JAR">Jar</Option>
+              </Select>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
   );
 }
 
 export default ImportManager;
-// vien chai lo cai
-// ten thuoc , decription,cach su dung
