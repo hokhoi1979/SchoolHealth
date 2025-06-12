@@ -1,38 +1,37 @@
-export const FETCH__PROFILE = "FETCH_PROFILE";
-export const FETCH__PROFILE__SUCCESS = "FETCH_PROFILE_SUCCESS";
-export const FETCH__PROFILE__FAIL = "FETCH_PROFILE_FAIL";
+// actions
+export const FETCH_HEALTH_PROFILE = "FETCH_HEALTH_PROFILE";
+export const FETCH_HEALTH_PROFILE_SUCCESS = "FETCH_HEALTH_PROFILE_SUCCESS";
+export const FETCH_HEALTH_PROFILE_FAIL = "FETCH_HEALTH_PROFILE_FAIL";
 
-export const fetchProfile = (data) => ({
-  type: FETCH__PROFILE,
+// action creators
+export const fetchHealthProfile = () => ({ type: FETCH_HEALTH_PROFILE });
+export const fetchHealthProfileSuccess = (data) => ({
+  type: FETCH_HEALTH_PROFILE_SUCCESS,
   payload: data,
 });
-
-export const fetchProfileSuccess = (data) => ({
-  type: FETCH__PROFILE__SUCCESS,
-  payload: data,
+export const fetchHealthProfileFail = (error) => ({
+  type: FETCH_HEALTH_PROFILE_FAIL,
+  payload: error,
 });
 
-export const fetchProfileFail = (data) => ({
-  type: FETCH__PROFILE__FAIL,
-  payload: data,
-});
-
+// reducer
 const initialState = {
-  student: [],
+  healthProfiles: [], // List of students with health info
   loading: false,
   error: null,
 };
 
-const profileReducer = (state = initialState, action) => {
+const healthProfileReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH__PROFILE:
+    case FETCH_HEALTH_PROFILE:
       return { ...state, loading: true, error: null };
-    case FETCH__PROFILE__SUCCESS:
-      return { ...state, loading: false, student: action.payload };
-    case FETCH__PROFILE__FAIL:
+    case FETCH_HEALTH_PROFILE_SUCCESS:
+      return { ...state, loading: false, healthProfiles: action.payload };
+    case FETCH_HEALTH_PROFILE_FAIL:
       return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
 };
-export default profileReducer;
+
+export default healthProfileReducer;

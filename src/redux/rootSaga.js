@@ -9,6 +9,8 @@ import watchFetchParentForm from "./profileParent/formSaga";
 import watchFetchHealthStudent from "./profileParent/HealthByIdSaga";
 import watchFetchCreateHealth from "./profileParent/createHealthSaga";
 import watchFetchUpdateHealth from "./profileParent/profileSaga";
+import watchFetchVaccineParent from "./getVaccineParent/getVaccineParentSaga";
+import watchFetchVaccineParentResult from "./getVaccineParent/getVaccineParentResultSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -22,5 +24,7 @@ export default function* rootSaga() {
     watchFetchHealthStudent(),
     watchFetchCreateHealth(),
     watchFetchUpdateHealth(),
+    watchFetchVaccineParent(),
+    watchFetchVaccineParentResult(),
   ]);
 }

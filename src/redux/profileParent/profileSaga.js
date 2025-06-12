@@ -1,17 +1,17 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import {
-  FETCH__PROFILE,
-  FETCH__PROFILE__SUCCESS,
-  fetchProfile,
-  fetchProfileFail,
-  fetchProfileSuccess,
-} from "./profileSlice";
 import axios from "axios";
+import {
+  FETCH_HEALTH_PROFILE,
+  fetchHealthProfileSuccess,
+  fetchHealthProfileFail,
+} from "./profileSlice";
+
 const URL_API = import.meta.env.VITE_API_URL;
 
-function* profileSaga() {
+function* fetchHealthProfileSaga() {
   try {
     const token = localStorage.getItem("accessToken");
+    console.log(token);
     const response = yield call(axios.get, `${URL_API}/parent/v1/health`, {
       headers: {
         Authorization: `${token}`,
@@ -19,17 +19,17 @@ function* profileSaga() {
       },
     });
 
-    if (response.status === 200 || response.status === 201) {
-      yield put(fetchProfileSuccess(response.data.result));
+    if (response.status === 200) {
+      yield put(fetchHealthProfileSuccess(response.data));
     } else {
-      yield put(fetchProfileFail(`API Error: ${response.status}`));
+      yield put(fetchHealthProfileFail("Unexpected response status"));
     }
   } catch (error) {
-    yield put(fetchProfileFail(`API Error: ${error}`));
+    yield put(fetchHealthProfileFail(error.message));
   }
 }
 
-function* watchFetchProfile() {
-  yield takeLatest(FETCH__PROFILE, profileSaga);
+function* watchHealthProfileSaga() {
+  yield takeLatest(FETCH_HEALTH_PROFILE, fetchHealthProfileSaga);
 }
-export default watchFetchProfile;
+export default watchHealthProfileSaga;

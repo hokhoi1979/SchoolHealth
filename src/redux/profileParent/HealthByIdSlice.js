@@ -19,7 +19,7 @@ export const fetchHealthStudentFail = (error) => ({
 });
 
 const initialState = {
-  student: [],
+  healthDetail: [],
   loading: false,
   error: null,
 };
@@ -29,7 +29,7 @@ const healthStudentReducer = (state = initialState, action) => {
     case FETCH__HEALTH__STUDENT:
       return { ...state, loading: true, error: null };
     case FETCH__HEALTH__STUDENT__SUCCESS:
-      return { ...state, loading: false, student: action.payload };
+      return { ...state, loading: false, healthDetail: action.payload };
     case FETCH__HEALTH__STUDENT__FAIL:
       return { ...state, loading: false, error: action.payload };
     default:

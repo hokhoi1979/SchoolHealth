@@ -26,7 +26,7 @@ function* healthStudentSaga(action) {
     if (response.status === 200 || response.status === 201) {
       console.log(response.data);
 
-      yield put(fetchHealthStudentSucess(response.data));
+      yield put(fetchHealthStudentSucess(response.data.data.healthProfile));
     } else {
       yield put(fetchHealthStudentFail(response.status));
     }

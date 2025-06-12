@@ -9,6 +9,8 @@ import formParentReducer from "./profileParent/formSlice";
 import healthStudentReducer from "./profileParent/HealthByIdSlice";
 import createHealthStudentReducer from "./profileParent/createHealthSlice";
 import updateHealthStudentReducer from "./profileParent/updateHealthSlice";
+import vaccineParentReducer from "./getVaccineParent/getVaccineParentSlice";
+import vaccineParentResultReducer from "./getVaccineParent/getVaccineParentResultSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -21,6 +23,8 @@ const rootReducer = combineReducers({
   healthStudent: healthStudentReducer,
   createHealthStudent: createHealthStudentReducer,
   updateHealthStudent: updateHealthStudentReducer,
+  vaccineParent: vaccineParentReducer,
+  vaccineParentResult: vaccineParentResultReducer,
 });
 
 export default rootReducer;
