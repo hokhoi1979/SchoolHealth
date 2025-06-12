@@ -11,6 +11,7 @@ import { putManagerMedical } from "../../../redux/manager/updateVaccineManagerSl
 import { fetchClassManager } from "../../../redux/manager/getClassManagerSlice";
 import { patchManagerVaccine } from "../../../redux/manager/successVaccineManagerSlice";
 import { ModalDetail } from "./ModalDetail";
+import { patchManagerConfirmVaccine } from "../../../redux/manager/ConfirmVaccineManager/ConfirmVaccineManagerSlice";
 const VaccineManager = () => {
   const [open, setOpen] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
@@ -24,6 +25,10 @@ const VaccineManager = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [data, setData] = useState([]);
+  const [notificationModalOpen, setNotificationModalOpen] = useState(false);
+  const [notificationTitle, setNotificationTitle] = useState("");
+  const [notificationContent, setNotificationContent] = useState("");
+
   let targetIds = [];
   const dispatch = useDispatch();
 
@@ -38,7 +43,9 @@ const VaccineManager = () => {
   const { vaccineSuccess = [] } = useSelector(
     (state) => state.patchManagerVaccine
   );
-
+  const { vaccineConfirm = [] } = useSelector(
+    (state) => state.patchManagerConfirmVaccine
+  );
   const { classManager } = useSelector((state) => state.getManagerClass);
   const classList = classManager?.data || [];
 
@@ -64,19 +71,59 @@ const VaccineManager = () => {
     fetchData();
   }, []);
 
+  // const formatData = () => {
+  //   if (
+  //     vaccineDay?.data?.vaccinationEvents &&
+  //     Array.isArray(vaccineDay?.data?.vaccinationEvents)
+  //   ) {
+  //     const format = vaccineDay?.data?.vaccinationEvents.map((item) => {
+  //       return {
+  //         id: item?.id,
+  //         name: item?.name,
+  //         description: item?.description,
+  //         scheduledAt: item?.scheduledAt
+  //           ? dayjs(item.scheduledAt).format("DD/MM/YYYY HH:mm")
+  //           : "Chưa xác định",
+  //         grade: item?.targets?.map((t) => t.className).join(", ") || "SCHOOL",
+  //         participate: item?.studentResponseCount?.studentsAcceptCount,
+  //         total: item?.studentResponseCount?.totalStudent,
+  //         status: item?.status,
+  //       };
+  //     });
+  //     console.log("FORMAT", format);
+  //     setData(format);
+  //   }
+  // };
   const formatData = () => {
     if (
       vaccineDay?.data?.vaccinationEvents &&
       Array.isArray(vaccineDay?.data?.vaccinationEvents)
     ) {
       const format = vaccineDay?.data?.vaccinationEvents.map((item) => {
+        // Nếu targetType là "GRADE", hiển thị các lớp đã chọn
+        let displayedClasses = "";
+        if (item.targetType === "GRADE") {
+          item.targetIds.forEach((targetId) => {
+            const className = classList.find(
+              (cls) => cls.id === targetId
+            )?.name;
+            if (className) {
+              displayedClasses += `${className}, `;
+            }
+          });
+        } else {
+          // Nếu không phải "GRADE", lấy thông tin từ "targetIds"
+          displayedClasses = item.targets?.map((t) => t.className).join(", ");
+        }
+
         return {
           id: item?.id,
           name: item?.name,
+          description: item?.description,
           scheduledAt: item?.scheduledAt
             ? dayjs(item.scheduledAt).format("DD/MM/YYYY HH:mm")
             : "Chưa xác định",
-          grade: item?.targets?.map((t) => t.className).join(", ") || "N/A",
+          grade: displayedClasses || "SCHOOL", // Display the classes for selected grade
           participate: item?.studentResponseCount?.studentsAcceptCount,
           total: item?.studentResponseCount?.totalStudent,
           status: item?.status,
@@ -103,7 +150,6 @@ const VaccineManager = () => {
 
     const formattedTargetType = targetType.toUpperCase();
     let updatedTargetIds = [];
-
     if (formattedTargetType === "CLASS") {
       updatedTargetIds = selectedClasses.map((cls) => classIdMap[cls]);
       if (updatedTargetIds.length === 0) {
@@ -117,7 +163,7 @@ const VaccineManager = () => {
         return;
       }
     } else if (formattedTargetType === "SCHOOL") {
-      updatedTargetIds = classList.map((cls) => cls.id); // tất cả lớp
+      updatedTargetIds = classList.map((cls) => cls.id); // Tất cả lớp
     }
 
     const payload = {
@@ -162,29 +208,67 @@ const VaccineManager = () => {
     gradeIdMap[grade].push(cls.id);
   });
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     const targetTypeFormatted = targetType.toUpperCase();
+    let targetIds = [];
 
-    const targetIds =
-      targetType === "school"
-        ? []
-        : targetType === "class"
-        ? selectedClasses.map((cls) => classIdMap[cls])
-        : selectedGrades.flatMap((gr) => gradeIdMap[gr]);
+    // Determine targetIds based on the selected targetType
+    if (targetTypeFormatted === "SCHOOL") {
+      targetIds = classList.map((cls) => cls.id);
+      if (targetIds.length === 0) {
+        alert("Vui lòng chọn ít nhất một lớp.");
+        return;
+      }
+    } else if (targetTypeFormatted === "CLASS") {
+      targetIds = selectedClasses.map((cls) => classIdMap[cls]);
+      if (targetIds.length === 0) {
+        alert("Vui lòng chọn ít nhất một lớp.");
+        return;
+      }
+    } else if (targetTypeFormatted === "GRADE") {
+      targetIds = selectedGrades.flatMap((gr) => gradeIdMap[gr]);
+      if (targetIds.length === 0) {
+        alert("Vui lòng chọn ít nhất một khối.");
+        return;
+      }
+    }
 
     const payload = {
       name: vaccineName,
       description: vaccineDescription,
-      scheduledAt: vaccineDate,
+      scheduledAt: dayjs(vaccineDate).format("YYYY-MM-DD"), // Ensure correct date format
       targetType: targetTypeFormatted,
       targetIds,
     };
-    console.log(payload);
-    dispatch(postManagerVaccine(payload));
-    if (vaccine) {
-      setOpen(false);
+
+    try {
+      const response = await dispatch(postManagerVaccine(payload));
+      console.log("Create Success:", response);
+      if (response && response.data) {
+        // Reset form after successful creation
+        setOpen(false);
+        setVaccineName("");
+        setVaccineDescription("");
+        setVaccineDate("");
+        setTargetType("school");
+        setSelectedClasses([]);
+        setSelectedGrades([]);
+        setSelectAllClasses(false);
+        dispatch(fetchVaccineManager()); // Re-fetch the data
+      }
+    } catch (error) {
+      if (error.response) {
+        // Lỗi từ API
+        console.error("API Error Response:", error.response);
+        console.error("API Error Data:", error.response.data);
+        console.error("API Error Status:", error.response.status);
+        console.error("API Error Headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("No response from API:", error.request);
+      } else {
+        console.error("Error in request setup:", error.message);
+      }
     }
-    console.log("DUC", vaccine);
   };
 
   useEffect(() => {
@@ -202,28 +286,115 @@ const VaccineManager = () => {
 
   const availableGrades = ["10", "11", "12"];
 
-  const handleSendNotification = (event) => {
-    setNotificationModalOpen(true);
-    setSelectedEvent(event);
-    setNotificationTitle(`Checkup Notice for ${event.title}`);
-    setNotificationContent(
-      `Dear Parents,\n\nOur school will organize the ${event.title.toLowerCase()} for students in class ${event.classes.join(
-        ", "
-      )} on ${
-        event.date
-      }.\n\nPlease confirm your participation and support us in ensuring the best preparation.\n\nSincerely,`
+  const formatScheduledAt = (scheduledAt) => {
+    const isValidDate = dayjs(scheduledAt, "DD/MM/YYYY HH:mm", true).isValid();
+
+    if (!isValidDate) {
+      console.error("Invalid scheduledAt date:", scheduledAt);
+      return null; // Trả về null để thông báo rằng ngày không hợp lệ
+    }
+
+    const formattedDate = dayjs(scheduledAt, "DD/MM/YYYY HH:mm").format(
+      "YYYY-MM-DD"
     );
+    return formattedDate;
   };
-  const handleCloseNotification = () => {
-    setNotificationModalOpen(false);
+  const handleSendConfirm = async () => {
+    const { id } = selectedEvent;
+    if (!id) {
+      console.error("Event ID is missing");
+      return;
+    }
+
+    // Đảm bảo title và content có giá trị
+    if (!notificationTitle || !notificationContent) {
+      console.error("Title or Content is missing");
+      return;
+    }
+
+    // Kiểm tra và định dạng scheduledAt
+    const scheduledAt = selectedEvent.scheduledAt;
+    const formattedScheduledAt = formatScheduledAt(scheduledAt); // Sử dụng hàm formatScheduledAt
+
+    if (!formattedScheduledAt) {
+      alert("Invalid scheduled date. Please check the date.");
+      return;
+    }
+
+    // Kiểm tra selectedGrades và classIdMap
+    console.log("Selected Grades:", selectedGrades); // Kiểm tra selectedGrades
+    const targetIds = selectedGrades
+      .map((grade) => {
+        const targetId = classIdMap[grade];
+        console.log(`Mapping grade ${grade} to targetId:`, targetId); // Kiểm tra ánh xạ
+        return targetId;
+      })
+      .filter((id) => id !== undefined); // Loại bỏ undefined
+
+    console.log("Target IDs:", targetIds); // Kiểm tra targetIds sau khi ánh xạ
+
+    if (targetIds.length === 0) {
+      console.error("No valid targetIds provided");
+      alert("Please select at least one class or grade");
+      return;
+    }
+
+    // Tạo payload với các thông tin cần thiết
+    const payload = {
+      id,
+      customMailTitle: notificationTitle, // Tiêu đề email
+      customMailBody: notificationContent, // Nội dung email
+      scheduledAt: formattedScheduledAt, // Đảm bảo trường này được bao gồm
+      targetIds: targetIds, // Đảm bảo trường này được bao gồm
+    };
+
+    console.log("Payload to send:", payload); // Log payload để kiểm tra
+
+    // Gửi payload bằng API
+    try {
+      dispatch(patchManagerConfirmVaccine(payload));
+    } catch (error) {
+      console.error("API Error:", error?.response?.data || error?.message); // Log chi tiết lỗi
+    }
   };
 
   const handleViewMore = (event) => {
     setSelectedEvent(event);
-    setViewModalOpen(true);
+    setNotificationTitle(`Checkup Notice for ${event?.name}`);
+
+    const updatedGrades = event?.grade
+      ? event.grade.split(",").map((grade) => grade.trim()) // Tách grade từ chuỗi
+      : [];
+    console.log("Updated Grades in handleViewMore:", updatedGrades);
+
+    // Cập nhật selectedGrades trong state
+    setSelectedGrades(updatedGrades);
+
+    const gradeList =
+      event?.grade && typeof event.grade === "string"
+        ? event.grade.split(", ").join(", ")
+        : event?.grade && Array.isArray(event.grade)
+        ? event.grade.join(", ")
+        : "No grades available";
+
+    const scheduledAt = event?.scheduledAt;
+    const formattedDate = scheduledAt
+      ? dayjs(scheduledAt, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD")
+      : "Invalid Date";
+
+    console.log("Event grades:", event?.grade);
+    console.log("Scheduled date:", scheduledAt);
+    console.log("Selected grades:", updatedGrades);
+
+    setNotificationContent(
+      `Dear Parents,\n\nOur school will organize the ${event?.name.toLowerCase()} for students in grade ${gradeList} on ${formattedDate}. \n\nPlease confirm your participation and support us in ensuring the best preparation.\n\nSincerely,`
+    );
+
+    setOpenDetail(true);
   };
+
   const handleCloseViewMore = () => {
-    setViewModalOpen(false);
+    setOpenDetail(false);
     setSelectedEvent(null);
   };
 
@@ -285,14 +456,7 @@ const VaccineManager = () => {
       case "class":
         return (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 mb-3">
-              <Checkbox
-                checked={selectAllClasses}
-                onChange={(e) => handleSelectAllClasses(e.target.checked)}
-              >
-                <span className="font-medium">Choose All Class</span>
-              </Checkbox>
-            </div>
+            <div className="flex items-center gap-2 mb-3"></div>
             <div className="grid grid-cols-3 gap-2 max-h-32 overflow-y-auto border p-3 rounded">
               {classList.map((cls) => (
                 <Checkbox
@@ -410,7 +574,7 @@ const VaccineManager = () => {
           {data.map((item) => (
             <div className="bg-white p-6 rounded-2xl">
               <div className="flex justify-between">
-                {item.status === "Scheduled" ? (
+                {item.status === "CONFIRMED" ? (
                   <>
                     {" "}
                     <Button className="!bg-[#6CC76F] !text-white">
@@ -427,7 +591,7 @@ const VaccineManager = () => {
                   width={25}
                   height={25}
                   viewBox="0 0 24 24"
-                  onClick={() => setOpenDetail(true)}
+                  onClick={() => handleViewMore(item)}
                 >
                   <path
                     fill="gray"
@@ -435,18 +599,124 @@ const VaccineManager = () => {
                   ></path>
                 </svg>
               </div>
-
               {openDetail && (
-                <>
-                  <ModalDetail
-                    open={openDetail}
-                    canncel={() => setOpenDetail(false)}
-                  />
-                </>
+                <ModalDetail
+                  open={openDetail}
+                  cancel={handleCloseViewMore}
+                  ok={handleSendConfirm}
+                  title={notificationTitle}
+                  content={notificationContent}
+                />
               )}
 
               <h1 className="mt-2 text-2xl">{item.name}</h1>
               <p className="text-gray-500">{item.grade}</p>
+
+              <div className="flex gap-2.5 mt-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <mask id="lineMdFileDocumentMinus0">
+                    <g
+                      fill="none"
+                      stroke="#fff"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-dasharray="64"
+                        stroke-dashoffset="64"
+                        d="M13.5 3l5.5 5.5v11.5c0 0.55 -0.45 1 -1 1h-12c-0.55 0 -1 -0.45 -1 -1v-16c0 -0.55 0.45 -1 1 -1Z"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          dur="0.6s"
+                          values="64;0"
+                        />
+                      </path>
+                      <path d="M14.5 3.5l2.25 2.25l2.25 2.25z" opacity="0">
+                        <animate
+                          fill="freeze"
+                          attributeName="d"
+                          begin="0.6s"
+                          dur="0.2s"
+                          values="M14.5 3.5l2.25 2.25l2.25 2.25z;M14.5 3.5l0 4.5l4.5 0z"
+                        />
+                        <set
+                          fill="freeze"
+                          attributeName="opacity"
+                          begin="0.6s"
+                          to="1"
+                        />
+                      </path>
+                      <path
+                        stroke-dasharray="8"
+                        stroke-dashoffset="8"
+                        d="M9 13h6"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          begin="0.8s"
+                          dur="0.2s"
+                          values="8;0"
+                        />
+                      </path>
+                      <path
+                        stroke-dasharray="4"
+                        stroke-dashoffset="4"
+                        d="M9 17h3"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          begin="1s"
+                          dur="0.2s"
+                          values="4;0"
+                        />
+                      </path>
+                      <path
+                        fill="#000"
+                        fill-opacity="0"
+                        stroke="none"
+                        d="M19 13c3.31 0 6 2.69 6 6c0 3.31 -2.69 6 -6 6c-3.31 0 -6 -2.69 -6 -6c0 -3.31 2.69 -6 6 -6Z"
+                      >
+                        <set
+                          fill="freeze"
+                          attributeName="fill-opacity"
+                          begin="1.2s"
+                          to="1"
+                        />
+                      </path>
+                      <path
+                        stroke-dasharray="8"
+                        stroke-dashoffset="8"
+                        d="M16 19h6"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          begin="1.2s"
+                          dur="0.2s"
+                          values="8;0"
+                        />
+                      </path>
+                    </g>
+                  </mask>
+                  <rect
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    mask="url(#lineMdFileDocumentMinus0)"
+                  />
+                </svg>
+                <p>{item.description}</p>
+              </div>
 
               <div className="flex gap-2.5 mt-3">
                 <svg
@@ -485,7 +755,7 @@ const VaccineManager = () => {
               </div>
               <div className="mt-3">
                 <div className="flex justify-between mb-1 text-sm text-gray-600">
-                  <span>Conform Paritcipate</span>
+                  <span>Confirm Paritcipate</span>
                   <span>
                     {item.participate}/{item.total}
                   </span>
@@ -512,9 +782,11 @@ const VaccineManager = () => {
               </div>
               <div className="flex gap-2.5">
                 <div>
-                  <Button onClick={() => handleUpdateEvent(item)}>
-                    Update Schedule
-                  </Button>
+                  {item.status !== "ENDED" && item.status !== "CONFIRMED" && (
+                    <Button onClick={() => handleUpdateEvent(item)}>
+                      Update Schedule
+                    </Button>
+                  )}
                 </div>
                 <div>
                   <Button

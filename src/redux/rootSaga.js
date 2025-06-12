@@ -16,6 +16,7 @@ import watchUpdateVaccineResult from "./vaccineNurse/updateVaccineResult/updateR
 import watchFetchVaccine from "./vaccineNurse/vaccine/vaccineSaga";
 import watchFetchCheckup from "./checkupNurse/checkupSaga";
 import watchFetchProfileDetail from "./vaccineNurse/profileDetail/profileStudentSaga";
+import watchPatchVaccineConfirmManager from "./manager/ConfirmVaccineManager/ConfirmVaccineManagerSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -37,5 +38,6 @@ export default function* rootSaga() {
     watchFetchCheckup(),
     watchUpdateVaccineResult(),
     watchFetchProfileDetail(),
+    watchPatchVaccineConfirmManager(),
   ]);
 }
