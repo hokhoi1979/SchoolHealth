@@ -20,6 +20,15 @@
             "student": "Student Profile",
             "medicalEvent": "Medical Event"
         }
-
+    },
+       "Parent": {
+        "title": "Parent",
+        "pages": {
+            "student": "Student Health",
+            "request": "Medical Request",
+            "vaccination": "Vaccination",
+            "check up": "Medical CheckUp",
+            "history": "History & Report"
+        }
     }
 }

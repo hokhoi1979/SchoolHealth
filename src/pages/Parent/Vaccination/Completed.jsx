@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Space, Typography } from "antd";
-import { MedicineBoxOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined } from "@ant-design/icons";
+import { Syringe } from "lucide-react";
 
 const { Title, Paragraph } = Typography;
 
@@ -37,7 +38,7 @@ const Completed = ({ notifications }) => {
         <Card key={notification.id} style={{ borderLeft: `4px solid #d97706` }}>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <MedicineBoxOutlined style={{ fontSize: 20, color: "#d97706" }} />
+              <Syringe style={{ fontSize: 20, color: "#d97706" }} />
               <Title level={5} style={{ margin: 0 }}>
                 {notification.title}
               </Title>

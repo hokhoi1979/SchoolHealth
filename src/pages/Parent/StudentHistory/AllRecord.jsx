@@ -10,11 +10,8 @@ import {
   Radio,
   Input,
 } from "antd";
-import {
-  FileTextOutlined,
-  MedicineBoxOutlined,
-  HeartOutlined,
-} from "@ant-design/icons";
+import { Activity, FileText, Pill, Syringe } from "lucide-react";
+import { EyeOutlined } from "@ant-design/icons";
 
 const AllRecord = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -27,22 +24,22 @@ const AllRecord = () => {
 
   const typeConfig = {
     health: {
-      icon: <FileTextOutlined />,
+      icon: <FileText className="h-3 w-3" />,
       text: "Health Information",
       color: "bg-blue-100 text-blue-700 border-blue-300",
     },
     medication: {
-      icon: <MedicineBoxOutlined />,
+      icon: <Pill className="h-3 w-3" />,
       text: "Send Result",
       color: "bg-green-100 text-green-700 border-green-300",
     },
     vaccination: {
-      icon: <MedicineBoxOutlined />,
+      icon: <Syringe className="h-3 w-3" />,
       text: "Vaccination",
       color: "bg-amber-100 text-amber-700 border-amber-300",
     },
     checkup: {
-      icon: <HeartOutlined />,
+      icon: <Activity className="h-3 w-3" />,
       text: "Check Up",
       color: "bg-purple-100 text-purple-700 border-purple-300",
     },
@@ -61,9 +58,11 @@ const AllRecord = () => {
       key: "type",
       width: 150,
       render: (type) => (
-        <Tag className={`flex items-center gap-1 ${typeConfig[type].color}`}>
-          {typeConfig[type].icon}
-          {typeConfig[type].text}
+        <Tag className={`${typeConfig[type].color}`}>
+          <span className="flex items-center gap-1">
+            {typeConfig[type].icon}
+            {typeConfig[type].text}
+          </span>
         </Tag>
       ),
     },
@@ -95,9 +94,11 @@ const AllRecord = () => {
       key: "action",
       width: 120,
       render: (_, record) => (
-        <Button type="link" onClick={() => handleViewDetails(record)}>
-          View Details
-        </Button>
+        <Button
+          type="text"
+          icon={<EyeOutlined />}
+          onClick={() => handleViewDetails(record)}
+        />
       ),
       align: "center",
     },
