@@ -1,5 +1,5 @@
 import { Button, Checkbox, Input, Modal, Radio } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import logo from "../../../img/logo.jpg";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,9 @@ import { fetchClassManager } from "../../../redux/manager/getClassManagerSlice";
 import { patchManagerVaccine } from "../../../redux/manager/successVaccineManagerSlice";
 import { ModalDetail } from "./ModalDetail";
 import { patchManagerConfirmVaccine } from "../../../redux/manager/ConfirmVaccineManager/ConfirmVaccineManagerSlice";
+import { deleteManagerVaccine } from "../../../redux/manager/DeleteVaccineEvent/deleteVaccineEventSlice";
+import { fetchMedicineSupplyManager } from "../../../redux/manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSlice";
+import "./style.css";
 const VaccineManager = () => {
   const [open, setOpen] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
@@ -28,6 +31,7 @@ const VaccineManager = () => {
   const [notificationModalOpen, setNotificationModalOpen] = useState(false);
   const [notificationTitle, setNotificationTitle] = useState("");
   const [notificationContent, setNotificationContent] = useState("");
+  const [items, setItems] = useState([]);
 
   let targetIds = [];
   const dispatch = useDispatch();
@@ -49,28 +53,38 @@ const VaccineManager = () => {
   const { classManager } = useSelector((state) => state.getManagerClass);
   const classList = classManager?.data || [];
 
-  const formatClassData = () => {
-    if (classManager?.data && Array.isArray(classManager?.data)) {
-      const format = classManager?.data.map((cls) => {
+  const { medicineSupply = [] } = useSelector(
+    (state) => state.getMedicineSupplyManager
+  );
+
+  useEffect(() => {
+    fetchVaccine();
+  }, []);
+
+  const formatMedicineAndSupply = () => {
+    if (Array.isArray(medicineSupply)) {
+      const format = medicineSupply.map((item) => {
         return {
-          id: cls?.id,
-          name: cls?.name,
+          id: item?.id,
+          image: item?.image,
+          name: item?.name,
+          stock: item?.stock,
+          type: item?.type,
         };
       });
+      console.log(format);
+      return format;
     }
   };
-  useEffect(() => {
-    dispatch(fetchClassManager());
-  }, []);
+  const formattedData = formatMedicineAndSupply();
 
-  const fetchData = () => {
-    dispatch(fetchVaccineManager());
+  useEffect(() => {
+    console.log("Formatted Data:", formattedData);
+  }, [medicineSupply]);
+  console.log("DUClklklCC", medicineSupply);
+  const fetchVaccine = () => {
+    dispatch(fetchMedicineSupplyManager());
   };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   // const formatData = () => {
   //   if (
   //     vaccineDay?.data?.vaccinationEvents &&
@@ -94,13 +108,39 @@ const VaccineManager = () => {
   //     setData(format);
   //   }
   // };
+  const formatClassData = () => {
+    if (classManager?.data && Array.isArray(classManager?.data)) {
+      const format = classManager?.data.map((cls) => {
+        return {
+          id: cls?.id,
+          name: cls?.name,
+        };
+      });
+    }
+  };
+  useEffect(() => {
+    dispatch(fetchClassManager());
+  }, []);
+
+  const fetchData = () => {
+    dispatch(fetchVaccineManager());
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleDeleteVaccine = (id) => {
+    dispatch(deleteManagerVaccine({ id }));
+    console.log("DDDD", id);
+  };
+
   const formatData = () => {
     if (
       vaccineDay?.data?.vaccinationEvents &&
       Array.isArray(vaccineDay?.data?.vaccinationEvents)
     ) {
       const format = vaccineDay?.data?.vaccinationEvents.map((item) => {
-        // Nếu targetType là "GRADE", hiển thị các lớp đã chọn
         let displayedClasses = "";
         if (item.targetType === "GRADE") {
           item.targetIds.forEach((targetId) => {
@@ -112,7 +152,6 @@ const VaccineManager = () => {
             }
           });
         } else {
-          // Nếu không phải "GRADE", lấy thông tin từ "targetIds"
           displayedClasses = item.targets?.map((t) => t.className).join(", ");
         }
 
@@ -127,9 +166,11 @@ const VaccineManager = () => {
           participate: item?.studentResponseCount?.studentsAcceptCount,
           total: item?.studentResponseCount?.totalStudent,
           status: item?.status,
+          targets: item.targets,
         };
       });
       console.log("FORMAT", format);
+      console.log("main", format);
       setData(format);
     }
   };
@@ -214,23 +255,16 @@ const VaccineManager = () => {
 
     // Determine targetIds based on the selected targetType
     if (targetTypeFormatted === "SCHOOL") {
-      targetIds = classList.map((cls) => cls.id);
-      if (targetIds.length === 0) {
-        alert("Vui lòng chọn ít nhất một lớp.");
-        return;
-      }
+      targetIds = [];
     } else if (targetTypeFormatted === "CLASS") {
       targetIds = selectedClasses.map((cls) => classIdMap[cls]);
-      if (targetIds.length === 0) {
-        alert("Vui lòng chọn ít nhất một lớp.");
-        return;
-      }
     } else if (targetTypeFormatted === "GRADE") {
-      targetIds = selectedGrades.flatMap((gr) => gradeIdMap[gr]);
-      if (targetIds.length === 0) {
-        alert("Vui lòng chọn ít nhất một khối.");
-        return;
-      }
+      // targetIds = selectedGrades.flatMap((gr) => gradeIdMap[gr]);
+      // if (targetIds.length === 0) {
+      //   alert("Vui lòng chọn ít nhất một khối.");
+      //   return;
+      // }
+      targetIds = selectedGrades;
     }
 
     const payload = {
@@ -239,6 +273,7 @@ const VaccineManager = () => {
       scheduledAt: dayjs(vaccineDate).format("YYYY-MM-DD"), // Ensure correct date format
       targetType: targetTypeFormatted,
       targetIds,
+      items: items,
     };
 
     try {
@@ -284,7 +319,7 @@ const VaccineManager = () => {
     }
   }, [loading, vaccine, error]);
 
-  const availableGrades = ["10", "11", "12"];
+  const availableGrades = [10, 11, 12];
 
   const formatScheduledAt = (scheduledAt) => {
     const isValidDate = dayjs(scheduledAt, "DD/MM/YYYY HH:mm", true).isValid();
@@ -396,37 +431,6 @@ const VaccineManager = () => {
   const handleCloseViewMore = () => {
     setOpenDetail(false);
     setSelectedEvent(null);
-  };
-
-  const showModal = () => {
-    setOpen(true);
-  };
-  const closeModal = () => {
-    setOpen(false);
-    setTargetType("school");
-    setSelectedClasses([]);
-    setSelectedGrades([]);
-    setSelectAllClasses(false);
-  };
-  const handleOk = () => {
-    setLoading(true);
-
-    setTimeout(() => {
-      setOpen(false);
-      setTargetType("school");
-      setSelectedClasses([]);
-      setSelectedGrades([]);
-      setSelectAllClasses(false);
-      setLoading(false);
-    }, 3000);
-  };
-  const handleSelectAllClasses = (checked) => {
-    setSelectAllClasses(checked);
-    if (checked) {
-      setSelectedClasses(availableClasses);
-    } else {
-      setSelectedClasses([]);
-    }
   };
 
   const handleClassSelection = (classID, checked) => {
@@ -608,10 +612,18 @@ const VaccineManager = () => {
                   content={notificationContent}
                 />
               )}
-
               <h1 className="mt-2 text-2xl">{item.name}</h1>
-              <p className="text-gray-500">{item.grade}</p>
+              {item.targets.length === 0 ? (
+                <>SCHOOL</>
+              ) : (
+                item.targets.map((target, index) => (
+                  <span key={index}>
+                    {target.className ? target.className : target.grade},
+                  </span>
+                ))
+              )}
 
+              {/* <p className="text-gray-500">{item.grade}</p> */}
               <div className="flex gap-2.5 mt-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -717,7 +729,6 @@ const VaccineManager = () => {
                 </svg>
                 <p>{item.description}</p>
               </div>
-
               <div className="flex gap-2.5 mt-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -734,7 +745,6 @@ const VaccineManager = () => {
                 </svg>
                 <p>{item.scheduledAt}</p>
               </div>
-
               <div className="flex gap-2.5 mt-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -788,6 +798,15 @@ const VaccineManager = () => {
                     </Button>
                   )}
                 </div>
+
+                <div>
+                  {item.status !== "ENDED" && item.status !== "CONFIRMED" && (
+                    <Button onClick={() => handleDeleteVaccine(item?.id)}>
+                      Delete
+                    </Button>
+                  )}
+                </div>
+
                 <div>
                   <Button
                     onClick={() => {
@@ -809,6 +828,7 @@ const VaccineManager = () => {
         open={open}
         onCancel={handleCloseModal}
         footer={[<Button onClick={handleCreate}>Create</Button>]}
+        style={{ width: "700px!important" }}
       >
         <div>
           <div>
@@ -881,6 +901,132 @@ const VaccineManager = () => {
             </Radio.Group>
 
             {renderTargetSelection()}
+            <div className="mt-6 border rounded p-4 bg-gray-50">
+              <div className="flex items-center gap-2 mb-2">
+                <input
+                  type="checkbox"
+                  checked={items.length > 0}
+                  onChange={(e) => {
+                    if (!e.target.checked) setItems([]);
+                  }}
+                />
+                <span className="font-semibold">
+                  Nội dung kiểm tra (thuốc):
+                </span>
+              </div>
+
+              <Button
+                size="sm"
+                onClick={() =>
+                  setItems([
+                    ...items,
+                    { medicineSupplyID: null, quantityPlanned: 1, notes: "" },
+                  ])
+                }
+                className="mb-3"
+              >
+                [+] Thêm mục kiểm tra
+              </Button>
+
+              {items.length > 0 && (
+                <table className="w-full text-left border border-collapse">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border px-2">STT</th>
+                      <th className="border px-2">Tên thuốc</th>
+                      <th className="border px-2">Số lượng dự kiến</th>
+                      <th className="border px-2">Image</th>
+
+                      <th className="border px-2">Ghi chú</th>
+                      <th className="border px-2">Xóa</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {items.map((item, index) => (
+                      <tr key={index} className="bg-white">
+                        <td className="border px-2">{index + 1}</td>
+                        <td className="border px-2">
+                          <select
+                            value={item.medicineSupplyID || ""}
+                            onChange={(e) => {
+                              const updated = [...items];
+                              updated[index].medicineSupplyID = parseInt(
+                                e.target.value
+                              );
+                              setItems(updated);
+                            }}
+                          >
+                            <option value="">Chọn thuốc</option>
+                            {formattedData?.map((med) => (
+                              <option key={med.id} value={med.id}>
+                                {med.name}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="border px-2">
+                          <Input
+                            type="number"
+                            value={item.quantityPlanned}
+                            min={1}
+                            onChange={(e) => {
+                              const updated = [...items];
+                              updated[index].quantityPlanned = parseInt(
+                                e.target.value
+                              );
+                              setItems(updated);
+                            }}
+                          />
+                        </td>
+
+                        <td className="border px-2">
+                          {(() => {
+                            const medicine = formattedData.find(
+                              (med) => med.id === item.medicineSupplyID
+                            );
+                            return medicine?.image ? (
+                              <img
+                                src={medicine.image}
+                                width={90}
+                                alt="medicine"
+                                className="w-12 h-12 object-cover"
+                              />
+                            ) : (
+                              "—"
+                            );
+                          })()}
+                        </td>
+
+                        <td className="border px-2">
+                          <Input
+                            placeholder="Ghi chú"
+                            value={item.notes || ""}
+                            onChange={(e) => {
+                              const updated = [...items];
+                              updated[index].notes = e.target.value;
+                              setItems(updated);
+                            }}
+                          />
+                        </td>
+                        <td className="border px-2 text-center">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              const updated = [...items];
+                              updated.splice(index, 1);
+                              setItems(updated);
+                            }}
+                          >
+                            🗑️
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
         </div>
       </Modal>

@@ -1,5 +1,7 @@
 import React from "react";
-import { Modal, Button } from "antd";
+import { Modal, Button, Input } from "antd";
+
+const { TextArea } = Input;
 
 export const ModalDetail = ({ open, cancel, ok, title, content }) => {
   return (
@@ -18,7 +20,7 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
       ]}
     >
       <h2>{title}</h2>
-      <p>{content}</p>
+      <TextArea defaultValue={content} rows={4} />
     </Modal>
   );
 };

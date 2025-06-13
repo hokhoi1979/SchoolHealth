@@ -27,6 +27,9 @@ import patchManagerConfirmVaccineReducer, {
 import vaccineStudentReducer from "./vaccineNurse/vaccineById/vaccineByIdSlice";
 import vaccineReducer from "./vaccineNurse/vaccine/vaccineSlice";
 import healthProfileReducer from "./profileParent/profileSlice";
+import managerDeleteVaccineReducer from "./manager/DeleteVaccineEvent/deleteVaccineEventSlice";
+import managerCreateMedicineReducer from "./manager/CreateManagerMedicine/createManagerMedicineSlice";
+import getMedicineSupplyManagerReducer from "./manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -55,6 +58,10 @@ const rootReducer = combineReducers({
   getManagerClass: getClassManagerReducer,
   patchManagerVaccine: patchManagerVaccineReducer,
   patchManagerConfirmVaccine: patchManagerConfirmVaccineReducer,
+  deleteManagerVacine: managerDeleteVaccineReducer,
+  createManagerMedicine: managerCreateMedicineReducer,
+  getMedicineSupplyManager: getMedicineSupplyManagerReducer,
+
   parentProfileHealth: healthProfileReducer,
 });
 
