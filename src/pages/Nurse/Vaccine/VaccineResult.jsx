@@ -27,7 +27,7 @@ function VaccineResult({ studentList }) {
         name: item.student,
         grade: item.grade,
         vaccinated: false,
-        result: "Tốt",
+        result: "GOOD",
         note: "",
       }));
 
@@ -56,12 +56,6 @@ function VaccineResult({ studentList }) {
   };
 
   const handleSendResult = () => {
-    const resultMap = {
-      Tốt: "GOOD",
-      Nhẹ: "MILD",
-      Nặng: "SEVERE",
-    };
-
     if (dataRecord.length === 0) {
       console.error("Không có dữ liệu để gửi");
       return;
@@ -75,18 +69,18 @@ function VaccineResult({ studentList }) {
     }
 
     const format = dataRecord.map((item) => ({
-      id: item.id,
-      status: item.vaccinated ? "SUCCESS" : "FAILED",
+      studentID: item.id,
+      status: item.vaccinated ? "SUCCESS" : "SKIPPED",
       note: item.note,
-      result: resultMap[item.result] || "GOOD",
+      result: item.result,
     }));
-
-    console.log("Gửi dữ liệu POST:", format);
+    const total = {
+      result: format,
+    };
+    console.log("Gửi dữ liệu POST:", total);
     console.log("ID Vaccine:", idVaccine);
 
-    dispatch(
-      updateVaccineResult({ IdVaccine: idVaccine, bodyVaccine: format })
-    );
+    dispatch(updateVaccineResult({ IdVaccine: idVaccine, bodyVaccine: total }));
   };
 
   const columnsRecord = [
@@ -126,9 +120,8 @@ function VaccineResult({ studentList }) {
           className="w-full"
           onChange={(value) => handleResultChange(record.key, value)}
         >
-          <Option value="Tốt">Tốt</Option>
-          <Option value="Nhẹ">Nhẹ</Option>
-          <Option value="Nặng">Nặng</Option>
+          <Option value="GOOD">Tốt</Option>
+          <Option value="BAD">Nặng</Option>
         </Select>
       ),
     },

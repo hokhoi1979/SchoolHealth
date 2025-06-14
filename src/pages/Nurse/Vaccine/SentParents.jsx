@@ -7,9 +7,9 @@ import { postResultVaccine } from "../../../redux/vaccineNurse/sendResult/sendRe
 function SentParents({ studentList }) {
   const [idVaccine, setIdVaccine] = useState(null);
   const [open, setOpen] = useState(false);
-  const [mainData, setMainData] = useState([]); // Dữ liệu bảng chính
-  const [modalData, setModalData] = useState([]); // Dữ liệu trong modal
-  const [sending, setSending] = useState(false); // loading gửi
+  const [mainData, setMainData] = useState([]);
+  const [modalData, setModalData] = useState([]);
+  const [sending, setSending] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,8 +24,10 @@ function SentParents({ studentList }) {
     error,
   } = useSelector((state) => state.vaccineResult);
 
+  const { sent = [] } = useSelector((state) => state.sendVaccineResult);
+
   useEffect(() => {
-    dispatch(fetchVaccineResult(1));
+    dispatch(fetchVaccineResult(4));
   }, [dispatch]);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ function SentParents({ studentList }) {
         kq: item?.result,
         updatedAt: item?.updatedAt,
         note: item?.note,
-        sent: item?.status?.toLowerCase() === "success", // hoặc nếu có field "sent" từ backend thì dùng item.sent
+        sent: item?.status?.toLowerCase() === "success",
       }));
       setMainData(formatted);
     }
@@ -53,10 +55,28 @@ function SentParents({ studentList }) {
   const handleSendResult = async () => {
     if (!idVaccine) return;
     setSending(true);
+
     try {
       await dispatch(postResultVaccine(idVaccine));
-      await dispatch(fetchVaccineResult(1));
-      setOpen(false); // đóng modal sau khi gửi xong
+      const response = await dispatch(fetchVaccineResult(idVaccine));
+
+      const resultData = response?.payload?.data;
+      if (Array.isArray(resultData)) {
+        const formatted = resultData.map((item) => ({
+          id: item?.studentID,
+          student: item?.student?.account?.fullname,
+          parent: item?.student?.ParentInfo?.fullname,
+          grade: item?.student?.classAssignments?.[0]?.class?.name,
+          status: item?.status,
+          kq: item?.result,
+          updatedAt: item?.updatedAt,
+          note: item?.note,
+          sent: item?.status?.toLowerCase() === "success",
+        }));
+        setMainData(formatted);
+      }
+
+      setOpen(false);
     } catch (error) {
       console.error("Send failed", error);
     } finally {
@@ -178,7 +198,7 @@ function SentParents({ studentList }) {
       align: "center",
       render: (sent) => (
         <Space>
-          {sent ? (
+          {sent.success === true ? (
             <p className="rounded-2xl w-[80px] p-1 bg-[#6CC76F] text-white">
               Sent
             </p>

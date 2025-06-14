@@ -9,6 +9,9 @@ const History = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <h1 className="pl-10 pt-5 text-xl font-inria font-medium mb-4">
+        <CommonBreadcrumb role={"Parent"} page={"history"} />
+      </h1>
       <div className="p-6 flex flex-col flex-1">
         <h1 className="text-3xl font-bold text-blue-400 ml-5">
           HISTORY & DASHBOARD
