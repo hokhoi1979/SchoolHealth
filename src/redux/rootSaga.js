@@ -26,6 +26,9 @@ import watchFetchUpdateHealth from "./profileParent/profileSaga";
 import watchFetchVaccineParent from "./getVaccineParent/getVaccineParentSaga";
 import watchFetchVaccineParentResult from "./getVaccineParent/getVaccineParentResultSaga";
 import watchHealthProfileSaga from "./profileParent/profileSaga";
+import watchDeleteManagerVaccine from "./manager/DeleteVaccineEvent/deleteVaccineEventSaga";
+import watchPostManagerMedicine from "./manager/CreateManagerMedicine/createManagerMedicineSaga";
+import watchFetchMedicineSuppplyManager from "./manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -48,6 +51,9 @@ export default function* rootSaga() {
     watchPutVaccineManager(),
     watchFetchClassManager(),
     watchPatchVaccineManager(),
+    watchDeleteManagerVaccine(),
+    watchPostManagerMedicine(),
+    watchFetchMedicineSuppplyManager(),
 
     // watchFetchVaccineResult(),
     watchFetchVaccineResult(),

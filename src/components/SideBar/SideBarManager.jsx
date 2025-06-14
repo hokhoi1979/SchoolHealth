@@ -77,37 +77,6 @@ const SideBarManager = () => {
 
         <div className="pl-3 pr-3 pt-5 text-[#5B5454]">
           <div
-            className={`flex items-center gap-4  hover:bg-[#EFEEEE] p-2 rounded-xl ${
-              click === "dashboard"
-                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
-                : ""
-            } ${toggle && "justify-center"} `}
-            style={{ cursor: "pointer" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              className="text-[#5B5454]"
-            >
-              <path
-                fill="#5B5454"
-                d="M2 13h6v8H2zm14-5h6v13h-6zM9 3h6v18H9zM4 15v4h2v-4zm7-10v14h2V5zm7 5v9h2v-9z"
-              />
-            </svg>
-            {!toggle && (
-              <Link
-                onClick={() => setClick("dashboard")}
-                to={"/manager"}
-                className="text-[18px]"
-              >
-                Dash Board
-              </Link>
-            )}
-          </div>
-
-          <div
             className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
               click === "materials"
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"

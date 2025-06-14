@@ -20,12 +20,8 @@ import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
 // Manager imports
 import Home from "../pages/Home/Home";
 import ManagerLayout from "../pages/Manager/ManagerLayout";
-import Dashboard from "../pages/Nurse/Dashboard/DashboardNurse";
 import MedicalCheckup from "../pages/Manager/MedicalCheckup/MedicalCheckupManager";
 import VaccineManager from "../pages/Manager/vaccine/VaccineManager";
-import MedicalManager from "../pages/Manager/Dashboard/MedicalManager";
-import DashboardManager from "../pages/Manager/Dashboard/dashboardManager";
-import VaccinationManager from "../pages/Manager/Dashboard/VaccinationManager";
 import ImportManager from "../pages/Manager/MaterialManagement/ImportManager";
 import MaterialManage from "../pages/Manager/MaterialManagement/MaterialManage";
 import InventoryManager from "../pages/Manager/MaterialManagement/InventoryManager";
@@ -133,24 +129,13 @@ const router = createBrowserRouter([
         path: "/manager",
         element: <ManagerLayout />,
         children: [
-          { path: "", element: <Navigate to="dashboard" /> },
-          {
-            path: "dashboard",
-            element: <DashboardManager />,
-            children: [
-              { path: "", element: <MedicalManager /> },
-              { path: "vaccinationManager", element: <VaccinationManager /> },
-              { path: "checkupManager", element: <Checkup /> },
-              { path: "trendManager", element: <Trend /> },
-            ],
-          },
           {
             path: "materials",
             element: <MaterialManage />,
             children: [
               { path: "inventoryManager", element: <InventoryManager /> },
               { path: "importManager", element: <ImportManager /> },
-              { path: "exportManager", element: <VaccinationManager /> },
+              // { path: "exportManager", element: <VaccinationManager /> },
 
               { path: "medicineManager", element: <Trend /> },
             ],
@@ -163,7 +148,6 @@ const router = createBrowserRouter([
             path: "vaccine",
             element: <VaccineManager />,
             children: [
-              { path: "", element: <MedicalManager /> },
               { path: "vaccination", element: <Vaccination /> },
               { path: "checkup", element: <Checkup /> },
               { path: "trend", element: <Trend /> },
