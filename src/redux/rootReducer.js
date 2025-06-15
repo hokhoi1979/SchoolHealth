@@ -30,12 +30,20 @@ import healthProfileReducer from "./profileParent/profileSlice";
 import managerDeleteVaccineReducer from "./manager/DeleteVaccineEvent/deleteVaccineEventSlice";
 import managerCreateMedicineReducer from "./manager/CreateManagerMedicine/createManagerMedicineSlice";
 import getMedicineSupplyManagerReducer from "./manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSlice";
+import getAllMedicineNurseReducer from "./materialsNurse/getAllMedicine/getAllMedicineSlice";
+import getRequestMedicineReducer from "./materialsNurse/getSendRequestMedicine/getRequestMedicineSlice";
+import getMedicineSupplyReducer from "./materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
+import postRequestMedicineReducer from "./materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSLice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
   profile: profileReducer,
   vaccine: vaccineReducer,
   vaccineStudent: vaccineStudentReducer,
+  medicineNurse: getAllMedicineNurseReducer,
+  requestMedicine: getRequestMedicineReducer,
+  getMedicineSupplyNurse: getMedicineSupplyReducer,
+  postRequestMedicine: postRequestMedicineReducer,
 
   profileParent: profileParentReducer,
   studentOfParent: studentOfParentReducer,

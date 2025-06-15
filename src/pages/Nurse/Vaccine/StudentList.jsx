@@ -42,9 +42,12 @@ function StudentList() {
       student?.data?.studentResponseEntity &&
       Array.isArray(student?.data?.studentResponseEntity)
     ) {
+      const idVaccine = student?.data?.id;
       const format = student?.data?.studentResponseEntity.map((item) => {
         return {
-          id: item?.student?.student_code,
+          idVaccine,
+          id: item?.student?.id,
+          studentId: item?.student?.student_code,
           student: item?.student?.account?.fullname,
           parent: item?.student?.ParentInfo?.fullname,
           phone: item?.student?.ParentInfo?.phone,
@@ -53,6 +56,7 @@ function StudentList() {
           grade: item?.student?.classAssignments?.[0]?.class?.name || "N/A",
         };
       });
+
       setData(format);
       console.log("FORMAT", data);
     }
@@ -65,8 +69,8 @@ function StudentList() {
   const columns = [
     {
       title: "ID",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "studentId",
+      key: "studentId",
       align: "center",
     },
     {
@@ -100,19 +104,29 @@ function StudentList() {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.status?.toLowerCase() === "confirm" ? (
+          {record.status?.toLowerCase() === "accepted" && (
             <p
               type="secondary"
               className="rounded-2xl w-[80px] text-[#6CC76F] font-medium "
             >
-              Confirm
+              Accept
             </p>
-          ) : (
+          )}
+          {record.status?.toLowerCase() === "pending" && (
             <p
               type="secondary"
-              className="rounded-2xl w-[80px] text-[#E26666] font-medium"
+              className="rounded-2xl w-[80px] text-[#abc600] font-medium"
             >
-              Refuse
+              Pending
+            </p>
+          )}
+
+          {record.status?.toLowerCase() === "declined" && (
+            <p
+              type="secondary"
+              className="rounded-2xl w-[80px] text-[#c93f0c] font-medium"
+            >
+              Declined
             </p>
           )}
         </Space>
@@ -201,12 +215,12 @@ function StudentList() {
       )}
       {selectedOption === "record" && (
         <div className="flex gap-5 pl-5">
-          <VaccineResult />
+          <VaccineResult studentList={data} />
         </div>
       )}
       {selectedOption === "send" && (
         <div className="flex gap-5 pl-5">
-          <SentParents />
+          <SentParents studentList={data} />
         </div>
       )}
       <div className="h-20"></div>
