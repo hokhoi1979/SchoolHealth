@@ -14,13 +14,14 @@ function* fetchHealthProfileSaga() {
     console.log(token);
     const response = yield call(axios.get, `${URL_API}/parent/v1/health`, {
       headers: {
-        Authorization: `${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
 
     if (response.status === 200) {
       yield put(fetchHealthProfileSuccess(response.data));
+      console.log(response.data);
     } else {
       yield put(fetchHealthProfileFail("Unexpected response status"));
     }

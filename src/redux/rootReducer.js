@@ -21,14 +21,29 @@ import sendResultVaccineReducer from "./vaccineNurse/sendResult/sendResultSlice"
 import updateVaccineReducer from "./vaccineNurse/updateVaccineResult/updateResultSlice";
 import checkupReducer from "./checkupNurse/checkupSlice";
 import profileDetailReducer from "./vaccineNurse/profileDetail/profileStudentSlice";
+import patchManagerConfirmVaccineReducer, {
+  patchManagerConfirmVaccine,
+} from "./manager/ConfirmVaccineManager/ConfirmVaccineManagerSlice";
 import vaccineStudentReducer from "./vaccineNurse/vaccineById/vaccineByIdSlice";
 import vaccineReducer from "./vaccineNurse/vaccine/vaccineSlice";
+import healthProfileReducer from "./profileParent/profileSlice";
+import managerDeleteVaccineReducer from "./manager/DeleteVaccineEvent/deleteVaccineEventSlice";
+import managerCreateMedicineReducer from "./manager/CreateManagerMedicine/createManagerMedicineSlice";
+import getMedicineSupplyManagerReducer from "./manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSlice";
+import getAllMedicineNurseReducer from "./materialsNurse/getAllMedicine/getAllMedicineSlice";
+import getRequestMedicineReducer from "./materialsNurse/getSendRequestMedicine/getRequestMedicineSlice";
+import getMedicineSupplyReducer from "./materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
+import postRequestMedicineReducer from "./materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSLice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
   profile: profileReducer,
   vaccine: vaccineReducer,
   vaccineStudent: vaccineStudentReducer,
+  medicineNurse: getAllMedicineNurseReducer,
+  requestMedicine: getRequestMedicineReducer,
+  getMedicineSupplyNurse: getMedicineSupplyReducer,
+  postRequestMedicine: postRequestMedicineReducer,
 
   profileParent: profileParentReducer,
   studentOfParent: studentOfParentReducer,
@@ -50,6 +65,12 @@ const rootReducer = combineReducers({
   putManagerVaccine: managerUpdateMedicalReducer,
   getManagerClass: getClassManagerReducer,
   patchManagerVaccine: patchManagerVaccineReducer,
+  patchManagerConfirmVaccine: patchManagerConfirmVaccineReducer,
+  deleteManagerVacine: managerDeleteVaccineReducer,
+  createManagerMedicine: managerCreateMedicineReducer,
+  getMedicineSupplyManager: getMedicineSupplyManagerReducer,
+
+  parentProfileHealth: healthProfileReducer,
 });
 
 export default rootReducer;

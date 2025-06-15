@@ -1,15 +1,16 @@
-import { Button, Modal, Space, Table } from "antd";
+import { Button, message, Modal, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVaccineResult } from "../../../redux/vaccineNurse/vaccineResult/vaccineResultSlice";
 import { postResultVaccine } from "../../../redux/vaccineNurse/sendResult/sendResultSlice";
-
+import { toast } from "react-toastify";
 function SentParents({ studentList }) {
   const [idVaccine, setIdVaccine] = useState(null);
   const [open, setOpen] = useState(false);
   const [mainData, setMainData] = useState([]);
   const [modalData, setModalData] = useState([]);
   const [sending, setSending] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -77,12 +78,15 @@ function SentParents({ studentList }) {
       }
 
       setOpen(false);
+      toast.success("Send successful!");
     } catch (error) {
       console.error("Send failed", error);
     } finally {
       setSending(false);
     }
   };
+
+  console.log("first", sent);
 
   const handleCancel = () => {
     setOpen(false);
@@ -121,7 +125,7 @@ function SentParents({ studentList }) {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.status?.toLowerCase() === "attended" ? (
+          {record.status?.toLowerCase() === "success" ? (
             <p className="rounded-xl w-[80px] p-1 bg-[#6CC76F] text-white">
               Attended
             </p>
@@ -191,25 +195,6 @@ function SentParents({ studentList }) {
       key: "note",
       align: "center",
     },
-    {
-      title: "Send result",
-      dataIndex: "sent",
-      key: "sent",
-      align: "center",
-      render: (sent) => (
-        <Space>
-          {sent.success === true ? (
-            <p className="rounded-2xl w-[80px] p-1 bg-[#6CC76F] text-white">
-              Sent
-            </p>
-          ) : (
-            <p className="rounded-2xl w-[80px] p-1 bg-[#E26666] text-white">
-              Not sent
-            </p>
-          )}
-        </Space>
-      ),
-    },
   ];
 
   return (
@@ -276,7 +261,7 @@ function SentParents({ studentList }) {
               className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
               onClick={handleSendResult}
               loading={sending}
-              disabled={sending}
+              disabled={sending || modalData.every((item) => item.sent)}
             >
               {sending ? "Sending..." : "Send Result"}
             </Button>
