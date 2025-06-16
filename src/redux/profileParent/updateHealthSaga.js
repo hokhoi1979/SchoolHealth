@@ -11,27 +11,35 @@ const URL_API = import.meta.env.VITE_API_URL;
 function* updateHealthSaga(action) {
   try {
     const token = localStorage.getItem("accessToken");
-    const id = action.payload;
+    const { studentID, ...healthData } = action.payload;
+
     const response = yield call(
       axios.put,
-      `${URL_API}/parent/v1/health/${id}`,
+      `${URL_API}/parent/v1/health/${studentID}`,
+      healthData,
       {
         headers: {
-          Authorization: `${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log(response.data);
-
       yield put(fetchUpdateHealthSucess(response.data));
+      console.log("SUCCESS", response);
     } else {
       yield put(fetchUpdateHealthFail(response.status));
     }
   } catch (error) {
-    yield put(fetchUpdateHealthFail(error));
+    console.log(error);
+    yield put(
+      fetchUpdateHealthFail({
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+      })
+    );
   }
 }
 

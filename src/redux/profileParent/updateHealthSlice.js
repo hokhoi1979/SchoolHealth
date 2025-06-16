@@ -2,7 +2,7 @@ export const FETCH__UPDATE__HEALTH = "FETCH__UPDATE__HEALTH";
 export const FETCH__UPDATE__HEALTH__SUCCESS = "FETCH__UPDATE__HEALTH__SUCCESS";
 export const FETCH__UPDATE__HEALTH__FAIL = "FETCH__UPDATE__HEALTH__FAIL";
 
-export const fetchVaccineStudent = (data) => ({
+export const fetchUpdateHealth = (data) => ({
   type: FETCH__UPDATE__HEALTH,
   payload: data,
 });

@@ -13,11 +13,18 @@ export function* fetchLogin(action) {
     );
     if (response?.data?.backendToken?.accessToken) {
       const decodedUser = jwtDecode(response.data.backendToken.accessToken);
-      localStorage.setItem("accessToken", response.data.backendToken.accessToken);
+      localStorage.setItem(
+        "accessToken",
+        response.data.backendToken.accessToken
+      );
       if (response.status === 200 || response.status === 201) {
         yield put(
-          fetchSuccess({ user: decodedUser, token: response.data.backendToken.accessToken })
+          fetchSuccess({
+            user: decodedUser,
+            token: response.data.backendToken.accessToken,
+          })
         );
+        console.log("TOKEN", response.data.backendToken.accessToken);
       } else {
         yield put(fetchFail(response.status));
       }
@@ -28,15 +35,14 @@ export function* fetchLogin(action) {
   } catch (error) {
     console.error("Login error:", error.response || error.message);
 
-  let errorMessage = "Login failed!";
-  if (error.response?.data?.message) {
-    errorMessage = error.response.data.message;
-  } else if (error.message) {
-    errorMessage = error.message;
+    let errorMessage = "Login failed!";
+    if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    yield put(fetchFail(errorMessage));
   }
-  yield put(fetchFail(errorMessage));
-}
-
 }
 function* watchFetchLogin() {
   yield takeLatest(FETCH_API_LOGIN, fetchLogin);

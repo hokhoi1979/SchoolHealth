@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import { useState } from "react";
 import {
   Button,
   Card,
@@ -15,10 +17,11 @@ import { AppFooter } from "../../../components/Footer/AppFooter";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStudent } from "../../../redux/profileParent/StudentOfParentSlice";
+import { fetchParentHealth } from "../../../redux/profileParent/parentGetHealth/parentGetHealthSlice";
 import { fetchCreateHealth } from "../../../redux/profileParent/createHealthSlice";
 import { fetchForm } from "../../../redux/profileParent/formSlice";
-import { fetchHealthProfile } from "../../../redux/profileParent/profileSlice";
 import { fetchHealth } from "../../../redux/profileParent/HealthByIdSlice";
+import { fetchUpdateHealth } from "../../../redux/profileParent/updateHealthSlice";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -28,14 +31,17 @@ const StudentHealth = () => {
 
   //API get information student
   const { student, loading } = useSelector((state) => state.studentOfParent);
-  //API get all health profile
-  const { healthProfiles = [] } = useSelector((state) => state.profileParent);
   //API get detail form
   const { formData, loading: formLoading } = useSelector(
     (state) => state.formParent
   );
   //API get detail health information
   const { healthDetail } = useSelector((state) => state.healthStudent);
+
+  // Add selector for update health status
+  const { loading: updateLoading, success: updateSuccess } = useSelector(
+    (state) => state.updateHealth || {}
+  );
 
   const allergiesDetail = Array.isArray(formData?.Allergies)
     ? formData.Allergies
@@ -47,24 +53,26 @@ const StudentHealth = () => {
     ? formData.Vaccination
     : [];
 
-  // State for save status
+  //State for save status
   const [saved, setSaved] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showHealthForm, setShowHealthForm] = useState(false);
   const [healthExists, setHealthExists] = useState(null);
   const [viewModal, setViewModal] = useState(false);
 
+  const { healthProfileParent = [] } = useSelector(
+    (state) => state.healthParentProfile
+  );
+
   const fetchData = () => {
     dispatch(fetchStudent());
     dispatch(fetchForm());
-    dispatch(fetchHealthProfile());
+    dispatch(fetchParentHealth());
   };
 
   useEffect(() => {
     fetchData();
   }, []);
-
-  console.log("Khanh", healthProfiles);
 
   const handleSelectedStudent = (studentId) => {
     setSelectedStudent(studentId);
@@ -80,7 +88,17 @@ const StudentHealth = () => {
     }
   }, [healthDetail, selectedStudent]);
 
-  // Autofill form if data exists
+  // FIX 1: Re-fetch health data after successful update
+  useEffect(() => {
+    if (updateSuccess && selectedStudent) {
+      // Re-fetch the health data to get updated information
+      dispatch(fetchHealth(selectedStudent));
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    }
+  }, [updateSuccess, selectedStudent, dispatch]);
+
+  //Autofill form if data exists
   useEffect(() => {
     if (healthDetail && selectedStudent === healthDetail.studentID) {
       setHeight(healthDetail.height || "");
@@ -124,27 +142,27 @@ const StudentHealth = () => {
   const [treatmentHistory, setTreatmentHistory] = useState("");
   const [additionalNote, setAddtionalNote] = useState("");
 
-  // State for Allergies
+  //State for Allergies
   const [hasAllergy, setHasAllergy] = useState("no");
   const [allergies, setAllergies] = useState([]);
   const [detailAllergies, setDetailAllergies] = useState("");
   const [methodAllergies, setMethodAllergies] = useState("");
 
-  // State for Chronic
+  //State for Chronic
   const [hasChronic, setHasChronic] = useState("no");
   const [chronicDiseases, setChronicDiseases] = useState([]);
   const [detailChronicDiseases, setDetailChronicDiseases] = useState("");
   const [methodChronicDiseases, setMethodChronicDiseases] = useState("");
   const [medicationNote, setMedicationNote] = useState("");
 
-  // State for Vaccination
+  //State for Vaccination
   const [healthVaccination, setHealthVaccination] = useState("no");
   const [selectedVaccinations, setSelectedVaccinations] = useState([]);
   const [vaccinationHistory, setVaccinationHistory] = useState("");
   const [hadSideEffects, setHadSideEffects] = useState("no");
   const [detailSideEffect, setDetailSideEffect] = useState("");
 
-  // State for Vision & Hearing
+  //State for Vision & Hearing
   const [visionLeft, setVisionLeft] = useState("");
   const [visionRight, setVisionRight] = useState("");
   const [wearGlasses, setWearGlasses] = useState("no");
@@ -178,7 +196,7 @@ const StudentHealth = () => {
       noteVision,
       hearingLeft,
       hearingRight,
-      hearingAid: useHearingAids === "yes", // CHỈNH CHỮ BOOLEAN
+      hearingAid: useHearingAids === "yes",
       noteHearing,
       selectedVaccinations,
       vaccinationHistory,
@@ -188,6 +206,104 @@ const StudentHealth = () => {
     dispatch(fetchCreateHealth(payload));
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
+  };
+
+  //State local trong modal de edit
+  const [modalIsEditing, setModalIsEditing] = useState(false);
+  const [updateModalForm, setUpdateModalForm] = useState({
+    height: "",
+    weight: "",
+    bloodGroup: "",
+    treatmentHistory: "",
+    additionalNote: "",
+    hasNoAllergies: false,
+    selectedAllergyIds: [],
+    detailAllergies: "",
+    methodAllergies: "",
+    hasNochronicDiseases: false,
+    selectedChronicDiseases: [],
+    detailChronicDiseases: "",
+    methodChronicDiseases: "",
+    medicationNote: "",
+    visionLeft: "",
+    visionRight: "",
+    wearGlasses: false,
+    noteVision: "",
+    hearingLeft: "",
+    hearingRight: "",
+    hearingAid: false,
+    noteHearing: "",
+    selectedVaccinations: [],
+    vaccinationHistory: "",
+    sideEffect: false,
+    DetailSideEffect: "",
+  });
+
+  // FIX 2: Update modal form when healthDetail changes
+  useEffect(() => {
+    if (healthDetail?.data?.healthProfile) {
+      const p = healthDetail.data.healthProfile;
+      setUpdateModalForm({
+        height: p.height || "",
+        weight: p.weight || "",
+        bloodGroup: p.bloodGroup || "",
+        treatmentHistory: p.treatmentHistory || "",
+        additionalNote: p.additionalNote || "",
+        hasNoAllergies: p.hasNoAllergies || false,
+        selectedAllergyIds: p.hasNoAllergies
+          ? []
+          : p.healthAllergies?.map((a) => a.allergies.id) || [1],
+        detailAllergies: p.detailAllergies || "",
+        methodAllergies: p.methodAllergies || "",
+        hasNochronicDiseases: p.hasNochronicDiseases || false,
+        selectedChronicDiseases: p.hasNochronicDiseases
+          ? []
+          : p.healthChronicDiseases?.map((c) => c.chronicDiseases.id) || [1],
+        detailChronicDiseases: p.detailChronicDiseases || "",
+        methodChronicDiseases: p.methodChronicDiseases || "",
+        medicationNote: p.medicationNote || "",
+        visionLeft: p.visionLeft || "",
+        visionRight: p.visionRight || "",
+        wearGlasses: p.wearGlasses || false,
+        noteVision: p.noteVision || "",
+        hearingLeft: p.hearingLeft || "",
+        hearingRight: p.hearingRight || "",
+        hearingAid: p.hearingAid || false,
+        noteHearing: p.noteHearing || "",
+        selectedVaccinations: p.healthVaccination?.map(
+          (v) => v.vaccination.id
+        ) || [1],
+        vaccinationHistory: p.vaccinationHistory || "",
+        sideEffect: p.sideEffect || false,
+        DetailSideEffect: p.DetailSideEffect || "",
+      });
+    }
+  }, [healthDetail]);
+
+  //State lay du lieu healthDetail
+  const openModalWithData = () => {
+    setModalIsEditing(false);
+    setViewModal(true);
+  };
+
+  // FIX 3: Improved modal save function
+  const handleModalSave = async () => {
+    const updatedFields = {
+      ...updateModalForm,
+      studentID: healthDetail.data.healthProfile.id,
+    };
+
+    console.log("Update fields", updatedFields);
+
+    try {
+      await dispatch(fetchUpdateHealth(updatedFields));
+      setViewModal(false);
+      setModalIsEditing(false);
+      // The useEffect above will handle re-fetching and showing success message
+    } catch (error) {
+      console.error("Update failed:", error);
+      // Handle error if needed
+    }
   };
 
   return (
@@ -213,7 +329,7 @@ const StudentHealth = () => {
               placeholder="Choose your student"
               className="w-full"
               loading={loading}
-              onChange={(v) => setSelectedStudent(v)}
+              onChange={handleSelectedStudent}
             >
               {student?.map((s) => (
                 <Option key={s.id} value={s.id}>
@@ -232,15 +348,7 @@ const StudentHealth = () => {
                     Health record information available
                   </p>
                   <div className="flex gap-3 mt-3">
-                    <Button onClick={() => setViewModal(true)}>
-                      View detail
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={() => setShowHealthForm(true)}
-                    >
-                      Update
-                    </Button>
+                    <Button onClick={openModalWithData}>View detail</Button>
                   </div>
                 </>
               ) : (
@@ -603,8 +711,8 @@ const StudentHealth = () => {
                           </p>
                         ) : (
                           <Checkbox.Group
-                            value={healthVaccination}
-                            onChange={setHealthVaccination}
+                            value={selectedVaccinations}
+                            onChange={setSelectedVaccinations}
                             className="mb-2"
                           >
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
@@ -773,7 +881,7 @@ const StudentHealth = () => {
                       <Select
                         placeholder="Select hearing level"
                         value={hearingLeft}
-                        onChange={(e) => setHearingLeft(e.target.value)}
+                        onChange={setHearingLeft}
                         className="w-full"
                       >
                         <Option value="normal">Normal</Option>
@@ -792,7 +900,7 @@ const StudentHealth = () => {
                       <Select
                         placeholder="Select hearing level"
                         value={hearingRight}
-                        onChange={(e) => setHearingRight(e.target.value)}
+                        onChange={setHearingRight}
                         className="w-full"
                       >
                         <Option value="normal">Normal</Option>
@@ -860,33 +968,643 @@ const StudentHealth = () => {
         <div className="h-[160px] w-full"></div>
       </div>
       <AppFooter />
-      {/* Modal xem chi tiết */}
+
+      {/* Modal xem chi tiết - FIX 4: Improved Modal */}
       <Modal
         title="Health Record Detail"
         open={viewModal}
-        onCancel={() => setViewModal(false)}
-        footer={<Button onClick={() => setViewModal(false)}>Close</Button>}
+        onCancel={() => {
+          setViewModal(false);
+          setModalIsEditing(false);
+        }}
+        footer={
+          modalIsEditing ? (
+            <>
+              <Button
+                onClick={() => setModalIsEditing(false)}
+                disabled={updateLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="primary"
+                onClick={handleModalSave}
+                loading={updateLoading}
+              >
+                Save
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button onClick={() => setViewModal(false)}>Close</Button>
+              <Button type="primary" onClick={() => setModalIsEditing(true)}>
+                Update
+              </Button>
+            </>
+          )
+        }
         width={800}
       >
-        {healthDetail ? (
-          <div className="space-y-2">
-            <p>
-              <b>Height:</b> {healthDetail.height} cm
-            </p>
-            <p>
-              <b>Weight:</b> {healthDetail.weight} kg
-            </p>
-            <p>
-              <b>Blood Group:</b> {healthDetail.bloodGroup}
-            </p>
-            <p>
-              <b>Has Allergies:</b> {healthDetail.hasNoAllergies ? "No" : "Yes"}
-            </p>
-            <p>
-              <b>Has Chronic Diseases:</b>{" "}
-              {healthDetail.hasNochronicDiseases ? "No" : "Yes"}
-            </p>
-            {/* Hiển thị thêm các trường khác nếu cần */}
+        {healthDetail?.data?.healthProfile ? (
+          <div className="grid grid-cols-2 gap-4">
+            {/* Height */}
+            <div>
+              <b>Height:</b>
+              {modalIsEditing ? (
+                <Input
+                  value={updateModalForm.height}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      height: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <span> {updateModalForm.height} cm</span>
+              )}
+            </div>
+
+            {/* Weight */}
+            <div>
+              <b>Weight:</b>
+              {modalIsEditing ? (
+                <Input
+                  value={updateModalForm.weight}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      weight: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <span> {updateModalForm.weight} kg</span>
+              )}
+            </div>
+
+            {/* Blood Group */}
+            <div>
+              <b>Blood Group:</b>
+              {modalIsEditing ? (
+                <Select
+                  value={updateModalForm.bloodGroup}
+                  onChange={(val) =>
+                    setUpdateModalForm({ ...updateModalForm, bloodGroup: val })
+                  }
+                  className="w-full"
+                >
+                  <Option value="A">A</Option>
+                  <Option value="B">B</Option>
+                  <Option value="AB">AB</Option>
+                  <Option value="O">O</Option>
+                  <Option value="unknown">Unknown</Option>
+                </Select>
+              ) : (
+                <span> {updateModalForm.bloodGroup}</span>
+              )}
+            </div>
+
+            {/* Treatment History */}
+            <div className="col-span-2">
+              <b>Treatment History:</b>
+              {modalIsEditing ? (
+                <TextArea
+                  rows={3}
+                  value={updateModalForm.treatmentHistory}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      treatmentHistory: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <p>{updateModalForm.treatmentHistory}</p>
+              )}
+            </div>
+
+            {/* Additional Note */}
+            <div className="col-span-2">
+              <b>Additional Note:</b>
+              {modalIsEditing ? (
+                <TextArea
+                  rows={3}
+                  value={updateModalForm.additionalNote}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      additionalNote: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <p>{updateModalForm.additionalNote}</p>
+              )}
+            </div>
+
+            {/* Allergies */}
+            <div className="col-span-2">
+              <b>Has No Allergies:</b>
+              {modalIsEditing ? (
+                <Radio.Group
+                  value={updateModalForm.hasNoAllergies ? "no" : "yes"}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      hasNoAllergies: e.target.value === "no",
+                      selectedAllergyIds:
+                        e.target.value === "no"
+                          ? []
+                          : updateModalForm.selectedAllergyIds,
+                      detailAllergies:
+                        e.target.value === "no"
+                          ? ""
+                          : updateModalForm.detailAllergies,
+                      methodAllergies:
+                        e.target.value === "no"
+                          ? ""
+                          : updateModalForm.methodAllergies,
+                    })
+                  }
+                >
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </Radio.Group>
+              ) : (
+                <span>{updateModalForm.hasNoAllergies ? "No" : "Yes"}</span>
+              )}
+            </div>
+
+            {!updateModalForm.hasNoAllergies && (
+              <>
+                <div className="col-span-2">
+                  <b>Allergies:</b>
+                  {modalIsEditing ? (
+                    <Checkbox.Group
+                      value={updateModalForm.selectedAllergyIds}
+                      onChange={(values) =>
+                        setUpdateModalForm({
+                          ...updateModalForm,
+                          selectedAllergyIds:
+                            values.length > 0 || updateModalForm.hasNoAllergies
+                              ? values
+                              : [1],
+                        })
+                      }
+                    >
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
+                        {allergiesDetail.map((item) => (
+                          <Checkbox key={item.id} value={item.id}>
+                            {item.name}
+                          </Checkbox>
+                        ))}
+                      </div>
+                    </Checkbox.Group>
+                  ) : (
+                    <p>
+                      {updateModalForm.selectedAllergyIds
+                        .map(
+                          (id) =>
+                            allergiesDetail.find((item) => item.id === id)
+                              ?.name || "Unknown"
+                        )
+                        .join(", ")}
+                    </p>
+                  )}
+                </div>
+
+                <div className="col-span-2">
+                  <b>Allergy Details:</b>
+                  {modalIsEditing ? (
+                    <TextArea
+                      rows={3}
+                      value={updateModalForm.detailAllergies}
+                      onChange={(e) =>
+                        setUpdateModalForm({
+                          ...updateModalForm,
+                          detailAllergies: e.target.value,
+                        })
+                      }
+                    />
+                  ) : (
+                    <p>{updateModalForm.detailAllergies}</p>
+                  )}
+                </div>
+
+                <div className="col-span-2">
+                  <b>Allergy Methods:</b>
+                  {modalIsEditing ? (
+                    <TextArea
+                      rows={3}
+                      value={updateModalForm.methodAllergies}
+                      onChange={(e) =>
+                        setUpdateModalForm({
+                          ...updateModalForm,
+                          methodAllergies: e.target.value,
+                        })
+                      }
+                    />
+                  ) : (
+                    <p>{updateModalForm.methodAllergies}</p>
+                  )}
+                </div>
+              </>
+            )}
+
+            {/* Chronic Diseases */}
+            <div className="col-span-2">
+              <b>Has No Chronic Diseases:</b>
+              {modalIsEditing ? (
+                <Radio.Group
+                  value={updateModalForm.hasNochronicDiseases ? "no" : "yes"}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      hasNochronicDiseases: e.target.value === "no",
+                      selectedChronicDiseases:
+                        e.target.value === "no"
+                          ? []
+                          : updateModalForm.selectedChronicDiseases,
+                      detailChronicDiseases:
+                        e.target.value === "no"
+                          ? ""
+                          : updateModalForm.detailChronicDiseases,
+                      methodChronicDiseases:
+                        e.target.value === "no"
+                          ? ""
+                          : updateModalForm.methodChronicDiseases,
+                      medicationNote:
+                        e.target.value === "no"
+                          ? ""
+                          : updateModalForm.medicationNote,
+                    })
+                  }
+                >
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </Radio.Group>
+              ) : (
+                <span>
+                  {updateModalForm.hasNochronicDiseases ? "No" : "Yes"}
+                </span>
+              )}
+            </div>
+
+            {!updateModalForm.hasNochronicDiseases && (
+              <>
+                <div className="col-span-2">
+                  <b>Chronic Diseases:</b>
+                  {modalIsEditing ? (
+                    <Checkbox.Group
+                      value={updateModalForm.selectedChronicDiseases}
+                      onChange={(values) =>
+                        setUpdateModalForm({
+                          ...updateModalForm,
+                          selectedChronicDiseases:
+                            values.length > 0 ? values : [1],
+                        })
+                      }
+                    >
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
+                        {chronicDetail.map((item) => (
+                          <Checkbox key={item.id} value={item.id}>
+                            {item.name}
+                          </Checkbox>
+                        ))}
+                      </div>
+                    </Checkbox.Group>
+                  ) : (
+                    <p>
+                      {updateModalForm.selectedChronicDiseases
+                        .map(
+                          (id) =>
+                            chronicDetail.find((item) => item.id === id)
+                              ?.name || "Unknown"
+                        )
+                        .join(", ")}
+                    </p>
+                  )}
+                </div>
+
+                <div className="col-span-2">
+                  <b>Chronic Disease Details:</b>
+                  {modalIsEditing ? (
+                    <TextArea
+                      rows={3}
+                      value={updateModalForm.detailChronicDiseases}
+                      onChange={(e) =>
+                        setUpdateModalForm({
+                          ...updateModalForm,
+                          detailChronicDiseases: e.target.value,
+                        })
+                      }
+                    />
+                  ) : (
+                    <p>{updateModalForm.detailChronicDiseases}</p>
+                  )}
+                </div>
+
+                <div className="col-span-2">
+                  <b>Chronic Disease Methods:</b>
+                  {modalIsEditing ? (
+                    <TextArea
+                      rows={3}
+                      value={updateModalForm.methodChronicDiseases}
+                      onChange={(e) =>
+                        setUpdateModalForm({
+                          ...updateModalForm,
+                          methodChronicDiseases: e.target.value,
+                        })
+                      }
+                    />
+                  ) : (
+                    <p>{updateModalForm.methodChronicDiseases}</p>
+                  )}
+                </div>
+
+                <div className="col-span-2">
+                  <b>Medication Notes:</b>
+                  {modalIsEditing ? (
+                    <TextArea
+                      rows={3}
+                      value={updateModalForm.medicationNote}
+                      onChange={(e) =>
+                        setUpdateModalForm({
+                          ...updateModalForm,
+                          medicationNote: e.target.value,
+                        })
+                      }
+                    />
+                  ) : (
+                    <p>{updateModalForm.medicationNote}</p>
+                  )}
+                </div>
+              </>
+            )}
+
+            {/* Vision */}
+            <div className="col-span-2">
+              <b>Vision Left:</b>
+              {modalIsEditing ? (
+                <Input
+                  value={updateModalForm.visionLeft}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      visionLeft: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <span>{updateModalForm.visionLeft}</span>
+              )}
+            </div>
+
+            <div className="col-span-2">
+              <b>Vision Right:</b>
+              {modalIsEditing ? (
+                <Input
+                  value={updateModalForm.visionRight}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      visionRight: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <span>{updateModalForm.visionRight}</span>
+              )}
+            </div>
+
+            <div className="col-span-2">
+              <b>Wear Glasses:</b>
+              {modalIsEditing ? (
+                <Radio.Group
+                  value={updateModalForm.wearGlasses ? "yes" : "no"}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      wearGlasses: e.target.value === "yes",
+                      noteVision:
+                        e.target.value === "no"
+                          ? ""
+                          : updateModalForm.noteVision,
+                    })
+                  }
+                >
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </Radio.Group>
+              ) : (
+                <span>{updateModalForm.wearGlasses ? "Yes" : "No"}</span>
+              )}
+            </div>
+
+            {updateModalForm.wearGlasses && (
+              <div className="col-span-2">
+                <b>Vision Notes:</b>
+                {modalIsEditing ? (
+                  <TextArea
+                    rows={3}
+                    value={updateModalForm.noteVision}
+                    onChange={(e) =>
+                      setUpdateModalForm({
+                        ...updateModalForm,
+                        noteVision: e.target.value,
+                      })
+                    }
+                  />
+                ) : (
+                  <p>{updateModalForm.noteVision}</p>
+                )}
+              </div>
+            )}
+
+            {/* Hearing */}
+            <div className="col-span-2">
+              <b>Hearing Left:</b>
+              {modalIsEditing ? (
+                <Select
+                  value={updateModalForm.hearingLeft}
+                  onChange={(val) =>
+                    setUpdateModalForm({ ...updateModalForm, hearingLeft: val })
+                  }
+                  className="w-full"
+                >
+                  <Option value="normal">Normal</Option>
+                  <Option value="mild">Mild</Option>
+                  <Option value="moderate">Moderate</Option>
+                  <Option value="severe">Severe</Option>
+                </Select>
+              ) : (
+                <span>{updateModalForm.hearingLeft}</span>
+              )}
+            </div>
+
+            <div className="col-span-2">
+              <b>Hearing Right:</b>
+              {modalIsEditing ? (
+                <Select
+                  value={updateModalForm.hearingRight}
+                  onChange={(val) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      hearingRight: val,
+                    })
+                  }
+                  className="w-full"
+                >
+                  <Option value="normal">Normal</Option>
+                  <Option value="mild">Mild</Option>
+                  <Option value="moderate">Moderate</Option>
+                  <Option value="severe">Severe</Option>
+                </Select>
+              ) : (
+                <span>{updateModalForm.hearingRight}</span>
+              )}
+            </div>
+
+            <div className="col-span-2">
+              <b>Use Hearing Aids:</b>
+              {modalIsEditing ? (
+                <Radio.Group
+                  value={updateModalForm.hearingAid ? "yes" : "no"}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      hearingAid: e.target.value === "yes",
+                      noteHearing:
+                        e.target.value === "no"
+                          ? ""
+                          : updateModalForm.noteHearing,
+                    })
+                  }
+                >
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </Radio.Group>
+              ) : (
+                <span>{updateModalForm.hearingAid ? "Yes" : "No"}</span>
+              )}
+            </div>
+
+            {updateModalForm.hearingAid && (
+              <div className="col-span-2">
+                <b>Hearing Notes:</b>
+                {modalIsEditing ? (
+                  <TextArea
+                    rows={3}
+                    value={updateModalForm.noteHearing}
+                    onChange={(e) =>
+                      setUpdateModalForm({
+                        ...updateModalForm,
+                        noteHearing: e.target.value,
+                      })
+                    }
+                  />
+                ) : (
+                  <p>{updateModalForm.noteHearing}</p>
+                )}
+              </div>
+            )}
+
+            {/* Vaccinations */}
+            <div className="col-span-2">
+              <b>Vaccinations:</b>
+              {modalIsEditing ? (
+                <Checkbox.Group
+                  value={updateModalForm.selectedVaccinations}
+                  onChange={(values) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      selectedVaccinations: values.length > 0 ? values : [1],
+                    })
+                  }
+                >
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
+                    {vaccinationList.map((item) => (
+                      <Checkbox key={item.id} value={item.id}>
+                        {item.name}
+                      </Checkbox>
+                    ))}
+                  </div>
+                </Checkbox.Group>
+              ) : (
+                <p>
+                  {updateModalForm.selectedVaccinations
+                    .map(
+                      (id) =>
+                        vaccinationList.find((item) => item.id === id)?.name ||
+                        "Unknown"
+                    )
+                    .join(", ")}
+                </p>
+              )}
+            </div>
+
+            <div className="col-span-2">
+              <b>Vaccination History:</b>
+              {modalIsEditing ? (
+                <TextArea
+                  rows={3}
+                  value={updateModalForm.vaccinationHistory}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      vaccinationHistory: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <p>{updateModalForm.vaccinationHistory}</p>
+              )}
+            </div>
+
+            <div className="col-span-2">
+              <b>Had Side Effects:</b>
+              {modalIsEditing ? (
+                <Radio.Group
+                  value={updateModalForm.sideEffect ? "yes" : "no"}
+                  onChange={(e) =>
+                    setUpdateModalForm({
+                      ...updateModalForm,
+                      sideEffect: e.target.value === "yes",
+                      DetailSideEffect:
+                        e.target.value === "no"
+                          ? ""
+                          : updateModalForm.DetailSideEffect,
+                    })
+                  }
+                >
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </Radio.Group>
+              ) : (
+                <span>{updateModalForm.sideEffect ? "Yes" : "No"}</span>
+              )}
+            </div>
+
+            {updateModalForm.sideEffect && (
+              <div className="col-span-2">
+                <b>Side Effect Details:</b>
+                {modalIsEditing ? (
+                  <TextArea
+                    rows={3}
+                    value={updateModalForm.DetailSideEffect}
+                    onChange={(e) =>
+                      setUpdateModalForm({
+                        ...updateModalForm,
+                        DetailSideEffect: e.target.value,
+                      })
+                    }
+                  />
+                ) : (
+                  <p>{updateModalForm.DetailSideEffect}</p>
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <p>No data available.</p>

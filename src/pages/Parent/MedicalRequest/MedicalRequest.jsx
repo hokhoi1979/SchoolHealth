@@ -50,6 +50,7 @@ const MedicalRequest = () => {
     form.resetFields();
     setIsAddVisible(false);
     message.success("Add new medication successfully");
+    console.log("KHANHHH");
   };
 
   return (

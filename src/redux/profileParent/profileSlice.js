@@ -4,7 +4,10 @@ export const FETCH_HEALTH_PROFILE_SUCCESS = "FETCH_HEALTH_PROFILE_SUCCESS";
 export const FETCH_HEALTH_PROFILE_FAIL = "FETCH_HEALTH_PROFILE_FAIL";
 
 // action creators
-export const fetchHealthProfile = () => ({ type: FETCH_HEALTH_PROFILE });
+export const fetchHealthProfile = (data) => ({
+  type: FETCH_HEALTH_PROFILE,
+  payload: data,
+});
 export const fetchHealthProfileSuccess = (data) => ({
   type: FETCH_HEALTH_PROFILE_SUCCESS,
   payload: data,

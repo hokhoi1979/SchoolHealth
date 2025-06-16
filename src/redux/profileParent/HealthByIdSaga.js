@@ -12,6 +12,7 @@ function* healthStudentSaga(action) {
   try {
     const token = localStorage.getItem("accessToken");
     const id = action.payload;
+
     const response = yield call(
       axios.get,
       `${URL_API}/parent/v1/health/${id}`,
@@ -24,9 +25,7 @@ function* healthStudentSaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log(response.data);
-
-      yield put(fetchHealthStudentSucess(response.data.data.healthProfile));
+      yield put(fetchHealthStudentSucess(response.data));
     } else {
       yield put(fetchHealthStudentFail(response.status));
     }

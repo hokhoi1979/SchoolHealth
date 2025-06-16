@@ -16,10 +16,10 @@ const store = configureStore({
 
 sagaMiddleware.run(rootSaga);
 
-const storeToken= localStorage.getItem("accessToken");
-if(storeToken){
-    const decode=jwtDecode(storeToken);
-    store.dispatch(fetchSuccess({user:decode, token:storeToken}))
+const storeToken = localStorage.getItem("accessToken");
+if (storeToken) {
+  const decode = jwtDecode(storeToken);
+  store.dispatch(fetchSuccess({ user: decode, token: storeToken }));
 }
 
 export default store;
