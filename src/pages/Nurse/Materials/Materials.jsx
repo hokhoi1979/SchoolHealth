@@ -7,7 +7,6 @@ import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcr
 import { AppFooter } from "../../../components/Footer/AppFooter";
 
 function Materials() {
-  const [open, setOpen] = useState(false);
   const [click, setClick] = useState("inventory");
   let material = [
     {
@@ -98,42 +97,17 @@ function Materials() {
             {click === "inventory" && (
               <>
                 {" "}
-                <Button
+                {/* <Button
                   type="secondary"
                   className="!bg-black hover:!bg-gray-600"
                   onClick={() => setOpen(true)}
                 >
                   <p className="text-white font-serif p-1">+ Import Medicine</p>
-                </Button>
+                </Button> */}
               </>
             )}
 
-            {click === "medicine" && (
-              <>
-                {" "}
-                <Button
-                  type="secondary"
-                  className="!bg-black hover:!bg-gray-600"
-                  onClick={() => setOpen(true)}
-                >
-                  <p className="text-white font-serif p-1">
-                    + Add medicine for student
-                  </p>
-                </Button>
-              </>
-            )}
-          </div>
-          <div className="pl-5 mt-5 flex gap-5">
-            <Input
-              style={{ borderRadius: "7px", width: "300px" }}
-              placeholder="Search drugs, materials..."
-            />
-            <Button
-              className="!bg-[#90A8B0] !hover:bg-gray-600"
-              type="secondary"
-            >
-              <p className="text-white font-kameron"> Search</p>
-            </Button>
+            {click === "medicine" && <> </>}
           </div>
 
           <div className="flex-1 overflow-auto mt-5 ml-5 mr-5 mb-10">
@@ -141,196 +115,9 @@ function Materials() {
           </div>
           <div className="mt-20"></div>
 
-          {click === "inventory" && (
-            <>
-              {" "}
-              <Modal
-                open={open}
-                style={{ marginTop: 110 }}
-                onCancel={() => setOpen(false)}
-                footer={false}
-              >
-                <h1 className="font-serif text-2xl flex justify-center">
-                  Import medicine/medical supplies
-                </h1>
+          {click === "inventory" && <> </>}
 
-                <div className="font-serif">
-                  <h1 className="text-[17px] font-medium font-kameron mt-3">
-                    Choose medicine/ medical
-                  </h1>
-                  <Select
-                    placeholder="--Choose medicine/medical--"
-                    className="w-full"
-                  >
-                    <Select.Option value="Paracetamol 250mg">
-                      Paracetamol 250mg
-                    </Select.Option>
-                    <Select.Option value="Betadine 100ml">
-                      Betadine 100ml
-                    </Select.Option>
-                    <Select.Option value="Band-Aid">Band-Aid</Select.Option>
-                    <Select.Option value="Cough medicine">
-                      Cough medicine
-                    </Select.Option>
-                    <Select.Option value="Medical cotton">
-                      Medical cotton
-                    </Select.Option>
-                  </Select>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 font-serif">
-                  <div>
-                    <h1 className="text-[17px] font-medium font-kameron mt-3">
-                      Quantity imported
-                      <Input type="number" placeholder="Enter number" />
-                    </h1>
-                  </div>
-                  <div>
-                    <h1 className="text-[17px] font-medium font-kameron mt-3">
-                      Expiry
-                      <Input type="date" />
-                    </h1>
-                  </div>
-                </div>
-
-                <div>
-                  <h1 className="text-[17px] font-medium font-kameron mt-3 font-serif">
-                    Note
-                    <TextArea placeholder="Note if you have" />
-                  </h1>
-                </div>
-
-                <div className="mt-5 flex justify-between font-serif">
-                  <div></div>
-                  <div className="flex gap-3">
-                    <Button
-                      type="secondary"
-                      className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
-                      onClick={() => setOpen(false)}
-                    >
-                      <p className="text-white text-xl font-serif p-1">
-                        Cancel
-                      </p>
-                    </Button>
-                    <Button
-                      type="secondary"
-                      className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
-                      onClick={() => setOpen(true)}
-                    >
-                      <p className="text-white text-xl font-serif p-1">Save</p>
-                    </Button>
-                  </div>
-                </div>
-              </Modal>
-            </>
-          )}
-
-          {click === "medicine" && (
-            <>
-              {" "}
-              <Modal
-                open={open}
-                style={{ marginTop: 110 }}
-                onCancel={() => setOpen(false)}
-                footer={false}
-              >
-                <h1 className="font-serif text-2xl flex justify-center">
-                  Add medicine for student
-                </h1>
-
-                <div className="grid grid-cols-2 gap-3 font-serif">
-                  <div>
-                    <h1 className="text-[17px] font-medium font-kameron mt-3">
-                      Enter ID student
-                      <Input type="text" placeholder="Enter ID" />
-                    </h1>
-                  </div>
-                  <div>
-                    <h1 className="text-[17px] font-medium font-kameron mt-3">
-                      Enter Name student
-                      <Input type="text" placeholder="Enter Name" />
-                    </h1>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 font-serif">
-                  <div>
-                    <h1 className="text-[17px] font-medium font-kameron mt-3">
-                      Enter grade
-                      <Input type="text" placeholder="Enter Grade" />
-                    </h1>
-                  </div>
-                  <div className="font-serif">
-                    <h1 className="text-[17px] font-medium font-kameron mt-3">
-                      Choose medicine/ medical
-                    </h1>
-                    <Select
-                      placeholder="--Choose medicine/medical--"
-                      className="w-full"
-                    >
-                      <Select.Option value="Paracetamol 250mg">
-                        Paracetamol 250mg
-                      </Select.Option>
-                      <Select.Option value="Betadine 100ml">
-                        Betadine 100ml
-                      </Select.Option>
-                      <Select.Option value="Band-Aid">Band-Aid</Select.Option>
-                      <Select.Option value="Cough medicine">
-                        Cough medicine
-                      </Select.Option>
-                      <Select.Option value="Medical cotton">
-                        Medical cotton
-                      </Select.Option>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 font-serif">
-                  <div>
-                    <h1 className="text-[17px] font-medium font-kameron mt-3">
-                      Quantity imported
-                      <Input type="number" placeholder="Enter number" />
-                    </h1>
-                  </div>
-                  <div>
-                    <h1 className="text-[17px] font-medium font-kameron mt-3">
-                      Dosage
-                      <Input type="text" placeholder="Enter dosage" />
-                    </h1>
-                  </div>
-                </div>
-
-                <div>
-                  <h1 className="text-[17px] font-medium font-kameron mt-3 font-serif">
-                    Status
-                    <TextArea placeholder="Note if you have" />
-                  </h1>
-                </div>
-
-                <div className="mt-5 flex justify-between font-serif">
-                  <div></div>
-                  <div className="flex gap-3">
-                    <Button
-                      type="secondary"
-                      className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
-                      onClick={() => setOpen(false)}
-                    >
-                      <p className="text-white text-xl font-serif p-1">
-                        Cancel
-                      </p>
-                    </Button>
-                    <Button
-                      type="secondary"
-                      className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
-                      onClick={() => setOpen(true)}
-                    >
-                      <p className="text-white text-xl font-serif p-1">Save</p>
-                    </Button>
-                  </div>
-                </div>
-              </Modal>
-            </>
-          )}
+          {click === "medicine" && <> </>}
         </div>
 
         {/* Footer nằm dưới cùng */}

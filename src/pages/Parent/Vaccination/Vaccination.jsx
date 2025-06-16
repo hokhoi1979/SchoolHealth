@@ -1,132 +1,192 @@
-import React, { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Pending from "./Pending";
 import Completed from "./Completed";
 import Rejected from "./Rejected";
 import ModalResponse from "./ModalResponse";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
-
-const initialNotifications = [
-  {
-    id: 1,
-    title: "Vaccination Notice",
-    description:
-      "The school organizes influenza vaccination for students. Please confirm your agreement or refusal.",
-    date: "06/15/2025",
-    type: "vaccination",
-    status: "pending",
-  },
-  {
-    id: 2,
-    title: "Varicella (Chickenpox) Vaccination Notice",
-    description:
-      "The school is facilitating varicella vaccinations to protect students against chickenpox. Please confirm your agreement or refusal.",
-    date: "08/15/2025",
-    type: "vaccination",
-    status: "pending",
-  },
-  {
-    id: 3,
-    title: "HPV Vaccination Notice",
-    description:
-      "The school coordinates with the Medical Center to organize HPV vaccination for students. Please confirm your agreement or refusal.",
-    date: "07/10/2025",
-    type: "vaccination",
-    status: "pending",
-  },
-  {
-    id: 4,
-    title: "Measles, Mumps, and Rubella (MMR) Vaccination Notice",
-    description:
-      "The school is arranging MMR vaccinations to protect students against measles, mumps, and rubella. Please confirm your agreement or refusal.",
-    date: "07/15/2025",
-    type: "vaccination",
-    status: "pending",
-  },
-  {
-    id: 5,
-    title: "Tetanus and Diphtheria (Td) Vaccination Notice",
-    description:
-      "The school, in collaboration with the local health department, is offering Td vaccinations for students. Please confirm your agreement or refusal.",
-    date: "07/20/2025",
-    type: "vaccination",
-    status: "pending",
-  },
-  {
-    id: 6,
-    title: "Hepatitis B Vaccination Notice",
-    description:
-      "The school is organizing Hepatitis B vaccinations for students. Please confirm your agreement or refusal.",
-    date: "08/05/2025",
-    type: "vaccination",
-    status: "pending",
-  },
-  {
-    id: 7,
-    title: "Meningococcal Vaccination Notice",
-    description:
-      "In partnership with the local health authority, the school is offering meningococcal vaccinations to prevent meningitis. Please confirm your agreement or refusal.",
-    date: "08/20/2025",
-    type: "vaccination",
-    status: "pending",
-  },
-  {
-    id: 8,
-    title: "Pneumococcal Vaccination Notice",
-    description:
-      "The school is organizing pneumococcal vaccinations to protect students against pneumococcal diseases. Please confirm your agreement or refusal.",
-    date: "09/01/2025",
-    type: "vaccination",
-    status: "pending",
-  },
-];
+import { fetchVaccineParent } from "../../../redux/getVaccineParent/getVaccineParentSlice";
+import { fetchAcceptVaccine } from "../../../redux/getVaccineParent/getVaccineParentAcceptSlice";
+import { fetchDeclineVaccine } from "../../../redux/getVaccineParent/getVaccineParentDeclineSlice";
+import { Spin, Alert, message } from "antd";
 
 const Vaccination = () => {
-  const [notifications, setNotifications] = useState(initialNotifications);
-  const [selectNotification, setSelectNotification] = useState(null);
+  const dispatch = useDispatch();
+  const { vaccine, loading, error } = useSelector(
+    (state) => state.vaccineParent
+  );
+  const { loading: acceptLoading, error: acceptError } = useSelector(
+    (state) => state.vaccineParentAccept
+  );
+  const { loading: declineLoading, error: declineError } = useSelector(
+    (state) => state.vaccineParentDecline
+  );
+  const [selectedNotification, setSelectedNotification] = useState(null);
   const [response, setResponse] = useState({ consent: "yes", reason: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  useEffect(() => {
+    dispatch(fetchVaccineParent());
+  }, [dispatch]);
+
+  // Hàm mapping status từ API sang UI - SỬA LẠI ĐỂ XỬ LÝ CẢ DECLINED VÀ REJECTED
+  const mapStatus = (apiStatus) => {
+    const status = apiStatus?.toUpperCase();
+    console.log("Mapping status:", apiStatus, "->", status);
+
+    switch (status) {
+      case "ACCEPTED":
+        return "completed";
+      case "REJECTED":
+      case "DECLINED": // THÊM CASE NÀY
+        return "rejected";
+      case "PENDING":
+      default:
+        return "pending";
+    }
+  };
+
+  const notificationsItem =
+    vaccine?.data?.map((item) => ({
+      id: item.id,
+      vaccinationEventID: item.vaccinationEventID,
+      studentID: item.studentID,
+      title: item.vaccinationEvent?.name || "Vaccination Notice",
+      description:
+        item.vaccinationEvent?.description || "No description available",
+      date: item.vaccinationEvent?.scheduledAt
+        ? new Date(item.vaccinationEvent.scheduledAt).toLocaleDateString(
+            "en-GB"
+          )
+        : "No date",
+      type: "vaccination",
+      status: mapStatus(item.status), // Sử dụng hàm mapping
+      originalStatus: item.status, // Giữ lại status gốc để debug
+      note: item.note,
+      respondedAt: item.respondedAt,
+      student: item.student,
+      vaccinationEvent: item.vaccinationEvent,
+    })) || [];
+
   const handleOpenModal = (notification) => {
-    setSelectNotification(notification);
+    setSelectedNotification(notification);
     setResponse({ consent: "yes", reason: "" });
     setIsModalOpen(true);
   };
 
-  const handleConfirm = () => {
-    setNotifications((prev) =>
-      prev.map((n) =>
-        n.id === selectNotification.id
-          ? {
-              ...n,
-              status: response.consent === "yes" ? "completed" : "rejected",
-            }
-          : n
-      )
-    );
+  const handleConfirm = async () => {
+    if (!selectedNotification) return;
+    const payload = {
+      id: selectedNotification.id,
+      studentID: selectedNotification.studentID,
+    };
+
+    try {
+      if (response.consent === "yes") {
+        console.log("Accepting vaccination with payload:", payload);
+        await dispatch(fetchAcceptVaccine(payload));
+        message.success("Vaccination accepted successfully!");
+      } else {
+        if (!response.reason?.trim()) {
+          message.error("Please provide a reason for rejection");
+          return;
+        }
+        console.log("Declining vaccination with payload:", {
+          ...payload,
+          reason: response.reason,
+        });
+        await dispatch(
+          fetchDeclineVaccine({
+            ...payload,
+            reason: response.reason,
+          })
+        );
+        message.success("Vaccination declined successfully!");
+      }
+
+      setIsModalOpen(false);
+      setSelectedNotification(null);
+      setResponse({ consent: "yes", reason: "" });
+
+      // Refresh data ngay lập tức
+      setTimeout(() => {
+        console.log("Refreshing data...");
+        dispatch(fetchVaccineParent());
+      }, 1000); // Tăng thời gian delay lên 1 giây
+    } catch (error) {
+      console.error("Error submitting response:", error);
+      message.error("Failed to submit response. Please try again.");
+    }
+  };
+
+  const handleCancel = () => {
     setIsModalOpen(false);
+    setSelectedNotification(null);
+    setResponse({ consent: "yes", reason: "" });
   };
 
   const location = useLocation();
   const currentTab = location.pathname.split("/").pop() || "pending";
 
   const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center py-10">
+          <Spin size="large" />
+        </div>
+      );
+    }
+    if (error) {
+      return (
+        <Alert
+          message="Error"
+          description={`Failed to load vaccination notifications: ${error}`}
+          type="error"
+          showIcon
+          className="mb-4"
+        />
+      );
+    }
     switch (currentTab) {
       case "completed":
-        return <Completed notifications={notifications} />;
+        return <Completed notifications={notificationsItem} />;
       case "rejected":
-        return <Rejected notifications={notifications} />;
+        return <Rejected notifications={notificationsItem} />;
       case "pending":
       default:
         return (
           <Pending
-            notifications={notifications}
+            notifications={notificationsItem}
             onOpenModal={handleOpenModal}
           />
         );
     }
   };
+
+  const modalLoading = acceptLoading || declineLoading;
+  const modalError = acceptError || declineError;
+
+  // Debug: Log để kiểm tra dữ liệu
+  console.log("=== VACCINATION DEBUG ===");
+  console.log("Raw API data:", vaccine?.data);
+  console.log("All notifications:", notificationsItem);
+  console.log(
+    "Pending:",
+    notificationsItem.filter((n) => n.status === "pending")
+  );
+  console.log(
+    "Completed:",
+    notificationsItem.filter((n) => n.status === "completed")
+  );
+  console.log(
+    "Rejected:",
+    notificationsItem.filter((n) => n.status === "rejected")
+  );
+  console.log("=========================");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -147,7 +207,9 @@ const Vaccination = () => {
                 to={""}
                 className={currentTab === "pending" ? "font-bold" : ""}
               >
-                Pending
+                Pending (
+                {notificationsItem.filter((n) => n.status === "pending").length}
+                )
               </Link>
             </div>
             <div className="hover:bg-white p-1 rounded-lg w-50">
@@ -155,7 +217,12 @@ const Vaccination = () => {
                 to={"completed"}
                 className={currentTab === "completed" ? "font-bold" : ""}
               >
-                Completed
+                Completed (
+                {
+                  notificationsItem.filter((n) => n.status === "completed")
+                    .length
+                }
+                )
               </Link>
             </div>
             <div className="hover:bg-white p-1 rounded-lg w-50">
@@ -163,7 +230,12 @@ const Vaccination = () => {
                 to={"rejected"}
                 className={currentTab === "rejected" ? "font-bold" : ""}
               >
-                Rejected
+                Rejected (
+                {
+                  notificationsItem.filter((n) => n.status === "rejected")
+                    .length
+                }
+                )
               </Link>
             </div>
           </div>
@@ -176,14 +248,15 @@ const Vaccination = () => {
       <AppFooter />
       <ModalResponse
         open={isModalOpen}
-        notification={selectNotification}
+        notification={selectedNotification}
         response={response}
         setResponse={setResponse}
         onConfirm={handleConfirm}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={handleCancel}
+        loading={modalLoading}
+        error={modalError}
       />
     </div>
   );
 };
-
 export default Vaccination;

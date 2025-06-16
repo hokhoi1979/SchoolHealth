@@ -64,7 +64,6 @@ function VaccineDay() {
           <div
             className="bg-white p-6 rounded-2xl hover:bg-gray-100"
             style={{ cursor: "pointer" }}
-            // onClick={() => navigate("studentList", { state: { item } })}
             onClick={() => navigate(`studentList/${item.id}`)}
           >
             <div className="flex justify-between">

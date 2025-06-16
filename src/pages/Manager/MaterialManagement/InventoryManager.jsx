@@ -1,7 +1,7 @@
 import { Space, Table, Tooltip, Modal, Input, Button } from "antd";
 import React, { useState } from "react";
 
-function ImportManager() {
+function InventoryManager() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [updatedStock, setUpdatedStock] = useState("");
@@ -227,4 +227,4 @@ function ImportManager() {
   );
 }
 
-export default ImportManager;
+export default InventoryManager;

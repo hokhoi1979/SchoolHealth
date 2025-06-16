@@ -31,6 +31,10 @@ const StudentHealth = () => {
 
   //API get information student
   const { student, loading } = useSelector((state) => state.studentOfParent);
+  //API get all health profile
+  const { healthProfiles = [] } = useSelector(
+    (state) => state.parentProfileHealth
+  );
   //API get detail form
   const { formData, loading: formLoading } = useSelector(
     (state) => state.formParent
@@ -68,6 +72,8 @@ const StudentHealth = () => {
     dispatch(fetchStudent());
     dispatch(fetchForm());
     dispatch(fetchParentHealth());
+    // dispatch(fetchStudent());
+    // dispatch(fetchForm());
   };
 
   useEffect(() => {

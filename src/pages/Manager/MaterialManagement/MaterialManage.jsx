@@ -7,17 +7,26 @@ import { AppFooter } from "../../../components/Footer/AppFooter";
 
 function MaterialManage() {
   const [open, setOpen] = useState(false);
-  const [click, setClick] = useState("inventory"); // ✅ Sửa từ "inventoryManager" → "inventory"
+  const [click, setClick] = useState("inventory");
+  const [openCategoryModal, setOpenCategoryModal] = useState(false);
+  const [categoryName, setCategoryName] = useState("");
+
   let material = [
     {
       total: "79",
       stock: "99",
     },
   ];
+  const [selectedClassify, setSelectedClassify] = useState("");
+  const [newClassify, setNewClassify] = useState("");
 
-  useEffect(() => {
-    console.log(material);
-  }, []);
+  const classifyOptions = [
+    "Painkiller",
+    "Antibiotic",
+    "Supplement",
+    "Antiseptic",
+    "Other",
+  ];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -61,33 +70,39 @@ function MaterialManage() {
                   Import
                 </Link>
               </div>
-              <div
-                className={`hover:bg-white p-1 rounded-md ${
-                  click === "medicineManager" ? "bg-white text-black" : ""
-                }`}
-              >
-                <Link
-                  onClick={() => setClick("medicineManager")}
-                  to={"medicineManager"}
-                >
-                  Drugs for Student
-                </Link>
-              </div>
             </div>
           </div>
 
-          {(click === "inventory" || click === "import") && (
+          {click === "inventory" && (
             <Button
               type="secondary"
               className="!bg-black hover:!bg-gray-600"
               onClick={() => setOpen(true)}
             >
-              <p className="text-white font-serif p-1">
-                {click === "inventory"
-                  ? "+ Import Medicine"
-                  : "+ Add medicine for student"}
-              </p>
+              <p className="text-white font-serif p-1">+ Import Medicine</p>
             </Button>
+          )}
+
+          {click === "import" && (
+            <div className="flex gap-3">
+              <Button
+                type="secondary"
+                className="!bg-black hover:!bg-gray-600"
+                onClick={() => setOpen(true)}
+              >
+                <p className="text-white font-serif p-1">
+                  + Add medicine for student
+                </p>
+              </Button>
+
+              <Button
+                type="secondary"
+                className="!bg-[#406AFF] hover:!bg-[#2457f3]"
+                onClick={() => setOpenCategoryModal(true)}
+              >
+                <p className="text-white font-serif p-1">+ Add new category</p>
+              </Button>
+            </div>
           )}
         </div>
 
@@ -173,102 +188,159 @@ function MaterialManage() {
           </Modal>
         )}
 
-        {/* ======== Modal for Add Medicine to Student ======== */}
+        {/* ======== Modal for Add Medicine  ======== */}
         {click === "import" && (
           <Modal
             open={open}
-            style={{ marginTop: 110 }}
             onCancel={() => setOpen(false)}
             footer={false}
+            style={{ marginTop: 110 }}
           >
-            <h1 className="font-serif text-2xl flex justify-center">
-              Add medicine for student
+            <h1 className="font-serif text-2xl flex justify-center mb-4">
+              Add New Medicine
             </h1>
 
-            <div className="grid grid-cols-2 gap-3 font-serif">
+            <div className="grid grid-cols-2 gap-4 font-serif">
+              {/* Name */}
               <div>
-                <h1 className="text-[17px] font-medium font-kameron mt-3">
-                  Enter ID student
-                </h1>
-                <Input placeholder="Enter ID" />
+                <label className="text-[16px] font-medium">
+                  Medicine Name *
+                </label>
+                <Input placeholder="Enter medicine name" />
               </div>
-              <div>
-                <h1 className="text-[17px] font-medium font-kameron mt-3">
-                  Enter Name student
-                </h1>
-                <Input placeholder="Enter Name" />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3 font-serif">
+              {/* Stock */}
               <div>
-                <h1 className="text-[17px] font-medium font-kameron mt-3">
-                  Enter grade
-                </h1>
-                <Input placeholder="Enter Grade" />
+                <label className="text-[16px] font-medium">Stock *</label>
+                <Input type="number" placeholder="Enter stock quantity" />
               </div>
+
+              {/* Description */}
+              <div className="col-span-2">
+                <label className="text-[16px] font-medium">Description</label>
+                <TextArea placeholder="e.g., Provides vitamin C for the body" />
+              </div>
+
+              {/* Type */}
               <div>
-                <h1 className="text-[17px] font-medium font-kameron mt-3">
-                  Choose medicine/ medical
-                </h1>
-                <Select
-                  placeholder="--Choose medicine/medical--"
-                  className="w-full"
-                >
-                  <Select.Option value="Paracetamol 250mg">
-                    Paracetamol 250mg
-                  </Select.Option>
-                  <Select.Option value="Betadine 100ml">
-                    Betadine 100ml
-                  </Select.Option>
-                  <Select.Option value="Band-Aid">Band-Aid</Select.Option>
-                  <Select.Option value="Cough medicine">
-                    Cough medicine
-                  </Select.Option>
-                  <Select.Option value="Medical cotton">
-                    Medical cotton
-                  </Select.Option>
+                <label className="text-[16px] font-medium">Type *</label>
+                <Select placeholder="Choose type" className="w-full">
+                  <Option value="PELLETS">Pellets</Option>
+                  <Option value="BOTTLE">Bottle</Option>
+                  <Option value="JAR">Jar</Option>
                 </Select>
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3 font-serif">
+              {/* Classify Name */}
               <div>
-                <h1 className="text-[17px] font-medium font-kameron mt-3">
-                  Quantity imported
-                </h1>
-                <Input type="number" placeholder="Enter number" />
+                <label className="text-[16px] font-medium">
+                  Classify Name *
+                </label>
+                <Select
+                  placeholder="Select classify name"
+                  className="w-full"
+                  value={selectedClassify}
+                  onChange={(value) => setSelectedClassify(value)}
+                >
+                  {classifyOptions.map((item) => (
+                    <Option key={item} value={item}>
+                      {item}
+                    </Option>
+                  ))}
+                </Select>
               </div>
-              <div>
-                <h1 className="text-[17px] font-medium font-kameron mt-3">
-                  Dosage
-                </h1>
-                <Input placeholder="Enter dosage" />
+
+              {selectedClassify === "Other" && (
+                <div className="col-span-2">
+                  <label className="text-[16px] font-medium">
+                    New Classify Name
+                  </label>
+                  <Input
+                    placeholder="Enter new classify name"
+                    value={newClassify}
+                    onChange={(e) => setNewClassify(e.target.value)}
+                  />
+                </div>
+              )}
+
+              {/* Usage */}
+              <div className="col-span-2">
+                <label className="text-[16px] font-medium">Usage *</label>
+                <TextArea placeholder="e.g., Take one pill after meal" />
               </div>
             </div>
 
-            <div>
-              <h1 className="text-[17px] font-medium font-kameron mt-3">
-                Status
-              </h1>
-              <TextArea placeholder="Note if you have" />
-            </div>
-
-            <div className="mt-5 flex justify-end gap-3 font-serif">
+            {/* Buttons */}
+            <div className="mt-6 flex justify-end gap-3 font-serif">
               <Button
-                type="secondary"
                 className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
                 onClick={() => setOpen(false)}
               >
                 <p className="text-white text-xl font-serif p-1">Cancel</p>
               </Button>
               <Button
-                type="secondary"
                 className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  // Handle save logic here
+                  console.log({
+                    classifyID: selectedClassify,
+                    newClassifyName:
+                      selectedClassify === "Other" ? newClassify : null,
+                  });
+                  setOpen(false);
+                }}
               >
                 <p className="text-white text-xl font-serif p-1">Save</p>
               </Button>
+            </div>
+          </Modal>
+        )}
+        {/* ======== Modal for Add CategoryCategory  ======== */}
+
+        {click === "import" && (
+          <Modal
+            open={openCategoryModal}
+            onCancel={() => setOpenCategoryModal(false)}
+            footer={null}
+            title="Add New Medicine Category"
+            style={{ marginTop: 110 }}
+          >
+            <div className="font-serif">
+              <label className="block text-[16px] font-medium mb-2">
+                Category Name *
+              </label>
+              <Input
+                placeholder="e.g., Stomach pain"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+              />
+
+              <div className="mt-6 flex justify-end gap-3">
+                <Button
+                  className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
+                  onClick={() => {
+                    setCategoryName("");
+                    setOpenCategoryModal(false);
+                  }}
+                >
+                  <p className="text-white text-base font-serif">Cancel</p>
+                </Button>
+                <Button
+                  className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
+                  onClick={() => {
+                    if (categoryName.trim()) {
+                      if (!classifyOptions.includes(categoryName)) {
+                        setClassifyOptions([...classifyOptions, categoryName]);
+                        setSelectedClassify(categoryName);
+                      }
+                      setCategoryName("");
+                      setOpenCategoryModal(false);
+                    }
+                  }}
+                >
+                  <p className="text-white text-base font-serif">Save</p>
+                </Button>
+              </div>
             </div>
           </Modal>
         )}
