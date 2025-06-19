@@ -11,20 +11,23 @@ export function* fetchLogin(action) {
       `${API_URL}/v1/auth/login`,
       action.payload
     );
-    if (response?.data?.backendToken?.accessToken) {
-      const decodedUser = jwtDecode(response.data.backendToken.accessToken);
+    console.log(response);
+    if (response?.data?.data.backendToken?.accessToken) {
+      const decodedUser = jwtDecode(
+        response.data.data.backendToken.accessToken
+      );
       localStorage.setItem(
         "accessToken",
-        response.data.backendToken.accessToken
+        response.data.data.backendToken.accessToken
       );
       if (response.status === 200 || response.status === 201) {
         yield put(
           fetchSuccess({
             user: decodedUser,
-            token: response.data.backendToken.accessToken,
+            token: response.data.data.backendToken.accessToken,
           })
         );
-        console.log("TOKEN", response.data.backendToken.accessToken);
+        console.log("TOKEN", response.data.data.backendToken.accessToken);
       } else {
         yield put(fetchFail(response.status));
       }
