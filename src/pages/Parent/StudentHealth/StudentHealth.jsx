@@ -10,6 +10,7 @@ import {
   Checkbox,
   Alert,
   Modal,
+  Spin,
 } from "antd";
 import { SaveOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
@@ -63,6 +64,7 @@ const StudentHealth = () => {
   const [showHealthForm, setShowHealthForm] = useState(false);
   const [healthExists, setHealthExists] = useState(null);
   const [viewModal, setViewModal] = useState(false);
+  const [checkingHealth, setCheckingHealth] = useState(false);
 
   const { healthProfileParent = [] } = useSelector(
     (state) => state.healthParentProfile
@@ -83,18 +85,27 @@ const StudentHealth = () => {
   const handleSelectedStudent = (studentId) => {
     setSelectedStudent(studentId);
     setShowHealthForm(false);
+    setHealthExists(false);
+    setCheckingHealth(true);
+
     dispatch(fetchHealth(studentId));
   };
 
   useEffect(() => {
-    if (healthDetail && selectedStudent) {
-      setHealthExists(true);
+    if (selectedStudent) {
+      if (healthDetail) {
+        const hasValidHealthData =
+          healthDetail?.data?.healthProfile &&
+          Object.keys(healthDetail.data.healthProfile).length > 0;
+        setHealthExists(hasValidHealthData);
+        setCheckingHealth(false);
+      }
     } else {
       setHealthExists(false);
+      setCheckingHealth(false);
     }
   }, [healthDetail, selectedStudent]);
 
-  // FIX 1: Re-fetch health data after successful update
   useEffect(() => {
     if (updateSuccess && selectedStudent) {
       // Re-fetch the health data to get updated information
@@ -318,10 +329,10 @@ const StudentHealth = () => {
         <CommonBreadcrumb role={"Parent"} page={"student"} />
       </h1>
       <div className="p-6 flex flex-col flex-1">
-        <h1 className="text-3xl font-bold text-blue-600 ml-5">
+        <h1 className="text-3xl font-bold text-blue-400 ml-5">
           STUDENT HEALTH RECORD
         </h1>
-        <p className="pt-5 ml-5 text-blue-500 font-medium">
+        <p className="pt-5 ml-5 text-blue-400 font-medium">
           Declare student health information so the school can provide the best
           care.
         </p>
@@ -348,26 +359,43 @@ const StudentHealth = () => {
           </Card>
           {selectedStudent && !showHealthForm && (
             <Card className="rounded-lg shadow-md border-none mb-6">
-              {healthExists ? (
+              {checkingHealth ? (
+                <div className="flex items-center gap-2">
+                  <Spin size="small" />
+                  <span className="text-gray-600">
+                    Checking health profile...
+                  </span>
+                </div>
+              ) : healthExists && healthDetail?.data?.healthProfile ? (
                 <>
-                  <p className="text-green-700 text-base">
-                    Health record information available
+                  <p className="text-green-700 text-base font-semibold">
+                    ✅ Health profile available for this student
                   </p>
                   <div className="flex gap-3 mt-3">
-                    <Button onClick={openModalWithData}>View detail</Button>
+                    <Button
+                      type="primary"
+                      onClick={openModalWithData}
+                      className="bg-blue-500 hover:bg-blue-600"
+                    >
+                      View Details
+                    </Button>
                   </div>
                 </>
               ) : (
                 <>
-                  <p className="text-red-700 text-base">
-                    Chưa có hồ sơ học sinh
+                  <p className="text-orange-700 text-base font-semibold">
+                    ⚠️ No health profile found for this student
+                  </p>
+                  <p className="text-gray-600 text-sm mt-1">
+                    Please create a health profile to ensure proper care at
+                    school.
                   </p>
                   <Button
                     type="primary"
                     onClick={() => setShowHealthForm(true)}
-                    className="mt-3"
+                    className="mt-3 bg-green-500 hover:bg-green-600"
                   >
-                    Tạo hồ sơ mới
+                    Create Health Profile
                   </Button>
                 </>
               )}

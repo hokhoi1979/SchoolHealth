@@ -57,6 +57,13 @@ import AllRecord from "../pages/Parent/StudentHistory/AllRecord";
 import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
 import SendResult from "../pages/Parent/StudentHistory/SendResult";
 import Notification from "../pages/Parent/StudentHistory/Notification";
+import ParentInfor from "../pages/Parent/ParentInformation/ParentInformation";
+import ChangePasswordParent from "../pages/Parent/ChangePassword/ChangePassword";
+
+//Students import
+import StudentLayout from "../pages/Student/StudentLayout";
+import StudentInformation from "../pages/Student/StudentInformation/StudentInformation";
+import ChangePassword from "../pages/Student/ChangePassword/ChangePassword";
 
 const router = createBrowserRouter([
   {
@@ -201,6 +208,21 @@ const router = createBrowserRouter([
               { path: "notification", element: <Notification /> },
             ],
           },
+          {
+            path: "information",
+            element: <ParentInfor />,
+          },
+          { path: "change_password", element: <ChangePasswordParent /> },
+        ],
+      },
+      //Student route
+      {
+        path: "student",
+        element: <StudentLayout />,
+        children: [
+          { path: "", element: <Navigate to="student_information" /> },
+          { path: "student_information", element: <StudentInformation /> },
+          { path: "change_password", element: <ChangePassword /> },
         ],
       },
     ],

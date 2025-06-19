@@ -38,6 +38,9 @@ import watchFetchRequestMedicine from "./materialsNurse/getSendRequestMedicine/g
 import watchFetchMedicineSupply from "./materialsNurse/getMedicineSupplies/getMedicineSuppliesSaga";
 import watchPostRequestMedicine from "./materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSaga";
 
+import watchGetProfileSaga from "./getProflie/getProfileSaga";
+import watchFetchChangePassword from "./ChangePassword/changePasswordSaga";
+
 export default function* rootSaga() {
   yield all([
     watchFetchVaccine(),
@@ -80,5 +83,8 @@ export default function* rootSaga() {
 
     watchPatchVaccineConfirmManager(),
     watchHealthProfileSaga(),
+
+    watchGetProfileSaga(),
+    watchFetchChangePassword(),
   ]);
 }

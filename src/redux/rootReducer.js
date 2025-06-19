@@ -41,6 +41,9 @@ import getRequestMedicineReducer from "./materialsNurse/getSendRequestMedicine/g
 import getMedicineSupplyReducer from "./materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
 import postRequestMedicineReducer from "./materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSLice";
 
+import getProfileReducer from "./getProflie/getProfileSlice";
+import changePasswordReducer from "./ChangePassword/changePasswordSlice";
+
 const rootReducer = combineReducers({
   account: accountReducers,
   profile: profileReducer,
@@ -81,6 +84,9 @@ const rootReducer = combineReducers({
   getMedicineSupplyManager: getMedicineSupplyManagerReducer,
 
   parentProfileHealth: healthProfileReducer,
+
+  getProfile: getProfileReducer,
+  changePassword: changePasswordReducer,
 });
 
 export default rootReducer;

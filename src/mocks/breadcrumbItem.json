@@ -28,7 +28,16 @@
             "request": "Medical Request",
             "vaccination": "Vaccination",
             "check up": "Medical CheckUp",
-            "history": "History & Report"
+            "history": "History & Report",
+            "information": "Information",
+            "password": "Change Password"
+        }
+    },
+    "Student": {
+        "title": "Student",
+        "pages": {
+            "information": "Student Information",
+            "password": "Change Password"
         }
     }
 }
