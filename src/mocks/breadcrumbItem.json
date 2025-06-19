@@ -8,7 +8,9 @@
             "student": "Student Profile",
             "medicalEvent": "Medical Event",
             "medicalCheckup": "Medical Checkup",
-            "vaccineManagement":"Vaccine Management"
+            "vaccineManagement":"Vaccine Management",
+            "information": "Information",
+            "password": "Change Password"
 
         }
     },
@@ -18,7 +20,9 @@
             "dashboard": "Dashboard",
             "materials": "Materials",
             "student": "Student Profile",
-            "medicalEvent": "Medical Event"
+            "medicalEvent": "Medical Event",
+            "information": "Information",
+            "password": "Change Password"
         }
     },
        "Parent": {

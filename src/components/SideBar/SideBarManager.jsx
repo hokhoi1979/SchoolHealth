@@ -233,6 +233,66 @@ const SideBarManager = () => {
               </Link>
             )}
           </div>
+
+          <div
+            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+              click === "information"
+                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
+                : ""
+            } ${toggle && "justify-center"}`}
+            style={{ cursor: "pointer" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+            >
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            {!toggle && (
+              <Link
+                onClick={() => setClick("information")}
+                to={"/manager/information"}
+                className="text-[18px]"
+              >
+                Manager Information
+              </Link>
+            )}
+          </div>
+
+          <div
+            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+              click === "password"
+                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
+                : ""
+            } ${toggle && "justify-center"}`}
+            style={{ cursor: "pointer" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"
+              />
+            </svg>
+            {!toggle && (
+              <Link
+                onClick={() => setClick("change_password")}
+                to={"/manager/change_password"}
+                className="text-[18px]"
+              >
+                Change Password
+              </Link>
+            )}
+          </div>
         </div>
         <div className="w-full h-[2px] bg-[#5B5454] mt-auto"></div>
 

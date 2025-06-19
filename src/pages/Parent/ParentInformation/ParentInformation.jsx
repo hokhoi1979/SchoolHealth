@@ -145,6 +145,7 @@ const ParentInformation = () => {
                 }
               >
                 <div className="flex items-center gap-2">
+                  <CalendarOutlined className="text-blue-500" />
                   {profile?.parentInfo?.createdAt || "N/A"}
                 </div>
               </Descriptions.Item>
