@@ -6,14 +6,19 @@ import { fetchRequestMedicine } from "../../../redux/materialsNurse/getSendReque
 import { fetchAllMedicine } from "../../../redux/materialsNurse/getAllMedicine/getAllMedicineSlice";
 import { fetchMedicineSupply } from "../../../redux/materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
 import { postRequestMedicine } from "../../../redux/materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSLice";
+import { fetchRequestDetail } from "../../../redux/materialsNurse/getDetailRequest/getDetailRequestSlice";
 
 function Import() {
   const [open, setOpen] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
   const request = useSelector((state) => state.requestMedicine.requestMedicine);
   const [medicineRequest, setMedicine] = useState([]);
   const { medicine = [] } = useSelector((state) => state.medicineNurse);
   const { medicineSupply = [] } = useSelector(
     (state) => state.getMedicineSupplyNurse
+  );
+  const { detailRequest = [] } = useSelector(
+    (state) => state.getRequestDetailNurse
   );
 
   const [note, setNote] = useState("");
@@ -105,6 +110,17 @@ function Import() {
     setNote("");
   };
 
+  const handleDetail = (id) => {
+    dispatch(fetchRequestDetail(id));
+    console.log("GET", detailRequest);
+  };
+
+  useEffect(() => {
+    if (detailRequest?.data?.id) {
+      setOpenDetail(true);
+    }
+  }, [detailRequest]);
+
   const columns = [
     {
       title: "ID",
@@ -118,12 +134,7 @@ function Import() {
       key: "createdAt",
       align: "center",
     },
-    {
-      title: "createdBy",
-      dataIndex: "createdBy",
-      key: "createdBy",
-      align: "center",
-    },
+
     {
       title: "Note",
       dataIndex: "note",
@@ -135,6 +146,33 @@ function Import() {
       dataIndex: "status",
       key: "status",
       align: "center",
+      render: (_, record) => (
+        <>
+          {record.status === "PENDING" && (
+            <>
+              <div className=" py-1 w-25 rounded-xl m-auto text-[#CBD361] font-serif">
+                <p>{record?.status}</p>
+              </div>
+            </>
+          )}
+          {record.status === "APPROVED" && (
+            <>
+              {" "}
+              <div className=" py-1 w-25 rounded-xl m-auto text-[#6CC76F] font-serif">
+                <p>{record?.status}</p>
+              </div>
+            </>
+          )}
+          {record.status === "REJECTED" && (
+            <>
+              {" "}
+              <div className=" py-1 w-25 rounded-xl m-auto text-[#E26666] font-serif">
+                <p>{record?.status}</p>
+              </div>
+            </>
+          )}
+        </>
+      ),
     },
     {
       title: "Action",
@@ -149,6 +187,9 @@ function Import() {
                 width={20}
                 height={20}
                 viewBox="0 0 24 24"
+                onClick={() => {
+                  handleDetail(record?.id);
+                }}
               >
                 <path
                   fill="currentColor"
@@ -335,6 +376,88 @@ function Import() {
             </Button>
           </div>
         </div>
+      </Modal>
+
+      <Modal
+        open={openDetail}
+        onCancel={() => setOpenDetail(false)}
+        footer={null}
+        width={800}
+      >
+        <h1 className="font-serif text-2xl flex justify-center mb-4 font-bold">
+          Request Detail
+        </h1>
+
+        {detailRequest?.data ? (
+          <div className="space-y-2 font-serif text-[16px]">
+            <p>
+              <strong>Created By:</strong> {detailRequest.data.createdBy}
+            </p>
+            <p>
+              <strong>Status:</strong> {detailRequest.data.status}
+            </p>
+            <p>
+              <strong>Note:</strong> {detailRequest.data.note}
+            </p>
+
+            <h2 className="text-lg mt-4">Requested Items</h2>
+            <Table
+              dataSource={detailRequest.data.items}
+              rowKey={(record, index) => index}
+              pagination={false}
+              columns={[
+                {
+                  title: "Image",
+                  dataIndex: "",
+                  key: "image",
+                  render: (_, record) => {
+                    const img =
+                      record.medicine?.image || record.medicineSupply?.image;
+                    return img ? (
+                      <img
+                        src={img}
+                        alt="img"
+                        style={{ width: 50, height: 50 }}
+                      />
+                    ) : (
+                      "No Image"
+                    );
+                  },
+                },
+                {
+                  title: "Name",
+                  dataIndex: "",
+                  key: "name",
+                  render: (_, record) => {
+                    return (
+                      record.medicine?.name ||
+                      record.medicineSupply?.name ||
+                      "Unknown"
+                    );
+                  },
+                },
+                {
+                  title: "Quantity",
+                  dataIndex: "quantity",
+                  key: "quantity",
+                },
+                {
+                  title: "Urgency",
+                  dataIndex: "urgency",
+                  key: "urgency",
+                },
+                {
+                  title: "Note",
+                  dataIndex: "note",
+                  key: "note",
+                  render: (text) => text || "No Note",
+                },
+              ]}
+            />
+          </div>
+        ) : (
+          <p>Loading...</p>
+        )}
       </Modal>
     </div>
   );

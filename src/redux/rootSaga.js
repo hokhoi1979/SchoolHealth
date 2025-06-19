@@ -34,6 +34,14 @@ import watchFetchAllMedicine from "./materialsNurse/getAllMedicine/getAllMedicin
 import watchFetchRequestMedicine from "./materialsNurse/getSendRequestMedicine/getRequestMedicineSaga";
 import watchFetchMedicineSupply from "./materialsNurse/getMedicineSupplies/getMedicineSuppliesSaga";
 import watchPostRequestMedicine from "./materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSaga";
+import watchFetchRequestDetailSaga from "./materialsNurse/getDetailRequest/getDetailRequestSaga";
+import watchFetchMedicalEvent from "./medicalEventNurse/medicalEvent/getMedicalEventSaga";
+import watchFetchMedicalEventDetail from "./medicalEventNurse/medicalDetailEvent/getMedicalEventDetailSaga";
+import watchPostMedicalEvent from "./medicalEventNurse/createMedicalEvent/createMedicalEventSaga";
+import watchSendMedicalEvent from "./medicalEventNurse/sendMedicalEvent/sendMedicalEventSaga";
+import watchPatchHospitalEvent from "./medicalEventNurse/editHospitalEvent/editHospitalEventSaga";
+import watchCreateMedicineEvent from "./medicalEventNurse/createMedicineEvent/createMedicineEventSaga";
+import watchDeleteMedicalEvent from "./medicalEventNurse/deleteMedicalEvent/deleteMedicalEventSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -53,6 +61,14 @@ export default function* rootSaga() {
     watchFetchRequestMedicine(),
     watchFetchMedicineSupply(),
     watchPostRequestMedicine(),
+    watchFetchRequestDetailSaga(),
+    watchFetchMedicalEvent(),
+    watchFetchMedicalEventDetail(),
+    watchPostMedicalEvent(),
+    watchSendMedicalEvent(),
+    watchPatchHospitalEvent(),
+    watchCreateMedicineEvent(),
+    watchDeleteMedicalEvent(),
     //Manager
     watchFetchManagerMedical(),
     watchPostManagerVaccine(),

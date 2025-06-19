@@ -1,9 +1,9 @@
 import { Button, Input, Space, Table, Tooltip } from "antd";
-import React from "react";
+
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 
-const MedicalEvent = () => {
+const Medical = () => {
   const columns = [
     {
       title: "ID",
@@ -190,4 +190,4 @@ const MedicalEvent = () => {
   );
 };
 
-export default MedicalEvent;
+export default Medical;

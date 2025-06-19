@@ -21,6 +21,7 @@ function* getRequestMedicineSaga() {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchRequestMedicineSuccess(response.data));
+      console.log("KHOI", response.data);
     } else {
       yield put(fetchRequestMedicineFail(response.status));
     }
