@@ -37,6 +37,7 @@ function* patchVaccineManagerSaga(action) {
     const errMsg =
       error?.response?.data?.message || error.message || "Unknown error";
     yield put(patchMangerFailVaccine(errMsg));
+    console.log(error);
   }
 }
 

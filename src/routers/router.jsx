@@ -57,6 +57,7 @@ import AllRecord from "../pages/Parent/StudentHistory/AllRecord";
 import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
 import SendResult from "../pages/Parent/StudentHistory/SendResult";
 import Notification from "../pages/Parent/StudentHistory/Notification";
+import RequestManager from "../pages/Manager/Request/RequestManager";
 
 const router = createBrowserRouter([
   {
@@ -152,6 +153,15 @@ const router = createBrowserRouter([
               { path: "checkup", element: <Checkup /> },
               { path: "trend", element: <Trend /> },
             ],
+          },
+          {
+            path: "requestManager",
+            element: <RequestManager />,
+            // children: [
+            //   { path: "vaccination", element: <Vaccination /> },
+            //   { path: "checkup", element: <Checkup /> },
+            //   { path: "trend", element: <Trend /> },
+            // ],
           },
         ],
       },

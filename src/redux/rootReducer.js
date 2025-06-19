@@ -30,6 +30,19 @@ import healthProfileReducer from "./profileParent/profileSlice";
 import managerDeleteVaccineReducer from "./manager/DeleteVaccineEvent/deleteVaccineEventSlice";
 import managerCreateMedicineReducer from "./manager/CreateManagerMedicine/createManagerMedicineSlice";
 import getMedicineSupplyManagerReducer from "./manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSlice";
+import getMedicineClasstifyManagerReducer from "./manager/GetManagerMedineClassify/getManagerMedicineClassifySlice";
+import { postManagerClasstify } from "./manager/CreateManagerClassify/createManagerClassifySlice";
+import getDetailManagerClassifyReducer from "./manager/GetDetallManagerClassify/getDetailManagerClassifySlice";
+import UpdateDetailClassifyManagerReducer from "./manager/UpdateDetailClassifyManager/updateDetailClassifyManagerSlice";
+import deleteManagerMedicineClassifyReducer from "./manager/DeleteManagerClassify/deleteManagerMedicineClassifySlice";
+import deleteMedicineManagerReducer from "./manager/DeleteManagerMedicine/deleteManagerMedicineSlice";
+import getAllMedicineSupplyManagerReducer from "./manager/GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSlice";
+import managerCreateSupplyReducer from "./manager/CreateManagerSuppy/createManagerSupplySlice";
+import managerUpdateSupplyReducer from "./manager/UpdateManagerSupply/updateManagerSupplySlice";
+import deleteManagerSupplyReducer from "./manager/DeleteManagerSupply/deleteManagerSupplySlice";
+import getAllRequestReducer from "./manager/GetAllRequest/getAllRequestSlice";
+import getDetailRequestReducer from "./manager/GetDetailRequestManager/getDetailRequestManagerSlice";
+import updateManagerSupplyReducer from "./manager/RejectRequestManager/rejectRequestManagerSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -61,6 +74,19 @@ const rootReducer = combineReducers({
   deleteManagerVacine: managerDeleteVaccineReducer,
   createManagerMedicine: managerCreateMedicineReducer,
   getMedicineSupplyManager: getMedicineSupplyManagerReducer,
+  getMedicineClasstifyManager: getMedicineClasstifyManagerReducer,
+  createManagerClasstify: postManagerClasstify,
+  getDetailManagerClassify: getDetailManagerClassifyReducer,
+  updateDetailClassifyManager: UpdateDetailClassifyManagerReducer,
+  deleteManagerMedicineClassify: deleteManagerMedicineClassifyReducer,
+  deleteMedicineManager: deleteMedicineManagerReducer,
+  getAllMedicineSupplyManager: getAllMedicineSupplyManagerReducer,
+  postmanagerCreateSupply: managerCreateSupplyReducer,
+  patchManagerUpdateSupply: managerUpdateSupplyReducer,
+  deleteManagerSupply: deleteManagerSupplyReducer,
+  getAllRequest: getAllRequestReducer,
+  getDetailRequest: getDetailRequestReducer,
+  updateManagerSupply: updateManagerSupplyReducer,
 
   parentProfileHealth: healthProfileReducer,
 });

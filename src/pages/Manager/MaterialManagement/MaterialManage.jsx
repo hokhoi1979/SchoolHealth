@@ -1,15 +1,81 @@
 import React, { useState, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { Button, Input, Select, Modal } from "antd";
+import { Button, Input, Select, Modal, Upload, message } from "antd";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import TextArea from "antd/es/input/TextArea";
 import { AppFooter } from "../../../components/Footer/AppFooter";
+import { useDispatch, useSelector } from "react-redux";
+import { postManagerClasstify } from "../../../redux/manager/CreateManagerClassify/createManagerClassifySlice";
+import { fetchMedicineClasstifyManager } from "../../../redux/manager/GetManagerMedineClassify/getManagerMedicineClassifySlice";
+import { postManagerMedicine } from "../../../redux/manager/CreateManagerMedicine/createManagerMedicineSlice";
+import { CloudHail } from "lucide-react";
+import { postManagerSupply } from "../../../redux/manager/CreateManagerSuppy/createManagerSupplySlice";
 
 function MaterialManage() {
+  const [medicineName, setMedicineName] = useState("");
+  const [stock, setStock] = useState(0);
+  const [description, setDescription] = useState("");
+  const [type, setType] = useState("");
+  const [usage, setUsage] = useState("");
   const [open, setOpen] = useState(false);
   const [click, setClick] = useState("inventory");
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
   const [categoryName, setCategoryName] = useState("");
+  const [newMedicineImage, setNewMedicineImage] = useState(null);
+  const dispatch = useDispatch();
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [selectedClassifyID, setSelectedClassifyID] = useState("");
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [note, setNote] = useState("");
+  const [image, setImage] = useState(null);
+  const [categoryOptions, setCategoryOptions] = useState([]);
+
+  const {
+    medicineClasstifyManager = [],
+    loading,
+    error,
+  } = useSelector((state) => state.getMedicineClasstifyManager);
+  const { medicineSupplyManager = [] } = useSelector(
+    (state) => state.getAllMedicineSupplyManager
+  );
+
+  const formatSupply = () => {
+    if (Array.isArray(medicineSupplyManager?.data?.medicineSupply)) {
+      const tempSupply = medicineSupplyManager.data.medicineSupply.map(
+        (item) => ({
+          id: item.id,
+          nameMedicine: item.name,
+          category: item.category,
+          description: item.description,
+          usage: item.usage,
+          image: item.image,
+          stock: item.stock,
+        })
+      );
+      // llayy category ra
+      const uniqueCategories = [
+        ...new Set(tempSupply.map((item) => item.category)),
+      ];
+
+      setCategoryOptions(uniqueCategories);
+    }
+  };
+  useEffect(() => {
+    formatSupply();
+  }, [medicineSupplyManager]);
+
+  useEffect(() => {
+    const rawList = medicineClasstifyManager?.data?.medicineClassify || [];
+    const format = rawList.map((item) => ({
+      id: item.id,
+      name: item.name,
+      medicinesCount: item._count?.medicines || 0,
+    }));
+
+    setCategories(format);
+  }, [medicineClasstifyManager]);
 
   let material = [
     {
@@ -19,14 +85,6 @@ function MaterialManage() {
   ];
   const [selectedClassify, setSelectedClassify] = useState("");
   const [newClassify, setNewClassify] = useState("");
-
-  const classifyOptions = [
-    "Painkiller",
-    "Antibiotic",
-    "Supplement",
-    "Antiseptic",
-    "Other",
-  ];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -134,39 +192,81 @@ function MaterialManage() {
 
             <div className="font-serif">
               <h1 className="text-[17px] font-medium font-kameron mt-3">
-                Import medicine/ medical
+                Name of medicine/supplies
               </h1>
-              <Input />
+              <Input
+                placeholder="Enter name"
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
 
-            <div className="grid grid-cols-2 gap-3 font-serif">
+            <div className=" font-serif">
               <div>
                 <h1 className="text-[17px] font-medium font-kameron mt-3">
                   Quantity imported
                 </h1>
-                <Input type="number" placeholder="Enter number" />
+                <Input
+                  type="number"
+                  placeholder="Enter number"
+                  onChange={(e) => setStock(e.target.value)}
+                />
               </div>
-              <div className="w-[100px] pt-[38px]">
-                <Select className="w-full">
-                  <Select.Option value="pellets">Pellets</Select.Option>
-                  <Select.Option value="bottle">Bottle</Select.Option>
-                  <Select.Option value="jar">Jar</Select.Option>
-                </Select>
-              </div>
+            </div>
+
+            <div className="font-serif">
+              <h1 className="text-[17px] font-medium font-kameron mt-3">
+                Category
+              </h1>
+              <Select
+                className="w-full"
+                placeholder="Select category"
+                value={category}
+                onChange={(value) => setCategory(value)}
+              >
+                {categoryOptions.map((cat) => (
+                  <Select.Option key={cat} value={cat}>
+                    {cat}
+                  </Select.Option>
+                ))}
+              </Select>
             </div>
 
             <div>
               <h1 className="text-[17px] font-medium font-kameron mt-3">
                 Description
               </h1>
-              <Input />
+              <Input
+                placeholder="Enter description"
+                onChange={(e) => setDescription(e.target.value)}
+              />
             </div>
 
             <div>
-              <h1 className="text-[17px] font-medium font-kameron mt-3">
-                Note
+              <h1 className="text-[17px] font-medium font-kameron mt-3 ">
+                Usage
               </h1>
-              <TextArea placeholder="Note if you have" />
+              <TextArea
+                placeholder="Note if you have"
+                onChange={(e) => setUsage(e.target.value)}
+              />
+            </div>
+
+            <div className="font-serif mt-3">
+              <h1 className="text-[17px] font-medium font-kameron">
+                Upload Image
+              </h1>
+              <Upload
+                listType="picture"
+                maxCount={1}
+                beforeUpload={() => false}
+                onChange={(info) => {
+                  // Lấy file đầu tiên
+                  const file = info.fileList[0]?.originFileObj;
+                  setImage(file);
+                }}
+              >
+                <Button>Click to Upload</Button>
+              </Upload>
             </div>
 
             <div className="mt-5 flex justify-end gap-3 font-serif">
@@ -180,7 +280,18 @@ function MaterialManage() {
               <Button
                 type="secondary"
                 className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  dispatch(
+                    postManagerSupply({
+                      name,
+                      stock,
+                      description,
+                      usage,
+                      category,
+                      image, // vẫn truyền file nhưng dưới dạng JS File object, không gói vào FormData
+                    })
+                  );
+                }}
               >
                 <p className="text-white text-xl font-serif p-1">Save</p>
               </Button>
@@ -199,6 +310,31 @@ function MaterialManage() {
             <h1 className="font-serif text-2xl flex justify-center mb-4">
               Add New Medicine
             </h1>
+            {/* Upload Image */}
+            <div>
+              <label className="text-[16px] font-medium">Image *</label>
+              <Upload
+                showUploadList={false}
+                beforeUpload={(file) => {
+                  setNewMedicineImage(file); // Lưu file gốc, không đọc base64 nữa
+                  return false; // Ngăn tự upload
+                }}
+              >
+                {newMedicineImage ? (
+                  <img
+                    src={URL.createObjectURL(newMedicineImage)}
+                    alt="medicine preview"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <Button>Upload Image</Button>
+                )}
+              </Upload>
+            </div>
 
             <div className="grid grid-cols-2 gap-4 font-serif">
               {/* Name */}
@@ -206,25 +342,43 @@ function MaterialManage() {
                 <label className="text-[16px] font-medium">
                   Medicine Name *
                 </label>
-                <Input placeholder="Enter medicine name" />
+                <Input
+                  placeholder="Enter medicine name"
+                  onChange={(e) => setMedicineName(e.target.value)}
+                  value={medicineName}
+                />
               </div>
 
               {/* Stock */}
               <div>
                 <label className="text-[16px] font-medium">Stock *</label>
-                <Input type="number" placeholder="Enter stock quantity" />
+                <Input
+                  type="number"
+                  placeholder="Enter stock quantity"
+                  onChange={(e) => setStock(e.target.value)}
+                  value={stock}
+                />
               </div>
 
               {/* Description */}
               <div className="col-span-2">
                 <label className="text-[16px] font-medium">Description</label>
-                <TextArea placeholder="e.g., Provides vitamin C for the body" />
+                <TextArea
+                  placeholder="e.g., Provides vitamin C for the body"
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                />
               </div>
 
               {/* Type */}
               <div>
                 <label className="text-[16px] font-medium">Type *</label>
-                <Select placeholder="Choose type" className="w-full">
+                <Select
+                  placeholder="Choose type"
+                  className="w-full"
+                  value={type}
+                  onChange={(value) => setType(value)}
+                >
                   <Option value="PELLETS">Pellets</Option>
                   <Option value="BOTTLE">Bottle</Option>
                   <Option value="JAR">Jar</Option>
@@ -239,14 +393,26 @@ function MaterialManage() {
                 <Select
                   placeholder="Select classify name"
                   className="w-full"
-                  value={selectedClassify}
-                  onChange={(value) => setSelectedClassify(value)}
+                  value={selectedClassifyID}
+                  onChange={(value) => {
+                    if (value === "Other") {
+                      setSelectedClassifyID("Other");
+                      setSelectedClassify("Other");
+                    } else {
+                      const found = categories.find(
+                        (item) => item.id === value
+                      );
+                      setSelectedClassifyID(value);
+                      setSelectedClassify(found?.name || "");
+                    }
+                  }}
                 >
-                  {classifyOptions.map((item) => (
-                    <Option key={item} value={item}>
-                      {item}
+                  {categories.map((item) => (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
                     </Option>
                   ))}
+                  <Option value="Other">Other</Option>
                 </Select>
               </div>
 
@@ -266,7 +432,11 @@ function MaterialManage() {
               {/* Usage */}
               <div className="col-span-2">
                 <label className="text-[16px] font-medium">Usage *</label>
-                <TextArea placeholder="e.g., Take one pill after meal" />
+                <TextArea
+                  placeholder="e.g., Take one pill after meal"
+                  onChange={(e) => setUsage(e.target.value)}
+                  value={usage}
+                />
               </div>
             </div>
 
@@ -279,18 +449,39 @@ function MaterialManage() {
                 <p className="text-white text-xl font-serif p-1">Cancel</p>
               </Button>
               <Button
-                className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
-                onClick={() => {
-                  // Handle save logic here
-                  console.log({
-                    classifyID: selectedClassify,
-                    newClassifyName:
-                      selectedClassify === "Other" ? newClassify : null,
-                  });
-                  setOpen(false);
+                className=" bg-[#39fa39] "
+                onClick={async () => {
+                  try {
+                    let classifyIDToUse = null;
+
+                    if (selectedClassify === "Other") {
+                      const newClassifyData = await dispatch(
+                        postManagerClasstify({ name: newClassify })
+                      ).unwrap();
+                      classifyIDToUse = String(newClassifyData.id);
+                    } else {
+                      classifyIDToUse = String(selectedClassifyID);
+                    }
+
+                    dispatch(
+                      postManagerMedicine({
+                        name: medicineName,
+                        stock,
+                        description,
+                        type: type?.toUpperCase(),
+                        classifyID: classifyIDToUse,
+                        usage,
+                        image: newMedicineImage,
+                      })
+                    );
+
+                    setOpen(false);
+                  } catch (err) {
+                    console.error("Failed to save:", err);
+                  }
                 }}
               >
-                <p className="text-white text-xl font-serif p-1">Save</p>
+                <p className="text-white ]  text-xl font-serif p-1">Save</p>
               </Button>
             </div>
           </Modal>
@@ -327,14 +518,31 @@ function MaterialManage() {
                 </Button>
                 <Button
                   className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
-                  onClick={() => {
+                  onClick={async () => {
                     if (categoryName.trim()) {
                       if (!classifyOptions.includes(categoryName)) {
-                        setClassifyOptions([...classifyOptions, categoryName]);
-                        setSelectedClassify(categoryName);
+                        try {
+                          setSaveLoading(true);
+                          await dispatch(
+                            postManagerClasstify({ name: categoryName })
+                          );
+                          window.success("Create Success");
+                          setClassifyOptions([
+                            ...classifyOptions,
+                            categoryName,
+                          ]);
+                          setSelectedClassify(categoryName);
+                        } catch (err) {
+                          message.error("Error Create");
+                        } finally {
+                          setSaveLoading(false);
+                          setCategoryName("");
+                          setOpenCategoryModal(false);
+                        }
+                      } else {
+                        setCategoryName("");
+                        setOpenCategoryModal(false);
                       }
-                      setCategoryName("");
-                      setOpenCategoryModal(false);
                     }
                   }}
                 >

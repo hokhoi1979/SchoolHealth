@@ -131,11 +131,11 @@ const SideBarManager = () => {
             </svg>
             {!toggle && (
               <Link
-                onClick={() => setClick("medical")}
-                to={"/manager/medicalcheckup"}
+                onClick={() => setClick("Request")}
+                to={"/manager/requestManager"}
                 className="text-[18px]"
               >
-                Medical Event
+                Request from Nurse
               </Link>
             )}
           </div>

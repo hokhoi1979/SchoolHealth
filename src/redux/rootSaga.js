@@ -29,6 +29,19 @@ import watchHealthProfileSaga from "./profileParent/profileSaga";
 import watchDeleteManagerVaccine from "./manager/DeleteVaccineEvent/deleteVaccineEventSaga";
 import watchPostManagerMedicine from "./manager/CreateManagerMedicine/createManagerMedicineSaga";
 import watchFetchMedicineSuppplyManager from "./manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSaga";
+import watchFetchMedicineClasstifyManager from "./manager/GetManagerMedineClassify/getManagerMedicineClassifySaga";
+import watchPostManagerClasstify from "./manager/CreateManagerClassify/createManagerClassifySaga";
+import watchFetchDetailManagerClassify from "./manager/GetDetallManagerClassify/getDetailManagerClassifySaga";
+import watchPutClassifyManager from "./manager/UpdateDetailClassifyManager/updateDetailClassifyManagerSaga";
+import watchDeleteManagerMedicineClassify from "./manager/DeleteManagerClassify/deleteManagerMedicineClassifySaga";
+import watchDeleteMedicineManager from "./manager/DeleteManagerMedicine/DeleteManagerMedicineSaga";
+import watchFetchAllMedicineSupplyManager from "./manager/GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSaga";
+import watchPostManagerSupply from "./manager/CreateManagerSuppy/createManagerSupplySaga";
+import watchPutManagerSupply from "./manager/UpdateManagerSupply/updateManagerSupplySaga";
+import watchDeleteManagerSupply from "./manager/DeleteManagerSupply/deleteManagerSupplySaga";
+import watchFetchAllRequest from "./manager/GetAllRequest/getAllRequestSaga";
+import watchFetchDetailRequest from "./manager/GetDetailRequestManager/getDetailRequestManagerSaga";
+import watchUpdateManagerSupply from "./manager/RejectRequestManager/rejectRequestManagerSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -54,6 +67,19 @@ export default function* rootSaga() {
     watchDeleteManagerVaccine(),
     watchPostManagerMedicine(),
     watchFetchMedicineSuppplyManager(),
+    watchFetchMedicineClasstifyManager(),
+    watchPostManagerClasstify(),
+    watchFetchDetailManagerClassify(),
+    watchPutClassifyManager(),
+    watchDeleteManagerMedicineClassify(),
+    watchDeleteMedicineManager(),
+    watchFetchAllMedicineSupplyManager(),
+    watchPostManagerSupply(),
+    watchPutManagerSupply(),
+    watchDeleteManagerSupply(),
+    watchFetchAllRequest(),
+    watchFetchDetailRequest(),
+    watchUpdateManagerSupply(),
 
     // watchFetchVaccineResult(),
     watchFetchVaccineResult(),

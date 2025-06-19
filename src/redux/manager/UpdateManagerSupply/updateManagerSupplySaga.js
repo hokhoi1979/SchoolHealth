@@ -1,21 +1,21 @@
-import { actionChannel, call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 import {
-  PUT__MANAGER__VACCINE,
-  putManagerMedical,
-  putManagerSucessMedical,
-  putMangerFailMedical,
-} from "./updateVaccineManagerSlice";
+  PUT__MANAGER__SUPPLY,
+  putManagerFailSupply,
+  putManagerSuccessSupply,
+  putManagerSupply,
+} from "./updateManagerSupplySlice";
 
 const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
-function* updateVaccineManagerSaga(action) {
+function* updateManagerSupplySaga(action) {
   try {
     const token = localStorage.getItem("accessToken");
     const { id, ...data } = action.payload;
     const response = yield call(
-      axios.put,
-      `${URL_API}/manager/v1/vaccinationEvent/${id}`,
+      axios.patch,
+      `${URL_API}/manager/v1/medicineSupply/${id}`,
       data,
       {
         headers: {
@@ -27,21 +27,20 @@ function* updateVaccineManagerSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       console.log("DUCC", response.data);
-
-      yield put(putManagerSucessMedical(response.data));
+      yield put(putManagerSuccessSupply(response.data));
     } else {
-      yield put(putMangerFailMedical(response.status));
+      yield put(putManagerFailSupply(response.status));
     }
   } catch (error) {
     const errMsg =
       error?.response?.data?.message || error.message || "Unknown error";
-    yield put(putMangerFailMedical(errMsg));
+    yield put(putManagerFailSupply(errMsg));
     console.log(error);
   }
 }
 
-function* watchPutVaccineManager() {
-  yield takeLatest(PUT__MANAGER__VACCINE, updateVaccineManagerSaga);
+function* watchPutManagerSupply() {
+  yield takeLatest(PUT__MANAGER__SUPPLY, updateManagerSupplySaga);
 }
 
-export default watchPutVaccineManager;
+export default watchPutManagerSupply;
