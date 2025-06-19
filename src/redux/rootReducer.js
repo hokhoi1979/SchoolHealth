@@ -34,6 +34,14 @@ import getAllMedicineNurseReducer from "./materialsNurse/getAllMedicine/getAllMe
 import getRequestMedicineReducer from "./materialsNurse/getSendRequestMedicine/getRequestMedicineSlice";
 import getMedicineSupplyReducer from "./materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
 import postRequestMedicineReducer from "./materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSLice";
+import getRequestDetailReducer from "./materialsNurse/getDetailRequest/getDetailRequestSlice";
+import getMedicalEventNurseReducer from "./medicalEventNurse/medicalEvent/getMedicalEventSlice";
+import getMedicalEventDetailReducer from "./medicalEventNurse/medicalDetailEvent/getMedicalEventDetailSlice";
+import createMedicalEventReducer from "./medicalEventNurse/createMedicalEvent/createMedicalEventSlice";
+import sendMedicalEnventReducer from "./medicalEventNurse/sendMedicalEvent/sendMedicalEventSlice";
+import hospitalEventReducer from "./medicalEventNurse/editHospitalEvent/editHospitalEventSlice";
+import postMedicineEventReducer from "./medicalEventNurse/createMedicineEvent/createMedicineEventSlice";
+import deleteMedicalEventReducer from "./medicalEventNurse/deleteMedicalEvent/deleteMedicalEventSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -44,6 +52,14 @@ const rootReducer = combineReducers({
   requestMedicine: getRequestMedicineReducer,
   getMedicineSupplyNurse: getMedicineSupplyReducer,
   postRequestMedicine: postRequestMedicineReducer,
+  getRequestDetailNurse: getRequestDetailReducer,
+  getMedicalEventNurse: getMedicalEventNurseReducer,
+  getMedicalEventDetailNurse: getMedicalEventDetailReducer,
+  postMedicalEventNurse: createMedicalEventReducer,
+  sendMedicalEnventNurse: sendMedicalEnventReducer,
+  hospitalEvent: hospitalEventReducer,
+  postMedicineEvent: postMedicineEventReducer,
+  deleteMedicalEvent: deleteMedicalEventReducer,
 
   profileParent: profileParentReducer,
   studentOfParent: studentOfParentReducer,

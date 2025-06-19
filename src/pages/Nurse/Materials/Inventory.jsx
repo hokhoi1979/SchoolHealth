@@ -80,6 +80,7 @@ function Inventory() {
       setCombinedStore(combined);
     }
   }, [medicineStore, medicineSupplyStore]);
+  console.log("ALLL:L", combinedStore);
 
   const columns = [
     {
