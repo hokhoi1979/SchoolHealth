@@ -91,7 +91,7 @@ const SideBar = () => {
         <div className="w-full h-[2px] bg-[#5B5454]"></div>
 
         <div className="pl-3 pr-3 pt-5 text-[#5B5454]">
-          <div
+          {/* <div
             className={`flex items-center gap-4  hover:bg-[#EFEEEE] p-2 rounded-xl ${
               click === "dashboard"
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
@@ -121,7 +121,7 @@ const SideBar = () => {
                 Dash Board
               </Link>
             )}
-          </div>
+          </div> */}
 
           <div
             className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${

@@ -1,6 +1,8 @@
+"use client";
+
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Descriptions, Avatar, Tag, Spin } from "antd";
+import { Card, Descriptions, Avatar, Tag, Spin, Alert } from "antd";
 import {
   UserOutlined,
   PhoneOutlined,
@@ -21,9 +23,9 @@ const ParentInformation = () => {
     dispatch(fetchGetProfile());
   }, [dispatch]);
 
-  const formDate = (dataString) => {
-    if (!dataString) return "N/A";
-    const date = new Date(dataString);
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
     return date.toLocaleDateString("vi-VN");
   };
 
@@ -59,6 +61,7 @@ const ParentInformation = () => {
       </div>
     );
   }
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <h1 className="pl-10 pt-5 text-xl font-inria font-medium mb-4">
@@ -71,6 +74,8 @@ const ParentInformation = () => {
         <p className="pt-5 ml-5 text-blue-400 font-medium">
           Parent profile information
         </p>
+
+        {/* Profile Header Card */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex items-center gap-6">
             <Avatar
@@ -81,24 +86,35 @@ const ParentInformation = () => {
             />
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-800 mb-2 font-inria">
-                {profile?.parentInfo?.fullname || "N/A"}
+                {profile?.data?.parentInfo?.fullname || "N/A"}
               </h1>
               <div className="flex flex-wrap gap-4 text-gray-600">
                 <div className="flex items-center gap-2">
                   <PhoneOutlined className="text-blue-500" />
                   <span>
-                    Phone: <strong>{profile?.parentInfo?.phone}</strong>
+                    Phone:{" "}
+                    <strong>{profile?.data?.parentInfo?.phone || "N/A"}</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MailOutlined className="text-blue-500" />
+                  <span>
+                    Email:{" "}
+                    <strong>{profile?.data?.parentInfo?.email || "N/A"}</strong>
                   </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Information Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Parent Information Card */}
           <Card
             title={
               <div className="flex items-center gap-2">
-                <UserOutlined classID="text-blue-500" />
+                <UserOutlined className="text-blue-500" />
                 <span className="text-xl font-semibold font-inria">
                   Parent Information
                 </span>
@@ -112,7 +128,7 @@ const ParentInformation = () => {
                   <span className="font-semibold text-gray-700">Full Name</span>
                 }
               >
-                {profile?.parentInfo?.fullname || "N/A"}
+                {profile?.data?.parentInfo?.fullname || "N/A"}
               </Descriptions.Item>
 
               <Descriptions.Item
@@ -122,7 +138,7 @@ const ParentInformation = () => {
               >
                 <div className="flex items-center gap-2">
                   <MailOutlined className="text-blue-500" />
-                  {profile?.parentInfo?.email || "N/A"}
+                  {profile?.data?.parentInfo?.email || "N/A"}
                 </div>
               </Descriptions.Item>
 
@@ -133,7 +149,7 @@ const ParentInformation = () => {
               >
                 <div className="flex items-center gap-2">
                   <PhoneOutlined className="text-blue-500" />
-                  {profile?.parentInfo?.phone || "N/A"}
+                  {profile?.data?.parentInfo?.phone || "N/A"}
                 </div>
               </Descriptions.Item>
 
@@ -146,27 +162,32 @@ const ParentInformation = () => {
               >
                 <div className="flex items-center gap-2">
                   <CalendarOutlined className="text-blue-500" />
-                  {profile?.parentInfo?.createdAt || "N/A"}
+                  {formatDate(profile?.data?.parentInfo?.createdAt)}
                 </div>
               </Descriptions.Item>
             </Descriptions>
           </Card>
 
+          {/* Student Information Card */}
           <Card
             title={
               <div className="flex items-center gap-2">
-                <TeamOutlined classID="text-blue-500" />
+                <TeamOutlined className="text-blue-500" />
                 <span className="text-xl font-semibold font-inria">
                   Student Of Parent Information
                 </span>
               </div>
             }
-            className="shadow-sm "
+            className="shadow-sm"
           >
-            {profile?.studentOfParent && profile?.studentOfParent.length > 0 ? (
+            {profile?.data?.studentOfParent &&
+            profile?.data?.studentOfParent.length > 0 ? (
               <div className="space-y-4">
-                {profile.studentOfParent.map((student, index) => (
-                  <div key={index}>
+                {profile.data.studentOfParent.map((student, index) => (
+                  <div
+                    key={index}
+                    className={index > 0 ? "border-t border-gray-100 pt-4" : ""}
+                  >
                     <Descriptions
                       column={1}
                       size="middle"
@@ -203,22 +224,29 @@ const ParentInformation = () => {
                         }
                       >
                         {student?.classAssignments &&
-                        student.classAssignments.length > 0
-                          ? student.classAssignments.map((assignment, idx) => (
-                              <Tag key={idx} color="green">
-                                {assignment?.class?.name || "N/A"}
-                              </Tag>
-                            ))
-                          : "N/A"}
+                        student.classAssignments.length > 0 ? (
+                          student.classAssignments.map((assignment, idx) => (
+                            <Tag key={idx} color="green">
+                              {assignment?.class?.name || "N/A"}
+                            </Tag>
+                          ))
+                        ) : (
+                          <span className="text-gray-500">
+                            No class assigned
+                          </span>
+                        )}
                       </Descriptions.Item>
                     </Descriptions>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-center py-4">
-                No children information available
-              </p>
+              <div className="text-center py-8">
+                <TeamOutlined className="text-4xl text-gray-300 mb-2" />
+                <p className="text-gray-500">
+                  No children information available
+                </p>
+              </div>
             )}
           </Card>
         </div>
@@ -228,4 +256,5 @@ const ParentInformation = () => {
     </div>
   );
 };
+
 export default ParentInformation;

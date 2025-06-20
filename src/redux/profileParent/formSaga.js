@@ -12,7 +12,7 @@ function* formSaga() {
       `${URL_API}/parent/v1/health/formData`,
       {
         headers: {
-          Authorization: `${token}`,
+          Authorization: `Bearer${token}`,
           "Content-Type": "application/json",
         },
       }

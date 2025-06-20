@@ -11,6 +11,7 @@ import {
   Alert,
   Modal,
   Spin,
+  message,
 } from "antd";
 import { SaveOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
@@ -43,6 +44,13 @@ const StudentHealth = () => {
   //API get detail health information
   const { healthDetail } = useSelector((state) => state.healthStudent);
 
+  // Add selector for create health status
+  const {
+    loading: createLoading,
+    success: createSuccess,
+    error: createError,
+  } = useSelector((state) => state.createHealth || {});
+
   // Add selector for update health status
   const { loading: updateLoading, success: updateSuccess } = useSelector(
     (state) => state.updateHealth || {}
@@ -74,13 +82,28 @@ const StudentHealth = () => {
     dispatch(fetchStudent());
     dispatch(fetchForm());
     dispatch(fetchParentHealth());
-    // dispatch(fetchStudent());
-    // dispatch(fetchForm());
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Handle create success/error
+  useEffect(() => {
+    if (createSuccess) {
+      message.success("Health record created successfully!");
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+      // Refresh health data
+      if (selectedStudent) {
+        dispatch(fetchHealth(selectedStudent));
+      }
+      setShowHealthForm(false);
+    }
+    if (createError) {
+      message.error(`Failed to create health record: ${createError}`);
+    }
+  }, [createSuccess, createError, selectedStudent, dispatch]);
 
   const handleSelectedStudent = (studentId) => {
     setSelectedStudent(studentId);
@@ -88,7 +111,40 @@ const StudentHealth = () => {
     setHealthExists(false);
     setCheckingHealth(true);
 
+    // Reset form when changing student
+    resetForm();
+
     dispatch(fetchHealth(studentId));
+  };
+
+  const resetForm = () => {
+    setHeight("");
+    setWeight("");
+    setBloodGroup("");
+    setTreatmentHistory("");
+    setAddtionalNote("");
+    setHasAllergy("no");
+    setAllergies([]);
+    setDetailAllergies("");
+    setMethodAllergies("");
+    setHasChronic("no");
+    setChronicDiseases([]);
+    setDetailChronicDiseases("");
+    setMethodChronicDiseases("");
+    setMedicationNote("");
+    setHealthVaccination("no");
+    setSelectedVaccinations([]);
+    setVaccinationHistory("");
+    setHadSideEffects("no");
+    setDetailSideEffect("");
+    setVisionLeft("");
+    setVisionRight("");
+    setWearGlasses("no");
+    setNoteVision("");
+    setHearingLeft("");
+    setHearingRight("");
+    setUseHearingAids("no");
+    setNoteHearing("");
   };
 
   useEffect(() => {
@@ -118,8 +174,8 @@ const StudentHealth = () => {
   //Autofill form if data exists
   useEffect(() => {
     if (healthDetail && selectedStudent === healthDetail.studentID) {
-      setHeight(healthDetail.height || "");
-      setWeight(healthDetail.weight || "");
+      setHeight(healthDetail.height?.toString() || "");
+      setWeight(healthDetail.weight?.toString() || "");
       setBloodGroup(healthDetail.bloodGroup?.toLowerCase() || "");
       setTreatmentHistory(healthDetail.treatmentHistory || "");
       setAddtionalNote(healthDetail.additionalNote || "");
@@ -189,40 +245,113 @@ const StudentHealth = () => {
   const [useHearingAids, setUseHearingAids] = useState("no");
   const [noteHearing, setNoteHearing] = useState("");
 
-  //Save function
+  // Validation function
+  const validateForm = () => {
+    const errors = [];
+
+    if (!selectedStudent) {
+      errors.push("Please select a student");
+    }
+
+    if (!height || height.trim() === "") {
+      errors.push("Height is required");
+    } else if (
+      isNaN(Number.parseFloat(height)) ||
+      Number.parseFloat(height) <= 0
+    ) {
+      errors.push("Height must be a valid positive number");
+    }
+
+    if (!weight || weight.trim() === "") {
+      errors.push("Weight is required");
+    } else if (
+      isNaN(Number.parseFloat(weight)) ||
+      Number.parseFloat(weight) <= 0
+    ) {
+      errors.push("Weight must be a valid positive number");
+    }
+
+    if (!bloodGroup || bloodGroup.trim() === "") {
+      errors.push("Blood group is required");
+    }
+
+    // Validate allergies
+    if (hasAllergy === "yes") {
+      if (allergies.length === 0) {
+        errors.push(
+          "Please select at least one allergy type or change to 'No allergies'"
+        );
+      }
+    }
+
+    // Validate chronic diseases
+    if (hasChronic === "yes") {
+      if (chronicDiseases.length === 0) {
+        errors.push(
+          "Please select at least one chronic disease type or change to 'No chronic diseases'"
+        );
+      }
+    }
+
+    // Validate vaccinations
+    if (healthVaccination === "yes") {
+      if (selectedVaccinations.length === 0) {
+        errors.push(
+          "Please select at least one vaccination type or change to 'No vaccinations'"
+        );
+      }
+    }
+
+    return errors;
+  };
+
+  //Save function - FIXED VERSION
   const handleSave = () => {
+    // Validate form first
+    const validationErrors = validateForm();
+    if (validationErrors.length > 0) {
+      message.error(
+        `Please fix the following errors:\n${validationErrors.join("\n")}`
+      );
+      return;
+    }
+
     const payload = {
-      studentID: selectedStudent,
-      height,
-      weight,
+      studentID: String(selectedStudent),
+      height: String(height),
+      weight: String(weight),
       bloodGroup: bloodGroup?.toUpperCase(),
-      treatmentHistory,
-      additionalNote,
-      hasNoAllergies: hasAllergy === "no",
-      selectedAllergyIds: allergies,
-      detailAllergies,
-      methodAllergies,
-      hasNochronicDiseases: hasChronic === "no",
-      selectedChronicDiseases: chronicDiseases,
-      detailChronicDiseases,
-      methodChronicDiseases,
-      medicationNote,
-      visionLeft,
-      visionRight,
+      treatmentHistory: treatmentHistory || "",
+      additionalNote: additionalNote || "",
+      hasNoAllergies: !hasAllergy,
+      selectedAllergyIds: !hasAllergy ? [] : allergies.map(Number),
+      detailAllergies: !hasAllergy ? "" : detailAllergies,
+      methodAllergies: !hasAllergy ? "" : methodAllergies,
+      hasNochronicDiseases: !hasChronic,
+      selectedChronicDiseases: !hasChronic ? [] : chronicDiseases.map(Number),
+      detailChronicDiseases: !hasChronic ? "" : detailChronicDiseases,
+      methodChronicDiseases: !hasChronic ? "" : methodChronicDiseases,
+      medicationNote: !hasChronic ? "" : medicationNote,
+      visionLeft: visionLeft ? String(visionLeft) : "0",
+      visionRight: visionRight ? String(visionRight) : "0",
       wearGlasses: wearGlasses === "yes",
-      noteVision,
-      hearingLeft,
-      hearingRight,
+      noteVision: wearGlasses === "no" ? "" : noteVision,
+      hearingLeft: hearingLeft || "Bình thường", // default tiếng Việt
+      hearingRight: hearingRight || "Bình thường",
       hearingAid: useHearingAids === "yes",
-      noteHearing,
-      selectedVaccinations,
-      vaccinationHistory,
+      noteHearing: useHearingAids === "no" ? "" : noteHearing,
+      selectedVaccinations:
+        healthVaccination === "no" ? [] : selectedVaccinations.map(Number),
+      vaccinationHistory: healthVaccination === "no" ? "" : vaccinationHistory,
       sideEffect: hadSideEffects === "yes",
-      detailSideEffect,
+      DetailSideEffect: hadSideEffects === "no" ? "" : detailSideEffect,
     };
+
+    // Debug log - remove in procduction
+    console.log("HH", payload);
+    console.log("Sending payload:", JSON.stringify(payload, null, 2));
+
     dispatch(fetchCreateHealth(payload));
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
   };
 
   //State local trong modal de edit
@@ -261,21 +390,21 @@ const StudentHealth = () => {
     if (healthDetail?.data?.healthProfile) {
       const p = healthDetail.data.healthProfile;
       setUpdateModalForm({
-        height: p.height || "",
-        weight: p.weight || "",
+        height: p.height?.toString() || "",
+        weight: p.weight?.toString() || "",
         bloodGroup: p.bloodGroup || "",
         treatmentHistory: p.treatmentHistory || "",
         additionalNote: p.additionalNote || "",
         hasNoAllergies: p.hasNoAllergies || false,
         selectedAllergyIds: p.hasNoAllergies
           ? []
-          : p.healthAllergies?.map((a) => a.allergies.id) || [1],
+          : p.healthAllergies?.map((a) => a.allergies.id) || [],
         detailAllergies: p.detailAllergies || "",
         methodAllergies: p.methodAllergies || "",
         hasNochronicDiseases: p.hasNochronicDiseases || false,
         selectedChronicDiseases: p.hasNochronicDiseases
           ? []
-          : p.healthChronicDiseases?.map((c) => c.chronicDiseases.id) || [1],
+          : p.healthChronicDiseases?.map((c) => c.chronicDiseases.id) || [],
         detailChronicDiseases: p.detailChronicDiseases || "",
         methodChronicDiseases: p.methodChronicDiseases || "",
         medicationNote: p.medicationNote || "",
@@ -287,9 +416,8 @@ const StudentHealth = () => {
         hearingRight: p.hearingRight || "",
         hearingAid: p.hearingAid || false,
         noteHearing: p.noteHearing || "",
-        selectedVaccinations: p.healthVaccination?.map(
-          (v) => v.vaccination.id
-        ) || [1],
+        selectedVaccinations:
+          p.healthVaccination?.map((v) => v.vaccination.id) || [],
         vaccinationHistory: p.vaccinationHistory || "",
         sideEffect: p.sideEffect || false,
         DetailSideEffect: p.DetailSideEffect || "",
@@ -308,18 +436,26 @@ const StudentHealth = () => {
     const updatedFields = {
       ...updateModalForm,
       studentID: healthDetail.data.healthProfile.id,
+      height: updateModalForm.height.toString(), // Convert to string
+      weight: updateModalForm.weight.toString(), // Convert to string
     };
 
-    console.log("Update fields", updatedFields);
+    console.log("Payload being sent:", updatedFields); // Debug payload
 
     try {
-      await dispatch(fetchUpdateHealth(updatedFields));
-      setViewModal(false);
-      setModalIsEditing(false);
-      // The useEffect above will handle re-fetching and showing success message
+      const result = await dispatch(fetchUpdateHealth(updatedFields));
+
+      if (result.payload?.success) {
+        message.success("Cập nhật hồ sơ sức khỏe thành công!"); // Success message
+        dispatch(fetchHealth(selectedStudent)); // Reload the updated data
+        setViewModal(false); // Close the modal
+        setModalIsEditing(false); // Reset editing state
+      } else {
+        message.error("Cập nhật thất bại. Vui lòng thử lại."); // Error message
+      }
     } catch (error) {
       console.error("Update failed:", error);
-      // Handle error if needed
+      message.error("Có lỗi xảy ra khi cập nhật"); // Error message
     }
   };
 
@@ -347,6 +483,7 @@ const StudentHealth = () => {
               className="w-full"
               loading={loading}
               onChange={handleSelectedStudent}
+              value={selectedStudent}
             >
               {student?.map((s) => (
                 <Option key={s.id} value={s.id}>
@@ -425,13 +562,16 @@ const StudentHealth = () => {
                       htmlFor="height"
                       className="block mb-1 text-base font-medium text-gray-700"
                     >
-                      Height (cm)
+                      Height (cm) <span className="text-red-500">*</span>
                     </label>
                     <Input
                       placeholder="Enter your height"
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
                       className="rounded-md"
+                      type="number"
+                      min="0"
+                      step="0.1"
                     />
                   </div>
                   <div>
@@ -439,13 +579,16 @@ const StudentHealth = () => {
                       htmlFor="weight"
                       className="block mb-1 text-base font-medium text-gray-700"
                     >
-                      Weight (kg)
+                      Weight (kg) <span className="text-red-500">*</span>
                     </label>
                     <Input
                       placeholder="Enter your weight"
                       value={weight}
                       onChange={(e) => setWeight(e.target.value)}
                       className="rounded-md"
+                      type="number"
+                      min="0"
+                      step="0.1"
                     />
                   </div>
                   <div>
@@ -453,7 +596,7 @@ const StudentHealth = () => {
                       htmlFor="blood-type"
                       className="block mb-1 text-base font-medium text-gray-700"
                     >
-                      Blood Type
+                      Blood Type <span className="text-red-500">*</span>
                     </label>
                     <Select
                       placeholder="Enter your blood type"
@@ -512,7 +655,14 @@ const StudentHealth = () => {
                     Does the student have allergies?
                   </label>
                   <Radio.Group
-                    onChange={(e) => setHasAllergy(e.target.value)}
+                    onChange={(e) => {
+                      setHasAllergy(e.target.value);
+                      if (e.target.value === "no") {
+                        setAllergies([]);
+                        setDetailAllergies("");
+                        setMethodAllergies("");
+                      }
+                    }}
                     value={hasAllergy}
                     className="mt-2"
                   >
@@ -532,7 +682,8 @@ const StudentHealth = () => {
                   <>
                     <div className="mt-4">
                       <label className="block text-base font-medium text-gray-700">
-                        Type of allergies
+                        Type of allergies{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <div className="grid grid-cols-3 md:grid-cols-2 mt-2 gap-2">
                         {formLoading ? (
@@ -605,7 +756,15 @@ const StudentHealth = () => {
                     Does the student have chronic?
                   </label>
                   <Radio.Group
-                    onChange={(e) => setHasChronic(e.target.value)}
+                    onChange={(e) => {
+                      setHasChronic(e.target.value);
+                      if (e.target.value === "no") {
+                        setChronicDiseases([]);
+                        setDetailChronicDiseases("");
+                        setMethodChronicDiseases("");
+                        setMedicationNote("");
+                      }
+                    }}
                     value={hasChronic}
                     className="mt-2"
                   >
@@ -625,7 +784,7 @@ const StudentHealth = () => {
                   <>
                     <div className="mt-4">
                       <label className="block text-base font-medium text-gray-700">
-                        Type of chronic
+                        Type of chronic <span className="text-red-500">*</span>
                       </label>
                       <div className="grid grid-cols-3 md:grid-cols-2 mt-2 gap-2">
                         {formLoading ? (
@@ -716,7 +875,15 @@ const StudentHealth = () => {
                     Does the student have vaccination?
                   </label>
                   <Radio.Group
-                    onChange={(e) => setHealthVaccination(e.target.value)}
+                    onChange={(e) => {
+                      setHealthVaccination(e.target.value);
+                      if (e.target.value === "no") {
+                        setSelectedVaccinations([]);
+                        setVaccinationHistory("");
+                        setHadSideEffects("no");
+                        setDetailSideEffect("");
+                      }
+                    }}
                     value={healthVaccination}
                     className="mt-2"
                   >
@@ -736,7 +903,8 @@ const StudentHealth = () => {
                   <>
                     <div className="mt-4">
                       <label className="block text-base font-medium text-gray-700">
-                        Type of vaccination
+                        Type of vaccination{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <div className="grid grid-cols-3 md:grid-cols-2 mt-2 gap-2">
                         {formLoading ? (
@@ -784,7 +952,12 @@ const StudentHealth = () => {
                         Does the student have side effects after vaccination?
                       </label>
                       <Radio.Group
-                        onChange={(e) => setHadSideEffects(e.target.value)}
+                        onChange={(e) => {
+                          setHadSideEffects(e.target.value);
+                          if (e.target.value === "no") {
+                            setDetailSideEffect("");
+                          }
+                        }}
                         value={hadSideEffects}
                         className="mt-2"
                       >
@@ -867,7 +1040,12 @@ const StudentHealth = () => {
                     Do students wear glasses?
                   </label>
                   <Radio.Group
-                    onChange={(e) => setWearGlasses(e.target.value)}
+                    onChange={(e) => {
+                      setWearGlasses(e.target.value);
+                      if (e.target.value === "no") {
+                        setNoteVision("");
+                      }
+                    }}
                     value={wearGlasses}
                     className="mt-2"
                   >
@@ -950,7 +1128,12 @@ const StudentHealth = () => {
                     Do students use hearing aids?
                   </label>
                   <Radio.Group
-                    onChange={(e) => setUseHearingAids(e.target.value)}
+                    onChange={(e) => {
+                      setUseHearingAids(e.target.value);
+                      if (e.target.value === "no") {
+                        setNoteHearing("");
+                      }
+                    }}
                     value={useHearingAids}
                     className="mt-2"
                   >
@@ -991,9 +1174,10 @@ const StudentHealth = () => {
                   type="primary"
                   icon={<SaveOutlined />}
                   onClick={handleSave}
+                  loading={createLoading}
                   className="w-full md:w-1/3 h-12 text-lg font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg transform transition-transform hover:scale-105"
                 >
-                  Save All Information
+                  {createLoading ? "Saving..." : "Save All Information"}
                 </Button>
               </div>
             </div>
@@ -1024,6 +1208,10 @@ const StudentHealth = () => {
                 type="primary"
                 onClick={handleModalSave}
                 loading={updateLoading}
+                onCancel={() => {
+                  setViewModal(false);
+                  setModalIsEditing(false);
+                }}
               >
                 Save
               </Button>
@@ -1053,6 +1241,9 @@ const StudentHealth = () => {
                       height: e.target.value,
                     })
                   }
+                  type="number"
+                  min="0"
+                  step="0.1"
                 />
               ) : (
                 <span> {updateModalForm.height} cm</span>
@@ -1071,6 +1262,9 @@ const StudentHealth = () => {
                       weight: e.target.value,
                     })
                   }
+                  type="number"
+                  min="0"
+                  step="0.1"
                 />
               ) : (
                 <span> {updateModalForm.weight} kg</span>
@@ -1183,7 +1377,7 @@ const StudentHealth = () => {
                           selectedAllergyIds:
                             values.length > 0 || updateModalForm.hasNoAllergies
                               ? values
-                              : [1],
+                              : [],
                         })
                       }
                     >
@@ -1296,7 +1490,7 @@ const StudentHealth = () => {
                         setUpdateModalForm({
                           ...updateModalForm,
                           selectedChronicDiseases:
-                            values.length > 0 ? values : [1],
+                            values.length > 0 ? values : [],
                         })
                       }
                     >
@@ -1553,7 +1747,7 @@ const StudentHealth = () => {
                   onChange={(values) =>
                     setUpdateModalForm({
                       ...updateModalForm,
-                      selectedVaccinations: values.length > 0 ? values : [1],
+                      selectedVaccinations: values.length > 0 ? values : [],
                     })
                   }
                 >

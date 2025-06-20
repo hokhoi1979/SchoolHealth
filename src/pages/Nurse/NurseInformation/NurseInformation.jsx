@@ -69,12 +69,12 @@ const NurseInformation = () => {
             />
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-800 mb-2 font-inria">
-                {profile?.fullname || "N/A"}
+                {profile?.data?.fullname || "N/A"}
               </h1>
               <div className="flex items-center gap-2">
                 <MailOutlined className="text-blue-500" />
                 <span>
-                  Email: <strong>{profile?.email}</strong>
+                  Email: <strong>{profile?.data?.email}</strong>
                 </span>
               </div>
             </div>

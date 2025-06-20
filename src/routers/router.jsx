@@ -83,17 +83,17 @@ const router = createBrowserRouter([
         path: "nurse",
         element: <NurseLayout />,
         children: [
-          { path: "", element: <Navigate to="dashboard" /> },
-          {
-            path: "dashboard",
-            element: <DashboardNurse />,
-            children: [
-              { path: "", element: <Medical /> },
-              { path: "vaccination", element: <Vaccination /> },
-              { path: "checkup", element: <Checkup /> },
-              { path: "trend", element: <Trend /> },
-            ],
-          },
+          { path: "", element: <Navigate to="materials" /> },
+          // {
+          //   path: "dashboard",
+          //   element: <DashboardNurse />,
+          //   children: [
+          //     { path: "", element: <Medical /> },
+          //     { path: "vaccination", element: <Vaccination /> },
+          //     { path: "checkup", element: <Checkup /> },
+          //     { path: "trend", element: <Trend /> },
+          //   ],
+          // },
           {
             path: "materials",
             element: <Materials />,

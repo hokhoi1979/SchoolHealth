@@ -4,6 +4,7 @@ import { fetchFail, fetchSuccess, FETCH_API_LOGIN } from "./authSlice";
 import { jwtDecode } from "jwt-decode";
 
 const API_URL = import.meta.env.VITE_API_URL;
+
 export function* fetchLogin(action) {
   try {
     const response = yield call(
@@ -11,26 +12,20 @@ export function* fetchLogin(action) {
       `${API_URL}/v1/auth/login`,
       action.payload
     );
-    console.log(response);
-    if (response?.data?.data.backendToken?.accessToken) {
-      const decodedUser = jwtDecode(
-        response.data.data.backendToken.accessToken
+
+    const accessToken = response.data?.data?.backendToken?.accessToken;
+
+    if (accessToken) {
+      const decodedUser = jwtDecode(accessToken);
+      localStorage.setItem("accessToken", accessToken);
+
+      yield put(
+        fetchSuccess({
+          user: decodedUser,
+          token: accessToken,
+        })
       );
-      localStorage.setItem(
-        "accessToken",
-        response.data.data.backendToken.accessToken
-      );
-      if (response.status === 200 || response.status === 201) {
-        yield put(
-          fetchSuccess({
-            user: decodedUser,
-            token: response.data.data.backendToken.accessToken,
-          })
-        );
-        console.log("TOKEN", response.data.data.backendToken.accessToken);
-      } else {
-        yield put(fetchFail(response.status));
-      }
+
       if (action.onSuccess) action.onSuccess(response);
     } else {
       throw new Error("Email or password is not correct! Try again");
@@ -44,9 +39,11 @@ export function* fetchLogin(action) {
     } else if (error.message) {
       errorMessage = error.message;
     }
+
     yield put(fetchFail(errorMessage));
   }
 }
+
 function* watchFetchLogin() {
   yield takeLatest(FETCH_API_LOGIN, fetchLogin);
 }

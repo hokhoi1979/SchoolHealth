@@ -20,7 +20,7 @@ export const fetchCreateHealthFail = (error) => ({
 
 // reducer
 const initialState = {
-  data: null,
+  data: [],
   loading: false,
   error: null,
 };
