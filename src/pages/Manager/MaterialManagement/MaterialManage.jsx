@@ -10,6 +10,7 @@ import { fetchMedicineClasstifyManager } from "../../../redux/manager/GetManager
 import { postManagerMedicine } from "../../../redux/manager/CreateManagerMedicine/createManagerMedicineSlice";
 import { CloudHail } from "lucide-react";
 import { postManagerSupply } from "../../../redux/manager/CreateManagerSuppy/createManagerSupplySlice";
+import toast from "react-hot-toast";
 
 function MaterialManage() {
   const [medicineName, setMedicineName] = useState("");
@@ -31,6 +32,7 @@ function MaterialManage() {
   const [note, setNote] = useState("");
   const [image, setImage] = useState(null);
   const [categoryOptions, setCategoryOptions] = useState([]);
+  const [classifyOptions, setClassifyOptions] = useState([]);
 
   const {
     medicineClasstifyManager = [],
@@ -41,30 +43,10 @@ function MaterialManage() {
     (state) => state.getAllMedicineSupplyManager
   );
 
-  const formatSupply = () => {
-    if (Array.isArray(medicineSupplyManager?.data?.medicineSupply)) {
-      const tempSupply = medicineSupplyManager.data.medicineSupply.map(
-        (item) => ({
-          id: item.id,
-          nameMedicine: item.name,
-          category: item.category,
-          description: item.description,
-          usage: item.usage,
-          image: item.image,
-          stock: item.stock,
-        })
-      );
-      // llayy category ra
-      const uniqueCategories = [
-        ...new Set(tempSupply.map((item) => item.category)),
-      ];
-
-      setCategoryOptions(uniqueCategories);
-    }
-  };
   useEffect(() => {
-    formatSupply();
-  }, [medicineSupplyManager]);
+    const CATEGORY_ENUM = ["Vật tư", "Thiết bị", "Tiêu hao"];
+    setCategoryOptions(CATEGORY_ENUM);
+  }, []);
 
   useEffect(() => {
     const rawList = medicineClasstifyManager?.data?.medicineClassify || [];
@@ -77,14 +59,19 @@ function MaterialManage() {
     setCategories(format);
   }, [medicineClasstifyManager]);
 
-  let material = [
-    {
-      total: "79",
-      stock: "99",
-    },
-  ];
   const [selectedClassify, setSelectedClassify] = useState("");
   const [newClassify, setNewClassify] = useState("");
+  const resetForm = () => {
+    setMedicineName("");
+    setStock(0);
+    setDescription("");
+    setType("");
+    setUsage("");
+    setSelectedClassify("");
+    setSelectedClassifyID("");
+    setNewClassify("");
+    setNewMedicineImage(null);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -116,7 +103,7 @@ function MaterialManage() {
                   onClick={() => setClick("inventory")}
                   to={"inventoryManager"}
                 >
-                  Inventory
+                  Supply
                 </Link>
               </div>
               <div
@@ -125,7 +112,7 @@ function MaterialManage() {
                 }`}
               >
                 <Link onClick={() => setClick("import")} to={"importManager"}>
-                  Import
+                  Medicine
                 </Link>
               </div>
             </div>
@@ -288,9 +275,10 @@ function MaterialManage() {
                       description,
                       usage,
                       category,
-                      image, // vẫn truyền file nhưng dưới dạng JS File object, không gói vào FormData
+                      image,
                     })
                   );
+                  setOpen(false);
                 }}
               >
                 <p className="text-white text-xl font-serif p-1">Save</p>
@@ -456,11 +444,19 @@ function MaterialManage() {
 
                     if (selectedClassify === "Other") {
                       const newClassifyData = await dispatch(
-                        postManagerClasstify({ name: newClassify })
+                        postManagerClasstify({
+                          body: { name: newClassify },
+                          limit: 8,
+                          page: 1,
+                        })
                       ).unwrap();
                       classifyIDToUse = String(newClassifyData.id);
                     } else {
                       classifyIDToUse = String(selectedClassifyID);
+                    }
+                    if (!classifyIDToUse || classifyIDToUse === "undefined") {
+                      toast.error("Bạn chưa chọn hoặc thêm loại thuốc hợp lệ!");
+                      return;
                     }
 
                     dispatch(
@@ -474,7 +470,8 @@ function MaterialManage() {
                         image: newMedicineImage,
                       })
                     );
-
+                    toast.success("Tạo thuốc thành công!");
+                    resetForm();
                     setOpen(false);
                   } catch (err) {
                     console.error("Failed to save:", err);
@@ -524,7 +521,11 @@ function MaterialManage() {
                         try {
                           setSaveLoading(true);
                           await dispatch(
-                            postManagerClasstify({ name: categoryName })
+                            postManagerClasstify({
+                              body: { name: categoryName },
+                              limit: 8,
+                              page: 1,
+                            })
                           );
                           window.success("Create Success");
                           setClassifyOptions([

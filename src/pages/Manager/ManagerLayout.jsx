@@ -4,6 +4,7 @@ import SideBarManager from "../../components/SideBar/SideBarManager";
 import { Outlet } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 
 function ManagerLayout() {
   return (
@@ -11,7 +12,7 @@ function ManagerLayout() {
       <SideBarManager />
       <div className="flex-1 overflow-auto">
         <Outlet />
-        <ToastContainer />
+        <Toaster position="top-right" />
       </div>
     </div>
   );

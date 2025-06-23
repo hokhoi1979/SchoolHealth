@@ -1,14 +1,23 @@
-import { Button, Modal, Space, Table } from "antd";
-import TextArea from "antd/es/input/TextArea";
+import { Button, message, Modal, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVaccineResult } from "../../../redux/vaccineNurse/vaccineResult/vaccineResultSlice";
 import { postResultVaccine } from "../../../redux/vaccineNurse/sendResult/sendResultSlice";
-
-function SentParents() {
+import { toast } from "react-toastify";
+function SentParents({ studentList }) {
+  const [idVaccine, setIdVaccine] = useState(null);
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
+  const [mainData, setMainData] = useState([]);
+  const [modalData, setModalData] = useState([]);
+  const [sending, setSending] = useState(false);
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (studentList && studentList.length > 0) {
+      setIdVaccine(studentList[0].idVaccine);
+    }
+  }, [studentList]);
 
   const {
     result = [],
@@ -16,12 +25,10 @@ function SentParents() {
     error,
   } = useSelector((state) => state.vaccineResult);
 
-  const { resultVaccine = [] } = useSelector(
-    (state) => state.sendVaccineResult
-  );
+  const { sent = [] } = useSelector((state) => state.sendVaccineResult);
 
   useEffect(() => {
-    dispatch(fetchVaccineResult(1));
+    dispatch(fetchVaccineResult(4));
   }, [dispatch]);
 
   useEffect(() => {
@@ -35,14 +42,55 @@ function SentParents() {
         kq: item?.result,
         updatedAt: item?.updatedAt,
         note: item?.note,
+        sent: item?.status?.toLowerCase() === "success",
       }));
-      setData(formatted);
+      setMainData(formatted);
     }
   }, [result]);
 
-  const handleSendResult = () => {
-    dispatch(postResultVaccine(1));
-    console.log("POST", resultVaccine);
+  const handleOpenModal = () => {
+    setModalData(mainData);
+    setOpen(true);
+  };
+
+  const handleSendResult = async () => {
+    if (!idVaccine) return;
+    setSending(true);
+
+    try {
+      await dispatch(postResultVaccine(idVaccine));
+      const response = await dispatch(fetchVaccineResult(idVaccine));
+
+      const resultData = response?.payload?.data;
+      if (Array.isArray(resultData)) {
+        const formatted = resultData.map((item) => ({
+          id: item?.studentID,
+          student: item?.student?.account?.fullname,
+          parent: item?.student?.ParentInfo?.fullname,
+          grade: item?.student?.classAssignments?.[0]?.class?.name,
+          status: item?.status,
+          kq: item?.result,
+          updatedAt: item?.updatedAt,
+          note: item?.note,
+          sent: item?.status?.toLowerCase() === "success",
+        }));
+        setMainData(formatted);
+      }
+
+      setOpen(false);
+      toast.success("Send successful!");
+    } catch (error) {
+      console.error("Send failed", error);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  console.log("first", sent);
+
+  const handleCancel = () => {
+    setOpen(false);
+    setModalData([]);
   };
 
   const columnStudent = [
@@ -77,7 +125,7 @@ function SentParents() {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.status?.toLowerCase() === "attended" ? (
+          {record.status?.toLowerCase() === "success" ? (
             <p className="rounded-xl w-[80px] p-1 bg-[#6CC76F] text-white">
               Attended
             </p>
@@ -147,19 +195,6 @@ function SentParents() {
       key: "note",
       align: "center",
     },
-    {
-      title: "Send result",
-      dataIndex: "send",
-      key: "send",
-      align: "center",
-      render: () => (
-        <Space>
-          <p className="rounded-2xl w-[80px] p-1 bg-[#E26666] text-white">
-            Not sent
-          </p>
-        </Space>
-      ),
-    },
   ];
 
   return (
@@ -170,7 +205,7 @@ function SentParents() {
           <Button
             type="secondary"
             className="!bg-black hover:!bg-gray-600 w-[255px]"
-            onClick={() => setOpen(true)}
+            onClick={handleOpenModal}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -192,17 +227,13 @@ function SentParents() {
         <Table
           className="mt-5 w-full"
           columns={columns}
-          dataSource={data}
+          dataSource={mainData}
           loading={loading}
+          rowKey="id"
         />
       </div>
 
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        footer={null}
-        width="60%"
-      >
+      <Modal open={open} onCancel={handleCancel} footer={null} width="60%">
         <h1 className="text-2xl font-serif flex justify-center">
           Send Vaccination Results
         </h1>
@@ -210,22 +241,29 @@ function SentParents() {
           Send vaccination results to parents
         </p>
 
-        <Table dataSource={data} columns={columnStudent} pagination={false} />
+        <Table
+          dataSource={modalData}
+          columns={columnStudent}
+          pagination={false}
+          rowKey="id"
+        />
 
         <div className="flex justify-between mt-5">
           <div></div>
           <div className="flex gap-5">
             <Button
               className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
-              onClick={() => setOpen(false)}
+              onClick={handleCancel}
             >
               Cancel
             </Button>
             <Button
-              className="!bg-[#6CC76F] !p-2 w-[100px] hover:!bg-[#3BB32B] !text-white !font-serif"
+              className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
               onClick={handleSendResult}
+              loading={sending}
+              disabled={sending || modalData.every((item) => item.sent)}
             >
-              Send Result
+              {sending ? "Sending..." : "Send Result"}
             </Button>
           </div>
         </div>

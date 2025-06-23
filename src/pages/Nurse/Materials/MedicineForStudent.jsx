@@ -1,7 +1,10 @@
-import { Space, Table, Tooltip } from "antd";
-import React from "react";
+import { Button, Input, Modal, Select, Space, Table, Tooltip } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import React, { useState } from "react";
 
 function MedicineForStudent() {
+  const [open, setOpen] = useState(false);
+
   const columns = [
     {
       title: "ID",
@@ -117,8 +120,118 @@ function MedicineForStudent() {
   ];
   return (
     <div>
-      {" "}
-      <Table className="mt-5" columns={columns} dataSource={dataSource} />
+      <div className="flex justify-between">
+        <div></div>{" "}
+        <Button
+          type="secondary"
+          className="!bg-black hover:!bg-gray-600"
+          onClick={() => setOpen(true)}
+        >
+          <p className="text-white font-serif p-1">
+            + Add medicine for student
+          </p>
+        </Button>
+      </div>
+      <Table className="mt-5" columns={columns} dataSource={dataSource} />{" "}
+      <Modal
+        open={open}
+        style={{ marginTop: 110 }}
+        onCancel={() => setOpen(false)}
+        footer={false}
+      >
+        <h1 className="font-serif text-2xl flex justify-center">
+          Add medicine for student
+        </h1>
+
+        <div className="grid grid-cols-2 gap-3 font-serif">
+          <div>
+            <h1 className="text-[17px] font-medium font-kameron mt-3">
+              Enter ID student
+              <Input type="text" placeholder="Enter ID" />
+            </h1>
+          </div>
+          <div>
+            <h1 className="text-[17px] font-medium font-kameron mt-3">
+              Enter Name student
+              <Input type="text" placeholder="Enter Name" />
+            </h1>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 font-serif">
+          <div>
+            <h1 className="text-[17px] font-medium font-kameron mt-3">
+              Enter grade
+              <Input type="text" placeholder="Enter Grade" />
+            </h1>
+          </div>
+          <div className="font-serif">
+            <h1 className="text-[17px] font-medium font-kameron mt-3">
+              Choose medicine/ medical
+            </h1>
+            <Select
+              placeholder="--Choose medicine/medical--"
+              className="w-full"
+            >
+              <Select.Option value="Paracetamol 250mg">
+                Paracetamol 250mg
+              </Select.Option>
+              <Select.Option value="Betadine 100ml">
+                Betadine 100ml
+              </Select.Option>
+              <Select.Option value="Band-Aid">Band-Aid</Select.Option>
+              <Select.Option value="Cough medicine">
+                Cough medicine
+              </Select.Option>
+              <Select.Option value="Medical cotton">
+                Medical cotton
+              </Select.Option>
+            </Select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 font-serif">
+          <div>
+            <h1 className="text-[17px] font-medium font-kameron mt-3">
+              Quantity imported
+              <Input type="number" placeholder="Enter number" />
+            </h1>
+          </div>
+          <div>
+            <h1 className="text-[17px] font-medium font-kameron mt-3">
+              Dosage
+              <Input type="text" placeholder="Enter dosage" />
+            </h1>
+          </div>
+        </div>
+
+        <div>
+          <h1 className="text-[17px] font-medium font-kameron mt-3 font-serif">
+            Status
+            <TextArea placeholder="Note if you have" />
+          </h1>
+        </div>
+
+        <div className="mt-5 flex justify-between font-serif">
+          <div></div>
+          <div className="flex gap-3">
+            <Button
+              type="secondary"
+              className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
+              onClick={() => setOpen(false)}
+            >
+              <p className="text-white text-xl font-serif p-1">Cancel</p>
+            </Button>
+            <Button
+              type="secondary"
+              className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
+              onClick={() => setOpen(true)}
+            >
+              <p className="text-white text-xl font-serif p-1">Save</p>
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

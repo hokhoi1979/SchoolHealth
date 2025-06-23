@@ -225,11 +225,11 @@ const SideBarManager = () => {
             </svg>
             {!toggle && (
               <Link
-                onClick={() => setClick("history")}
-                to={"/manager"}
+                onClick={() => setClick("medical events")}
+                to={"/manager/managerMedicalEvent"}
                 className="text-[18px]"
               >
-                History & Report
+                Medical Events
               </Link>
             )}
           </div>

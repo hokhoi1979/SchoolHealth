@@ -58,6 +58,7 @@ import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
 import SendResult from "../pages/Parent/StudentHistory/SendResult";
 import Notification from "../pages/Parent/StudentHistory/Notification";
 import RequestManager from "../pages/Manager/Request/RequestManager";
+import ManagerMedicalEvent from "../pages/Manager/MedicalEventMedical/managerMedicalEvent";
 
 const router = createBrowserRouter([
   {
@@ -73,17 +74,17 @@ const router = createBrowserRouter([
         path: "nurse",
         element: <NurseLayout />,
         children: [
-          { path: "", element: <Navigate to="dashboard" /> },
-          {
-            path: "dashboard",
-            element: <DashboardNurse />,
-            children: [
-              { path: "", element: <Medical /> },
-              { path: "vaccination", element: <Vaccination /> },
-              { path: "checkup", element: <Checkup /> },
-              { path: "trend", element: <Trend /> },
-            ],
-          },
+          { path: "", element: <Navigate to="materials" /> },
+          // {
+          //   path: "dashboard",
+          //   element: <DashboardNurse />,
+          //   children: [
+          //     { path: "", element: <Medical /> },
+          //     { path: "vaccination", element: <Vaccination /> },
+          //     { path: "checkup", element: <Checkup /> },
+          //     { path: "trend", element: <Trend /> },
+          //   ],
+          // },
           {
             path: "materials",
             element: <Materials />,
@@ -162,6 +163,10 @@ const router = createBrowserRouter([
             //   { path: "checkup", element: <Checkup /> },
             //   { path: "trend", element: <Trend /> },
             // ],
+          },
+          {
+            path: "managerMedicalEvent",
+            element: <ManagerMedicalEvent />,
           },
         ],
       },

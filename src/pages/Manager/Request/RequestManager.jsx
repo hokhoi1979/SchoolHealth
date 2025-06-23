@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllRequest } from "../../../redux/manager/GetAllRequest/getAllRequestSlice";
 import axios from "axios";
-import { Modal } from "antd";
+import { Modal, Popconfirm } from "antd";
 import { fetchDetailRequest } from "../../../redux/manager/GetDetailRequestManager/getDetailRequestManagerSlice";
 import { updateManagerSupply } from "../../../redux/manager/RejectRequestManager/rejectRequestManagerSlice";
+import { rejectManagerMedicineSupply } from "../../../redux/manager/Reject/rejectMedicineSupplySlice";
 
 function RequestManager() {
   const [data, setData] = useState([]);
@@ -53,6 +54,8 @@ function RequestManager() {
           quantity: item?.quantity,
           urgency: item?.urgency,
           note: item?.note,
+          medicine: item?.medicine,
+          medicineSupply: item?.medicineSupply,
         })),
       };
       setDetail(detailData);
@@ -66,6 +69,9 @@ function RequestManager() {
   };
   const handleApprove = (id) => {
     dispatch(updateManagerSupply({ id }));
+  };
+  const handleReject = (id) => {
+    dispatch(rejectManagerMedicineSupply({ id }));
   };
   return (
     <>
@@ -115,22 +121,44 @@ function RequestManager() {
                   </g>
                 </svg>
               </div>
-              <div className="mt-4">
-                <button
-                  className={`w-full py-2 rounded-xl text-white font-semibold ${
-                    item.status === "APPROVED"
-                      ? "bg-green-500 cursor-not-allowed"
-                      : "bg-red-500 hover:bg-red-600"
-                  }`}
-                  disabled={item.status === "APPROVED"}
-                  onClick={() => {
-                    if (item.status !== "APPROVED") {
-                      handleApprove(item?.id);
-                    }
-                  }}
-                >
-                  {item.status === "APPROVED" ? "APPROVED" : "Approve"}
-                </button>
+              <div className="mt-4 flex gap-4">
+                {item.status !== "REJECTED" && (
+                  <button
+                    className={`flex-1 py-2 rounded-xl text-white font-semibold transition-colors ${
+                      item.status === "APPROVED"
+                        ? "bg-green-500 cursor-not-allowed"
+                        : "bg-blue-500 hover:bg-blue-600"
+                    }`}
+                    disabled={item.status === "APPROVED"}
+                    onClick={() => {
+                      if (item.status !== "APPROVED") {
+                        handleApprove(item?.id);
+                      }
+                    }}
+                  >
+                    {item.status === "APPROVED" ? "APPROVED" : "Approve"}
+                  </button>
+                )}
+
+                {item.status !== "APPROVED" && (
+                  <Popconfirm
+                    title="Bạn có chắc chắn muốn từ chối yêu cầu này không?"
+                    okText="Đồng ý"
+                    cancelText="Hủy"
+                    onConfirm={() => handleReject(item?.id)}
+                  >
+                    <button
+                      className={`flex-1 py-2 rounded-xl text-white font-semibold transition-colors ${
+                        item.status === "REJECTED"
+                          ? "bg-red-500 cursor-not-allowed"
+                          : "bg-gray-500 hover:bg-gray-600"
+                      }`}
+                      disabled={item.status === "REJECTED"}
+                    >
+                      {item.status === "REJECTED" ? "REJECTED" : "Reject"}
+                    </button>
+                  </Popconfirm>
+                )}
               </div>
             </div>
           ))}
@@ -141,23 +169,56 @@ function RequestManager() {
       <Modal open={showModal} onCancel={handleCloseModal} footer={null}>
         {detail ? (
           <div className="bg-white rounded-lg p-6 w-[500px] max-h-[80vh] overflow-y-auto">
-            <p>
+            <p className="mb-2">
               <strong>Ghi chú:</strong> {detail?.note || "-"}
             </p>
-            <p>
-              <strong>Trạng thái:</strong> {detail?.status || "-"}
-            </p>
-            <p>
-              <strong>Người tạo:</strong> {detail?.createdBy || "-"}
+            <p className="mb-2">
+              <strong>Trạng thái:</strong>
+              <span
+                className={
+                  detail.status === "PENDING"
+                    ? "text-red-500 font-semibold"
+                    : detail?.status === "APPROVED"
+                    ? "text-green-500 font-semibold"
+                    : "text-gray-500 font-semibold"
+                }
+              >
+                {detail?.status || "-"}
+              </span>
             </p>
 
-            <p className="mt-4 font-semibold">Danh sách sản phẩm:</p>
-            <ul className="list-disc pl-5">
+            <p className="mt-4 font-semibold mb-2">Danh sách sản phẩm:</p>
+            <ul className="space-y-4">
               {detail?.items?.length > 0 ? (
                 detail.items.map((item, idx) => (
-                  <li key={idx}>
-                    SL: {item.quantity}, Mức độ: {item.urgency}, Ghi chú:{" "}
-                    {item.note}
+                  <li
+                    key={idx}
+                    className="border rounded p-3 shadow-sm flex items-start gap-4"
+                  >
+                    <img
+                      src={
+                        item.medicine?.image || item.medicineSupply?.image || ""
+                      }
+                      alt="Product"
+                      className="w-24 h-24 object-cover rounded border"
+                    />
+                    <div className="flex-1">
+                      <p>
+                        <strong>Tên:</strong>{" "}
+                        {item.medicine?.name ||
+                          item.medicineSupply?.name ||
+                          "-"}
+                      </p>
+                      <p>
+                        <strong>SL:</strong> {item.quantity}
+                      </p>
+                      <p>
+                        <strong>Mức độ:</strong> {item.urgency}
+                      </p>
+                      <p>
+                        <strong>Ghi chú:</strong> {item.note || "No Note"}
+                      </p>
+                    </div>
                   </li>
                 ))
               ) : (

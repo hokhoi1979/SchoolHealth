@@ -13,7 +13,7 @@ const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 function* medicineClasstifyManagerSaga(action) {
   try {
     const token = localStorage.getItem("accessToken");
-    const { page = 1, limit = 5 } = action.payload || {};
+    const { page, limit } = action.payload || {};
 
     const response = yield call(
       axios.get,

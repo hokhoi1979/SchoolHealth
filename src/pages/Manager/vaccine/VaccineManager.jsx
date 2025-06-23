@@ -1,4 +1,4 @@
-import { Button, Checkbox, Input, Modal, Radio } from "antd";
+import { Button, Checkbox, Input, Modal, Popconfirm, Radio } from "antd";
 import React, { use, useEffect, useState } from "react";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import logo from "../../../img/logo.jpg";
@@ -17,6 +17,7 @@ import { fetchMedicineSupplyManager } from "../../../redux/manager/GetMedicineAn
 import "./style.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import TextArea from "antd/es/input/TextArea";
 
 const VaccineManager = () => {
   const [open, setOpen] = useState(false);
@@ -99,7 +100,6 @@ const VaccineManager = () => {
     console.log("Formatted Data:", formattedData);
   }, [medicineSupply]);
 
-  console.log("DUClklklCC", medicineSupply);
   const fetchVaccine = () => {
     dispatch(fetchMedicineSupplyManager());
   };
@@ -173,8 +173,7 @@ const VaccineManager = () => {
           targets: item.targets,
         };
       });
-      console.log("FORMAT", format);
-      console.log("main", format);
+
       setData(format);
     }
   };
@@ -225,6 +224,18 @@ const VaccineManager = () => {
     dispatch(putManagerMedical(payload));
     dispatch(fetchVaccineManager());
     setIsUpdateModalOpen(false);
+
+    if (payload && payload.data) {
+      // Reset form after successful creation
+      setOpen(false);
+      setVaccineName("");
+      setVaccineDescription("");
+      setVaccineDate("");
+      setTargetType("school");
+      setSelectedClasses([]);
+      setSelectedGrades([]);
+      setSelectAllClasses(false);
+    }
   };
 
   if (targetType === "class") {
@@ -261,11 +272,6 @@ const VaccineManager = () => {
     } else if (targetTypeFormatted === "CLASS") {
       targetIds = selectedClasses.map((cls) => classIdMap[cls]);
     } else if (targetTypeFormatted === "GRADE") {
-      // targetIds = selectedGrades.flatMap((gr) => gradeIdMap[gr]);
-      // if (targetIds.length === 0) {
-      //   alert("Vui lòng chọn ít nhất một khối.");
-      //   return;
-      // }
       targetIds = selectedGrades;
     }
     const cleanedItems = items.map((item) => {
@@ -288,12 +294,11 @@ const VaccineManager = () => {
       targetIds,
       items: cleanedItems,
     };
-    console.log("➡️ Sắp gửi payload:", payload);
+    console.log("Sắp gửi payload:", payload);
     try {
       const data = await dispatch(postManagerVaccine(payload)).unwrap();
 
-      console.log("✅ Create Success:", data);
-      toast.success("Create success");
+      console.log("Create Success:", data);
 
       console.log(payload);
       if (response && response.data) {
@@ -372,7 +377,7 @@ const VaccineManager = () => {
     }
 
     // Kiểm tra selectedGrades và classIdMap
-    console.log("Selected Grades:", selectedGrades); // Kiểm tra selectedGrades
+    console.log("Selected Grades:", selectedGrades);
     const targetIds = selectedGrades.includes("GRADE")
       ? [] // nếu SCHOOL nghĩa là toàn bộ khối — hoặc logic riêng
       : selectedGrades.map(Number); // Chỉ dùng số khối, không map class
@@ -424,7 +429,6 @@ const VaccineManager = () => {
       return;
     }
 
-    // ✅ Ưu tiên lấy classIds từ targets nếu có classID
     if (targets.length > 0 && targets[0]?.classID !== undefined) {
       classIds = targets.map((t) => t.classID); // ✅ Lấy đúng field
       targetType = "CLASS"; // ép targetType về CLASS
@@ -454,11 +458,6 @@ const VaccineManager = () => {
     const formattedDate = event?.scheduledAt
       ? dayjs(event.scheduledAt, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD")
       : "Invalid Date";
-
-    console.log("✅ Target Type:", targetType);
-    console.log("✅ Grades:", grades);
-    console.log("✅ Class IDs:", classIds);
-    console.log("✅ Is School:", isSchool);
 
     setNotificationContent(
       `Dear Parents,\n\nOur school will organize the ${event?.name.toLowerCase()} for students in ${gradeList} on ${formattedDate}.\n\nPlease confirm your participation and support us in ensuring the best preparation.\n\nSincerely,`
@@ -554,6 +553,10 @@ const VaccineManager = () => {
   };
   const handleShowModal = () => {
     setOpen(true);
+    setVaccineName("");
+    setVaccineDescription("");
+    setVaccineDate("");
+    setUpdateItems([]);
   };
   const handleCloseModal = () => {
     setOpen(false);
@@ -572,7 +575,6 @@ const VaccineManager = () => {
 
   const handleEndEvent = async (id) => {
     dispatch(patchManagerVaccine(id));
-    // await dispatch(fetchVaccineManager());
   };
 
   return (
@@ -602,7 +604,6 @@ const VaccineManager = () => {
         </div>
       </div>
 
-      {/* ..... */}
       <div className="pl-5 mt-5 flex gap-5">
         <Input
           style={{ borderRadius: "7px", width: "300px" }}
@@ -623,7 +624,7 @@ const VaccineManager = () => {
           {data.map((item) => (
             <div className="bg-white p-6 rounded-2xl">
               <div className="flex justify-between">
-                {item.status === "CONFIRMED" ? (
+                {item.status === "SUCCESSED" ? (
                   <>
                     {" "}
                     <Button className="!bg-[#6CC76F] !text-white">
@@ -846,20 +847,33 @@ const VaccineManager = () => {
 
                 <div>
                   {item.status !== "ENDED" && item.status !== "CONFIRMED" && (
-                    <Button onClick={() => handleDeleteVaccine(item?.id)}>
-                      Delete
-                    </Button>
+                    <Popconfirm
+                      title="Bạn có chắc muốn xoá vaccine này không?"
+                      okText="DELETE"
+                      cancelText="Hủy"
+                      onConfirm={() => handleDeleteVaccine(item?.id)}
+                    >
+                      <Button danger>DELETE</Button>
+                    </Popconfirm>
                   )}
                 </div>
 
                 <div>
-                  <Button
-                    onClick={() => {
-                      handleEndEvent(item?.id);
-                    }}
-                  >
-                    End Event
-                  </Button>
+                  {item.status !== "SUCCESSED" && (
+                    <Popconfirm
+                      title="Bạn có chắc muốn xác nhận vaccine này không?"
+                      okText="CONFIRM"
+                      cancelText="Hủy"
+                    >
+                      <Button
+                        onClick={() => {
+                          handleEndEvent(item?.id);
+                        }}
+                      >
+                        End Event
+                      </Button>
+                    </Popconfirm>
+                  )}
                 </div>
               </div>
             </div>
@@ -876,48 +890,47 @@ const VaccineManager = () => {
       >
         <div>
           <div>
-            <div className="flex justify items-center gap-4 mb-[10px] pt-2">
-              <div>
-                {" "}
-                <img src={logo} alt="Logo" width={100} />
-                <p className="font-bold text-xl ml-[10px]">Health Care</p>
-              </div>
-              <div>
-                <h1 className="font-bold text-2xl ml-[10px]">
-                  New Vaccination
-                </h1>
-              </div>
-            </div>
-            <div className="flex justify items-center gap-4">
-              <div>
-                <p className="font-serif text-[#7F7F7F] ">Vaccination Name:</p>
-              </div>
-              <div>
-                <Input
-                  onChange={(e) => setVaccineName(e.target.value)}
-                  value={vaccineName}
-                ></Input>
-              </div>
+            <div className="flex justify-center items-center gap-4 mb-2 pt-2">
+              <h1 className="font-bold text-2xl text-center">
+                New Vaccination
+              </h1>
             </div>
 
-            <div className="flex items-start gap-2 pt-2 ">
-              <p className="font-serif text-[#7F7F7F] w-30 ml-1 ">
-                Vaccination Description:{" "}
+            <div className="flex items-center gap-4">
+              <p className="font-serif text-[#7F7F7F] w-40">
+                Vaccination Name:
               </p>
-              <div>
-                <Input
-                  onChange={(e) => setVaccineDescription(e.target.value)}
-                  value={vaccineDescription}
-                ></Input>
-              </div>
+              <Input
+                onChange={(e) => setVaccineName(e.target.value)}
+                value={vaccineName}
+                className="flex-1"
+              />
             </div>
+
+            <div className="flex items-start gap-4 pt-2">
+              <p className="font-serif text-[#7F7F7F] w-40">
+                Vaccination Description:
+              </p>
+              <TextArea
+                onChange={(e) => setVaccineDescription(e.target.value)}
+                value={vaccineDescription}
+                className="flex-1"
+              ></TextArea>
+              {/* 
+              <Input
+                onChange={(e) => setVaccineDescription(e.target.value)}
+                value={vaccineDescription}
+                className="flex-1"
+              /> */}
+            </div>
+
             <div className="flex items-center gap-4 pt-2">
               <p className="font-serif text-[#7F7F7F] w-40">
                 Implementation Date:
               </p>
               <Input
                 type="date"
-                className="rounded-full"
+                className="rounded-full flex-1"
                 onChange={(e) => setVaccineDate(e.target.value)}
                 value={vaccineDate}
               />

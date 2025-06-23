@@ -27,7 +27,7 @@ function* getAllMedicineSupplyManagerSaga(action) {
       yield put(fetchAllMedicineSupplyManagerSuccess(response.data));
       // yield put(fetchAllMedicineSupplyManager());
     } else {
-      yield put(fetchAllMedicineSupplyManagerFails(response.status));
+      yield put(fetchAllMedicineSupplyManagerFail(response.status));
     }
   } catch (error) {
     yield put(fetchAllMedicineSupplyManagerFail(error));

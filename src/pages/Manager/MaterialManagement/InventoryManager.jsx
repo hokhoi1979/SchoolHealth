@@ -23,6 +23,7 @@ function InventoryManager() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [supply, setSupply] = useState([]);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const {
     medicineSupplyManager = [],
@@ -39,13 +40,19 @@ function InventoryManager() {
     return "Sắp hết";
   };
 
+  useEffect(() => {
+    // Ví dụ fix cứng nếu enum có sẵn:
+    const CATEGORY_ENUM = ["Vật tư", "Thiết bị", "Tiêu hao"];
+    setCategoryOptions(CATEGORY_ENUM);
+  }, []);
+
   const formatSupply = () => {
     if (Array.isArray(medicineSupplyManager?.data?.medicineSupply)) {
       const tempSupply = medicineSupplyManager.data.medicineSupply.map(
         (item) => ({
           id: item.id,
           name: item.name,
-          category: item.category,
+          category: item.category || item.categoryName || "",
           description: item.description,
           usage: item.usage,
           image: item.image,
@@ -54,16 +61,17 @@ function InventoryManager() {
         })
       );
       // llayy category ra
-      const uniqueCategories = [
-        ...new Set(tempSupply.map((item) => item.category)),
-      ];
+      // const uniqueCategories = [
+      //   ...new Set(tempSupply.map((item) => item.category).filter(Boolean)),
+      // ];
+      // console.log(uniqueCategories);
       setSupply(tempSupply);
-      setCategoryOptions(uniqueCategories);
+      // setCategoryOptions(uniqueCategories);
     }
   };
 
   useEffect(() => {
-    dispatch(fetchAllMedicineSupplyManager({ page: 1, limit: 15 }));
+    dispatch(fetchAllMedicineSupplyManager({ page: 1 }));
   }, []);
 
   useEffect(() => {
@@ -112,8 +120,8 @@ function InventoryManager() {
             src={image}
             alt="Ảnh"
             style={{
-              width: 200,
-              height: 100,
+              width: 150,
+              height: 80,
               objectFit: "cover",
               borderRadius: 8,
             }}
@@ -220,6 +228,12 @@ function InventoryManager() {
 
   const handleUpdate = () => {
     if (selectedRecord) {
+      const stockValue = Number(selectedRecord.stock);
+      if (isNaN(stockValue) || stockValue < 0) {
+        message.error("Stock phải là số hợp lệ!");
+        return;
+      }
+
       dispatch(
         putManagerSupply({
           id: selectedRecord.id,
@@ -227,9 +241,11 @@ function InventoryManager() {
           description: selectedRecord.description,
           usage: selectedRecord.usage,
           category: selectedRecord.category,
-          stock: String(selectedRecord.stock),
+          stock: String(stockValue),
+          image: selectedRecord.image,
         })
       );
+
       setIsModalOpen(false);
       setSelectedRecord(null);
       message.success("Cập nhật thành công!");
@@ -237,10 +253,23 @@ function InventoryManager() {
   };
 
   const handleUpload = (file) => {
+    setSelectedRecord((prev) => ({
+      ...prev,
+      image: file,
+    }));
+
     const imageUrl = URL.createObjectURL(file);
-    setSelectedRecord({ ...selectedRecord, image: imageUrl });
-    return false;
+    setPreviewImage(imageUrl);
+
+    return false; // Chặn upload mặc định nếu dùng Ant Upload
   };
+  useEffect(() => {
+    if (selectedRecord) {
+      if (selectedRecord.image && !(selectedRecord.image instanceof File)) {
+        setPreviewImage(selectedRecord.image);
+      }
+    }
+  }, [selectedRecord]);
 
   return (
     <div>
@@ -251,6 +280,7 @@ function InventoryManager() {
         rowClassName="text-center text-sm"
         rowKey="id"
         bordered
+        pagination={{ pageSize: 4 }}
       />
 
       <Modal
@@ -320,12 +350,13 @@ function InventoryManager() {
             <Select
               className="w-full"
               value={selectedRecord?.category}
-              onChange={(value) =>
+              onChange={(value) => {
                 setSelectedRecord({
                   ...selectedRecord,
                   category: value,
-                })
-              }
+                });
+                console.log("Category Options:", categoryOptions);
+              }}
             >
               {categoryOptions.map((cat) => (
                 <Option key={cat} value={cat}>
@@ -349,7 +380,7 @@ function InventoryManager() {
               }
             />
           </div>
-          {/* 
+
           <div className="mb-2">
             <label className="block mb-1">Ảnh:</label>
             <Upload
@@ -359,16 +390,18 @@ function InventoryManager() {
             >
               <Button icon={<UploadOutlined />}>Chọn file ảnh</Button>
             </Upload>
-            {selectedRecord?.image && (
+            {previewImage && (
               <img
-                src={selectedRecord.image}
+                src={previewImage}
+                // src={selectedRecord.image}
                 alt="Preview"
                 style={{ marginTop: 10, width: 100, height: 100 }}
               />
             )}
-          </div> */}
+          </div>
         </div>
       </Modal>
+      <div className="w-full h-10"></div>
     </div>
   );
 }

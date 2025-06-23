@@ -43,12 +43,39 @@ import deleteManagerSupplyReducer from "./manager/DeleteManagerSupply/deleteMana
 import getAllRequestReducer from "./manager/GetAllRequest/getAllRequestSlice";
 import getDetailRequestReducer from "./manager/GetDetailRequestManager/getDetailRequestManagerSlice";
 import updateManagerSupplyReducer from "./manager/RejectRequestManager/rejectRequestManagerSlice";
+import getAllMedicineNurseReducer from "./materialsNurse/getAllMedicine/getAllMedicineSlice";
+import getRequestMedicineReducer from "./materialsNurse/getSendRequestMedicine/getRequestMedicineSlice";
+import getMedicineSupplyReducer from "./materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
+import postRequestMedicineReducer from "./materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSLice";
+import getRequestDetailReducer from "./materialsNurse/getDetailRequest/getDetailRequestSlice";
+import getMedicalEventNurseReducer from "./medicalEventNurse/medicalEvent/getMedicalEventSlice";
+import getMedicalEventDetailReducer from "./medicalEventNurse/medicalDetailEvent/getMedicalEventDetailSlice";
+import createMedicalEventReducer from "./medicalEventNurse/createMedicalEvent/createMedicalEventSlice";
+import sendMedicalEnventReducer from "./medicalEventNurse/sendMedicalEvent/sendMedicalEventSlice";
+import hospitalEventReducer from "./medicalEventNurse/editHospitalEvent/editHospitalEventSlice";
+import postMedicineEventReducer from "./medicalEventNurse/createMedicineEvent/createMedicineEventSlice";
+import deleteMedicalEventReducer from "./medicalEventNurse/deleteMedicalEvent/deleteMedicalEventSlice";
+import rejectManagerMedicineSupplyReducer from "./manager/Reject/rejectMedicineSupplySlice";
+import getManagerMedicalEventReducer from "./manager/ManagerMedicalEvent/managerMedicalEventSlice";
+import getManagerMedicalEventDetailReducer from "./manager/ManagerMedicalEvent/managerMedicalEventDetailSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
   profile: profileReducer,
   vaccine: vaccineReducer,
   vaccineStudent: vaccineStudentReducer,
+  medicineNurse: getAllMedicineNurseReducer,
+  requestMedicine: getRequestMedicineReducer,
+  getMedicineSupplyNurse: getMedicineSupplyReducer,
+  postRequestMedicine: postRequestMedicineReducer,
+  getRequestDetailNurse: getRequestDetailReducer,
+  getMedicalEventNurse: getMedicalEventNurseReducer,
+  getMedicalEventDetailNurse: getMedicalEventDetailReducer,
+  postMedicalEventNurse: createMedicalEventReducer,
+  sendMedicalEnventNurse: sendMedicalEnventReducer,
+  hospitalEvent: hospitalEventReducer,
+  postMedicineEvent: postMedicineEventReducer,
+  deleteMedicalEvent: deleteMedicalEventReducer,
 
   profileParent: profileParentReducer,
   studentOfParent: studentOfParentReducer,
@@ -87,6 +114,9 @@ const rootReducer = combineReducers({
   getAllRequest: getAllRequestReducer,
   getDetailRequest: getDetailRequestReducer,
   updateManagerSupply: updateManagerSupplyReducer,
+  rejectManagerMedicineSupply: rejectManagerMedicineSupplyReducer,
+  getManagerMedicalEvent: getManagerMedicalEventReducer,
+  getManagerMedicalEventDetail: getManagerMedicalEventDetailReducer,
 
   parentProfileHealth: healthProfileReducer,
 });

@@ -9,6 +9,7 @@ import {
   fetchVaccineManagerFail,
   fetchVaccineManagerSucess,
 } from "./getVaccineManagerSlice";
+import { toast } from "react-toastify";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
@@ -46,8 +47,10 @@ function* managerVaccineSaga(action) {
         console.log("DUCC", fetchData.data);
 
         yield put(fetchVaccineManagerSucess(fetchData.data));
+        toast.success("Create Vaccine Success");
       } else {
         yield put(fetchVaccineManagerFail(fetchData.status));
+        toast.error("Create Vaccine Fail ");
       }
     } else {
       yield put(postMangerFailVaccine(`API ERROR: ${response.data}`));

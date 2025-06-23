@@ -25,19 +25,21 @@ import {
 } from "../../../redux/manager/UpdateDetailClassifyManager/updateDetailClassifyManagerSlice";
 import { deleteManagerMedicineClassify } from "../../../redux/manager/DeleteManagerClassify/deleteManagerMedicineClassifySlice";
 import { deleteMedicineManager } from "../../../redux/manager/DeleteManagerMedicine/deleteManagerMedicineSlice";
-
+import toast from "react-hot-toast";
 const { Option } = Select;
 
 function ImportManager() {
   const [categories, setCategories] = useState([]);
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 8;
   const [total, setTotal] = useState(0);
   const [detail, setDetail] = useState([]);
   const [selectedClassifyID, setSelectedClassifyID] = useState("");
   const [selectedClassify, setSelectedClassify] = useState("");
   const [newClassify, setNewClassify] = useState("");
+  const paginatedCategories = categories;
+
   const { detailManagerClassify = [] } = useSelector(
     (state) => state.getDetailManagerClassify
   );
@@ -58,7 +60,6 @@ function ImportManager() {
       status: updateStatus(item?.stock),
     }));
 
-    console.log("CHo kkoii , ", format);
     setDetail(format);
   }, [detailManagerClassify]);
 
@@ -75,7 +76,8 @@ function ImportManager() {
       name: item.name,
       medicinesCount: item._count?.medicines || 0,
     }));
-    setTotal(medicineClasstifyManager?.data?.total || 0);
+
+    setTotal(medicineClasstifyManager?.data?.pagination?.total || 0);
     setCategories(format);
   }, [medicineClasstifyManager]);
 
@@ -83,13 +85,13 @@ function ImportManager() {
     dispatch(
       fetchMedicineClasstifyManager({ page: currentPage, limit: pageSize })
     );
-  }, [dispatch, currentPage]);
+  }, [dispatch, currentPage, pageSize]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedMedicine, setSelectedMedicine] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const paginatedCategories = categories;
+  // const paginatedCategories = categories;
 
   const updateStatus = (stock) => {
     if (stock > 50) return "Normal";
@@ -98,6 +100,12 @@ function ImportManager() {
   };
 
   const showModal = (category) => {
+    console.log("===> showModal: category = ", category);
+    if (!category?.id) {
+      console.error("🚨 Category ID is missing! Cannot fetch detail");
+      return; // Chặn luôn, tránh gọi BEs
+    }
+
     setSelectedCategory(category);
     setIsModalVisible(true);
     dispatch(
@@ -289,7 +297,7 @@ function ImportManager() {
   return (
     <div>
       <div className="grid grid-cols-4 gap-5 mt-5 w-full px-5 font-kameron">
-        {paginatedCategories.map((category) => (
+        {categories.map((category) => (
           <div
             key={category?.id}
             className="h-[120px] bg-white rounded-2xl shadow-md cursor-pointer relative"
@@ -309,9 +317,15 @@ function ImportManager() {
               okText="Delete"
               cancelText="Cancel"
               okType="danger"
-              onConfirm={() =>
-                dispatch(deleteManagerMedicineClassify({ id: category.id }))
-              }
+              onConfirm={() => {
+                dispatch(
+                  deleteManagerMedicineClassify({
+                    id: category.id,
+                    page: currentPage,
+                    limit: pageSize,
+                  })
+                );
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -337,7 +351,7 @@ function ImportManager() {
           setCurrentPage(page);
         }}
         showSizeChanger={false}
-        className="mt-5 flex justify-center"
+        className="mt-[20px] flex justify-center "
       />
 
       {/* Category Modal */}

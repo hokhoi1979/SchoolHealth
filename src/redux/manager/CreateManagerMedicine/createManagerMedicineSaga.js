@@ -5,6 +5,12 @@ import {
   postManagerSucessMedicine,
   postMangerFailMedicine,
 } from "./createManagerMedicineSlice";
+import {
+  fetchMedicineClasstifyManagerFail,
+  fetchMedicineClasstifyManagerSucess,
+} from "../GetManagerMedineClassify/getManagerMedicineClassifySlice";
+import toast from "react-hot-toast";
+import { fetchAllMedicineSupplyManagerSuccess } from "../GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSlice";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
@@ -39,8 +45,29 @@ function* managerCreateMedicineSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(postManagerSucessMedicine(response.data));
+
+      const { limit, page } = action.payload;
+
+      const fetchData = yield call(
+        axios.get,
+        `${URL_API}/manager/v1/medicineSupply?page=${page}&limit=${limit}&sortBy=createdAt&order=asc`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (fetchData.status === 200 || fetchData.status === 201) {
+        yield put(fetchAllMedicineSupplyManagerSuccess(fetchData.data));
+        toast.success("Create Medicine Success");
+      } else {
+        yield put(fetchAllMedicineSupplyManagerFail(fetchData.status));
+        toast.error("Create Medicine Fail");
+      }
     } else {
       yield put(postMangerFailMedicine(`API ERROR: ${response.data}`));
+      toast.error("Create Medicine Fail");
     }
   } catch (error) {
     console.error(error);
