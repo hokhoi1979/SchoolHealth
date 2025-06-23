@@ -36,12 +36,10 @@ const Vaccination = () => {
   // Hàm mapping status từ API sang UI - SỬA LẠI ĐỂ XỬ LÝ CẢ DECLINED VÀ REJECTED
   const mapStatus = (apiStatus) => {
     const status = apiStatus?.toUpperCase();
-    console.log("Mapping status:", apiStatus, "->", status);
 
     switch (status) {
       case "ACCEPTED":
         return "completed";
-      case "REJECTED":
       case "DECLINED": // THÊM CASE NÀY
         return "rejected";
       case "PENDING":
@@ -72,17 +70,17 @@ const Vaccination = () => {
       vaccinationEvent: item.vaccinationEvent,
     })) || [];
 
-  const handleOpenModal = (notification) => {
+  const handleOpenModal = (notification, consentType = "yes") => {
     setSelectedNotification(notification);
-    setResponse({ consent: "yes", reason: "" });
+    setResponse({ consent: consentType, reason: "" });
     setIsModalOpen(true);
   };
 
   const handleConfirm = async () => {
     if (!selectedNotification) return;
     const payload = {
-      id: selectedNotification.id,
       studentID: selectedNotification.studentID,
+      vaccinationEventID: selectedNotification.vaccinationEventID, // Thêm dòng này
     };
 
     try {
@@ -97,12 +95,12 @@ const Vaccination = () => {
         }
         console.log("Declining vaccination with payload:", {
           ...payload,
-          reason: response.reason,
+          note: response.reason,
         });
         await dispatch(
           fetchDeclineVaccine({
             ...payload,
-            reason: response.reason,
+            note: response.reason,
           })
         );
         message.success("Vaccination declined successfully!");
@@ -112,11 +110,10 @@ const Vaccination = () => {
       setSelectedNotification(null);
       setResponse({ consent: "yes", reason: "" });
 
-      // Refresh data ngay lập tức
       setTimeout(() => {
         console.log("Refreshing data...");
         dispatch(fetchVaccineParent());
-      }, 1000); // Tăng thời gian delay lên 1 giây
+      }, 1000);
     } catch (error) {
       console.error("Error submitting response:", error);
       message.error("Failed to submit response. Please try again.");
@@ -169,24 +166,6 @@ const Vaccination = () => {
 
   const modalLoading = acceptLoading || declineLoading;
   const modalError = acceptError || declineError;
-
-  // Debug: Log để kiểm tra dữ liệu
-  console.log("=== VACCINATION DEBUG ===");
-  console.log("Raw API data:", vaccine?.data);
-  console.log("All notifications:", notificationsItem);
-  console.log(
-    "Pending:",
-    notificationsItem.filter((n) => n.status === "pending")
-  );
-  console.log(
-    "Completed:",
-    notificationsItem.filter((n) => n.status === "completed")
-  );
-  console.log(
-    "Rejected:",
-    notificationsItem.filter((n) => n.status === "rejected")
-  );
-  console.log("=========================");
 
   return (
     <div className="flex flex-col min-h-screen">

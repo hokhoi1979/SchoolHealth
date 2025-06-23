@@ -338,7 +338,7 @@ const ChangePassword = () => {
                   type="primary"
                   size="large"
                   className="bg-blue-500 hover:bg-blue-600 px-8"
-                  onClick={() => (window.location.href = "/student")}
+                  onClick={() => (window.location.href = "/parent")}
                 >
                   Back to home page
                 </Button>

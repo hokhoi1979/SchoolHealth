@@ -10,6 +10,7 @@ import {
   message,
 } from "antd";
 import { fetchMedicineRequest } from "../../../redux/profileParent/medicalRequest/MedicineRequestSlice";
+import { fetchDetailRequest } from "../../../redux/profileParent/medicalRequest/getDetailRequestSlice";
 import { fetchDeleteMedicine } from "../../../redux/profileParent/medicalRequest/deleteMedicineSlice";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 
@@ -83,23 +84,34 @@ const MedicationHistory = () => {
               setIsModalVisible(true);
             }}
           />
-          <Popconfirm
-            title="Are you sure to delete this medicine request?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Yes"
-            cancelText="No"
-          >
+          {record.status === "PENDING" ? (
+            <Popconfirm
+              title="Are you sure to delete this medicine request?"
+              onConfirm={() => handleDelete(record.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="link"
+                danger
+                icon={<DeleteOutlined />}
+                loading={deleteLoading}
+              />
+            </Popconfirm>
+          ) : (
             <Button
               type="link"
               danger
               icon={<DeleteOutlined />}
-              loading={deleteLoading}
+              disabled
+              title="Cannot delete this request because it is not in PENDING status"
             />
-          </Popconfirm>
+          )}
         </>
       ),
     },
   ];
+
   return (
     <>
       <Table
@@ -108,6 +120,8 @@ const MedicationHistory = () => {
         columns={columns}
         rowKey="id"
         locale={{ emptyText: "No medicine request history." }}
+        pagination={{ pageSize: 10 }} // Add pagination for better UX
+        style={{ margin: "20px 0" }} // Add margin for spacing
       />
 
       <Modal
@@ -115,6 +129,7 @@ const MedicationHistory = () => {
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
+        width={800} // Set a width for the modal
       >
         {selectedItem && (
           <Descriptions column={1} bordered>
@@ -170,4 +185,5 @@ const MedicationHistory = () => {
     </>
   );
 };
+
 export default MedicationHistory;

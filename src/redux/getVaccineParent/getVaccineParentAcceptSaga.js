@@ -11,10 +11,10 @@ const URL_API = import.meta.env.VITE_API_URL;
 function* getVaccineParentAcceptSaga(action) {
   try {
     const token = localStorage.getItem("accessToken");
-    const { id, studentID } = action.payload;
+    const { studentID, vaccinationEventID } = action.payload; // Sửa tại đây
     const response = yield call(
       axios.put,
-      `${URL_API}/parent/v1/${id}/${studentID}/accepted`,
+      `${URL_API}/parent/v1/${vaccinationEventID}/${studentID}/accepted`, // Sửa tại đây
       {},
       {
         headers: {

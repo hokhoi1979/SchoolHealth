@@ -81,25 +81,26 @@ const StudentInformation = () => {
             />
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-800 mb-2 font-inria">
-                {profile?.fullname || "N/A"}
+                {profile?.data?.fullname || "N/A"}
               </h1>
               <div className="flex flex-wrap gap-4 text-gray-600">
                 <div className="flex items-center gap-2">
                   <UserOutlined className="text-blue-500" />
                   <span>
                     Student code:{" "}
-                    <strong>{profile?.student_code || "N/A"}</strong>
+                    <strong>{profile?.data?.student_code || "N/A"}</strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CalendarOutlined className="text-blue-500" />
                   <span>
-                    Classroom: <strong>{profile?.className || "N/A"}</strong>
+                    Classroom:{" "}
+                    <strong>{profile?.data?.className || "N/A"}</strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Tag color={profile?.graduated ? "green" : "orange"}>
-                    {profile?.graduated ? "Graduated" : "Studying"}
+                    {profile?.data?.graduated ? "Graduated" : "Studying"}
                   </Tag>
                 </div>
               </div>
@@ -124,7 +125,7 @@ const StudentInformation = () => {
                   <span className="font-semibold text-gray-700">Full Name</span>
                 }
               >
-                {profile?.fullname || "N/A"}
+                {profile?.data?.fullname || "N/A"}
               </Descriptions.Item>
 
               <Descriptions.Item
@@ -134,7 +135,7 @@ const StudentInformation = () => {
                   </span>
                 }
               >
-                {profile?.student_code || "N/A"}
+                {profile?.data?.student_code || "N/A"}
               </Descriptions.Item>
 
               <Descriptions.Item
@@ -144,7 +145,7 @@ const StudentInformation = () => {
                   </span>
                 }
               >
-                {profile?.dateOfBirth || "N/A"}
+                {profile?.data?.dateOfBirth || "N/A"}
               </Descriptions.Item>
 
               <Descriptions.Item
@@ -152,7 +153,7 @@ const StudentInformation = () => {
                   <span className="font-semibold text-gray-700">Gender</span>
                 }
               >
-                {profile?.gender || "N/A"}
+                {profile?.data?.gender || "N/A"}
               </Descriptions.Item>
 
               <Descriptions.Item
@@ -160,7 +161,7 @@ const StudentInformation = () => {
                   <span className="font-semibold text-gray-700">Graduated</span>
                 }
               >
-                <Tag color={profile?.graduated ? "green" : "orange"}>
+                <Tag color={profile?.data?.graduated ? "green" : "orange"}>
                   {profile?.graduated ? "Graduated" : "Studying"}
                 </Tag>
               </Descriptions.Item>
@@ -185,7 +186,7 @@ const StudentInformation = () => {
               >
                 <div className="flex items-center gap-2">
                   <MailOutlined className="text-blue-500" />
-                  {profile?.email || "N/A"}
+                  {profile?.data?.email || "N/A"}
                 </div>
               </Descriptions.Item>
             </Descriptions>
@@ -209,7 +210,7 @@ const StudentInformation = () => {
                   </span>
                 }
               >
-                {profile?.parentFullname}
+                {profile?.data?.parentFullname}
               </Descriptions.Item>
 
               <Descriptions.Item
@@ -221,7 +222,7 @@ const StudentInformation = () => {
               >
                 <div className="flex items-center gap-2">
                   <MailOutlined className="text-blue-500" />
-                  {profile?.parentEmail || "N/A"}
+                  {profile?.data?.parentEmail || "N/A"}
                 </div>
               </Descriptions.Item>
 
@@ -234,7 +235,7 @@ const StudentInformation = () => {
               >
                 <div className="flex items-center gap-2">
                   <PhoneOutlined className="text-blue-500" />
-                  {profile?.parentPhone || "N/A"}
+                  {profile?.data?.parentPhone || "N/A"}
                 </div>
               </Descriptions.Item>
             </Descriptions>

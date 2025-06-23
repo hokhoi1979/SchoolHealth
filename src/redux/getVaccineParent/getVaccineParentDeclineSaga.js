@@ -11,18 +11,12 @@ const URL_API = import.meta.env.VITE_API_URL;
 function* getVaccineParentDeclineSaga(action) {
   try {
     const token = localStorage.getItem("accessToken");
-    const { id, studentID, reason } = action.payload;
-
-    console.log("Decline Saga - Payload:", action.payload);
-    console.log(
-      "Decline Saga - URL:",
-      `${URL_API}/parent/v1/${id}/${studentID}/declined`
-    );
+    const { vaccinationEventID, studentID, note } = action.payload;
 
     const response = yield call(
       axios.put,
-      `${URL_API}/parent/v1/${id}/${studentID}/declined`,
-      { note: reason },
+      `${URL_API}/parent/v1/${vaccinationEventID}/${studentID}/declined`,
+      { note: note },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -31,15 +25,17 @@ function* getVaccineParentDeclineSaga(action) {
       }
     );
 
-    console.log("Decline Saga - Response:", response);
-
     if (response.status === 200 || response.status === 201) {
       yield put(fetchDeclineVaccineSuccess(response.data));
     } else {
       yield put(fetchDeclineVaccineFail(response.status));
     }
   } catch (error) {
-    console.error("Decline Saga - Error:", error);
+    console.error("Decline Saga - Full Error:", {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+    });
     yield put(
       fetchDeclineVaccineFail({
         message: error.message,

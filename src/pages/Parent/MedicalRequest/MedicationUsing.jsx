@@ -31,7 +31,7 @@ const statusColor = {
 };
 
 const MedicationUsing = () => {
-  const { medications } = useOutletContext();
+  const { medications, setMedications } = useOutletContext();
   const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
   const [editingMedication, setEditingMedication] = useState(null);
@@ -87,7 +87,6 @@ const MedicationUsing = () => {
   const columns = [
     { title: "Name", dataIndex: "name" },
     { title: "Dosage", dataIndex: "dosage" },
-
     {
       title: "Usage Times",
       dataIndex: "usageTimes",
@@ -137,6 +136,8 @@ const MedicationUsing = () => {
         dataSource={medications}
         rowKey="id"
         locale={{ emptyText: "No medications in use." }}
+        pagination={{ pageSize: 10 }} // Add pagination for better UX
+        style={{ margin: "20px 0" }} // Add margin for spacing
       />
       <Modal
         title="Edit Medication"
@@ -148,6 +149,7 @@ const MedicationUsing = () => {
         }}
         onOk={handleSave}
         okText="Save"
+        width={600} // Set a width for the modal
       >
         <Form layout="vertical" form={form}>
           <Row gutter={16}>

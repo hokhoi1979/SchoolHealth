@@ -22,12 +22,6 @@ const Completed = ({ notifications }) => {
     (n) => n.type === "vaccination" && n.status === "completed"
   );
 
-  console.log("Completed component - All notifications:", notifications);
-  console.log(
-    "Completed component - Filtered completed:",
-    approvedVaccinations
-  );
-
   if (approvedVaccinations.length === 0) {
     return (
       <Card className="text-center py-10">

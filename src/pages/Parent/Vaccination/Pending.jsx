@@ -84,13 +84,14 @@ const Pending = ({ notifications, onOpenModal }) => {
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button danger onClick={() => onOpenModal(notification)}>
+            <Button danger onClick={() => onOpenModal(notification, "no")}>
               Decline
             </Button>
+
             <Button
               type="primary"
               style={{ backgroundColor: "#d97706", borderColor: "#b45309" }}
-              onClick={() => onOpenModal(notification)}
+              onClick={() => onOpenModal(notification, "yes")}
             >
               Accept
             </Button>

@@ -33,6 +33,7 @@ import watchFetchDeclineVaccine from "./getVaccineParent/getVaccineParentDecline
 import watchFetchMedicineRequest from "./profileParent/medicalRequest/MedicineRequestSaga";
 import watchFetchCreateMedicine from "./profileParent/medicalRequest/createMedicineSaga";
 import watchFetchDeleteMedicine from "./profileParent/medicalRequest/deleteMedicineSaga";
+import watchFetchDetailRequest from "./profileParent/medicalRequest/getDetailRequestSaga";
 
 import watchDeleteManagerVaccine from "./manager/DeleteVaccineEvent/deleteVaccineEventSaga";
 import watchPostManagerMedicine from "./manager/CreateManagerMedicine/createManagerMedicineSaga";
@@ -74,6 +75,7 @@ export default function* rootSaga() {
     watchFetchMedicineRequest(),
     watchFetchCreateMedicine(),
     watchFetchDeleteMedicine(),
+    watchFetchDetailRequest(),
 
     watchFetchAllMedicine(),
     watchFetchRequestMedicine(),

@@ -1572,6 +1572,7 @@ const StudentHealth = () => {
             )}
 
             {/* Vision */}
+
             <div className="col-span-2">
               <b>Vision Left:</b>
               {modalIsEditing ? (

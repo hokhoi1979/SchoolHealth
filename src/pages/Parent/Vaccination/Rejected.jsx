@@ -22,19 +22,6 @@ const Rejected = ({ notifications }) => {
     (n) => n.type === "vaccination" && n.status === "rejected"
   );
 
-  console.log("=== REJECTED COMPONENT DEBUG ===");
-  console.log("All notifications received:", notifications);
-  console.log("Filtered rejected notifications:", rejectedVaccinations);
-  console.log(
-    "Status values in notifications:",
-    notifications.map((n) => ({
-      id: n.id,
-      status: n.status,
-      originalStatus: n.originalStatus,
-    }))
-  );
-  console.log("================================");
-
   if (rejectedVaccinations.length === 0) {
     return (
       <Card className="text-center py-10">

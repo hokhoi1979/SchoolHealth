@@ -16,6 +16,7 @@ import getVaccineParentDeclineReducer from "./getVaccineParent/getVaccineParentD
 import getMedicineRequestReducer from "./profileParent/medicalRequest/MedicineRequestSlice";
 import createMedicineReducer from "./profileParent/medicalRequest/createMedicineSlice";
 import deleteMedicineReducer from "./profileParent/medicalRequest/deleteMedicineSlice";
+import getDetailRequestReducer from "./profileParent/medicalRequest/getDetailRequestSlice";
 
 import managerMedicalReducer from "./manager/managerSlice";
 import managerVaccineReducer from "./manager/createVaccineManagerSlice";
@@ -87,6 +88,7 @@ const rootReducer = combineReducers({
   medicineRequest: getMedicineRequestReducer,
   createMedicineRequest: createMedicineReducer,
   deleteMedicineRequest: deleteMedicineReducer,
+  getDetailRequest: getDetailRequestReducer,
 
   vaccineResult: vaccineResultReducer,
   sendVaccineResult: sendResultVaccineReducer,
