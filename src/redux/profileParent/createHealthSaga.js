@@ -11,13 +11,14 @@ const URL_API = import.meta.env.VITE_API_URL;
 function* createHealthSaga(action) {
   try {
     const token = localStorage.getItem("accessToken");
+    const body = action.payload;
     const response = yield call(
       axios.post,
       `${URL_API}/parent/v1/health`,
-      action.payload,
+      body,
       {
         headers: {
-          Authorization: `${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }
@@ -27,6 +28,7 @@ function* createHealthSaga(action) {
       yield put(fetchCreateHealthSucess(response.data));
     } else {
       yield put(fetchCreateHealthFail(`Status: ${response.status}`));
+      console.log("EROR", response.status);
     }
   } catch (error) {
     yield put(fetchCreateHealthFail(error.message || "Unknown error"));

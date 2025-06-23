@@ -1,14 +1,23 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import accountReducers from "./auth/authSlice";
 import profileReducer from "./profileNurse/profileSlice";
-import profileParentReducer from "./profileParent/profileSlice";
+
+//api parent
 import studentOfParentReducer from "./profileParent/StudentOfParentSlice";
+import parentHealthProfileReducer from "./profileParent/parentGetHealth/parentGetHealthSlice";
 import formParentReducer from "./profileParent/formSlice";
 import healthStudentReducer from "./profileParent/HealthByIdSlice";
 import createHealthStudentReducer from "./profileParent/createHealthSlice";
-import updateHealthStudentReducer from "./profileParent/updateHealthSlice";
+import updateHealthReducer from "./profileParent/updateHealthSlice";
 import vaccineParentReducer from "./getVaccineParent/getVaccineParentSlice";
 import vaccineParentResultReducer from "./getVaccineParent/getVaccineParentResultSlice";
+import getVaccineParentAcceptReducer from "./getVaccineParent/getVaccineParentAcceptSlice";
+import getVaccineParentDeclineReducer from "./getVaccineParent/getVaccineParentDeclineSlice";
+import getMedicineRequestReducer from "./profileParent/medicalRequest/MedicineRequestSlice";
+import createMedicineReducer from "./profileParent/medicalRequest/createMedicineSlice";
+import deleteMedicineReducer from "./profileParent/medicalRequest/deleteMedicineSlice";
+import getDetailRequestReducer from "./profileParent/medicalRequest/getDetailRequestSlice";
+
 import managerMedicalReducer from "./manager/managerSlice";
 import managerVaccineReducer from "./manager/createVaccineManagerSlice";
 import getVaccineManagerReducer from "./manager/getVaccineManagerSlice";
@@ -26,6 +35,7 @@ import patchManagerConfirmVaccineReducer, {
 } from "./manager/ConfirmVaccineManager/ConfirmVaccineManagerSlice";
 import vaccineStudentReducer from "./vaccineNurse/vaccineById/vaccineByIdSlice";
 import vaccineReducer from "./vaccineNurse/vaccine/vaccineSlice";
+
 import healthProfileReducer from "./profileParent/profileSlice";
 import managerDeleteVaccineReducer from "./manager/DeleteVaccineEvent/deleteVaccineEventSlice";
 import managerCreateMedicineReducer from "./manager/CreateManagerMedicine/createManagerMedicineSlice";
@@ -42,6 +52,9 @@ import sendMedicalEnventReducer from "./medicalEventNurse/sendMedicalEvent/sendM
 import hospitalEventReducer from "./medicalEventNurse/editHospitalEvent/editHospitalEventSlice";
 import postMedicineEventReducer from "./medicalEventNurse/createMedicineEvent/createMedicineEventSlice";
 import deleteMedicalEventReducer from "./medicalEventNurse/deleteMedicalEvent/deleteMedicalEventSlice";
+
+import getProfileReducer from "./getProflie/getProfileSlice";
+import changePasswordReducer from "./ChangePassword/changePasswordSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -61,14 +74,22 @@ const rootReducer = combineReducers({
   postMedicineEvent: postMedicineEventReducer,
   deleteMedicalEvent: deleteMedicalEventReducer,
 
-  profileParent: profileParentReducer,
+  //api parent
   studentOfParent: studentOfParentReducer,
+  healthParentProfile: parentHealthProfileReducer,
   formParent: formParentReducer,
   healthStudent: healthStudentReducer,
   createHealthStudent: createHealthStudentReducer,
-  updateHealthStudent: updateHealthStudentReducer,
+  updateHealthStudent: updateHealthReducer,
   vaccineParent: vaccineParentReducer,
   vaccineParentResult: vaccineParentResultReducer,
+  vaccineParentAccept: getVaccineParentAcceptReducer,
+  vaccineParentDecline: getVaccineParentDeclineReducer,
+  medicineRequest: getMedicineRequestReducer,
+  createMedicineRequest: createMedicineReducer,
+  deleteMedicineRequest: deleteMedicineReducer,
+  getDetailRequest: getDetailRequestReducer,
+
   vaccineResult: vaccineResultReducer,
   sendVaccineResult: sendResultVaccineReducer,
   checkupNurse: checkupReducer,
@@ -87,6 +108,9 @@ const rootReducer = combineReducers({
   getMedicineSupplyManager: getMedicineSupplyManagerReducer,
 
   parentProfileHealth: healthProfileReducer,
+
+  getProfile: getProfileReducer,
+  changePassword: changePasswordReducer,
 });
 
 export default rootReducer;
