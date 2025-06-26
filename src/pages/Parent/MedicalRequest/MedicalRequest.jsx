@@ -16,6 +16,7 @@ import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCreateMedicine } from "../../../redux/profileParent/medicalRequest/createMedicineSlice";
+
 import { fetchStudent } from "../../../redux/profileParent/StudentOfParentSlice";
 
 const { TextArea } = Input;
@@ -189,6 +190,7 @@ const MedicalRequest = () => {
         <div className="flex mt-5 bg-[#F3F3F3] w-full h-10 rounded-xl">
           <div className="m-auto flex gap-10">
             <Link to={""}>Medication in use</Link>
+            <Link to={"notification"}>Notification</Link>
             <Link to={"medication_history"}>Medication history</Link>
           </div>
         </div>

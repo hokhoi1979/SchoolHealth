@@ -34,6 +34,9 @@ import watchFetchMedicineRequest from "./profileParent/medicalRequest/MedicineRe
 import watchFetchCreateMedicine from "./profileParent/medicalRequest/createMedicineSaga";
 import watchFetchDeleteMedicine from "./profileParent/medicalRequest/deleteMedicineSaga";
 import watchFetchDetailRequest from "./profileParent/medicalRequest/getDetailRequestSaga";
+import watchFetchStopMedicines from "./profileParent/medicalRequest/stopMedicineSaga";
+import watchFetchAcceptBenefit from "./profileParent/medicalRequest/acceptBenefitMedicineSaga";
+import watchFetchRejectBenefit from "./profileParent/medicalRequest/rejectBenefitMedicineSaga";
 
 import watchDeleteManagerVaccine from "./manager/DeleteVaccineEvent/deleteVaccineEventSaga";
 import watchPostManagerMedicine from "./manager/CreateManagerMedicine/createManagerMedicineSaga";
@@ -76,6 +79,9 @@ export default function* rootSaga() {
     watchFetchCreateMedicine(),
     watchFetchDeleteMedicine(),
     watchFetchDetailRequest(),
+    watchFetchStopMedicines(),
+    watchFetchAcceptBenefit(),
+    watchFetchRejectBenefit(),
 
     watchFetchAllMedicine(),
     watchFetchRequestMedicine(),

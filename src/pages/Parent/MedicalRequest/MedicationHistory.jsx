@@ -12,7 +12,8 @@ import {
 import { fetchMedicineRequest } from "../../../redux/profileParent/medicalRequest/MedicineRequestSlice";
 import { fetchDetailRequest } from "../../../redux/profileParent/medicalRequest/getDetailRequestSlice";
 import { fetchDeleteMedicine } from "../../../redux/profileParent/medicalRequest/deleteMedicineSlice";
-import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
+import { fetchStopMedicine } from "../../../redux/profileParent/medicalRequest/stopMedicineSlice";
+import { EyeOutlined, DeleteOutlined, StopOutlined } from "@ant-design/icons";
 
 const statusColor = {
   PENDING: "orange",
@@ -31,8 +32,20 @@ const MedicationHistory = () => {
     loading: deleteLoading,
   } = useSelector((state) => state.deleteMedicineRequest);
 
-  const [selectedItem, setSelectedItem] = useState(null);
+  const {
+    requestDetail,
+    loading: detailLoading,
+    error: detailError,
+  } = useSelector((state) => state.getDetailRequest);
+
+  const {
+    success: stopSuccess,
+    error: stopError,
+    loading: stopLoading,
+  } = useSelector((state) => state.stopMedicine);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentViewingId, setCurrentViewingId] = useState(null);
 
   useEffect(() => {
     dispatch(fetchMedicineRequest());
@@ -47,8 +60,41 @@ const MedicationHistory = () => {
     }
   }, [deleteSuccess, deleteError, dispatch]);
 
+  useEffect(() => {
+    if (requestDetail && !detailLoading && !detailError) {
+      setIsModalVisible(true);
+    } else if (detailError) {
+      message.error("Failed to fetch medication detail!");
+      setIsModalVisible(false);
+      setCurrentViewingId(null);
+    }
+  }, [requestDetail, deleteLoading, deleteError]);
+
+  useEffect(() => {
+    if (stopSuccess) {
+      message.success("Medicine stopped successfully!");
+      dispatch(fetchMedicineRequest());
+    } else if (stopError) {
+      message.error("Failed to stop medicine!");
+    }
+  }, [stopSuccess, stopError, dispatch]);
+
   const handleDelete = (id) => {
     dispatch(fetchDeleteMedicine(id));
+  };
+
+  const handleViewDetail = (requestID) => {
+    setCurrentViewingId(requestID);
+    dispatch(fetchDetailRequest({ requestID: requestID }));
+  };
+
+  const handleStopMedicine = (id) => {
+    dispatch(fetchStopMedicine(id));
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+    setCurrentViewingId(null);
   };
 
   const columns = [
@@ -80,9 +126,9 @@ const MedicationHistory = () => {
             type="link"
             icon={<EyeOutlined />}
             onClick={() => {
-              setSelectedItem(record);
-              setIsModalVisible(true);
+              handleViewDetail(record.id);
             }}
+            loading={detailLoading && currentViewingId === record.id}
           />
           {record.status === "PENDING" ? (
             <Popconfirm
@@ -107,6 +153,21 @@ const MedicationHistory = () => {
               title="Cannot delete this request because it is not in PENDING status"
             />
           )}
+          {record.status === "CONFIRMED_RECEIVED" && (
+            <Popconfirm
+              title="Are you sure you want to stop this medicine? This action will mark the request as COMPLETED."
+              onConfirm={() => handleStopMedicine(record.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="link"
+                icon={<StopOutlined />}
+                loading={stopLoading && currentViewingId === record.id} // Apply loading state
+                title="Stop Medicine"
+              />
+            </Popconfirm>
+          )}
         </>
       ),
     },
@@ -127,59 +188,64 @@ const MedicationHistory = () => {
       <Modal
         title="Medication Request Detail"
         open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={handleModalClose}
         footer={null}
-        width={800} // Set a width for the modal
+        width={800}
       >
-        {selectedItem && (
+        {detailLoading ? (
+          <div>Loading detailed information...</div>
+        ) : detailError ? (
+          <div style={{ color: "red" }}>
+            Error: {detailError.message || "Failed to load details."}
+          </div>
+        ) : requestDetail ? (
           <Descriptions column={1} bordered>
+            {/* Display fields from requestDetail, which now contains all necessary info */}
+            <Descriptions.Item label="Request ID">
+              {requestDetail.requestID}
+            </Descriptions.Item>
             <Descriptions.Item label="Student Name">
-              {selectedItem.studentInfo?.account?.fullname}
-            </Descriptions.Item>
-            <Descriptions.Item label="Student Code">
-              {selectedItem.studentInfo?.student_code}
-            </Descriptions.Item>
-            <Descriptions.Item label="Date of Birth">
-              {new Date(
-                selectedItem.studentInfo?.dateOfBirth
-              ).toLocaleDateString()}
-            </Descriptions.Item>
-            <Descriptions.Item label="Gender">
-              {selectedItem.studentInfo?.gender}
-            </Descriptions.Item>
-            <Descriptions.Item label="Class">
-              {selectedItem.studentInfo?.lastAcamedicYear?.class?.name}
-            </Descriptions.Item>
-            <Descriptions.Item label="Academic Year">
-              {selectedItem.studentInfo?.lastAcamedicYear?.academicYear?.name}
-            </Descriptions.Item>
-            <Descriptions.Item label="Parent Name">
-              {selectedItem.studentInfo?.ParentInfo?.fullname}
-            </Descriptions.Item>
-            <Descriptions.Item label="Parent Email">
-              {selectedItem.studentInfo?.ParentInfo?.email}
-            </Descriptions.Item>
-            <Descriptions.Item label="Parent Phone">
-              {selectedItem.studentInfo?.ParentInfo?.phone}
-            </Descriptions.Item>
-            <Descriptions.Item label="Note">
-              {selectedItem.note}
+              {requestDetail.studentName || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Status">
-              {selectedItem.status}
+              <Tag color={statusColor[requestDetail.status] || "default"}>
+                {requestDetail.status}
+              </Tag>
             </Descriptions.Item>
-            <Descriptions.Item label="Created At">
-              {new Date(selectedItem.createdAt).toLocaleString()}
-            </Descriptions.Item>
-            <Descriptions.Item label="Updated At">
-              {new Date(selectedItem.updatedAt).toLocaleString()}
-            </Descriptions.Item>
-            <Descriptions.Item label="Received At">
-              {selectedItem.receivedAt
-                ? new Date(selectedItem.receivedAt).toLocaleString()
-                : "N/A"}
+
+            <Descriptions.Item label="Medicine Details">
+              {requestDetail.items && requestDetail.items.length > 0 ? (
+                requestDetail.items.map((item, index) => (
+                  <div
+                    key={item.medicineItemID || index}
+                    style={{
+                      marginBottom: "10px",
+                      borderBottom: "1px dashed #eee",
+                      paddingBottom: "10px",
+                    }}
+                  >
+                    <p>
+                      <strong>Medicine Name:</strong> {item.medicineName}
+                    </p>
+                    <p>
+                      <strong>Dosage:</strong> {item.dosage}
+                    </p>
+                    <p>
+                      <strong>Quantity Remaining:</strong>{" "}
+                      {item.quantityRemaining}
+                    </p>
+                    <p>
+                      <strong>Usage Times:</strong> {item.usageTimes.join(", ")}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div>No detailed medicine items available.</div>
+              )}
             </Descriptions.Item>
           </Descriptions>
+        ) : (
+          <div>Select an item to view details.</div>
         )}
       </Modal>
     </>

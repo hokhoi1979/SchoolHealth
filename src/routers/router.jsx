@@ -48,6 +48,7 @@ import StudentHealth from "../pages/Parent/StudentHealth/StudentHealth";
 import MedicalRequest from "../pages/Parent/MedicalRequest/MedicalRequest";
 import MedicalUsing from "../pages/Parent/MedicalRequest/MedicationUsing";
 import MedicalHistoryParent from "../pages/Parent/MedicalRequest/MedicationHistory";
+import NotificationRequest from "../pages/Parent/MedicalRequest/Notification";
 import VaccinationConfirm from "../pages/Parent/Vaccination/Vaccination";
 import PendingVaccination from "../pages/Parent/Vaccination/Pending";
 import CompletedVaccination from "../pages/Parent/Vaccination/Completed";
@@ -189,6 +190,7 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <MedicalUsing /> },
               { path: "medication_history", element: <MedicalHistoryParent /> },
+              { path: "notification", element: <NotificationRequest /> },
             ],
           },
           {
