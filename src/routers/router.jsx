@@ -61,6 +61,8 @@ import AllRecord from "../pages/Parent/StudentHistory/AllRecord";
 import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
 import SendResult from "../pages/Parent/StudentHistory/SendResult";
 import Notification from "../pages/Parent/StudentHistory/Notification";
+import RequestManager from "../pages/Manager/Request/RequestManager";
+import ManagerMedicalEvent from "../pages/Manager/MedicalEventMedical/managerMedicalEvent";
 import ParentInfor from "../pages/Parent/ParentInformation/ParentInformation";
 import ChangePasswordParent from "../pages/Parent/ChangePassword/ChangePassword";
 
@@ -167,9 +169,19 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: "information",
-            element: <ManagerInfor />,
+            path: "requestManager",
+            element: <RequestManager />,
+            // children: [
+            //   { path: "vaccination", element: <Vaccination /> },
+            //   { path: "checkup", element: <Checkup /> },
+            //   { path: "trend", element: <Trend /> },
+            // ],
           },
+          {
+            path: "managerMedicalEvent",
+            element: <ManagerMedicalEvent />,
+          },
+          { path: "information", element: <ManagerInfor /> },
           { path: "change_password", element: <ChangePasswordManager /> },
         ],
       },

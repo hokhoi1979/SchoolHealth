@@ -5,6 +5,11 @@ import {
   deleteManagerSucessVaccine,
   deleteMangerFailVaccine,
 } from "./deleteVaccineEventSlice";
+import {
+  fetchVaccineManagerFail,
+  fetchVaccineManagerSucess,
+} from "../getVaccineManagerSlice";
+import { toast } from "react-toastify";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
@@ -27,6 +32,25 @@ function* managerDeleteVaccineSaga(action) {
     if (response.status === 200 || response.status === 201) {
       console.log("DUCC", response.data);
       yield put(deleteManagerSucessVaccine(response.data));
+
+      const fetchData = yield call(
+        axios.get,
+        `${URL_API}/manager/v1/vaccinationEvent`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (fetchData.status === 200 || fetchData.status === 201) {
+        yield put(fetchVaccineManagerSucess(fetchData.data));
+        toast.success("Delete Success");
+      } else {
+        yield put(fetchVaccineManagerFail(fetchData.status));
+        toast.success("Delete FAIL");
+      }
     } else {
       yield put(deleteMangerFailVaccine(`API ERROR: ${response.data}`));
     }
