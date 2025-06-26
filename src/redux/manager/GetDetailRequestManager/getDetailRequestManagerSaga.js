@@ -36,8 +36,8 @@ function* getDetailRequestSaga(action) {
   }
 }
 
-function* watchFetchDetailRequest() {
+function* watchFetchDetailRequestManager() {
   yield takeLatest(FETCH__DETAIL__REQUEST, getDetailRequestSaga);
 }
 
-export default watchFetchDetailRequest;
+export default watchFetchDetailRequestManager;

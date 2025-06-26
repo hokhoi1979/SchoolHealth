@@ -7,11 +7,13 @@ import {
 } from "./profileSlice";
 
 const URL_API = import.meta.env.VITE_API_URL;
-
+console.log("👀 profileParent/profileSaga LOADED");
 function* fetchHealthProfileSaga() {
   try {
+    console.log("Saga RUNNING");
     const token = localStorage.getItem("accessToken");
-    console.log(token);
+    console.log("Saga RUNNING");
+    console.log("TOKEN", token);
     const response = yield call(axios.get, `${URL_API}/parent/v1/health`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -26,6 +28,7 @@ function* fetchHealthProfileSaga() {
       yield put(fetchHealthProfileFail("Unexpected response status"));
     }
   } catch (error) {
+    console.error("FETCH HEALTH PROFILE FAILED", error);
     yield put(fetchHealthProfileFail(error.message));
   }
 }

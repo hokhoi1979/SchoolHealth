@@ -1011,30 +1011,29 @@ const VaccineManager = () => {
                         <td className="border px-2">
                           <select
                             value={
-                              item.medicineID ?? item.medicineSupplyID ?? ""
+                              item.medicineID !== null
+                                ? `med-${item.medicineID}`
+                                : item.medicineSupplyID !== null
+                                ? `sup-${item.medicineSupplyID}`
+                                : ""
                             }
                             onChange={(e) => {
-                              const selectedId = parseInt(e.target.value);
+                              const [type, id] = e.target.value.split("-");
+                              const selectedId = parseInt(id);
                               const updated = [...items];
-
-                              const selected = medicineSupply.find(
-                                (entry) => entry.id === selectedId
-                              );
 
                               // Reset trước
                               updated[index].medicineID = null;
                               updated[index].medicineSupplyID = null;
 
-                              if (!selected) {
-                                // Không tìm thấy, giữ trống
+                              if (!selectedId) {
                                 setItems(updated);
                                 return;
                               }
 
-                              // Gán đúng theo type
-                              if (selected.type === "medicine") {
+                              if (type === "med") {
                                 updated[index].medicineID = selectedId;
-                              } else if (selected.type === "supply") {
+                              } else if (type === "sup") {
                                 updated[index].medicineSupplyID = selectedId;
                               }
 
@@ -1046,7 +1045,10 @@ const VaccineManager = () => {
                               {medicineSupply
                                 .filter((m) => m.type === "medicine")
                                 .map((m) => (
-                                  <option key={`med-${m.id}`} value={m.id}>
+                                  <option
+                                    key={`med-${m.id}`}
+                                    value={`med-${m.id}`}
+                                  >
                                     {m.name}
                                   </option>
                                 ))}
@@ -1055,7 +1057,10 @@ const VaccineManager = () => {
                               {medicineSupply
                                 .filter((s) => s.type === "supply")
                                 .map((s) => (
-                                  <option key={`sup-${s.id}`} value={s.id}>
+                                  <option
+                                    key={`sup-${s.id}`}
+                                    value={`sup-${s.id}`}
+                                  >
                                     {s.name}
                                   </option>
                                 ))}

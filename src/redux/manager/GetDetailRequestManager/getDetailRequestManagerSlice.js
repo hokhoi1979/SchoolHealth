@@ -23,7 +23,7 @@ const initialState = {
   error: null,
 };
 
-const getDetailRequestReducer = (state = initialState, action) => {
+const getDetailRequestManagerReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH__DETAIL__REQUEST:
       return { ...state, loading: true, error: null };
@@ -40,4 +40,4 @@ const getDetailRequestReducer = (state = initialState, action) => {
   }
 };
 
-export default getDetailRequestReducer;
+export default getDetailRequestManagerReducer;

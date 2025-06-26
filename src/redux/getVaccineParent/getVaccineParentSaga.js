@@ -16,7 +16,7 @@ function* vaccineParentSaga() {
       `${URL_API}/parent/v1/vaccinationEvent`,
       {
         headers: {
-          Authorization: `${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }
