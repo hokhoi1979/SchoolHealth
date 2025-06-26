@@ -9,6 +9,7 @@ import {
   fetchMedicalEventFail,
   fetchMedicalEventSuccess,
 } from "../medicalEvent/getMedicalEventSlice";
+import { toast } from "react-toastify";
 
 const URL_API = import.meta.env.VITE_API_URL;
 function* deleteMedicalEventSaga(action) {
@@ -27,7 +28,7 @@ function* deleteMedicalEventSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(deleteMedicalEventSuccess(response.data));
-      console.log("DELETE SUCCESS");
+      toast.success("Delete successful!");
       const fetchData = yield call(
         axios.get,
         `${URL_API}/nurse/v1/medicalEvent`,

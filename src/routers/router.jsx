@@ -61,6 +61,7 @@ import AllRecord from "../pages/Parent/StudentHistory/AllRecord";
 import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
 import SendResult from "../pages/Parent/StudentHistory/SendResult";
 import Notification from "../pages/Parent/StudentHistory/Notification";
+import MedicineSchedule from "../pages/Nurse/Materials/MedicineSchedule";
 import RequestManager from "../pages/Manager/Request/RequestManager";
 import ManagerMedicalEvent from "../pages/Manager/MedicalEventMedical/managerMedicalEvent";
 import ParentInfor from "../pages/Parent/ParentInformation/ParentInformation";
@@ -86,16 +87,7 @@ const router = createBrowserRouter([
         element: <NurseLayout />,
         children: [
           { path: "", element: <Navigate to="materials" /> },
-          // {
-          //   path: "dashboard",
-          //   element: <DashboardNurse />,
-          //   children: [
-          //     { path: "", element: <Medical /> },
-          //     { path: "vaccination", element: <Vaccination /> },
-          //     { path: "checkup", element: <Checkup /> },
-          //     { path: "trend", element: <Trend /> },
-          //   ],
-          // },
+
           {
             path: "materials",
             element: <Materials />,
@@ -104,6 +96,7 @@ const router = createBrowserRouter([
               { path: "import", element: <Import /> },
               { path: "export", element: <Export /> },
               { path: "medicine", element: <MedicineForStudent /> },
+              { path: "schedule", element: <MedicineSchedule /> },
             ],
           },
           {
