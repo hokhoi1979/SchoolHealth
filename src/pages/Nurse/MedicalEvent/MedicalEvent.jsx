@@ -10,6 +10,7 @@ import {
   Select,
   Space,
   Table,
+  Tag,
   Tooltip,
 } from "antd";
 import { Option } from "antd/es/mentions";
@@ -33,11 +34,12 @@ const MedicalEvent = () => {
   const [openSend, setOpenSend] = useState(false);
   const [openHospital, setOpenHospital] = useState(false);
   const [openNormal, setOpenNormal] = useState(false);
+  const [openConfirmNormal, setOpenConfirmNormal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const [store, setStore] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const [idHospital, setIdHospital] = useState(null);
+  const [idStatus, setIdStatus] = useState(null);
 
   const [studentCode, setStudentCode] = useState("");
   const [type, setType] = useState("");
@@ -232,7 +234,7 @@ const MedicalEvent = () => {
   };
 
   const handleStatus = () => {
-    dispatch(patchHospitalEvent(idHospital));
+    dispatch(patchHospitalEvent(idStatus));
     setOpenHospital(false);
   };
 
@@ -286,6 +288,39 @@ const MedicalEvent = () => {
       dataIndex: "status",
       key: "status",
       align: "center",
+      render: (_, record) => (
+        <>
+          {record.status === "PROCESSING" && (
+            <>
+              <Tag color="yellow">{record.status}</Tag>
+            </>
+          )}
+
+          {record.status === "PENDING" && (
+            <>
+              <Tag color="blue">{record.status}</Tag>
+            </>
+          )}
+
+          {record.status === "COMPLETED" && (
+            <>
+              <Tag color="green">{record.status}</Tag>
+            </>
+          )}
+
+          {record.status === "HOSPITALIZED" && (
+            <>
+              <Tag color="orange">{record.status}</Tag>
+            </>
+          )}
+
+          {record.status === "HOSPITALDISCHARGE" && (
+            <>
+              <Tag color="green">{record.status}</Tag>
+            </>
+          )}
+        </>
+      ),
     },
     {
       title: "Time",
@@ -311,12 +346,18 @@ const MedicalEvent = () => {
                   onClick={() => {
                     if (record.severity === "HOSPITAL") {
                       setOpenHospital(true);
-                      setIdHospital(record?.id);
+                      setIdStatus(record?.id);
                       console.log("ID", record?.id);
                     } else {
-                      console.log("ID", record?.id);
-                      setOpenNormal(true);
-                      setIdNormal(record?.id);
+                      if (record.status === "PENDING") {
+                        console.log("ID", record?.id);
+                        setOpenNormal(true);
+                        setIdNormal(record?.id);
+                      } else {
+                        setOpenHospital(true);
+                        setIdStatus(record?.id);
+                        console.log("ID", record?.id);
+                      }
                     }
                   }}
                 >
@@ -417,20 +458,6 @@ const MedicalEvent = () => {
             <CommonBreadcrumb role={"Nurse"} page={"medicalEvent"} />
           </h1>
 
-          <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total Event</p>
-              <p className="flex justify-center text-[50px]">12</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total sick</p>
-              <p className="flex justify-center text-[50px]">12</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total injured</p>
-              <p className="flex justify-center text-[50px]">7</p>
-            </div>
-          </div>
           <div className="pl-5 mt-5 flex justify-between">
             <div className="flex gap-5">
               {" "}
@@ -830,7 +857,7 @@ const MedicalEvent = () => {
           ]}
         >
           <h1 className="text-2xl flex justify-center font-serif">
-            Do you want to confirm status Hospital
+            Do you want to confirm status
           </h1>
         </Modal>
         <Modal
@@ -919,6 +946,37 @@ const MedicalEvent = () => {
             </div>
           </div>
         </Modal>
+
+        {/* <Modal
+          open={openConfirmNormal}
+          onCancel={() => setOpenConfirmNormal(false)}
+          footer={[
+            <Button
+              key="cancel"
+              className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
+              onClick={() => setOpenConfirmNormal(false)}
+              style={{
+                backgroundColor: "#f87171",
+                color: "white",
+                border: "none",
+              }}
+            >
+              Cancel
+            </Button>,
+            <Button
+              key="send"
+              disabled={selectedRecord?.isSent}
+              className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
+              onClick={() => {handleConfirmNormal}}
+            >
+              Confirm status
+            </Button>,
+          ]}
+        >
+          <h1 className="text-2xl flex justify-center font-serif">
+            Do you want to confirm status Normal
+          </h1>
+        </Modal> */}
       </div>
     </>
   );

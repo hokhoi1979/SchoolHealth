@@ -31,6 +31,7 @@ function* createMedicineEventSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(postMedicineEventSuccess(response.data));
+      console.log("CREATE", response.data);
       const fetchData = yield call(
         axios.get,
         `${URL_API}/nurse/v1/medicalEvent`,

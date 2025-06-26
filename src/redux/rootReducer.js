@@ -42,9 +42,20 @@ import sendMedicalEnventReducer from "./medicalEventNurse/sendMedicalEvent/sendM
 import hospitalEventReducer from "./medicalEventNurse/editHospitalEvent/editHospitalEventSlice";
 import postMedicineEventReducer from "./medicalEventNurse/createMedicineEvent/createMedicineEventSlice";
 import deleteMedicalEventReducer from "./medicalEventNurse/deleteMedicalEvent/deleteMedicalEventSlice";
+import medicineRequestReducer from "./medicineRequestNurse/getMedicineRequest/getMedicineRequestSlice";
+import medicineDeTailRequestReducer from "./medicineRequestNurse/getDetailMedicineRequest/getMedicineDetailRequestSlice";
+import rejectMedicineRequestReducer from "./medicineRequestNurse/rejectMedicineRequest/rejectMedicineRequestSlice";
+import acceptMedicineRequestReducer from "./medicineRequestNurse/acceptMedicineRequest/acceptMedicineRequestSlice";
+import receiveMedicineRequestReducer from "./medicineRequestNurse/receiveMedicineRequest/receiveMedicineRequestSlice";
+import fetchMedicineScheduleReducer from "./materialsNurse/getMedicineSchedule/getMedicineScheduleSlice";
+import giveMedicineStudentReducer from "./materialsNurse/giveMedicineStudent/giveMedicineStudentSlice";
+import getLowStockReducer from "./materialsNurse/getLowStock/getLowStockSlice";
+import patchQuantityStockReducer from "./materialsNurse/patchMedicineStock/patchMedicineStockSlice";
+import registerReducer from "./register/registerSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
+  accountRegister: registerReducer,
   profile: profileReducer,
   vaccine: vaccineReducer,
   vaccineStudent: vaccineStudentReducer,
@@ -60,6 +71,15 @@ const rootReducer = combineReducers({
   hospitalEvent: hospitalEventReducer,
   postMedicineEvent: postMedicineEventReducer,
   deleteMedicalEvent: deleteMedicalEventReducer,
+  medicineRequest: medicineRequestReducer,
+  medicineDeTailRequest: medicineDeTailRequestReducer,
+  rejectMedicineRequest: rejectMedicineRequestReducer,
+  acceptMedicineRequest: acceptMedicineRequestReducer,
+  receiveMedicineRequest: receiveMedicineRequestReducer,
+  medicineSchedule: fetchMedicineScheduleReducer,
+  giveMedicineStudent: giveMedicineStudentReducer,
+  getLowStock: getLowStockReducer,
+  patchQuantityStock: patchQuantityStockReducer,
 
   profileParent: profileParentReducer,
   studentOfParent: studentOfParentReducer,
