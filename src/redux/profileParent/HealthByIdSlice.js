@@ -19,7 +19,7 @@ export const fetchHealthStudentFail = (error) => ({
 });
 
 const initialState = {
-  healthDetail: [],
+  healthDetail: null,
   loading: false,
   error: null,
 };

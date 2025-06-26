@@ -17,18 +17,39 @@ import watchFetchVaccine from "./vaccineNurse/vaccine/vaccineSaga";
 import watchFetchCheckup from "./checkupNurse/checkupSaga";
 import watchFetchProfileDetail from "./vaccineNurse/profileDetail/profileStudentSaga";
 import watchPatchVaccineConfirmManager from "./manager/ConfirmVaccineManager/ConfirmVaccineManagerSaga";
+
+//api parent
 import watchFetchParentProfile from "./profileParent/profileSaga";
 import watchFetchStudentOfParent from "./profileParent/StudentOfParentSaga";
 import watchFetchParentForm from "./profileParent/formSaga";
 import watchFetchHealthStudent from "./profileParent/HealthByIdSaga";
 import watchFetchCreateHealth from "./profileParent/createHealthSaga";
-import watchFetchUpdateHealth from "./profileParent/profileSaga";
 import watchFetchVaccineParent from "./getVaccineParent/getVaccineParentSaga";
 import watchFetchVaccineParentResult from "./getVaccineParent/getVaccineParentResultSaga";
+import watchFetchUpdateHealth from "./profileParent/updateHealthSaga";
+import watchFetchParentHealth from "./profileParent/parentGetHealth/parentGetHealthSaga";
+import watchFetchAcceptVaccine from "./getVaccineParent/getVaccineParentAcceptSaga";
+import watchFetchDeclineVaccine from "./getVaccineParent/getVaccineParentDeclineSaga";
+import watchFetchMedicineRequest from "./profileParent/medicalRequest/MedicineRequestSaga";
+import watchFetchCreateMedicine from "./profileParent/medicalRequest/createMedicineSaga";
+import watchFetchDeleteMedicine from "./profileParent/medicalRequest/deleteMedicineSaga";
+import watchFetchDetailRequest from "./profileParent/medicalRequest/getDetailRequestSaga";
 
 import watchDeleteManagerVaccine from "./manager/DeleteVaccineEvent/deleteVaccineEventSaga";
 import watchPostManagerMedicine from "./manager/CreateManagerMedicine/createManagerMedicineSaga";
 import watchFetchMedicineSuppplyManager from "./manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSaga";
+import watchFetchMedicineClasstifyManager from "./manager/GetManagerMedineClassify/getManagerMedicineClassifySaga";
+import watchPostManagerClasstify from "./manager/CreateManagerClassify/createManagerClassifySaga";
+import watchFetchDetailManagerClassify from "./manager/GetDetallManagerClassify/getDetailManagerClassifySaga";
+import watchPutClassifyManager from "./manager/UpdateDetailClassifyManager/updateDetailClassifyManagerSaga";
+import watchDeleteManagerMedicineClassify from "./manager/DeleteManagerClassify/deleteManagerMedicineClassifySaga";
+import watchDeleteMedicineManager from "./manager/DeleteManagerMedicine/DeleteManagerMedicineSaga";
+import watchFetchAllMedicineSupplyManager from "./manager/GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSaga";
+import watchPostManagerSupply from "./manager/CreateManagerSuppy/createManagerSupplySaga";
+import watchPutManagerSupply from "./manager/UpdateManagerSupply/updateManagerSupplySaga";
+import watchDeleteManagerSupply from "./manager/DeleteManagerSupply/deleteManagerSupplySaga";
+import watchFetchAllRequest from "./manager/GetAllRequest/getAllRequestSaga";
+import watchUpdateManagerSupply from "./manager/RejectRequestManager/rejectRequestManagerSaga";
 import watchHealthProfileSaga from "./profileParent/profileSaga";
 import watchFetchAllMedicine from "./materialsNurse/getAllMedicine/getAllMedicineSaga";
 import watchFetchRequestMedicine from "./materialsNurse/getSendRequestMedicine/getRequestMedicineSaga";
@@ -42,7 +63,7 @@ import watchSendMedicalEvent from "./medicalEventNurse/sendMedicalEvent/sendMedi
 import watchPatchHospitalEvent from "./medicalEventNurse/editHospitalEvent/editHospitalEventSaga";
 import watchCreateMedicineEvent from "./medicalEventNurse/createMedicineEvent/createMedicineEventSaga";
 import watchDeleteMedicalEvent from "./medicalEventNurse/deleteMedicalEvent/deleteMedicalEventSaga";
-import watchFetchMedicineRequest from "./medicineRequestNurse/getMedicineRequest/getMedicineRequestSaga";
+import watchFetchMedicineRequestNurse from "./medicineRequestNurse/getMedicineRequest/getMedicineRequestSaga";
 import watchFetchMedicineDetailRequest from "./medicineRequestNurse/getDetailMedicineRequest/getMedicineDetailRequestSaga";
 import watchRejectMedicineRequest from "./medicineRequestNurse/rejectMedicineRequest/rejectMedicineRequestSaga";
 import watchAcceptMedicineRequest from "./medicineRequestNurse/acceptMedicineRequest/acceptMedicineRequestSaga";
@@ -52,6 +73,16 @@ import watchGiveMedicineStudent from "./materialsNurse/giveMedicineStudent/giveM
 import watchFetchLowStock from "./materialsNurse/getLowStock/getLowStockSaga";
 import watchPatchQuantityStock from "./materialsNurse/patchMedicineStock/patchMedicineStockSaga";
 import watchRegister from "./register/registerSaga";
+import watchRejectMedicineSupplyManager from "./manager/Reject/rejectMedicineSupplySaga";
+import watchFetchManagerMedicalEvent from "./manager/ManagerMedicalEvent/managerMedicalEventSaga";
+import watchFetchManagerMedicalEventDetail from "./manager/ManagerMedicalEvent/managerMedicalEventDetailSaga";
+
+import watchGetProfileSaga from "./getProflie/getProfileSaga";
+import watchFetchChangePassword from "./ChangePassword/changePasswordSaga";
+import watchFetchDetailRequestManager from "./manager/GetDetailRequestManager/getDetailRequestManagerSaga";
+import watchPostAiChat from "./AI_Chat/chatBoxSaga";
+import watchAiChat from "./AI_Chat/chatBoxSaga";
+import watchGetAllChatBoxAi from "./AI_Chat/getChaxBoxSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -60,7 +91,8 @@ export default function* rootSaga() {
     watchFetchLogin(),
     watchFetchProfile(),
     watchFetchVaccineStudent(),
-    watchFetchParentProfile(),
+    //Parent
+    watchFetchParentHealth(),
     watchFetchStudentOfParent(),
     watchFetchParentForm(),
     watchFetchHealthStudent(),
@@ -68,6 +100,13 @@ export default function* rootSaga() {
     watchFetchUpdateHealth(),
     watchFetchVaccineParent(),
     watchFetchVaccineParentResult(),
+    watchFetchAcceptVaccine(),
+    watchFetchDeclineVaccine(),
+    watchFetchMedicineRequestNurse(),
+    watchFetchCreateMedicine(),
+    watchFetchDeleteMedicine(),
+    watchFetchDetailRequest(),
+
     watchFetchAllMedicine(),
     watchFetchRequestMedicine(),
     watchFetchMedicineSupply(),
@@ -99,6 +138,24 @@ export default function* rootSaga() {
     watchDeleteManagerVaccine(),
     watchPostManagerMedicine(),
     watchFetchMedicineSuppplyManager(),
+    watchFetchMedicineClasstifyManager(),
+    watchPostManagerClasstify(),
+    watchFetchDetailManagerClassify(),
+    watchPutClassifyManager(),
+    watchDeleteManagerMedicineClassify(),
+    watchDeleteMedicineManager(),
+    watchFetchAllMedicineSupplyManager(),
+    watchPostManagerSupply(),
+    watchPutManagerSupply(),
+    watchDeleteManagerSupply(),
+    watchFetchAllRequest(),
+    watchFetchDetailRequestManager(),
+    watchUpdateManagerSupply(),
+    watchRejectMedicineSupplyManager(),
+    watchFetchManagerMedicalEvent(),
+    watchFetchManagerMedicalEventDetail(),
+    watchAiChat(),
+    watchGetAllChatBoxAi(),
 
     // watchFetchVaccineResult(),
     watchFetchVaccineResult(),
@@ -106,7 +163,11 @@ export default function* rootSaga() {
     watchFetchCheckup(),
     watchUpdateVaccineResult(),
     watchFetchProfileDetail(),
+
     watchPatchVaccineConfirmManager(),
     watchHealthProfileSaga(),
+
+    watchGetProfileSaga(),
+    watchFetchChangePassword(),
   ]);
 }

@@ -31,8 +31,8 @@ function* getMedicineReuqestSaga() {
   }
 }
 
-function* watchFetchMedicineRequest() {
+function* watchFetchMedicineRequestNurse() {
   yield takeLatest(FETCH__MEDICINE__REQUEST, getMedicineReuqestSaga);
 }
 
-export default watchFetchMedicineRequest;
+export default watchFetchMedicineRequestNurse;

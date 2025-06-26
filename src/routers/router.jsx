@@ -16,6 +16,8 @@ import Inventory from "../pages/Nurse/Materials/Inventory";
 import Import from "../pages/Nurse/Materials/Import";
 import Export from "../pages/Nurse/Materials/Export";
 import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
+import NurseInfor from "../pages/Nurse/NurseInformation/NurseInformation";
+import ChangePasswordNurse from "../pages/Nurse/ChangePassword/ChangePassword";
 
 // Manager imports
 import Home from "../pages/Home/Home";
@@ -37,6 +39,8 @@ import MedicalDay from "../pages/Nurse/MedicalNurse/MedicalDay";
 import StudentListMedical from "../pages/Nurse/MedicalNurse/StudentListMedical";
 import MedicalHistory from "../pages/Nurse/MedicalNurse/MedicalHistory";
 import MedicalResult from "../pages/Nurse/MedicalNurse/MedicalResult";
+import ManagerInfor from "../pages/Manager/ManagerInformation/ManagerInformation";
+import ChangePasswordManager from "../pages/Manager/ChangePassword/ChangePassword";
 
 // Parents import
 import ParentLayout from "../pages/Parent/ParentLayout";
@@ -58,6 +62,15 @@ import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
 import SendResult from "../pages/Parent/StudentHistory/SendResult";
 import Notification from "../pages/Parent/StudentHistory/Notification";
 import MedicineSchedule from "../pages/Nurse/Materials/MedicineSchedule";
+import RequestManager from "../pages/Manager/Request/RequestManager";
+import ManagerMedicalEvent from "../pages/Manager/MedicalEventMedical/managerMedicalEvent";
+import ParentInfor from "../pages/Parent/ParentInformation/ParentInformation";
+import ChangePasswordParent from "../pages/Parent/ChangePassword/ChangePassword";
+
+//Students import
+import StudentLayout from "../pages/Student/StudentLayout";
+import StudentInformation from "../pages/Student/StudentInformation/StudentInformation";
+import ChangePassword from "../pages/Student/ChangePassword/ChangePassword";
 
 const router = createBrowserRouter([
   {
@@ -114,6 +127,8 @@ const router = createBrowserRouter([
             path: "medicalEvent",
             element: <MedicalEvent />,
           },
+          { path: "information", element: <NurseInfor /> },
+          { path: "change_password", element: <ChangePasswordNurse /> },
         ],
       },
 
@@ -146,6 +161,21 @@ const router = createBrowserRouter([
               { path: "trend", element: <Trend /> },
             ],
           },
+          {
+            path: "requestManager",
+            element: <RequestManager />,
+            // children: [
+            //   { path: "vaccination", element: <Vaccination /> },
+            //   { path: "checkup", element: <Checkup /> },
+            //   { path: "trend", element: <Trend /> },
+            // ],
+          },
+          {
+            path: "managerMedicalEvent",
+            element: <ManagerMedicalEvent />,
+          },
+          { path: "information", element: <ManagerInfor /> },
+          { path: "change_password", element: <ChangePasswordManager /> },
         ],
       },
       //Parents route
@@ -194,6 +224,21 @@ const router = createBrowserRouter([
               { path: "notification", element: <Notification /> },
             ],
           },
+          {
+            path: "information",
+            element: <ParentInfor />,
+          },
+          { path: "change_password", element: <ChangePasswordParent /> },
+        ],
+      },
+      //Student route
+      {
+        path: "student",
+        element: <StudentLayout />,
+        children: [
+          { path: "", element: <Navigate to="student_information" /> },
+          { path: "student_information", element: <StudentInformation /> },
+          { path: "change_password", element: <ChangePassword /> },
         ],
       },
     ],
