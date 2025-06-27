@@ -118,7 +118,10 @@ const router = createBrowserRouter([
             element: <MedicalNurse />,
             children: [
               { path: "", element: <MedicalDay /> },
-              { path: "studentList", element: <StudentListMedical /> },
+              {
+                path: "studentListCheckup/:id",
+                element: <StudentListMedical />,
+              },
               { path: "medicalHistory", element: <MedicalHistory /> },
               { path: "medicalResult", element: <MedicalResult /> },
             ],

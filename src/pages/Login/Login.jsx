@@ -22,6 +22,7 @@ function Login() {
   const handleLogin = async () => {
     try {
       const values = await form.validateFields();
+      console.log("EOOOO", values);
       dispatch(fetchLogin(values));
     } catch (err) {
       console.log("Validation failed:", err);
