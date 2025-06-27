@@ -72,6 +72,7 @@ import ChangePasswordParent from "../pages/Parent/ChangePassword/ChangePassword"
 import StudentLayout from "../pages/Student/StudentLayout";
 import StudentInformation from "../pages/Student/StudentInformation/StudentInformation";
 import ChangePassword from "../pages/Student/ChangePassword/ChangePassword";
+import PrivateRoute from "./privateRoute";
 
 const router = createBrowserRouter([
   {
@@ -85,54 +86,61 @@ const router = createBrowserRouter([
       // Nurse routes
       {
         path: "nurse",
-        element: <NurseLayout />,
+        // chỉ kiểm tra ở đây
+        element: <PrivateRoute allowedRoles={[3]} />,
         children: [
-          { path: "", element: <Navigate to="materials" /> },
+          {
+            path: "",
+            element: <NurseLayout />,
+            children: [
+              { path: "", element: <Navigate to="materials" /> },
 
-          {
-            path: "materials",
-            element: <Materials />,
-            children: [
-              { path: "", element: <Inventory /> },
-              { path: "import", element: <Import /> },
-              { path: "export", element: <Export /> },
-              { path: "medicine", element: <MedicineForStudent /> },
-              { path: "schedule", element: <MedicineSchedule /> },
-            ],
-          },
-          {
-            path: "student",
-            element: <StudentProfile />,
-          },
-          {
-            path: "vaccine",
-            element: <VaccineNurse />,
-            children: [
-              { path: "", element: <VaccineDay /> },
-              { path: "studentList/:id", element: <StudentList /> },
-              { path: "vaccineHistory", element: <VaccineHistory /> },
-              { path: "vaccineResult", element: <VaccineResult /> },
-            ],
-          },
-          {
-            path: "medical",
-            element: <MedicalNurse />,
-            children: [
-              { path: "", element: <MedicalDay /> },
               {
-                path: "studentListCheckup/:id",
-                element: <StudentListMedical />,
+                path: "materials",
+                element: <Materials />,
+                children: [
+                  { path: "", element: <Inventory /> },
+                  { path: "import", element: <Import /> },
+                  { path: "export", element: <Export /> },
+                  { path: "medicine", element: <MedicineForStudent /> },
+                  { path: "schedule", element: <MedicineSchedule /> },
+                ],
               },
-              { path: "medicalHistory", element: <MedicalHistory /> },
-              { path: "medicalResult", element: <MedicalResult /> },
+              {
+                path: "student",
+                element: <StudentProfile />,
+              },
+              {
+                path: "vaccine",
+                element: <VaccineNurse />,
+                children: [
+                  { path: "", element: <VaccineDay /> },
+                  { path: "studentList/:id", element: <StudentList /> },
+                  { path: "vaccineHistory", element: <VaccineHistory /> },
+                  { path: "vaccineResult", element: <VaccineResult /> },
+                ],
+              },
+              {
+                path: "medical",
+                element: <MedicalNurse />,
+                children: [
+                  { path: "", element: <MedicalDay /> },
+                  {
+                    path: "studentListCheckup/:id",
+                    element: <StudentListMedical />,
+                  },
+                  { path: "medicalHistory", element: <MedicalHistory /> },
+                  { path: "medicalResult", element: <MedicalResult /> },
+                ],
+              },
+              {
+                path: "medicalEvent",
+                element: <MedicalEvent />,
+              },
+              { path: "information", element: <NurseInfor /> },
+              { path: "change_password", element: <ChangePasswordNurse /> },
             ],
           },
-          {
-            path: "medicalEvent",
-            element: <MedicalEvent />,
-          },
-          { path: "information", element: <NurseInfor /> },
-          { path: "change_password", element: <ChangePasswordNurse /> },
         ],
       },
 
