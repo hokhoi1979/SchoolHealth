@@ -1,5 +1,5 @@
 import axios from "axios";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
   REJECT__MEDICINE__REQUEST,
   rejectMedicineRequestFail,
@@ -15,7 +15,8 @@ const URL_API = import.meta.env.VITE_API_URL;
 function* rejectMedicineRequestSaga(action) {
   try {
     const id = action.payload;
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
+
     const response = yield call(
       axios.put,
       `${URL_API}/nurse/v1/medicineRequest/rejected/${id}`,
