@@ -5,6 +5,7 @@ import {
   fetchDeleteMedicineSuccess,
   fetchDeleteMedicineFail,
 } from "./deleteMedicineSlice";
+import { toast } from "react-toastify";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
@@ -23,11 +24,15 @@ function* deleteMedicineSaga(action) {
     );
     if (response.status === 200 || response.status === 204) {
       yield put(fetchDeleteMedicineSuccess(action.payload));
+      toast.success(response.data.message);
     } else {
       yield put(fetchDeleteMedicineFail("Delete failed"));
+      toast.error(response.data.message);
     }
   } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message;
     yield put(fetchDeleteMedicineFail(error.message));
+    toast.error(`Error updating health record: ${errorMessage}`);
   }
 }
 

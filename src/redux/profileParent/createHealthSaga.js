@@ -5,6 +5,7 @@ import {
   fetchCreateHealthSucess,
 } from "./createHealthSlice";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
@@ -26,12 +27,16 @@ function* createHealthSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchCreateHealthSucess(response.data));
+      toast.success(response.data.message);
     } else {
       yield put(fetchCreateHealthFail(`Status: ${response.status}`));
       console.log("EROR", response.status);
+      toast.error(response.data.message);
     }
   } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message;
     yield put(fetchCreateHealthFail(error.message || "Unknown error"));
+    toast.error(`Error updating health record: ${errorMessage}`);
   }
 }
 

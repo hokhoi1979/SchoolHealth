@@ -7,6 +7,7 @@ import {
 } from "./sendRequestMedicineSLice";
 import { fetchRequestMedicine } from "../getSendRequestMedicine/getRequestMedicineSlice";
 const URL_API = import.meta.env.VITE_API_URL;
+import { toast } from "react-toastify";
 
 function* postRequestMedicineSaga(action) {
   try {
@@ -24,6 +25,7 @@ function* postRequestMedicineSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(postRequestMedicineSuccess(response.data));
+      toast.success("CREATE SUCCESSFUL");
       console.log("SUCCESS", response.data);
       yield put(fetchRequestMedicine());
     }

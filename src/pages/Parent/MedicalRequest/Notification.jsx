@@ -25,7 +25,7 @@ const Notification = () => {
     requestDetail,
     loading: detailLoading,
     error: detailError,
-  } = useSelector((state) => state.getDetailRequest);
+  } = useSelector((state) => state.getDetailRequestParent);
 
   const { loading: accepting } = useSelector(
     (state) => state.acceptBenefitMedicine

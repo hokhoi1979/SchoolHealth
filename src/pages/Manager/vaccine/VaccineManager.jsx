@@ -1,4 +1,4 @@
-import { Button, Checkbox, Input, Modal, Radio } from "antd";
+import { Button, Checkbox, Input, Modal, Popconfirm, Radio } from "antd";
 import React, { use, useEffect, useState } from "react";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import logo from "../../../img/logo.jpg";
@@ -15,6 +15,10 @@ import { patchManagerConfirmVaccine } from "../../../redux/manager/ConfirmVaccin
 import { deleteManagerVaccine } from "../../../redux/manager/DeleteVaccineEvent/deleteVaccineEventSlice";
 import { fetchMedicineSupplyManager } from "../../../redux/manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSlice";
 import "./style.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import TextArea from "antd/es/input/TextArea";
+
 const VaccineManager = () => {
   const [open, setOpen] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
@@ -32,6 +36,7 @@ const VaccineManager = () => {
   const [notificationTitle, setNotificationTitle] = useState("");
   const [notificationContent, setNotificationContent] = useState("");
   const [items, setItems] = useState([]);
+  const [updateItems, setUpdateItems] = useState([]);
 
   let targetIds = [];
   const dispatch = useDispatch();
@@ -63,51 +68,42 @@ const VaccineManager = () => {
 
   const formatMedicineAndSupply = () => {
     if (Array.isArray(medicineSupply)) {
-      const format = medicineSupply.map((item) => {
-        return {
-          id: item?.id,
-          image: item?.image,
-          name: item?.name,
-          stock: item?.stock,
-          type: item?.type,
-        };
-      });
-      console.log(format);
-      return format;
+      const medicine = medicineSupply
+        .filter((item) => item.type === "medicine")
+        .map((item) => ({
+          id: item.id,
+          image: item.image,
+          name: item.name,
+          stock: item.stock,
+          type: item.type,
+        }));
+
+      const supply = medicineSupply
+        .filter((item) => item.type === "supply")
+        .map((item) => ({
+          id: item.id,
+          image: item.image,
+          name: item.name,
+          stock: item.stock,
+          type: item.type,
+        }));
+
+      return { medicine, supply };
     }
+
+    return { medicine: [], supply: [] };
   };
+
   const formattedData = formatMedicineAndSupply();
 
   useEffect(() => {
     console.log("Formatted Data:", formattedData);
   }, [medicineSupply]);
-  console.log("DUClklklCC", medicineSupply);
+
   const fetchVaccine = () => {
     dispatch(fetchMedicineSupplyManager());
   };
-  // const formatData = () => {
-  //   if (
-  //     vaccineDay?.data?.vaccinationEvents &&
-  //     Array.isArray(vaccineDay?.data?.vaccinationEvents)
-  //   ) {
-  //     const format = vaccineDay?.data?.vaccinationEvents.map((item) => {
-  //       return {
-  //         id: item?.id,
-  //         name: item?.name,
-  //         description: item?.description,
-  //         scheduledAt: item?.scheduledAt
-  //           ? dayjs(item.scheduledAt).format("DD/MM/YYYY HH:mm")
-  //           : "Chưa xác định",
-  //         grade: item?.targets?.map((t) => t.className).join(", ") || "SCHOOL",
-  //         participate: item?.studentResponseCount?.studentsAcceptCount,
-  //         total: item?.studentResponseCount?.totalStudent,
-  //         status: item?.status,
-  //       };
-  //     });
-  //     console.log("FORMAT", format);
-  //     setData(format);
-  //   }
-  // };
+
   const formatClassData = () => {
     if (classManager?.data && Array.isArray(classManager?.data)) {
       const format = classManager?.data.map((cls) => {
@@ -141,18 +137,24 @@ const VaccineManager = () => {
       Array.isArray(vaccineDay?.data?.vaccinationEvents)
     ) {
       const format = vaccineDay?.data?.vaccinationEvents.map((item) => {
-        let displayedClasses = "";
+        let displayedGrades = "";
+
         if (item.targetType === "GRADE") {
+          const gradesSet = new Set();
+
           item.targetIds.forEach((targetId) => {
-            const className = classList.find(
-              (cls) => cls.id === targetId
-            )?.name;
-            if (className) {
-              displayedClasses += `${className}, `;
+            const classObj = classList.find((cls) => cls.id === targetId);
+            if (classObj) {
+              const grade = classObj.name.slice(0, 2); // Lấy số khối từ tên lớp (VD: "10A1" → "10")
+              gradesSet.add(grade);
             }
           });
-        } else {
-          displayedClasses = item.targets?.map((t) => t.className).join(", ");
+
+          displayedGrades = [...gradesSet].join(", ");
+        } else if (item.targetType === "CLASS") {
+          displayedGrades = item.targets?.map((t) => t.className).join(", ");
+        } else if (item.targetType === "SCHOOL") {
+          displayedGrades = "SCHOOL";
         }
 
         return {
@@ -162,15 +164,16 @@ const VaccineManager = () => {
           scheduledAt: item?.scheduledAt
             ? dayjs(item.scheduledAt).format("DD/MM/YYYY HH:mm")
             : "Chưa xác định",
-          grade: displayedClasses || "SCHOOL", // Display the classes for selected grade
+          grade: displayedGrades,
           participate: item?.studentResponseCount?.studentsAcceptCount,
           total: item?.studentResponseCount?.totalStudent,
           status: item?.status,
+          targetType: item?.targetType,
+          targetIds: item?.targetIds,
           targets: item.targets,
         };
       });
-      console.log("FORMAT", format);
-      console.log("main", format);
+
       setData(format);
     }
   };
@@ -198,13 +201,13 @@ const VaccineManager = () => {
         return;
       }
     } else if (formattedTargetType === "GRADE") {
-      updatedTargetIds = selectedGrades.flatMap((gr) => gradeIdMap[gr]);
+      updatedTargetIds = selectedGrades;
       if (updatedTargetIds.length === 0) {
         alert("Vui lòng chọn ít nhất một khối.");
         return;
       }
     } else if (formattedTargetType === "SCHOOL") {
-      updatedTargetIds = classList.map((cls) => cls.id); // Tất cả lớp
+      updatedTargetIds = []; // Tất cả lớp
     }
 
     const payload = {
@@ -214,12 +217,25 @@ const VaccineManager = () => {
       scheduledAt: dayjs(vaccineDate).format("YYYY-MM-DD"),
       targetType: formattedTargetType,
       targetIds: updatedTargetIds,
+      item: updateItems,
     };
 
     console.log("Final PAYLOAD gửi PUT:", payload);
     dispatch(putManagerMedical(payload));
     dispatch(fetchVaccineManager());
     setIsUpdateModalOpen(false);
+
+    if (payload && payload.data) {
+      // Reset form after successful creation
+      setOpen(false);
+      setVaccineName("");
+      setVaccineDescription("");
+      setVaccineDate("");
+      setTargetType("school");
+      setSelectedClasses([]);
+      setSelectedGrades([]);
+      setSelectAllClasses(false);
+    }
   };
 
   if (targetType === "class") {
@@ -227,9 +243,6 @@ const VaccineManager = () => {
   } else if (targetType === "grade") {
     targetIds = selectedGrades.map((id) => parseInt(id));
   }
-  // useEffect(() => {
-  //   dispatch(fetchVaccineManager());
-  // }, []);
 
   const { vaccineUpdate, loading: updateLoading } = useSelector(
     (state) => state.putManagerVaccine
@@ -259,26 +272,35 @@ const VaccineManager = () => {
     } else if (targetTypeFormatted === "CLASS") {
       targetIds = selectedClasses.map((cls) => classIdMap[cls]);
     } else if (targetTypeFormatted === "GRADE") {
-      // targetIds = selectedGrades.flatMap((gr) => gradeIdMap[gr]);
-      // if (targetIds.length === 0) {
-      //   alert("Vui lòng chọn ít nhất một khối.");
-      //   return;
-      // }
       targetIds = selectedGrades;
     }
+    const cleanedItems = items.map((item) => {
+      const cleaned = {
+        quantityPlanned: item.quantityPlanned,
+      };
 
+      if (item.medicineID != null) cleaned.medicineID = item.medicineID;
+      if (item.medicineSupplyID != null)
+        cleaned.medicineSupplyID = item.medicineSupplyID;
+      if (item.notes?.trim()) cleaned.notes = item.notes.trim();
+
+      return cleaned;
+    });
     const payload = {
       name: vaccineName,
       description: vaccineDescription,
       scheduledAt: dayjs(vaccineDate).format("YYYY-MM-DD"), // Ensure correct date format
       targetType: targetTypeFormatted,
       targetIds,
-      items: items,
+      items: cleanedItems,
     };
-
+    console.log("Sắp gửi payload:", payload);
     try {
-      const response = await dispatch(postManagerVaccine(payload));
-      console.log("Create Success:", response);
+      const data = await dispatch(postManagerVaccine(payload)).unwrap();
+
+      console.log("Create Success:", data);
+
+      console.log(payload);
       if (response && response.data) {
         // Reset form after successful creation
         setOpen(false);
@@ -289,7 +311,6 @@ const VaccineManager = () => {
         setSelectedClasses([]);
         setSelectedGrades([]);
         setSelectAllClasses(false);
-        dispatch(fetchVaccineManager()); // Re-fetch the data
       }
     } catch (error) {
       if (error.response) {
@@ -326,7 +347,7 @@ const VaccineManager = () => {
 
     if (!isValidDate) {
       console.error("Invalid scheduledAt date:", scheduledAt);
-      return null; // Trả về null để thông báo rằng ngày không hợp lệ
+      return null;
     }
 
     const formattedDate = dayjs(scheduledAt, "DD/MM/YYYY HH:mm").format(
@@ -334,6 +355,7 @@ const VaccineManager = () => {
     );
     return formattedDate;
   };
+
   const handleSendConfirm = async () => {
     const { id } = selectedEvent;
     if (!id) {
@@ -341,13 +363,11 @@ const VaccineManager = () => {
       return;
     }
 
-    // Đảm bảo title và content có giá trị
     if (!notificationTitle || !notificationContent) {
       console.error("Title or Content is missing");
       return;
     }
 
-    // Kiểm tra và định dạng scheduledAt
     const scheduledAt = selectedEvent.scheduledAt;
     const formattedScheduledAt = formatScheduledAt(scheduledAt); // Sử dụng hàm formatScheduledAt
 
@@ -357,27 +377,15 @@ const VaccineManager = () => {
     }
 
     // Kiểm tra selectedGrades và classIdMap
-    console.log("Selected Grades:", selectedGrades); // Kiểm tra selectedGrades
-    const targetIds = selectedGrades
-      .map((grade) => {
-        const targetId = classIdMap[grade];
-        console.log(`Mapping grade ${grade} to targetId:`, targetId); // Kiểm tra ánh xạ
-        return targetId;
-      })
-      .filter((id) => id !== undefined); // Loại bỏ undefined
+    console.log("Selected Grades:", selectedGrades);
+    const targetIds = selectedGrades.includes("GRADE")
+      ? [] // nếu SCHOOL nghĩa là toàn bộ khối — hoặc logic riêng
+      : selectedGrades.map(Number); // Chỉ dùng số khối, không map class
 
-    console.log("Target IDs:", targetIds); // Kiểm tra targetIds sau khi ánh xạ
-
-    if (targetIds.length === 0) {
-      console.error("No valid targetIds provided");
-      alert("Please select at least one class or grade");
-      return;
-    }
-
-    // Tạo payload với các thông tin cần thiết
+    console.log("Target IDs:", targetIds);
     const payload = {
       id,
-      customMailTitle: notificationTitle, // Tiêu đề email
+      customMailTitle: notificationTitle,
       customMailBody: notificationContent, // Nội dung email
       scheduledAt: formattedScheduledAt, // Đảm bảo trường này được bao gồm
       targetIds: targetIds, // Đảm bảo trường này được bao gồm
@@ -394,37 +402,71 @@ const VaccineManager = () => {
   };
 
   const handleViewMore = (event) => {
+    console.log("event trong handleViewMore:", event);
+
     setSelectedEvent(event);
     setNotificationTitle(`Checkup Notice for ${event?.name}`);
 
-    const updatedGrades = event?.grade
-      ? event.grade.split(",").map((grade) => grade.trim()) // Tách grade từ chuỗi
-      : [];
-    console.log("Updated Grades in handleViewMore:", updatedGrades);
+    const targets = event?.targets || [];
+    let targetType = event?.targetType;
 
-    // Cập nhật selectedGrades trong state
-    setSelectedGrades(updatedGrades);
+    if (!targetType) {
+      if (targets.length === 0) {
+        targetType = "SCHOOL";
+      } else if (targets[0]?.grade !== undefined) {
+        targetType = "GRADE";
+      } else {
+        targetType = "CLASS";
+      }
+    }
 
-    const gradeList =
-      event?.grade && typeof event.grade === "string"
-        ? event.grade.split(", ").join(", ")
-        : event?.grade && Array.isArray(event.grade)
-        ? event.grade.join(", ")
-        : "No grades available";
+    let grades = [];
+    let classIds = [];
+    let isSchool = false;
 
-    const scheduledAt = event?.scheduledAt;
-    const formattedDate = scheduledAt
-      ? dayjs(scheduledAt, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD")
+    if (!Array.isArray(classList)) {
+      console.warn("classList chưa sẵn sàng");
+      return;
+    }
+
+    if (targets.length > 0 && targets[0]?.classID !== undefined) {
+      classIds = targets.map((t) => t.classID); // ✅ Lấy đúng field
+      targetType = "CLASS"; // ép targetType về CLASS
+    } else if (targetType === "GRADE") {
+      grades = event?.targetIds?.length
+        ? event.targetIds
+        : targets
+            .map((t) => t.grade)
+            .filter((v, i, arr) => arr.indexOf(v) === i);
+    } else if (targetType === "SCHOOL") {
+      isSchool = true;
+    }
+
+    let gradeList = "Unknown";
+
+    if (classIds.length > 0) {
+      const classNames = classIds
+        .map((id) => classList.find((c) => c.id === id)?.name || `ID ${id}`)
+        .join(", ");
+      gradeList = `classes ${classNames}`;
+    } else if (grades.length > 0) {
+      gradeList = `grades ${grades.join(", ")}`;
+    } else if (isSchool) {
+      gradeList = "all students";
+    }
+
+    const formattedDate = event?.scheduledAt
+      ? dayjs(event.scheduledAt, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD")
       : "Invalid Date";
 
-    console.log("Event grades:", event?.grade);
-    console.log("Scheduled date:", scheduledAt);
-    console.log("Selected grades:", updatedGrades);
-
     setNotificationContent(
-      `Dear Parents,\n\nOur school will organize the ${event?.name.toLowerCase()} for students in grade ${gradeList} on ${formattedDate}. \n\nPlease confirm your participation and support us in ensuring the best preparation.\n\nSincerely,`
+      `Dear Parents,\n\nOur school will organize the ${event?.name.toLowerCase()} for students in ${gradeList} on ${formattedDate}.\n\nPlease confirm your participation and support us in ensuring the best preparation.\n\nSincerely,`
     );
 
+    // 👉 Lưu classIds & targetType để dùng confirm
+    setSelectedGrades(grades);
+    setSelectedClasses(classIds); // ✅ fix chỗ này
+    setTargetType(targetType);
     setOpenDetail(true);
   };
 
@@ -511,6 +553,10 @@ const VaccineManager = () => {
   };
   const handleShowModal = () => {
     setOpen(true);
+    setVaccineName("");
+    setVaccineDescription("");
+    setVaccineDate("");
+    setUpdateItems([]);
   };
   const handleCloseModal = () => {
     setOpen(false);
@@ -524,11 +570,11 @@ const VaccineManager = () => {
     setVaccineDate(
       dayjs(event.scheduledAt, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD")
     );
+    setUpdateItems(event.item || []);
   };
 
   const handleEndEvent = async (id) => {
     dispatch(patchManagerVaccine(id));
-    // await dispatch(fetchVaccineManager());
   };
 
   return (
@@ -536,6 +582,7 @@ const VaccineManager = () => {
       <h1 className="text-xl font-inria font-medium mb-4 p-6  ">
         <CommonBreadcrumb role={"Manager"} page={"dashboard"} />
       </h1>
+
       <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
         <div className="h-[120px] bg-white rounded-2xl">
           <p className="flex justify-center mt-5">Total Event</p>
@@ -557,7 +604,6 @@ const VaccineManager = () => {
         </div>
       </div>
 
-      {/* ..... */}
       <div className="pl-5 mt-5 flex gap-5">
         <Input
           style={{ borderRadius: "7px", width: "300px" }}
@@ -578,7 +624,7 @@ const VaccineManager = () => {
           {data.map((item) => (
             <div className="bg-white p-6 rounded-2xl">
               <div className="flex justify-between">
-                {item.status === "CONFIRMED" ? (
+                {item.status === "SUCCESSED" ? (
                   <>
                     {" "}
                     <Button className="!bg-[#6CC76F] !text-white">
@@ -801,21 +847,33 @@ const VaccineManager = () => {
 
                 <div>
                   {item.status !== "ENDED" && item.status !== "CONFIRMED" && (
-                    <Button onClick={() => handleDeleteVaccine(item?.id)}>
-                      Delete
-                    </Button>
+                    <Popconfirm
+                      title="Bạn có chắc muốn xoá vaccine này không?"
+                      okText="DELETE"
+                      cancelText="Hủy"
+                      onConfirm={() => handleDeleteVaccine(item?.id)}
+                    >
+                      <Button danger>DELETE</Button>
+                    </Popconfirm>
                   )}
                 </div>
 
                 <div>
-                  <Button
-                    onClick={() => {
-                      handleEndEvent(item?.id);
-                      console.log("IDDDD", item?.id);
-                    }}
-                  >
-                    End Event
-                  </Button>
+                  {item.status !== "SUCCESSED" && (
+                    <Popconfirm
+                      title="Bạn có chắc muốn xác nhận vaccine này không?"
+                      okText="CONFIRM"
+                      cancelText="Hủy"
+                    >
+                      <Button
+                        onClick={() => {
+                          handleEndEvent(item?.id);
+                        }}
+                      >
+                        End Event
+                      </Button>
+                    </Popconfirm>
+                  )}
                 </div>
               </div>
             </div>
@@ -832,48 +890,47 @@ const VaccineManager = () => {
       >
         <div>
           <div>
-            <div className="flex justify items-center gap-4 mb-[10px] pt-2">
-              <div>
-                {" "}
-                <img src={logo} alt="Logo" width={100} />
-                <p className="font-bold text-xl ml-[10px]">Health Care</p>
-              </div>
-              <div>
-                <h1 className="font-bold text-2xl ml-[10px]">
-                  New Vaccination
-                </h1>
-              </div>
-            </div>
-            <div className="flex justify items-center gap-4">
-              <div>
-                <p className="font-serif text-[#7F7F7F] ">Vaccination Name:</p>
-              </div>
-              <div>
-                <Input
-                  onChange={(e) => setVaccineName(e.target.value)}
-                  value={vaccineName}
-                ></Input>
-              </div>
+            <div className="flex justify-center items-center gap-4 mb-2 pt-2">
+              <h1 className="font-bold text-2xl text-center">
+                New Vaccination
+              </h1>
             </div>
 
-            <div className="flex items-start gap-2 pt-2 ">
-              <p className="font-serif text-[#7F7F7F] w-30 ml-1 ">
-                Vaccination Description:{" "}
+            <div className="flex items-center gap-4">
+              <p className="font-serif text-[#7F7F7F] w-40">
+                Vaccination Name:
               </p>
-              <div>
-                <Input
-                  onChange={(e) => setVaccineDescription(e.target.value)}
-                  value={vaccineDescription}
-                ></Input>
-              </div>
+              <Input
+                onChange={(e) => setVaccineName(e.target.value)}
+                value={vaccineName}
+                className="flex-1"
+              />
             </div>
+
+            <div className="flex items-start gap-4 pt-2">
+              <p className="font-serif text-[#7F7F7F] w-40">
+                Vaccination Description:
+              </p>
+              <TextArea
+                onChange={(e) => setVaccineDescription(e.target.value)}
+                value={vaccineDescription}
+                className="flex-1"
+              ></TextArea>
+              {/* 
+              <Input
+                onChange={(e) => setVaccineDescription(e.target.value)}
+                value={vaccineDescription}
+                className="flex-1"
+              /> */}
+            </div>
+
             <div className="flex items-center gap-4 pt-2">
               <p className="font-serif text-[#7F7F7F] w-40">
                 Implementation Date:
               </p>
               <Input
                 type="date"
-                className="rounded-full"
+                className="rounded-full flex-1"
                 onChange={(e) => setVaccineDate(e.target.value)}
                 value={vaccineDate}
               />
@@ -920,7 +977,12 @@ const VaccineManager = () => {
                 onClick={() =>
                   setItems([
                     ...items,
-                    { medicineSupplyID: null, quantityPlanned: 1, notes: "" },
+                    {
+                      medicineSupplyID: null,
+                      medicineID: null,
+                      quantityPlanned: 1,
+                      notes: "",
+                    },
                   ])
                 }
                 className="mb-3"
@@ -945,25 +1007,67 @@ const VaccineManager = () => {
                     {items.map((item, index) => (
                       <tr key={index} className="bg-white">
                         <td className="border px-2">{index + 1}</td>
+
                         <td className="border px-2">
                           <select
-                            value={item.medicineSupplyID || ""}
+                            value={
+                              item.medicineID !== null
+                                ? `med-${item.medicineID}`
+                                : item.medicineSupplyID !== null
+                                ? `sup-${item.medicineSupplyID}`
+                                : ""
+                            }
                             onChange={(e) => {
+                              const [type, id] = e.target.value.split("-");
+                              const selectedId = parseInt(id);
                               const updated = [...items];
-                              updated[index].medicineSupplyID = parseInt(
-                                e.target.value
-                              );
+
+                              // Reset trước
+                              updated[index].medicineID = null;
+                              updated[index].medicineSupplyID = null;
+
+                              if (!selectedId) {
+                                setItems(updated);
+                                return;
+                              }
+
+                              if (type === "med") {
+                                updated[index].medicineID = selectedId;
+                              } else if (type === "sup") {
+                                updated[index].medicineSupplyID = selectedId;
+                              }
+
                               setItems(updated);
                             }}
                           >
-                            <option value="">Chọn thuốc</option>
-                            {formattedData?.map((med) => (
-                              <option key={med.id} value={med.id}>
-                                {med.name}
-                              </option>
-                            ))}
+                            <option value="">Chọn</option>
+                            <optgroup label="Thuốc">
+                              {medicineSupply
+                                .filter((m) => m.type === "medicine")
+                                .map((m) => (
+                                  <option
+                                    key={`med-${m.id}`}
+                                    value={`med-${m.id}`}
+                                  >
+                                    {m.name}
+                                  </option>
+                                ))}
+                            </optgroup>
+                            <optgroup label="Vật tư">
+                              {medicineSupply
+                                .filter((s) => s.type === "supply")
+                                .map((s) => (
+                                  <option
+                                    key={`sup-${s.id}`}
+                                    value={`sup-${s.id}`}
+                                  >
+                                    {s.name}
+                                  </option>
+                                ))}
+                            </optgroup>
                           </select>
                         </td>
+
                         <td className="border px-2">
                           <Input
                             type="number"
@@ -971,9 +1075,8 @@ const VaccineManager = () => {
                             min={1}
                             onChange={(e) => {
                               const updated = [...items];
-                              updated[index].quantityPlanned = parseInt(
-                                e.target.value
-                              );
+                              updated[index].quantityPlanned =
+                                parseInt(e.target.value) || 1;
                               setItems(updated);
                             }}
                           />
@@ -981,12 +1084,17 @@ const VaccineManager = () => {
 
                         <td className="border px-2">
                           {(() => {
-                            const medicine = formattedData.find(
-                              (med) => med.id === item.medicineSupplyID
-                            );
-                            return medicine?.image ? (
+                            const found = item.medicineID
+                              ? formattedData?.medicine?.find(
+                                  (med) => med.id === item.medicineID
+                                )
+                              : formattedData?.supply?.find(
+                                  (sup) => sup.id === item.medicineSupplyID
+                                );
+
+                            return found?.image ? (
                               <img
-                                src={medicine.image}
+                                src={found.image}
                                 width={90}
                                 alt="medicine"
                                 className="w-12 h-12 object-cover"
@@ -1008,6 +1116,7 @@ const VaccineManager = () => {
                             }}
                           />
                         </td>
+
                         <td className="border px-2 text-center">
                           <Button
                             size="sm"
@@ -1082,6 +1191,161 @@ const VaccineManager = () => {
           </div>
 
           {renderTargetSelection()}
+          <div className="mt-6 border rounded p-4 bg-gray-50">
+            <div className="flex items-center gap-2 mb-2">
+              <input
+                type="checkbox"
+                checked={Array.isArray(updateItems) && updateItems.length > 0}
+                onChange={(e) => {
+                  if (!e.target.checked) setUpdateItems([]);
+                }}
+              />
+              <span className="font-semibold">
+                Nội dung kiểm tra (thuốc/vật tư):
+              </span>
+            </div>
+
+            <Button
+              size="sm"
+              onClick={() =>
+                setUpdateItems((prev) => [
+                  ...(Array.isArray(prev) ? prev : []),
+                  {
+                    medicineID: null,
+                    medicineSupplyID: null,
+                    quantityPlanned: 1,
+                    notes: "",
+                  },
+                ])
+              }
+              className="mb-3"
+            >
+              [+] Thêm mục kiểm tra
+            </Button>
+
+            {Array.isArray(updateItems) && updateItems.length > 0 && (
+              <table className="w-full text-left border border-collapse">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="border px-2">STT</th>
+                    <th className="border px-2">Tên thuốc / vật tư</th>
+                    <th className="border px-2">Số lượng dự kiến</th>
+                    <th className="border px-2">Hình ảnh</th>
+                    <th className="border px-2">Ghi chú</th>
+                    <th className="border px-2">Xóa</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {updateItems.map((item, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <select
+                          value={item.medicineID ?? item.medicineSupplyID ?? ""}
+                          onChange={(e) => {
+                            const selectedId = parseInt(e.target.value);
+                            const foundInMed = formattedData?.medicine?.find(
+                              (m) => m.id === selectedId
+                            );
+                            const foundInSup = formattedData?.supply?.find(
+                              (s) => s.id === selectedId
+                            );
+
+                            const updated = [...updateItems];
+
+                            if (foundInMed) {
+                              updated[index].medicineID = selectedId;
+                              updated[index].medicineSupplyID = null;
+                            } else if (foundInSup) {
+                              updated[index].medicineID = null;
+                              updated[index].medicineSupplyID = selectedId;
+                            }
+
+                            setUpdateItems(updated);
+                          }}
+                        >
+                          <option value="">Chọn</option>
+                          <optgroup label="Thuốc">
+                            {formattedData.medicine.map((m) => (
+                              <option key={`med-${m.id}`} value={m.id}>
+                                {m.name}
+                              </option>
+                            ))}
+                          </optgroup>
+                          <optgroup label="Vật tư">
+                            {formattedData.supply.map((s) => (
+                              <option key={`sup-${s.id}`} value={s.id}>
+                                {s.name}
+                              </option>
+                            ))}
+                          </optgroup>
+                        </select>
+                      </td>
+                      <td>
+                        <Input
+                          value={item.quantityPlanned}
+                          type="number"
+                          onChange={(e) => {
+                            const updated = [...updateItems];
+                            updated[index].quantityPlanned = parseInt(
+                              e.target.value
+                            );
+                            setUpdateItems(updated);
+                          }}
+                        />
+                      </td>
+                      <td>
+                        {(() => {
+                          const found =
+                            formattedData.medicine.find(
+                              (m) =>
+                                m.id ===
+                                (item.medicineID || item.medicineSupplyID)
+                            ) ||
+                            formattedData.supply.find(
+                              (s) =>
+                                s.id ===
+                                (item.medicineID || item.medicineSupplyID)
+                            );
+                          return found?.image ? (
+                            <img src={found.image} alt="" width={90} />
+                          ) : (
+                            "—"
+                          );
+                        })()}
+                      </td>
+                      <td>
+                        <Input
+                          placeholder="Ghi chú"
+                          value={item.notes || ""}
+                          onChange={(e) => {
+                            const updated = [...updateItems];
+                            updated[index].notes = e.target.value;
+                            setUpdateItems(updated);
+                          }}
+                        />
+                      </td>
+
+                      {/* ✅ CỘT XÓA */}
+                      <td className="text-center">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const updated = [...updateItems];
+                            updated.splice(index, 1);
+                            setUpdateItems(updated);
+                          }}
+                        >
+                          🗑️
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       </Modal>
     </>

@@ -87,6 +87,10 @@ const MedicationUsing = () => {
   const columns = [
     { title: "Name", dataIndex: "name" },
     { title: "Dosage", dataIndex: "dosage" },
+    { title: "Quantity", dataIndex: "quantity" },
+    {
+      /* Added Quantity Column */
+    },
     {
       title: "Usage Times",
       dataIndex: "usageTimes",
@@ -168,6 +172,14 @@ const MedicationUsing = () => {
               </Form.Item>
             </Col>
           </Row>
+
+          <Form.Item
+            label="Quantity"
+            name="quantity"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
 
           <Form.Item
             label="Usage Time"

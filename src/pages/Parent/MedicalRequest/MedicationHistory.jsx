@@ -36,7 +36,7 @@ const MedicationHistory = () => {
     requestDetail,
     loading: detailLoading,
     error: detailError,
-  } = useSelector((state) => state.getDetailRequest);
+  } = useSelector((state) => state.getDetailRequestParent);
 
   const {
     success: stopSuccess,
@@ -62,13 +62,13 @@ const MedicationHistory = () => {
 
   useEffect(() => {
     if (requestDetail && !detailLoading && !detailError) {
-      setIsModalVisible(true);
+      setIsModalVisible(true); // Hiển thị modal khi có thông tin chi tiết
     } else if (detailError) {
       message.error("Failed to fetch medication detail!");
-      setIsModalVisible(false);
+      setIsModalVisible(false); // Đóng modal nếu có lỗi
       setCurrentViewingId(null);
     }
-  }, [requestDetail, deleteLoading, deleteError]);
+  }, [requestDetail, detailLoading, detailError]);
 
   useEffect(() => {
     if (stopSuccess) {
@@ -84,8 +84,12 @@ const MedicationHistory = () => {
   };
 
   const handleViewDetail = (requestID) => {
-    setCurrentViewingId(requestID);
-    dispatch(fetchDetailRequest({ requestID: requestID }));
+    if (requestID) {
+      setCurrentViewingId(requestID);
+      dispatch(fetchDetailRequest({ requestID: requestID }));
+    } else {
+      message.error("Invalid request ID");
+    }
   };
 
   const handleStopMedicine = (id) => {

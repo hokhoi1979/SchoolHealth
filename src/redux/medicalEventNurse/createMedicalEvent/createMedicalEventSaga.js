@@ -6,6 +6,7 @@ import {
   postMedicalEventSuccess,
 } from "./createMedicalEventSlice";
 import { fetchMedicalEvent } from "../medicalEvent/getMedicalEventSlice";
+import { toast } from "react-toastify";
 
 const URL_API = import.meta.env.VITE_API_URL;
 function* createMedicalEventSaga(action) {
@@ -25,6 +26,7 @@ function* createMedicalEventSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(postMedicalEventSuccess(response.data));
+      toast.success("Add new Medical Event successful!");
       yield put(fetchMedicalEvent());
     } else {
       yield put(postMedicalEventFail(response.status));

@@ -5,6 +5,7 @@ import {
   fetchStopMedicineFail,
 } from "./stopMedicineSlice";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
@@ -25,11 +26,15 @@ function* stopMedicineSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchStopMedicineSuccess(response.data));
+      toast.success(response.data.message);
     } else {
       yield put(fetchStopMedicineFail(error));
+      toast.error(response.data.message);
     }
   } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message;
     yield put(fetchStopMedicineFail(error));
+    toast.error(errorMessage);
   }
 }
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -16,7 +18,6 @@ import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCreateMedicine } from "../../../redux/profileParent/medicalRequest/createMedicineSlice";
-
 import { fetchStudent } from "../../../redux/profileParent/StudentOfParentSlice";
 
 const { TextArea } = Input;
@@ -33,39 +34,70 @@ const MedicalRequest = () => {
     dispatch(fetchStudent());
   }, [dispatch]);
 
-  const handleAdd = (values) => {
-    const id = Math.max(0, ...medications.map((m) => m.id)) + 1;
+  const handleAdd = async (values) => {
+    try {
+      // Tạo payload để gửi tới backend
+      const payload = {
+        studentID: values.studentID,
+        note: values.note,
+        items: [
+          {
+            medicineName: values.name,
+            dosage: values.dosage,
+            quantitySent: values.quantitySent,
+            usageTimes: values.usageTimes.split(",").map((time) => time.trim()),
+            startDate: values.startDate.format("YYYY-MM-DD"),
+            endDate: values.endDate.format("YYYY-MM-DD"),
+          },
+        ],
+      };
 
-    const newMedication = {
-      id,
-      ...values,
-      startDate: values.startDate.format("YYYY-MM-DD"),
-      endDate: values.endDate.format("YYYY-MM-DD"),
-      usageTimes: values.usageTimes.split(",").map((time) => time.trim()),
-      status: "PENDING",
-    };
+      // Dispatch action tạo thuốc
+      const response = await dispatch(fetchCreateMedicine(payload));
 
-    setMedications([...medications, newMedication]);
-    form.resetFields();
-    setIsAddVisible(false);
-    message.success("Add new medication successfully");
+      // Kiểm tra nếu action bị reject (lỗi network, 400, 500, etc.)
+      if (fetchCreateMedicine.rejected.match(response)) {
+        const errorMessage =
+          response.payload?.message ||
+          response.error?.message ||
+          "Failed to create medication";
+        message.error(`Error: ${errorMessage}`);
+        return; // Dừng xử lý, không cập nhật UI
+      }
 
-    const payload = {
-      studentID: values.studentID,
-      note: values.note,
-      items: [
-        {
-          medicineName: values.name,
-          dosage: values.dosage,
-          quantitySent: values.quantitySent,
-          usageTimes: values.usageTimes.split(",").map((time) => time.trim()),
+      // Kiểm tra nếu response có success = false
+      if (response.payload && response.payload.success === false) {
+        message.error(`Error: ${response.payload.message || "Invalid data"}`);
+        return; // Dừng xử lý, không cập nhật UI
+      }
+
+      // Chỉ khi thành công hoàn toàn mới cập nhật UI
+      if (response.payload && response.payload.success === true) {
+        const id = Math.max(0, ...medications.map((m) => m.id)) + 1;
+
+        const newMedication = {
+          id,
+          ...values,
           startDate: values.startDate.format("YYYY-MM-DD"),
           endDate: values.endDate.format("YYYY-MM-DD"),
-        },
-      ],
-    };
+          usageTimes: values.usageTimes.split(",").map((time) => time.trim()),
+          status: "PENDING",
+        };
 
-    dispatch(fetchCreateMedicine(payload));
+        setMedications([...medications, newMedication]);
+        form.resetFields();
+        setIsAddVisible(false);
+        message.success("Add new medication successfully");
+      } else {
+        // Trường hợp không có success field hoặc success không phải true
+        message.error("Unexpected response from server");
+      }
+    } catch (error) {
+      // Bắt mọi lỗi khác (network error, parsing error, etc.)
+      message.error("Failed to add medication: " + error.message);
+      console.error("Error adding medication:", error);
+      // Không cập nhật UI khi có lỗi
+    }
   };
 
   return (
@@ -97,7 +129,7 @@ const MedicalRequest = () => {
           open={isAddVisible}
           onCancel={() => setIsAddVisible(false)}
           onOk={() => form.submit()}
-          width={600} // Set a width for the modal
+          width={600}
         >
           <Form layout="vertical" form={form} onFinish={handleAdd}>
             <Form.Item

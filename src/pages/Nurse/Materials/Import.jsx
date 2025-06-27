@@ -7,7 +7,6 @@ import { fetchAllMedicine } from "../../../redux/materialsNurse/getAllMedicine/g
 import { fetchMedicineSupply } from "../../../redux/materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
 import { postRequestMedicine } from "../../../redux/materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSLice";
 import { fetchRequestDetail } from "../../../redux/materialsNurse/getDetailRequest/getDetailRequestSlice";
-
 function Import() {
   const [open, setOpen] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
@@ -105,6 +104,7 @@ function Import() {
 
     console.log("Payload gửi API:", payload);
     dispatch(postRequestMedicine(payload));
+
     setOpen(false);
     setSelectedItems([]);
     setNote("");

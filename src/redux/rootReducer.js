@@ -20,6 +20,9 @@ import getDetailRequestReducer from "./profileParent/medicalRequest/getDetailReq
 import stopMedicineReducer from "./profileParent/medicalRequest/stopMedicineSlice";
 import acceptBenefitMedicineReducer from "./profileParent/medicalRequest/acceptBenefitMedicineSlice";
 import rejectBenefitMedicineReducer from "./profileParent/medicalRequest/rejectBenefitMedicineSlice";
+import checkupParentReducer from "./getCheckupParent/getCheckupParentSlice";
+import getCheckUpParentAcceptReducer from "./getCheckupParent/getCheckupParentAcceptSlice";
+import getCheckUpParentDeclineReducer from "./getCheckupParent/getCheckupParentDeclineSlice";
 
 import managerMedicalReducer from "./manager/managerSlice";
 import managerVaccineReducer from "./manager/createVaccineManagerSlice";
@@ -43,6 +46,18 @@ import healthProfileReducer from "./profileParent/profileSlice";
 import managerDeleteVaccineReducer from "./manager/DeleteVaccineEvent/deleteVaccineEventSlice";
 import managerCreateMedicineReducer from "./manager/CreateManagerMedicine/createManagerMedicineSlice";
 import getMedicineSupplyManagerReducer from "./manager/GetMedicineAndSupplyManager/getMedicineAndSupplyManagerSlice";
+import getMedicineClasstifyManagerReducer from "./manager/GetManagerMedineClassify/getManagerMedicineClassifySlice";
+import { postManagerClasstify } from "./manager/CreateManagerClassify/createManagerClassifySlice";
+import getDetailManagerClassifyReducer from "./manager/GetDetallManagerClassify/getDetailManagerClassifySlice";
+import UpdateDetailClassifyManagerReducer from "./manager/UpdateDetailClassifyManager/updateDetailClassifyManagerSlice";
+import deleteManagerMedicineClassifyReducer from "./manager/DeleteManagerClassify/deleteManagerMedicineClassifySlice";
+import deleteMedicineManagerReducer from "./manager/DeleteManagerMedicine/deleteManagerMedicineSlice";
+import getAllMedicineSupplyManagerReducer from "./manager/GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSlice";
+import managerCreateSupplyReducer from "./manager/CreateManagerSuppy/createManagerSupplySlice";
+import managerUpdateSupplyReducer from "./manager/UpdateManagerSupply/updateManagerSupplySlice";
+import deleteManagerSupplyReducer from "./manager/DeleteManagerSupply/deleteManagerSupplySlice";
+import getAllRequestReducer from "./manager/GetAllRequest/getAllRequestSlice";
+import updateManagerSupplyReducer from "./manager/RejectRequestManager/rejectRequestManagerSlice";
 import getAllMedicineNurseReducer from "./materialsNurse/getAllMedicine/getAllMedicineSlice";
 import getRequestMedicineReducer from "./materialsNurse/getSendRequestMedicine/getRequestMedicineSlice";
 import getMedicineSupplyReducer from "./materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
@@ -55,12 +70,29 @@ import sendMedicalEnventReducer from "./medicalEventNurse/sendMedicalEvent/sendM
 import hospitalEventReducer from "./medicalEventNurse/editHospitalEvent/editHospitalEventSlice";
 import postMedicineEventReducer from "./medicalEventNurse/createMedicineEvent/createMedicineEventSlice";
 import deleteMedicalEventReducer from "./medicalEventNurse/deleteMedicalEvent/deleteMedicalEventSlice";
+import medicineRequestReducer from "./medicineRequestNurse/getMedicineRequest/getMedicineRequestSlice";
+import medicineDeTailRequestReducer from "./medicineRequestNurse/getDetailMedicineRequest/getMedicineDetailRequestSlice";
+import rejectMedicineRequestReducer from "./medicineRequestNurse/rejectMedicineRequest/rejectMedicineRequestSlice";
+import acceptMedicineRequestReducer from "./medicineRequestNurse/acceptMedicineRequest/acceptMedicineRequestSlice";
+import receiveMedicineRequestReducer from "./medicineRequestNurse/receiveMedicineRequest/receiveMedicineRequestSlice";
+import fetchMedicineScheduleReducer from "./materialsNurse/getMedicineSchedule/getMedicineScheduleSlice";
+import giveMedicineStudentReducer from "./materialsNurse/giveMedicineStudent/giveMedicineStudentSlice";
+import getLowStockReducer from "./materialsNurse/getLowStock/getLowStockSlice";
+import patchQuantityStockReducer from "./materialsNurse/patchMedicineStock/patchMedicineStockSlice";
+import registerReducer from "./register/registerSlice";
+import rejectManagerMedicineSupplyReducer from "./manager/Reject/rejectMedicineSupplySlice";
+import getManagerMedicalEventReducer from "./manager/ManagerMedicalEvent/managerMedicalEventSlice";
+import getManagerMedicalEventDetailReducer from "./manager/ManagerMedicalEvent/managerMedicalEventDetailSlice";
 
 import getProfileReducer from "./getProflie/getProfileSlice";
 import changePasswordReducer from "./ChangePassword/changePasswordSlice";
+import getDetailRequestManagerReducer from "./manager/GetDetailRequestManager/getDetailRequestManagerSlice";
+import createAiChatReducer from "./AI_Chat/chatBoxSlice";
+import getAllChatBoxAiReducer from "./AI_Chat/getChaxBoxSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
+  accountRegister: registerReducer,
   profile: profileReducer,
   vaccine: vaccineReducer,
   vaccineStudent: vaccineStudentReducer,
@@ -76,6 +108,15 @@ const rootReducer = combineReducers({
   hospitalEvent: hospitalEventReducer,
   postMedicineEvent: postMedicineEventReducer,
   deleteMedicalEvent: deleteMedicalEventReducer,
+  medicineRequest: medicineRequestReducer,
+  medicineDeTailRequest: medicineDeTailRequestReducer,
+  rejectMedicineRequest: rejectMedicineRequestReducer,
+  acceptMedicineRequest: acceptMedicineRequestReducer,
+  receiveMedicineRequest: receiveMedicineRequestReducer,
+  medicineSchedule: fetchMedicineScheduleReducer,
+  giveMedicineStudent: giveMedicineStudentReducer,
+  getLowStock: getLowStockReducer,
+  patchQuantityStock: patchQuantityStockReducer,
 
   //api parent
   studentOfParent: studentOfParentReducer,
@@ -91,10 +132,13 @@ const rootReducer = combineReducers({
   medicineRequest: getMedicineRequestReducer,
   createMedicineRequest: createMedicineReducer,
   deleteMedicineRequest: deleteMedicineReducer,
-  getDetailRequest: getDetailRequestReducer,
+  getDetailRequestParent: getDetailRequestReducer,
   stopMedicine: stopMedicineReducer,
   acceptBenefitMedicine: acceptBenefitMedicineReducer,
   rejectBenefitMedicine: rejectBenefitMedicineReducer,
+  checkupParent: checkupParentReducer,
+  checkupParentAccept: getCheckUpParentAcceptReducer,
+  checkupParentDecline: getCheckUpParentDeclineReducer,
 
   vaccineResult: vaccineResultReducer,
   sendVaccineResult: sendResultVaccineReducer,
@@ -112,6 +156,24 @@ const rootReducer = combineReducers({
   deleteManagerVacine: managerDeleteVaccineReducer,
   createManagerMedicine: managerCreateMedicineReducer,
   getMedicineSupplyManager: getMedicineSupplyManagerReducer,
+  getMedicineClasstifyManager: getMedicineClasstifyManagerReducer,
+  createManagerClasstify: postManagerClasstify,
+  getDetailManagerClassify: getDetailManagerClassifyReducer,
+  updateDetailClassifyManager: UpdateDetailClassifyManagerReducer,
+  deleteManagerMedicineClassify: deleteManagerMedicineClassifyReducer,
+  deleteMedicineManager: deleteMedicineManagerReducer,
+  getAllMedicineSupplyManager: getAllMedicineSupplyManagerReducer,
+  postmanagerCreateSupply: managerCreateSupplyReducer,
+  patchManagerUpdateSupply: managerUpdateSupplyReducer,
+  deleteManagerSupply: deleteManagerSupplyReducer,
+  getAllRequest: getAllRequestReducer,
+  getDetailRequest: getDetailRequestManagerReducer,
+  updateManagerSupply: updateManagerSupplyReducer,
+  rejectManagerMedicineSupply: rejectManagerMedicineSupplyReducer,
+  getManagerMedicalEvent: getManagerMedicalEventReducer,
+  getManagerMedicalEventDetail: getManagerMedicalEventDetailReducer,
+  createAiChat: createAiChatReducer,
+  getAllChatBoxAi: getAllChatBoxAiReducer,
 
   parentProfileHealth: healthProfileReducer,
 

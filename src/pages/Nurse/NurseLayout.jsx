@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 const NurseLayout = () => {
   useEffect(() => {
     toast.success("Login successful!");
-  }, []); // chỉ gọi 1 lần khi component mount
+  }, []);
 
   return (
     <div className="flex h-screen">

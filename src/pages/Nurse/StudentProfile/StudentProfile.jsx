@@ -228,24 +228,6 @@ const StudentProfile = () => {
             <CommonBreadcrumb role={"Nurse"} page={"student"} />
           </h1>
 
-          <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total Student</p>
-              <p className="flex justify-center text-[50px]">{totalStudent}</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Male</p>
-              <p className="flex justify-center text-[50px]">{male}</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Female</p>
-              <p className="flex justify-center text-[50px]">{female}</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Out of Stock</p>
-              <p className="flex justify-center text-[50px]">12</p>
-            </div>
-          </div>
           <div className="pl-5 mt-5 flex gap-5">
             <Input
               style={{ borderRadius: "7px", width: "300px" }}

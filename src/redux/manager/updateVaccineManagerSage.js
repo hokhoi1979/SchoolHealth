@@ -30,12 +30,13 @@ function* updateVaccineManagerSaga(action) {
 
       yield put(putManagerSucessMedical(response.data));
     } else {
-      yield put(putManagerFailMedical(response.status));
+      yield put(putMangerFailMedical(response.status));
     }
   } catch (error) {
     const errMsg =
       error?.response?.data?.message || error.message || "Unknown error";
     yield put(putMangerFailMedical(errMsg));
+    console.log(error);
   }
 }
 

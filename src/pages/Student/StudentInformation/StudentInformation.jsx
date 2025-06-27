@@ -11,6 +11,7 @@ import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcr
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import { fetchGetProfile } from "../../../redux/getProflie/getProfileSlice";
 import hs from "../../../img/hs.jpg";
+import AIChatWidget from "../AI/AIChatWidget ";
 
 const StudentInformation = () => {
   const dispatch = useDispatch();
@@ -242,7 +243,11 @@ const StudentInformation = () => {
           </Card>
         </div>
       </div>
-      <div className="h-[160px] w-full"></div>
+      <div className=" fixed bottom-8 right-8 z-[9999]">
+        <AIChatWidget />
+      </div>
+
+      <div className="h-[160px] w-full mb-[100px]"></div>
       <AppFooter />
     </div>
   );
