@@ -131,7 +131,7 @@ function Login() {
                   </p>
                 </>
               )}
-              {customMessage === "Mật khẩu không đúng " &&
+              {customMessage === "Mật khẩu không đúng" &&
                 form.getFieldError("password").length === 0 && (
                   <p className="text-red-500 font-serif relative bottom-3">
                     Password is not correct!
