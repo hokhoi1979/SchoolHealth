@@ -14,7 +14,6 @@ import watchFetchVaccineResult from "./vaccineNurse/vaccineResult/vaccineResultS
 import watchPostResultSaga from "./vaccineNurse/sendResult/sendResultSaga";
 import watchUpdateVaccineResult from "./vaccineNurse/updateVaccineResult/updateResultSaga";
 import watchFetchVaccine from "./vaccineNurse/vaccine/vaccineSaga";
-import watchFetchCheckup from "./checkupNurse/checkupSaga";
 import watchFetchProfileDetail from "./vaccineNurse/profileDetail/profileStudentSaga";
 import watchPatchVaccineConfirmManager from "./manager/ConfirmVaccineManager/ConfirmVaccineManagerSaga";
 
@@ -86,6 +85,13 @@ import watchFetchDetailRequestManager from "./manager/GetDetailRequestManager/ge
 import watchPostAiChat from "./AI_Chat/chatBoxSaga";
 import watchAiChat from "./AI_Chat/chatBoxSaga";
 import watchGetAllChatBoxAi from "./AI_Chat/getChaxBoxSaga";
+import watchFetchCheckup from "./checkupNurse/checkupDay/checkupSaga";
+import watchCheckupJoin from "./checkupNurse/checkupJoin/checkupJoinSaga";
+import watchCheckupDetailResult from "./checkupNurse/checkupDetailResult/checkupDetailResultSaga";
+import watchPostCheckupResult from "./checkupNurse/sendCheckupDetailResult/sendCheckupDetailResultSaga";
+import watchFetchStudentCheckup from "./checkupNurse/listStudentCheckup/listStudentCheckupSaga";
+import watchFetchCheckupResult from "./checkupNurse/resultCheckup/resultCheckupSaga";
+import watchSendCheckupParent from "./checkupNurse/sendCheckupToParent/sendCheckupParentSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -134,6 +140,29 @@ export default function* rootSaga() {
     watchGiveMedicineStudent(),
     watchFetchLowStock(),
     watchPatchQuantityStock(),
+    watchCheckupJoin(),
+    watchCheckupDetailResult(),
+    watchPostCheckupResult(),
+    watchFetchStudentCheckup(),
+    watchFetchCheckupResult(),
+    watchSendCheckupParent(),
+
+    //Parent
+    watchFetchParentHealth(),
+    watchFetchStudentOfParent(),
+    watchFetchParentForm(),
+    watchFetchHealthStudent(),
+    watchFetchCreateHealth(),
+    watchFetchUpdateHealth(),
+    watchFetchVaccineParent(),
+    watchFetchVaccineParentResult(),
+    watchFetchAcceptVaccine(),
+    watchFetchDeclineVaccine(),
+    watchFetchMedicineRequestNurse(),
+    watchFetchCreateMedicine(),
+    watchFetchDeleteMedicine(),
+    watchFetchDetailRequest(),
+
     //Manager
     watchFetchManagerMedical(),
     watchPostManagerVaccine(),

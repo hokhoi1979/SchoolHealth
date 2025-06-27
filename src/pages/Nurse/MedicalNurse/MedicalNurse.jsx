@@ -1,14 +1,17 @@
 import { Button, Input, Modal, Space, Table, Tooltip } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { Link, Outlet } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCheckup } from "../../../redux/checkupNurse/checkupDay/checkupSlice";
 
 const MedicalNurse = () => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [click, setClick] = useState("medicalDay");
+
   const showModal = () => {
     setOpen(true);
   };
@@ -34,23 +37,6 @@ const MedicalNurse = () => {
           <h1 className="text-xl font-inria font-medium mb-4">
             <CommonBreadcrumb role={"Nurse"} page={"medicalCheckup"} />
           </h1>
-
-          <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total Vaccination</p>
-              <p className="flex justify-center text-[50px]">40</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Sick student</p>
-              <p className="flex justify-center text-[50px]">12</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">
-                Waiting for Confirmation
-              </p>
-              <p className="flex justify-center text-[50px]">7</p>
-            </div>
-          </div>
 
           <div className="flex bg-[#F3F3F3] font-kameron w-[250px] h-10 items-center rounded-md ml-5 mt-5">
             <div className="m-auto flex gap-5">

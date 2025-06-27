@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Select, Space, Table, Tooltip } from "antd";
+import { Button, Input, Modal, Select, Space, Table, Tag, Tooltip } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -150,25 +150,25 @@ function Import() {
         <>
           {record.status === "PENDING" && (
             <>
-              <div className=" py-1 w-25 rounded-xl m-auto text-[#CBD361] font-serif">
+              <Tag color="orange">
                 <p>{record?.status}</p>
-              </div>
+              </Tag>
             </>
           )}
           {record.status === "APPROVED" && (
             <>
               {" "}
-              <div className=" py-1 w-25 rounded-xl m-auto text-[#6CC76F] font-serif">
+              <Tag color="green">
                 <p>{record?.status}</p>
-              </div>
+              </Tag>
             </>
           )}
           {record.status === "REJECTED" && (
             <>
               {" "}
-              <div className=" py-1 w-25 rounded-xl m-auto text-[#E26666] font-serif">
+              <Tag color="red">
                 <p>{record?.status}</p>
-              </div>
+              </Tag>
             </>
           )}
         </>

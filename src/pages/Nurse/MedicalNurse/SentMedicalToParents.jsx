@@ -1,27 +1,105 @@
-import { Button, Modal, Space, Table } from "antd";
+import { Button, Modal, Space, Table, Tag, Tooltip } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCheckupResult } from "../../../redux/checkupNurse/resultCheckup/resultCheckupSlice";
+import { useParams } from "react-router";
+import { sendCheckupParent } from "../../../redux/checkupNurse/sendCheckupToParent/sendCheckupParentSlice";
 
-function SentMedicalToParents() {
+function SentMedicalToParents({ id }) {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { sendCheckup = [] } = useSelector((state) => state.sendCheckupParent);
+  const { resultCheckup = [] } = useSelector((state) => state.checkupResult);
+  const [student, setStudent] = useState([]);
+  const [result, setResult] = useState([]);
+  const [isSent, setIsSent] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const columnStudent = [
+
+  const fetchData = () => {
+    dispatch(fetchCheckupResult(id));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const formatData = () => {
+    if (Array.isArray(resultCheckup?.data)) {
+      const data = resultCheckup?.data.map((item) => {
+        return {
+          studentID: item?.studentID,
+          fullname: item?.fullname,
+          className: item?.className,
+          overallNotes: item?.overallNotes,
+          status: item?.status,
+          student_code: item?.student_code,
+        };
+      });
+      setStudent(data);
+      console.log("KAKAJ", data);
+    }
+  };
+
+  useEffect(() => {
+    formatData();
+  }, [resultCheckup]);
+
+  const handleDetail = () => {
+    if (Array.isArray(resultCheckup?.data)) {
+      const data = resultCheckup?.data.map((item) => {
+        return {
+          studentID: item?.studentID,
+          fullname: item?.fullname,
+          className: item?.className,
+          overallNotes: item?.overallNotes,
+          status: item?.status,
+          student_code: item?.student_code,
+          results: item?.results || [],
+        };
+      });
+
+      setResult(data);
+      console.log("AA", data);
+    }
+  };
+
+  const handleSend = () => {
+    if (id) {
+      dispatch(sendCheckupParent(id));
+    }
+    setOpen(false);
+  };
+
+  const column = [
     {
       title: "ID",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "studentID",
+      key: "studentID",
+      align: "center",
+    },
+    {
+      title: "student_code",
+      dataIndex: "student_code",
+      key: "student_code",
       align: "center",
     },
     {
       title: "Student",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "fullname",
+      key: "fullname",
       align: "center",
     },
     {
-      title: "Grade",
-      dataIndex: "grade",
-      key: "grade",
+      title: "Class",
+      dataIndex: "className",
+      key: "className",
+      align: "center",
+    },
+    {
+      title: "overallNotes",
+      dataIndex: "overallNotes",
+      key: "overallNotes",
       align: "center",
     },
     {
@@ -31,49 +109,58 @@ function SentMedicalToParents() {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.status?.toLowerCase() === "attended" ? (
-            <p
-              type="secondary"
-              className="rounded-xl w-[80px] p-1  bg-[#6CC76F] text-white "
-            >
-              Attended
-            </p>
+          {record.status?.toLowerCase() === "success" ? (
+            <Tag color="green">Attended</Tag>
           ) : (
-            <p
-              type="secondary"
-              className="rounded-xl w-[80px] p-1  bg-[#E26666] text-white "
-            >
-              Absent
-            </p>
+            <Tag color="red">Absent</Tag>
+          )}
+        </Space>
+      ),
+    },
+    {
+      title: "Send",
+      align: "center",
+      render: (_) => (
+        <Space>
+          {sendCheckup.success === true ? (
+            <Tag color="green">Sent</Tag>
+          ) : (
+            <Tag color="red">Not sent</Tag>
           )}
         </Space>
       ),
     },
   ];
 
-  const columns = [
-    {
-      title: "Vaccination",
-      dataIndex: "vaccination",
-      key: "vaccination ",
-      align: "center",
-    },
+  const columnsResultDetail = [
     {
       title: "ID",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "studentID",
+      key: "studentID",
       align: "center",
     },
     {
-      title: "Student",
-      dataIndex: "name",
-      key: "name",
+      title: "Student Code",
+      dataIndex: "student_code",
+      key: "student_code",
       align: "center",
     },
     {
-      title: "Grade",
-      dataIndex: "grade",
-      key: "grade",
+      title: "Full Name",
+      dataIndex: "fullname",
+      key: "fullname",
+      align: "center",
+    },
+    {
+      title: "Class",
+      dataIndex: "className",
+      key: "className",
+      align: "center",
+    },
+    {
+      title: "Overall Notes",
+      dataIndex: "overallNotes",
+      key: "overallNotes",
       align: "center",
     },
     {
@@ -81,117 +168,29 @@ function SentMedicalToParents() {
       dataIndex: "status",
       key: "status",
       align: "center",
-      render: (_, record) => (
-        <Space>
-          {record.status?.toLowerCase() === "attended" ? (
-            <p
-              type="secondary"
-              className="rounded-2xl w-[80px] text-[#0CC912] font-bold "
-            >
-              Attended
-            </p>
-          ) : (
-            <p
-              type="secondary"
-              className="rounded-2xl w-[80px] text-[#EE3B3B] font-bold"
-            >
-              Absented
-            </p>
-          )}
-        </Space>
+      render: (text) =>
+        text?.toLowerCase() === "success" ? (
+          <Tag color="green">Attended</Tag>
+        ) : (
+          <Tag color="red">Absent</Tag>
+        ),
+    },
+    {
+      title: "Result Details",
+      dataIndex: "results",
+      key: "results",
+      align: "left",
+      render: (results) => (
+        <div className="space-y-1">
+          {results.map((item, idx) => (
+            <div key={idx} className="text-sm text-gray-700 leading-tight">
+              <span className="font-medium">{item.contentTitle}:</span>{" "}
+              {item.value}{" "}
+              <span className="italic text-gray-500">({item.note})</span>
+            </div>
+          ))}
+        </div>
       ),
-    },
-    {
-      title: "React",
-      dataIndex: "react",
-      key: "react",
-      align: "center",
-    },
-    {
-      title: "Note",
-      dataIndex: "note",
-      key: "note",
-      align: "center",
-    },
-
-    {
-      title: "Send result",
-      dataIndex: "send",
-      key: "send",
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          <p
-            type="secondary"
-            className="rounded-2xl w-[80px] p-1  bg-[#E26666] text-white "
-          >
-            Not send
-          </p>
-        </Space>
-      ),
-    },
-  ];
-
-  const dataSource = [
-    {
-      vaccination: "Flu Vaccination",
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "Attended",
-      react: "Không",
-      note: "Tiêm bình thường",
-      send: "Not send",
-    },
-    {
-      vaccination: "Flu Vaccination",
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "Attended",
-      react: "Không",
-      note: "Tiêm bình thường",
-      send: "Not send",
-    },
-    {
-      vaccination: "Flu Vaccination",
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "Attended",
-      react: "Không",
-      note: "Tiêm bình thường",
-      send: "Not send",
-    },
-    {
-      vaccination: "Flu Vaccination",
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "Special tracking",
-      react: "Không",
-      note: "--",
-      send: "Sended",
-    },
-    {
-      vaccination: "Flu Vaccination",
-      id: "SE182629",
-      name: "Ho Khoi",
-      grade: "12A3",
-      parent: "Elon Musk",
-      phone: "0997899689",
-      status: "Attended",
-      react: "Không",
-      note: "Tiêm bình thường",
-      send: "Not send",
     },
   ];
 
@@ -204,7 +203,10 @@ function SentMedicalToParents() {
             <Button
               type="secondary"
               className="!bg-black hover:!bg-gray-600 w-[255px]"
-              onClick={() => setOpen(true)}
+              onClick={() => {
+                handleDetail();
+                setOpen(true);
+              }}
             >
               {" "}
               <svg
@@ -224,57 +226,52 @@ function SentMedicalToParents() {
             </Button>
           </div>
         </div>
-        <Table
-          className="mt-5 w-full"
-          columns={columns}
-          dataSource={dataSource}
-        />
+        <Table className="mt-5 w-full" columns={column} dataSource={student} />
       </div>
 
-      <Modal open={open} onCancel={() => setOpen(false)} footer={null}>
+      <Modal
+        open={open}
+        onCancel={() => setOpen(false)}
+        footer={null}
+        width={1000}
+      >
         <h1 className="text-2xl font-serif flex justify-center">
-          Send Vaccination Results
+          Send Medical Results
         </h1>
         <p className="mb-3 font-serif flex justify-center">
-          Send vaccination results to 's parents
+          Send medical results to students' parents
         </p>
 
         <Table
-          dataSource={dataSource}
-          columns={columnStudent}
+          columns={columnsResultDetail}
+          dataSource={result}
           pagination={false}
+          rowKey="studentID"
+          className="mb-6"
         />
-
-        <div className="mt-5 font-serif">
-          <div className="flex gap-5 w-[50%]">
-            <div className="w-[70px]">
-              <p className="font-bold">React:</p>
-            </div>
-            <p></p>
-          </div>
-          <div className="flex gap-5 w-full">
-            <div className="w-[70px]">
-              <p className="font-bold">Note:</p>
-            </div>
-            <p></p>
-          </div>
-          <div className="flex gap-5 w-full">
-            <div className="w-[70px]">
-              <p className="font-bold">Message:</p>
-            </div>
-            <TextArea placeholder="Enter message" />
-          </div>
-        </div>
 
         <div className="flex justify-between mt-5">
           <div></div>
           <div className="flex gap-5">
-            <Button className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif">
-              Cancel
-            </Button>
-            <Button className="!bg-[#6CC76F] !p-2 w-[100px] hover:!bg-[#3BB32B] !text-white !font-serif">
-              Send Result
-            </Button>
+            {sendCheckup.success === false && (
+              <>
+                {" "}
+                <Button
+                  className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
+                  onClick={() => setOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="!bg-[#6CC76F] !p-2 w-[100px] hover:!bg-[#3BB32B] !text-white !font-serif"
+                  onClick={() => {
+                    handleSend();
+                  }}
+                >
+                  Send Result
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </Modal>

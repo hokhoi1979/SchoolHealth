@@ -24,6 +24,7 @@ export function* fetchLogin(action) {
           token: accessToken,
         })
       );
+      console.log("SUCCESS", response.da);
 
       if (action.onSuccess) action.onSuccess(response);
     } else {
