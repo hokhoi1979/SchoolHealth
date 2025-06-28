@@ -20,7 +20,6 @@ import {
   CloseOutlined,
   EditOutlined,
 } from "@ant-design/icons";
-import { ToastContainer, toast } from "react-toastify";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import { useEffect } from "react";
@@ -182,8 +181,16 @@ const StudentHealth = () => {
   //Autofill form if data exists
   useEffect(() => {
     if (healthDetail && selectedStudent === healthDetail.studentID) {
-      setHeight(healthDetail.height?.toString() || "");
-      setWeight(healthDetail.weight?.toString() || "");
+      setHeight(
+        Number.isInteger(healthDetail.height)
+          ? String(healthDetail.height)
+          : healthDetail.height?.toFixed(1)
+      );
+      setWeight(
+        Number.isInteger(healthDetail.weight)
+          ? String(healthDetail.weight)
+          : healthDetail.weight?.toFixed(1)
+      );
       setBloodGroup(healthDetail.bloodGroup?.toLowerCase() || "");
       setTreatmentHistory(healthDetail.treatmentHistory || "");
       setAddtionalNote(healthDetail.additionalNote || "");
@@ -362,8 +369,6 @@ const StudentHealth = () => {
       // Dispatch the action to create health record
       await dispatch(fetchCreateHealth(payload));
 
-      // Only show the success toast after the dispatch completes
-
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
 
@@ -484,7 +489,6 @@ const StudentHealth = () => {
       }
     } catch (error) {
       console.error("Update failed:", error);
-      toast.error("Có lỗi xảy ra khi cập nhật");
     }
   };
 
@@ -1900,12 +1904,6 @@ const StudentHealth = () => {
           <p>No data available.</p>
         )}
       </Modal>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={true}
-      />
     </div>
   );
 };

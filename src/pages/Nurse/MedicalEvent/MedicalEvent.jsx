@@ -60,6 +60,10 @@ const MedicalEvent = () => {
   const { createMedicalEvent = [] } = useSelector(
     (state) => state.postMedicalEventNurse
   );
+
+  const { sendMedicalEventParent = [] } = useSelector(
+    (state) => state.sendMedicalEnventNurse
+  );
   const dispatch = useDispatch();
 
   const { medicine = [] } = useSelector((state) => state.medicineNurse);
@@ -226,7 +230,7 @@ const MedicalEvent = () => {
           )
         );
       } else {
-        toast.error("Gửi thất bại hoặc đã gửi rồi!");
+        // toast.error("Gửi thất bại hoặc đã gửi rồi!");
       }
 
       setOpenSend(false);
@@ -752,30 +756,36 @@ const MedicalEvent = () => {
         <Modal
           open={openSend}
           onCancel={() => setOpenSend(false)}
-          footer={[
-            <Button
-              key="cancel"
-              className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
-              onClick={() => setOpenSend(false)}
-              style={{
-                backgroundColor: "#f87171",
-                color: "white",
-                border: "none",
-              }}
-            >
-              Cancel
-            </Button>,
-            <Button
-              key="send"
-              disabled={selectedRecord?.isSent}
-              className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
-              onClick={() => {
-                handleSendEvent(selectedRecord?.id);
-              }}
-            >
-              Send to Parent
-            </Button>,
-          ]}
+          sendMedicalEventParent
+          footer={
+            sendMedicalEventParent.success === false && (
+              <>
+                <Button
+                  key="cancel"
+                  className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
+                  onClick={() => setOpenSend(false)}
+                  style={{
+                    backgroundColor: "#f87171",
+                    color: "white",
+                    border: "none",
+                  }}
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  key="send"
+                  disabled={selectedRecord?.isSent}
+                  className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
+                  onClick={() => {
+                    handleSendEvent(selectedRecord?.id);
+                  }}
+                >
+                  Send to Parent
+                </Button>
+              </>
+            )
+          }
         >
           <h1 className="text-2xl font-serif justify-center flex">
             Send Vaccination Results
@@ -946,37 +956,6 @@ const MedicalEvent = () => {
             </div>
           </div>
         </Modal>
-
-        {/* <Modal
-          open={openConfirmNormal}
-          onCancel={() => setOpenConfirmNormal(false)}
-          footer={[
-            <Button
-              key="cancel"
-              className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
-              onClick={() => setOpenConfirmNormal(false)}
-              style={{
-                backgroundColor: "#f87171",
-                color: "white",
-                border: "none",
-              }}
-            >
-              Cancel
-            </Button>,
-            <Button
-              key="send"
-              disabled={selectedRecord?.isSent}
-              className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
-              onClick={() => {handleConfirmNormal}}
-            >
-              Confirm status
-            </Button>,
-          ]}
-        >
-          <h1 className="text-2xl flex justify-center font-serif">
-            Do you want to confirm status Normal
-          </h1>
-        </Modal> */}
       </div>
     </>
   );

@@ -16,7 +16,7 @@ export function* fetchLogin(action) {
 
     if (accessToken) {
       const decodedUser = jwtDecode(accessToken);
-      localStorage.setItem("accessToken", accessToken);
+      // localStorage.setItem("accessToken", accessToken);
 
       yield put(
         fetchSuccess({

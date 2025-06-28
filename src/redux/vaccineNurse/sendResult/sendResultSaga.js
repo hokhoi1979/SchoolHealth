@@ -1,5 +1,5 @@
 import axios from "axios";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
   POST__RESULT__VACCINE,
   postResultVaccineFail,
@@ -15,7 +15,8 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* sendResultVaccineSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
+
     const id = action.payload;
 
     const response = yield call(
@@ -34,7 +35,6 @@ function* sendResultVaccineSaga(action) {
       yield put(postResultVaccineSuccess(response.data));
       message.success("Gửi kết quả tiêm thành công");
       yield put(postResultVaccineSuccess(response.data));
-      console.log(response.data);
       const fetchResponse = yield call(
         axios.get,
         `${URL_API}/nurse/v1/${id}/result`,

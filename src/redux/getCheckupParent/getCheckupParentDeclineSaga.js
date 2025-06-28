@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
   FETCH_DECLINE_CHECK_UP,
   fetchDeclineCheckUpSuccess,
@@ -11,7 +11,8 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* getCheckUpParentDeclineSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    // const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     const { healthCheckUpID, studentID, note } = action.payload;
 
     const response = yield call(

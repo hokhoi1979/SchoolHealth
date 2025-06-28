@@ -19,7 +19,7 @@ const statusColor = {
 const Notification = () => {
   const dispatch = useDispatch();
   const { medicine, loading, error } = useSelector(
-    (state) => state.medicineRequest
+    (state) => state.medicineRequestParent
   );
   const {
     requestDetail,

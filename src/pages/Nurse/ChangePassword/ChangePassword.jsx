@@ -105,13 +105,11 @@ const ChangePassword = () => {
       <div className="p-6 flex flex-col flex-1">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-            <Shield size={32} className="text-blue-600" />
+            <Shield size={32} className="" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-blue-600 ml-5">
-              Change Password
-            </h1>
-            <p className="pt-3 ml-5 text-blue-500 font-medium">
+            <h1 className="text-3xl font-bold  ml-5">Change Password</h1>
+            <p className="pt-3 ml-5  font-medium">
               Update your password to secure your account
             </p>
           </div>

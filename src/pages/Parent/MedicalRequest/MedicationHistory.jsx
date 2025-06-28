@@ -25,7 +25,9 @@ const statusColor = {
 
 const MedicationHistory = () => {
   const dispatch = useDispatch();
-  const { medicine, loading } = useSelector((state) => state.medicineRequest);
+  const { medicine, loading } = useSelector(
+    (state) => state.medicineRequestParent
+  );
   const {
     success: deleteSuccess,
     error: deleteError,

@@ -19,85 +19,123 @@ import { AppFooter } from "../../../components/Footer/AppFooter";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCreateMedicine } from "../../../redux/profileParent/medicalRequest/createMedicineSlice";
 import { fetchStudent } from "../../../redux/profileParent/StudentOfParentSlice";
+import { fetchMedicineRequest } from "../../../redux/profileParent/medicalRequest/MedicineRequestSlice";
+import { fetchDetailRequest } from "../../../redux/profileParent/medicalRequest/getDetailRequestSlice";
 
 const { TextArea } = Input;
 
 const MedicalRequest = () => {
-  const [medications, setMedications] = useState([]);
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-
   const { student, loading } = useSelector((state) => state.studentOfParent);
+  const [extraMedications, setExtraMedications] = useState([]);
+  const [medications, setMedications] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Add loading state
 
   useEffect(() => {
     dispatch(fetchStudent());
+    dispatch(fetchMedicineRequest());
   }, [dispatch]);
 
+  const addExtraMedication = () => {
+    setExtraMedications((prev) => [
+      ...prev,
+      {
+        name: "",
+        dosage: "",
+        quantitySent: "",
+        usageTimes: "",
+        startDate: null,
+        endDate: null,
+        note: "",
+      },
+    ]);
+  };
+
+  const updateExtraMedication = (index, field, value) => {
+    const newData = [...extraMedications];
+    newData[index][field] = value;
+    setExtraMedications(newData);
+  };
+
+  const removeExtraMedication = (index) => {
+    setExtraMedications(extraMedications.filter((_, i) => i !== index));
+  };
+
   const handleAdd = async (values) => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
-      // Tạo payload để gửi tới backend
+      const mainItem = {
+        medicineName: values.name,
+        dosage: values.dosage,
+        quantitySent: values.quantitySent,
+        usageTimes: values.usageTimes.split(",").map((time) => time.trim()),
+        startDate: values.startDate.format("YYYY-MM-DD"),
+        endDate: values.endDate.format("YYYY-MM-DD"),
+      };
+
+      const additionalItems = extraMedications.map((item) => ({
+        medicineName: item.name,
+        dosage: item.dosage,
+        quantitySent: item.quantitySent,
+        usageTimes: item.usageTimes.split(",").map((t) => t.trim()),
+        startDate: item.startDate.format("YYYY-MM-DD"),
+        endDate: item.endDate.format("YYYY-MM-DD"),
+      }));
+
       const payload = {
         studentID: values.studentID,
         note: values.note,
-        items: [
-          {
-            medicineName: values.name,
-            dosage: values.dosage,
-            quantitySent: values.quantitySent,
-            usageTimes: values.usageTimes.split(",").map((time) => time.trim()),
-            startDate: values.startDate.format("YYYY-MM-DD"),
-            endDate: values.endDate.format("YYYY-MM-DD"),
-          },
-        ],
+        items: [mainItem, ...additionalItems],
       };
 
-      // Dispatch action tạo thuốc
       const response = await dispatch(fetchCreateMedicine(payload));
 
-      // Kiểm tra nếu action bị reject (lỗi network, 400, 500, etc.)
-      if (fetchCreateMedicine.rejected.match(response)) {
-        const errorMessage =
-          response.payload?.message ||
-          response.error?.message ||
-          "Failed to create medication";
-        message.error(`Error: ${errorMessage}`);
-        return; // Dừng xử lý, không cập nhật UI
-      }
+      if (response.payload && response.payload.success !== false) {
+        const requestID = response.payload.data?.requestID;
 
-      // Kiểm tra nếu response có success = false
-      if (response.payload && response.payload.success === false) {
-        message.error(`Error: ${response.payload.message || "Invalid data"}`);
-        return; // Dừng xử lý, không cập nhật UI
-      }
+        if (requestID) {
+          const detailRes = await dispatch(fetchDetailRequest({ requestID }));
+          const detailData = detailRes.payload?.data;
 
-      // Chỉ khi thành công hoàn toàn mới cập nhật UI
-      if (response.payload && response.payload.success === true) {
-        const id = Math.max(0, ...medications.map((m) => m.id)) + 1;
+          if (detailData && Array.isArray(detailData.items)) {
+            const mapped = detailData.items.map((item, idx) => ({
+              id: `new-${Date.now()}-${idx}`,
+              name: item.medicineName,
+              dosage: item.dosage,
+              quantity: item.quantityRemaining,
+              usageTimes: item.usageTimes,
+              startDate: item.startDate || "",
+              endDate: item.endDate || "",
+              status: detailData.status || "PENDING",
+              note: detailData.note || "", // ✅ Thêm dòng này
+            }));
 
-        const newMedication = {
-          id,
-          ...values,
-          startDate: values.startDate.format("YYYY-MM-DD"),
-          endDate: values.endDate.format("YYYY-MM-DD"),
-          usageTimes: values.usageTimes.split(",").map((time) => time.trim()),
-          status: "PENDING",
-        };
+            setMedications((prev) => [...prev, ...mapped]);
+          }
+        }
 
-        setMedications([...medications, newMedication]);
         form.resetFields();
+        setExtraMedications([]);
         setIsAddVisible(false);
         message.success("Add new medication successfully");
       } else {
-        // Trường hợp không có success field hoặc success không phải true
-        message.error("Unexpected response from server");
+        message.error(`Error: ${response.payload?.message || "Invalid data"}`);
       }
     } catch (error) {
-      // Bắt mọi lỗi khác (network error, parsing error, etc.)
       message.error("Failed to add medication: " + error.message);
-      console.error("Error adding medication:", error);
-      // Không cập nhật UI khi có lỗi
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const handleCancel = () => {
+    form.resetFields();
+    setExtraMedications([]);
+    setIsAddVisible(false);
   };
 
   return (
@@ -105,6 +143,7 @@ const MedicalRequest = () => {
       <h1 className="pl-10 pt-5 text-xl font-inria font-medium mb-4">
         <CommonBreadcrumb role={"Parent"} page={"request"} />
       </h1>
+
       <div className="p-6 flex flex-col flex-1">
         <div className="flex justify-between items-center mb-4">
           <div>
@@ -124,14 +163,19 @@ const MedicalRequest = () => {
           </Button>
         </div>
 
+        {/* Modal Add Medication - FIXED */}
         <Modal
           title="Add new medication"
           open={isAddVisible}
-          onCancel={() => setIsAddVisible(false)}
-          onOk={() => form.submit()}
-          width={600}
+          onCancel={handleCancel}
+          footer={null} // Remove custom footer to prevent duplicate submission
+          width={800}
         >
-          <Form layout="vertical" form={form} onFinish={handleAdd}>
+          <Form
+            layout="vertical"
+            form={form}
+            onFinish={handleAdd} // Only use form's onFinish
+          >
             <Form.Item
               label="Student"
               name="studentID"
@@ -209,12 +253,131 @@ const MedicalRequest = () => {
               </Col>
             </Row>
 
-            <Form.Item label="Instructions" name="instructions">
+            <Form.Item label="Note" name="note" rules={[{ required: true }]}>
               <TextArea rows={2} />
             </Form.Item>
 
-            <Form.Item label="Note" name="note" rules={[{ required: true }]}>
-              <TextArea rows={2} />
+            <Form.Item>
+              <div
+                style={{
+                  border: "1px solid #d9d9d9",
+                  borderRadius: 8,
+                  padding: 16,
+                  marginTop: 16,
+                  backgroundColor: "#fafafa",
+                }}
+              >
+                <h3 className="text-lg font-semibold mb-4">
+                  Additional Medications
+                </h3>
+                {extraMedications.map((item, index) => (
+                  <Row
+                    gutter={8}
+                    key={index}
+                    align="middle"
+                    style={{ marginBottom: 12 }}
+                  >
+                    <Col span={4}>
+                      <Input
+                        placeholder="Name"
+                        value={item.name}
+                        onChange={(e) =>
+                          updateExtraMedication(index, "name", e.target.value)
+                        }
+                      />
+                    </Col>
+                    <Col span={3}>
+                      <Input
+                        placeholder="Dosage"
+                        value={item.dosage}
+                        onChange={(e) =>
+                          updateExtraMedication(index, "dosage", e.target.value)
+                        }
+                      />
+                    </Col>
+                    <Col span={3}>
+                      <Input
+                        placeholder="Qty"
+                        value={item.quantitySent}
+                        onChange={(e) =>
+                          updateExtraMedication(
+                            index,
+                            "quantitySent",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </Col>
+                    <Col span={4}>
+                      <Input
+                        placeholder="Times"
+                        value={item.usageTimes}
+                        onChange={(e) =>
+                          updateExtraMedication(
+                            index,
+                            "usageTimes",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </Col>
+                    <Col span={3}>
+                      <DatePicker
+                        placeholder="Start"
+                        value={item.startDate}
+                        onChange={(date) =>
+                          updateExtraMedication(index, "startDate", date)
+                        }
+                        style={{ width: "100%" }}
+                      />
+                    </Col>
+                    <Col span={3}>
+                      <DatePicker
+                        placeholder="End"
+                        value={item.endDate}
+                        onChange={(date) =>
+                          updateExtraMedication(index, "endDate", date)
+                        }
+                        style={{ width: "100%" }}
+                      />
+                    </Col>
+                    <Col span={4}>
+                      <Input.TextArea
+                        placeholder="Note"
+                        value={item.note}
+                        onChange={(e) =>
+                          updateExtraMedication(index, "note", e.target.value)
+                        }
+                        rows={1}
+                      />
+                    </Col>
+                    <Col span={2}>
+                      <Button
+                        danger
+                        onClick={() => removeExtraMedication(index)}
+                        className="mt-3"
+                      >
+                        Remove
+                      </Button>
+                    </Col>
+                  </Row>
+                ))}
+                <Button onClick={addExtraMedication} icon={<PlusOutlined />}>
+                  Add another medication
+                </Button>
+              </div>
+            </Form.Item>
+
+            {/* Form buttons - moved inside Form */}
+            <Form.Item>
+              <div className="flex justify-end gap-2">
+                <Button onClick={handleCancel} disabled={isSubmitting}>
+                  Cancel
+                </Button>
+                <Button type="primary" htmlType="submit" loading={isSubmitting}>
+                  OK
+                </Button>
+              </div>
             </Form.Item>
           </Form>
         </Modal>
@@ -223,7 +386,7 @@ const MedicalRequest = () => {
           <div className="m-auto flex gap-10">
             <Link to={""}>Medication in use</Link>
             <Link to={"notification"}>Notification</Link>
-            <Link to={"medication_history"}>Medication history</Link>
+            {/* <Link to={"medication_history"}>Medication history</Link> */}
           </div>
         </div>
 

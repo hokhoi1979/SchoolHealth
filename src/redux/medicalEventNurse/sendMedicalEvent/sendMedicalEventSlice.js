@@ -18,7 +18,7 @@ export const sendMedicalEventFail = (error) => ({
 });
 
 const initialState = {
-  sendMedicalEvent: [],
+  sendMedicalEventParent: [],
   loading: false,
   error: null,
 };
@@ -28,7 +28,11 @@ const sendMedicalEnventReducer = (state = initialState, action) => {
     case SEND__MEDICAL__EVENT:
       return { ...state, loading: true, error: null };
     case SEND__MEDICAL__EVENT__SUCCESS:
-      return { ...state, loading: false, sendMedicalEvent: action.payload };
+      return {
+        ...state,
+        loading: false,
+        sendMedicalEventParent: action.payload,
+      };
     case SEND__MEDICAL__EVENT__FAIL:
       return { ...state, loading: false, error: action.payload };
     default:

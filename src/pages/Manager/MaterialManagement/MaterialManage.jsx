@@ -99,10 +99,7 @@ function MaterialManage() {
                   click === "inventory" ? "bg-white text-black" : ""
                 }`}
               >
-                <Link
-                  onClick={() => setClick("inventory")}
-                  to={"inventoryManager"}
-                >
+                <Link onClick={() => setClick("inventory")} to={""}>
                   Supply
                 </Link>
               </div>

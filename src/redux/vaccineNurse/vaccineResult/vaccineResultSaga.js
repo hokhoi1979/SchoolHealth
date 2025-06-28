@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 
 import axios from "axios";
 import {
@@ -11,7 +11,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 function* vaccineResultSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
+
     const id = action.payload;
     const response = yield call(axios.get, `${API_URL}/nurse/v1/${id}/result`, {
       headers: {

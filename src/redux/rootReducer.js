@@ -36,7 +36,7 @@ import patchManagerVaccineReducer from "./manager/successVaccineManagerSlice";
 import vaccineResultReducer from "./vaccineNurse/vaccineResult/vaccineResultSlice";
 import sendResultVaccineReducer from "./vaccineNurse/sendResult/sendResultSlice";
 import updateVaccineReducer from "./vaccineNurse/updateVaccineResult/updateResultSlice";
-import checkupReducer from "./checkupNurse/checkupSlice";
+
 import profileDetailReducer from "./vaccineNurse/profileDetail/profileStudentSlice";
 import patchManagerConfirmVaccineReducer, {
   patchManagerConfirmVaccine,
@@ -91,6 +91,13 @@ import changePasswordReducer from "./ChangePassword/changePasswordSlice";
 import getDetailRequestManagerReducer from "./manager/GetDetailRequestManager/getDetailRequestManagerSlice";
 import createAiChatReducer from "./AI_Chat/chatBoxSlice";
 import getAllChatBoxAiReducer from "./AI_Chat/getChaxBoxSlice";
+import checkupReducer from "./checkupNurse/checkupDay/checkupSlice";
+import checkupJoinReducer from "./checkupNurse/checkupJoin/checkupJoinSlice";
+import fetchCheckupDetailResultReducer from "./checkupNurse/checkupDetailResult/checkupDetailResultSlice";
+import postCheckupDetailResultReducer from "./checkupNurse/sendCheckupDetailResult/sendCheckupDetailResultSlice";
+import studentCheckupReducer from "./checkupNurse/listStudentCheckup/listStudentCheckupSlice";
+import checkupResultReducer from "./checkupNurse/resultCheckup/resultCheckupSlice";
+import sendCheckupParentReducer from "./checkupNurse/sendCheckupToParent/sendCheckupParentSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -119,6 +126,11 @@ const rootReducer = combineReducers({
   giveMedicineStudent: giveMedicineStudentReducer,
   getLowStock: getLowStockReducer,
   patchQuantityStock: patchQuantityStockReducer,
+  checkupJoin: checkupJoinReducer,
+  fetchCheckupDetailResult: fetchCheckupDetailResultReducer,
+  postCheckupDetailResult: postCheckupDetailResultReducer,
+  studentCheckup: studentCheckupReducer,
+  sendCheckupParent: sendCheckupParentReducer,
 
   //api parent
   studentOfParent: studentOfParentReducer,
@@ -131,10 +143,11 @@ const rootReducer = combineReducers({
   vaccineParentResult: vaccineParentResultReducer,
   vaccineParentAccept: getVaccineParentAcceptReducer,
   vaccineParentDecline: getVaccineParentDeclineReducer,
-  medicineRequest: getMedicineRequestReducer,
+  medicineRequestParent: getMedicineRequestReducer,
   createMedicineRequest: createMedicineReducer,
   deleteMedicineRequest: deleteMedicineReducer,
   getDetailRequestParent: getDetailRequestReducer,
+  checkupResult: checkupResultReducer,
   stopMedicine: stopMedicineReducer,
   acceptBenefitMedicine: acceptBenefitMedicineReducer,
   rejectBenefitMedicine: rejectBenefitMedicineReducer,

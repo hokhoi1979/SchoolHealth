@@ -72,6 +72,7 @@ import ChangePasswordParent from "../pages/Parent/ChangePassword/ChangePassword"
 import StudentLayout from "../pages/Student/StudentLayout";
 import StudentInformation from "../pages/Student/StudentInformation/StudentInformation";
 import ChangePassword from "../pages/Student/ChangePassword/ChangePassword";
+import PrivateRoute from "./privateRoute";
 
 const router = createBrowserRouter([
   {
@@ -85,98 +86,117 @@ const router = createBrowserRouter([
       // Nurse routes
       {
         path: "nurse",
-        element: <NurseLayout />,
+        // chỉ kiểm tra ở đây
+        element: <PrivateRoute allowedRoles={[3]} />,
         children: [
-          { path: "", element: <Navigate to="materials" /> },
+          {
+            path: "",
+            element: <NurseLayout />,
+            children: [
+              { path: "", element: <Navigate to="materials" /> },
 
-          {
-            path: "materials",
-            element: <Materials />,
-            children: [
-              { path: "", element: <Inventory /> },
-              { path: "import", element: <Import /> },
-              { path: "export", element: <Export /> },
-              { path: "medicine", element: <MedicineForStudent /> },
-              { path: "schedule", element: <MedicineSchedule /> },
+              {
+                path: "materials",
+                element: <Materials />,
+                children: [
+                  { path: "", element: <Inventory /> },
+                  { path: "import", element: <Import /> },
+                  { path: "export", element: <Export /> },
+                  { path: "medicine", element: <MedicineForStudent /> },
+                  { path: "schedule", element: <MedicineSchedule /> },
+                ],
+              },
+              {
+                path: "student",
+                element: <StudentProfile />,
+              },
+              {
+                path: "vaccine",
+                element: <VaccineNurse />,
+                children: [
+                  { path: "", element: <VaccineDay /> },
+                  { path: "studentList/:id", element: <StudentList /> },
+                  { path: "vaccineHistory", element: <VaccineHistory /> },
+                  { path: "vaccineResult", element: <VaccineResult /> },
+                ],
+              },
+              {
+                path: "medical",
+                element: <MedicalNurse />,
+                children: [
+                  { path: "", element: <MedicalDay /> },
+                  {
+                    path: "studentListCheckup/:id",
+                    element: <StudentListMedical />,
+                  },
+                  { path: "medicalHistory", element: <MedicalHistory /> },
+                  { path: "medicalResult", element: <MedicalResult /> },
+                ],
+              },
+              {
+                path: "medicalEvent",
+                element: <MedicalEvent />,
+              },
+              { path: "information", element: <NurseInfor /> },
+              { path: "change_password", element: <ChangePasswordNurse /> },
             ],
           },
-          {
-            path: "student",
-            element: <StudentProfile />,
-          },
-          {
-            path: "vaccine",
-            element: <VaccineNurse />,
-            children: [
-              { path: "", element: <VaccineDay /> },
-              { path: "studentList/:id", element: <StudentList /> },
-              { path: "vaccineHistory", element: <VaccineHistory /> },
-              { path: "vaccineResult", element: <VaccineResult /> },
-            ],
-          },
-          {
-            path: "medical",
-            element: <MedicalNurse />,
-            children: [
-              { path: "", element: <MedicalDay /> },
-              { path: "studentList", element: <StudentListMedical /> },
-              { path: "medicalHistory", element: <MedicalHistory /> },
-              { path: "medicalResult", element: <MedicalResult /> },
-            ],
-          },
-          {
-            path: "medicalEvent",
-            element: <MedicalEvent />,
-          },
-          { path: "information", element: <NurseInfor /> },
-          { path: "change_password", element: <ChangePasswordNurse /> },
         ],
       },
 
       // Manager routes
       {
-        path: "/manager",
-        element: <ManagerLayout />,
+        path: "manager",
         children: [
           {
-            path: "materials",
-            element: <MaterialManage />,
+            path: "",
+            element: <ManagerLayout />,
             children: [
-              { path: "inventoryManager", element: <InventoryManager /> },
-              { path: "importManager", element: <ImportManager /> },
-              // { path: "exportManager", element: <VaccinationManager /> },
+              {
+                path: "",
+                element: <Navigate to="materials" />,
+              },
+              {
+                path: "materials",
+                element: <MaterialManage />,
+                children: [
+                  { path: "", element: <InventoryManager /> },
+                  { path: "importManager", element: <ImportManager /> },
+                  // { path: "exportManager", element: <VaccinationManager /> },
 
-              { path: "medicineManager", element: <Trend /> },
+                  { path: "medicineManager", element: <Trend /> },
+                ],
+              },
+              {
+                path: "medicalcheckup",
+                element: <MedicalCheckup />,
+              },
+              {
+                path: "vaccine",
+                element: <VaccineManager />,
+                children: [
+                  { path: "vaccination", element: <Vaccination /> },
+                  { path: "checkup", element: <Checkup /> },
+                  { path: "trend", element: <Trend /> },
+                ],
+              },
+              {
+                path: "requestManager",
+                element: <RequestManager />,
+                // children: [
+                //   { path: "vaccination", element: <Vaccination /> },
+                //   { path: "checkup", element: <Checkup /> },
+                //   { path: "trend", element: <Trend /> },
+                // ],
+              },
+              {
+                path: "managerMedicalEvent",
+                element: <ManagerMedicalEvent />,
+              },
+              { path: "information", element: <ManagerInfor /> },
+              { path: "change_password", element: <ChangePasswordManager /> },
             ],
           },
-          {
-            path: "medicalcheckup",
-            element: <MedicalCheckup />,
-          },
-          {
-            path: "vaccine",
-            element: <VaccineManager />,
-            children: [
-              { path: "vaccination", element: <Vaccination /> },
-              { path: "checkup", element: <Checkup /> },
-              { path: "trend", element: <Trend /> },
-            ],
-          },
-          {
-            path: "requestManager",
-            element: <RequestManager />,
-            // children: [
-            //   { path: "vaccination", element: <Vaccination /> },
-            //   { path: "checkup", element: <Checkup /> },
-            //   { path: "trend", element: <Trend /> },
-            // ],
-          },
-          {
-            path: "managerMedicalEvent",
-            element: <ManagerMedicalEvent />,
-          },
-          { path: "information", element: <ManagerInfor /> },
-          { path: "change_password", element: <ChangePasswordManager /> },
         ],
       },
       //Parents route
@@ -193,8 +213,8 @@ const router = createBrowserRouter([
             path: "medical_request",
             element: <MedicalRequest />,
             children: [
-              { path: "", element: <MedicalUsing /> },
-              { path: "medication_history", element: <MedicalHistoryParent /> },
+              { path: "", element: <MedicalHistoryParent /> },
+              // { path: "medication_history", element: <MedicalHistoryParent /> },
               { path: "notification", element: <NotificationRequest /> },
             ],
           },

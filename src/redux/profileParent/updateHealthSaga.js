@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
   FETCH__UPDATE__HEALTH,
   fetchUpdateHealthFail,
@@ -11,7 +11,8 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* updateHealthSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    // const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     const { studentID, ...healthData } = action.payload;
 
     const response = yield call(
@@ -28,8 +29,8 @@ function* updateHealthSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchUpdateHealthSucess(response.data));
-      toast.success(response.data.message);
       console.log("SUCCESS", response);
+      toast.success(response.data.message);
     } else {
       yield put(fetchUpdateHealthFail(response.status));
       toast.error(response.data.message);

@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
   FETCH_DETAIL_REQUEST,
   fetchDetailRequestSuccess,
@@ -10,7 +10,8 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* detailRequestSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    // const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     const { requestID } = action.payload;
     const response = yield call(
       axios.get,
