@@ -141,48 +141,57 @@ const router = createBrowserRouter([
 
       // Manager routes
       {
-        path: "/manager",
-        element: <ManagerLayout />,
+        path: "manager",
         children: [
           {
-            path: "materials",
-            element: <MaterialManage />,
+            path: "",
+            element: <ManagerLayout />,
             children: [
-              { path: "inventoryManager", element: <InventoryManager /> },
-              { path: "importManager", element: <ImportManager /> },
-              // { path: "exportManager", element: <VaccinationManager /> },
+              {
+                path: "",
+                element: <Navigate to="materials" />,
+              },
+              {
+                path: "materials",
+                element: <MaterialManage />,
+                children: [
+                  { path: "", element: <InventoryManager /> },
+                  { path: "importManager", element: <ImportManager /> },
+                  // { path: "exportManager", element: <VaccinationManager /> },
 
-              { path: "medicineManager", element: <Trend /> },
+                  { path: "medicineManager", element: <Trend /> },
+                ],
+              },
+              {
+                path: "medicalcheckup",
+                element: <MedicalCheckup />,
+              },
+              {
+                path: "vaccine",
+                element: <VaccineManager />,
+                children: [
+                  { path: "vaccination", element: <Vaccination /> },
+                  { path: "checkup", element: <Checkup /> },
+                  { path: "trend", element: <Trend /> },
+                ],
+              },
+              {
+                path: "requestManager",
+                element: <RequestManager />,
+                // children: [
+                //   { path: "vaccination", element: <Vaccination /> },
+                //   { path: "checkup", element: <Checkup /> },
+                //   { path: "trend", element: <Trend /> },
+                // ],
+              },
+              {
+                path: "managerMedicalEvent",
+                element: <ManagerMedicalEvent />,
+              },
+              { path: "information", element: <ManagerInfor /> },
+              { path: "change_password", element: <ChangePasswordManager /> },
             ],
           },
-          {
-            path: "medicalcheckup",
-            element: <MedicalCheckup />,
-          },
-          {
-            path: "vaccine",
-            element: <VaccineManager />,
-            children: [
-              { path: "vaccination", element: <Vaccination /> },
-              { path: "checkup", element: <Checkup /> },
-              { path: "trend", element: <Trend /> },
-            ],
-          },
-          {
-            path: "requestManager",
-            element: <RequestManager />,
-            // children: [
-            //   { path: "vaccination", element: <Vaccination /> },
-            //   { path: "checkup", element: <Checkup /> },
-            //   { path: "trend", element: <Trend /> },
-            // ],
-          },
-          {
-            path: "managerMedicalEvent",
-            element: <ManagerMedicalEvent />,
-          },
-          { path: "information", element: <ManagerInfor /> },
-          { path: "change_password", element: <ChangePasswordManager /> },
         ],
       },
       //Parents route

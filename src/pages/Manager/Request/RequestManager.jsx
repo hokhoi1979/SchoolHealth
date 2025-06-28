@@ -76,11 +76,11 @@ function RequestManager() {
   return (
     <>
       <div>
-        <div className="grid grid-cols-3 gap-5 mt-5 w-full pl-5 pr-5 font-kameron">
+        <div className="grid grid-cols-3 gap-5 mt-5 w-full pl-5 pr-5 font-kameron ">
           {data.map((item) => (
             <div
               key={item.id}
-              className="h-auto bg-white rounded-2xl p-5 relative"
+              className="h-auto bg-white rounded-2xl p-5 relative flex flex-col justify-between"
             >
               <p className="text-lg font-semibold">Note:</p>
               <p className="mb-3">{item.note}</p>
@@ -121,7 +121,8 @@ function RequestManager() {
                   </g>
                 </svg>
               </div>
-              <div className="mt-4 flex gap-4">
+
+              <div className="mt-5 flex gap-4">
                 {item.status !== "REJECTED" && (
                   <button
                     className={`flex-1 py-2 rounded-xl text-white font-semibold transition-colors ${
@@ -166,75 +167,100 @@ function RequestManager() {
       </div>
 
       {/* 👉 Modal hiển thị chi tiết */}
-      <Modal open={showModal} onCancel={handleCloseModal} footer={null}>
+      <Modal
+        open={showModal}
+        onCancel={handleCloseModal}
+        footer={null}
+        modalRender={(modal) => (
+          <div className="w-full max-w-[520px] mx-auto">{modal}</div>
+        )}
+      >
         {detail ? (
-          <div className="bg-white rounded-lg p-6 w-[500px] max-h-[80vh] overflow-y-auto">
-            <p className="mb-2">
-              <strong>Ghi chú:</strong> {detail?.note || "-"}
-            </p>
-            <p className="mb-2">
-              <strong>Trạng thái:</strong>
-              <span
-                className={
-                  detail.status === "PENDING"
-                    ? "text-red-500 font-semibold"
-                    : detail?.status === "APPROVED"
-                    ? "text-green-500 font-semibold"
-                    : "text-gray-500 font-semibold"
-                }
-              >
-                {detail?.status || "-"}
-              </span>
-            </p>
+          <div className="bg-white rounded-2xl px-6 py-5 max-h-[80vh] overflow-y-auto ">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">
+              Chi tiết yêu cầu
+            </h2>
 
-            <p className="mt-4 font-semibold mb-2">Danh sách sản phẩm:</p>
-            <ul className="space-y-4">
-              {detail?.items?.length > 0 ? (
-                detail.items.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="border rounded p-3 shadow-sm flex items-start gap-4"
-                  >
-                    <img
-                      src={
-                        item.medicine?.image || item.medicineSupply?.image || ""
-                      }
-                      alt="Product"
-                      className="w-24 h-24 object-cover rounded border"
-                    />
-                    <div className="flex-1">
-                      <p>
-                        <strong>Tên:</strong>{" "}
-                        {item.medicine?.name ||
-                          item.medicineSupply?.name ||
-                          "-"}
-                      </p>
-                      <p>
-                        <strong>SL:</strong> {item.quantity}
-                      </p>
-                      <p>
-                        <strong>Mức độ:</strong> {item.urgency}
-                      </p>
-                      <p>
-                        <strong>Ghi chú:</strong> {item.note || "No Note"}
-                      </p>
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <li>Không có sản phẩm</li>
-              )}
-            </ul>
+            <div className="space-y-3 mb-5">
+              <p className="text-gray-700">
+                <span className="font-semibold">Ghi chú:</span>{" "}
+                {detail?.note || "-"}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Trạng thái:</span>{" "}
+                <span
+                  className={`font-semibold ${
+                    detail.status === "PENDING"
+                      ? "text-red-500"
+                      : detail.status === "APPROVED"
+                      ? "text-green-600"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {detail?.status || "-"}
+                </span>
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-gray-800">
+                Danh sách sản phẩm
+              </h3>
+              <ul className="space-y-4">
+                {detail?.items?.length > 0 ? (
+                  detail.items.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="border rounded-md p-3 shadow-sm flex items-start gap-4"
+                    >
+                      <img
+                        src={
+                          item.medicine?.image ||
+                          item.medicineSupply?.image ||
+                          ""
+                        }
+                        alt="Product"
+                        className="w-20 h-20 object-cover rounded border bg-gray-100"
+                      />
+                      <div className="flex-1 space-y-1 text-sm text-gray-800">
+                        <p>
+                          <span className="font-semibold">Tên:</span>{" "}
+                          {item.medicine?.name ||
+                            item.medicineSupply?.name ||
+                            "-"}
+                        </p>
+                        <p>
+                          <span className="font-semibold">SL:</span>{" "}
+                          {item.quantity}
+                        </p>
+                        <p>
+                          <span className="font-semibold">Mức độ:</span>{" "}
+                          {item.urgency}
+                        </p>
+                        <p>
+                          <span className="font-semibold">Ghi chú:</span>{" "}
+                          {item.note || "Không có"}
+                        </p>
+                      </div>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-600 italic">Không có sản phẩm</li>
+                )}
+              </ul>
+            </div>
 
             <button
               onClick={handleCloseModal}
-              className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="mt-6 w-full py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
             >
               Đóng
             </button>
           </div>
         ) : (
-          <div className="p-6">Đang tải dữ liệu...</div>
+          <div className="p-6 text-center text-gray-500">
+            Đang tải dữ liệu...
+          </div>
         )}
       </Modal>
     </>

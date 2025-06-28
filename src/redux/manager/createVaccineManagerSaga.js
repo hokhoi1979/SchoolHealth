@@ -56,7 +56,11 @@ function* managerVaccineSaga(action) {
       yield put(postMangerFailVaccine(`API ERROR: ${response.data}`));
     }
   } catch (error) {
-    yield put(postMangerFailVaccine(`API ERROR: ${error}`));
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`Create Vaccine Fail: ${errorMessage}`);
+    yield put(postMangerFailVaccine(errorMessage));
+    console.error("Create Vaccine Error:", error);
   }
 }
 function* watchPostManagerVaccine() {

@@ -162,6 +162,7 @@ function ImportManager() {
       setSelectedMedicine(null);
       setSelectedClassifyID(null);
       setNewClassify("");
+      setIsModalVisible(false);
     }
   };
 
@@ -261,7 +262,14 @@ function ImportManager() {
           <Tooltip title="Update">
             <Button
               className="bg-blue-500 text-white hover:bg-blue-600"
-              onClick={() => setSelectedMedicine(record)}
+              onClick={() => {
+                setSelectedMedicine(record);
+                setSelectedClassifyID(record.classifyID);
+                const found = categories.find(
+                  (item) => item.id === record.classifyID
+                );
+                setSelectedClassify(found?.name || "");
+              }}
             >
               Update
             </Button>
@@ -283,6 +291,7 @@ function ImportManager() {
             onConfirm={() => {
               console.log("Deleting medicine ID:", record.id);
               dispatch(deleteMedicineManager({ id: record.id }));
+              setIsModalVisible(false);
             }}
           >
             <Button className="bg-red-500 text-white hover:bg-red-600">
@@ -380,7 +389,11 @@ function ImportManager() {
       {/* Update Medicine Modal */}
       {selectedMedicine && (
         <Modal
-          title={`Update medicine: ${selectedMedicine?.name}`}
+          title={
+            <div className="text-xl font-semibold text-center text-gray-800">
+              Update Medicine: {selectedMedicine?.name}
+            </div>
+          }
           open={!!selectedMedicine}
           onCancel={() => setSelectedMedicine(null)}
           footer={[
@@ -399,10 +412,14 @@ function ImportManager() {
               Update
             </Button>,
           ]}
+          width={700}
         >
-          <div className="grid grid-cols-2 gap-4 mt-2">
-            <div>
-              <label className="block mb-1 font-medium">Image</label>
+          <div className="flex flex-col md:flex-row gap-6 mt-2">
+            {/* Upload ảnh bên trái */}
+            <div className="w-full md:w-1/3 flex flex-col items-center">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Image
+              </label>
               <Upload
                 showUploadList={false}
                 beforeUpload={(file) => {
@@ -416,78 +433,98 @@ function ImportManager() {
                   return false;
                 }}
               >
-                {selectedMedicine?.previewImage || selectedMedicine?.image ? (
-                  <img
-                    src={
-                      selectedMedicine?.previewImage
-                        ? selectedMedicine?.previewImage
-                        : selectedMedicine?.image
-                    }
-                    alt="medicine"
-                    style={{ width: 150, height: 100 }}
-                  />
-                ) : (
-                  <Button icon={<PlusOutlined />}>Upload</Button>
-                )}
+                <div className="w-40 h-32 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center hover:border-blue-400 cursor-pointer overflow-hidden">
+                  {selectedMedicine?.previewImage || selectedMedicine?.image ? (
+                    <img
+                      src={
+                        selectedMedicine?.previewImage ||
+                        selectedMedicine?.image
+                      }
+                      alt="preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <PlusOutlined className="text-2xl text-gray-400" />
+                  )}
+                </div>
               </Upload>
             </div>
 
-            <div>
-              <label className="block mb-1 font-medium">Name</label>
-              <Input
-                value={selectedMedicine?.name}
-                onChange={(e) => handleFieldChange("name", e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Stock</label>
-              <Input
-                type="number"
-                value={selectedMedicine?.stock}
-                min={0}
-                onChange={(e) =>
-                  handleFieldChange("stock", parseInt(e.target.value) || 0)
-                }
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="block mb-1 font-medium">Usage</label>
-              <Input
-                value={selectedMedicine?.usage}
-                onChange={(e) => handleFieldChange("usage", e.target.value)}
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="block mb-1 font-medium">Description</label>
-              <TextArea
-                value={selectedMedicine?.description}
-                onChange={(e) =>
-                  handleFieldChange("description", e.target.value)
-                }
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="block mb-1 font-medium">Type</label>
-              <Select
-                className="w-full"
-                value={selectedMedicine?.type || "PELLETS"}
-                onChange={(value) => handleFieldChange("type", value)}
-              >
-                <Option value="PELLETS">Pellets</Option>
-                <Option value="BOTTLE">Bottle</Option>
-                <Option value="JAR">Jar</Option>
-              </Select>
+            {/* Thông tin thuốc bên phải */}
+            <div className="w-full md:w-2/3 grid grid-cols-1 gap-4 font-serif">
               <div>
-                <label className="text-[16px] font-medium">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Name
+                </label>
+                <Input
+                  value={selectedMedicine?.name}
+                  onChange={(e) => handleFieldChange("name", e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Stock
+                </label>
+                <Input
+                  type="number"
+                  min={0}
+                  value={selectedMedicine?.stock}
+                  onChange={(e) =>
+                    handleFieldChange("stock", parseInt(e.target.value) || 0)
+                  }
+                  className="text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Usage
+                </label>
+                <Input
+                  value={selectedMedicine?.usage}
+                  onChange={(e) => handleFieldChange("usage", e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
+                <TextArea
+                  rows={2}
+                  value={selectedMedicine?.description}
+                  onChange={(e) =>
+                    handleFieldChange("description", e.target.value)
+                  }
+                  className="text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Type
+                </label>
+                <Select
+                  className="w-full text-sm"
+                  value={selectedMedicine?.type || "PELLETS"}
+                  onChange={(value) => handleFieldChange("type", value)}
+                >
+                  <Option value="PELLETS">Pellets</Option>
+                  <Option value="BOTTLE">Bottle</Option>
+                  <Option value="JAR">Jar</Option>
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Classify Name *
                 </label>
                 <Select
                   placeholder="Select classify name"
-                  className="w-full"
+                  className="w-full text-sm"
                   value={selectedClassifyID}
                   onChange={(value) => {
                     if (value === "Other") {
@@ -513,13 +550,14 @@ function ImportManager() {
 
               {selectedClassify === "Other" && (
                 <div className="col-span-2">
-                  <label className="text-[16px] font-medium">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     New Classify Name
                   </label>
                   <Input
                     placeholder="Enter new classify name"
                     value={newClassify}
                     onChange={(e) => setNewClassify(e.target.value)}
+                    className="text-sm"
                   />
                 </div>
               )}

@@ -3,7 +3,6 @@ import axios from "axios";
 import {
   PATCH__MANAGER__VACCINE,
   patchManagerSucessVaccine,
-  patchManagerVaccine,
   patchMangerFailVaccine,
 } from "./successVaccineManagerSlice";
 import { toast } from "react-toastify";
@@ -50,13 +49,14 @@ function* patchVaccineManagerSaga(action) {
 
       yield put(patchManagerSucessVaccine(response.data));
     } else {
-      yield put(patchManagerFailVaccine(response.status));
+      yield put(patchMangerFailVaccine(response.status));
     }
   } catch (error) {
-    const errMsg =
-      error?.response?.data?.message || error.message || "Unknown error";
-    yield put(patchMangerFailVaccine(errMsg));
-    console.log(error);
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`Create Vaccine Fail: ${errorMessage}`);
+    yield put(patchMangerFailVaccine(errorMessage));
+    console.error("Create Vaccine Error:", error);
   }
 }
 

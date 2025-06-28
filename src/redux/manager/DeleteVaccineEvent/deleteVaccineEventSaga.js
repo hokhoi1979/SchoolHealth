@@ -32,7 +32,7 @@ function* managerDeleteVaccineSaga(action) {
     if (response.status === 200 || response.status === 201) {
       console.log("DUCC", response.data);
       yield put(deleteManagerSucessVaccine(response.data));
-
+      toast.success("Delete Success");
       const fetchData = yield call(
         axios.get,
         `${URL_API}/manager/v1/vaccinationEvent`,
@@ -46,7 +46,6 @@ function* managerDeleteVaccineSaga(action) {
 
       if (fetchData.status === 200 || fetchData.status === 201) {
         yield put(fetchVaccineManagerSucess(fetchData.data));
-        toast.success("Delete Success");
       } else {
         yield put(fetchVaccineManagerFail(fetchData.status));
         toast.success("Delete FAIL");
