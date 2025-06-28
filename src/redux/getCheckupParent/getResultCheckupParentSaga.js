@@ -1,0 +1,38 @@
+import { call, put, takeLatest } from "redux-saga/effects";
+import {
+  FETCH_RESULT_CHECK_UP_PARENT,
+  fetchResultCheckUpParentSuccess,
+  fetchResultCheckUpParentFail,
+} from "./getResultCheckupParentSlice";
+import axios from "axios";
+
+const URL_API = import.meta.env.VITE_API_URL;
+
+function* resultCheckUpParentSaga(action) {
+  try {
+    const token = localStorage.getItem("accessToken");
+    const { id, studentID } = action.payload;
+    const response = yield call(
+      axios.get,
+      `${URL_API}/parent/v1/check-up/${id}/result/${studentID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 200 || response.status === 201) {
+      yield put(fetchResultCheckUpParentSuccess(response.data));
+    } else {
+      yield put(fetchResultCheckUpParentFail(response.data));
+    }
+  } catch (error) {
+    yield put(fetchResultCheckUpParentFail(error));
+  }
+}
+
+function* watchFetchResultCheckUpParent() {
+  yield takeLatest(FETCH_RESULT_CHECK_UP_PARENT, resultCheckUpParentSaga);
+}
+export default watchFetchResultCheckUpParent;

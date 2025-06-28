@@ -96,7 +96,7 @@ const Rejected = ({ notifications }) => {
             <div className="flex items-center gap-2">
               <CloseCircleOutlined style={{ color: "#dc2626" }} />
               <Text strong className="text-red-700">
-                Vaccination Rejected
+                Check Up Rejected
               </Text>
             </div>
             {notification.respondedAt && (

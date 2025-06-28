@@ -40,6 +40,8 @@ import watchFetchRejectBenefit from "./profileParent/medicalRequest/rejectBenefi
 import watchFetchCheckUpParent from "./getCheckupParent/getCheckupParentSaga";
 import watchFetchAcceptCheckUp from "./getCheckupParent/getCheckupParentAcceptSaga";
 import watchFetchDeclineCheckUp from "./getCheckupParent/getCheckupParentDeclineSaga";
+import watchFetchDetailCheckUpParent from "./getCheckupParent/getDetailCheckupParentSaga";
+import watchFetchResultCheckUpParent from "./getCheckupParent/getResultCheckupParentSaga";
 
 import watchDeleteManagerVaccine from "./manager/DeleteVaccineEvent/deleteVaccineEventSaga";
 import watchPostManagerMedicine from "./manager/CreateManagerMedicine/createManagerMedicineSaga";
@@ -118,6 +120,8 @@ export default function* rootSaga() {
     watchFetchCheckUpParent(),
     watchFetchAcceptCheckUp(),
     watchFetchDeclineCheckUp(),
+    watchFetchDetailCheckUpParent(),
+    watchFetchResultCheckUpParent(),
 
     watchFetchAllMedicine(),
     watchFetchRequestMedicine(),

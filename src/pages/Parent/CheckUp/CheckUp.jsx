@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -5,11 +7,13 @@ import Pending from "./Pending";
 import Completed from "./Completed";
 import Rejected from "./Rejected";
 import ModalResponse from "./ModalResponse";
+import DetailModal from "./DetailModal";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { fetchCheckUpParent } from "../../../redux/getCheckupParent/getCheckupParentSlice";
 import { fetchAcceptCheckUp } from "../../../redux/getCheckupParent/getCheckupParentAcceptSlice";
 import { fetchDeclineCheckUp } from "../../../redux/getCheckupParent/getCheckupParentDeclineSlice";
+import { fetchDetailCheckUpParent } from "../../../redux/getCheckupParent/getDetailCheckupParentSlice";
 import { Spin, Alert, message } from "antd";
 
 const CheckUp = () => {
@@ -23,9 +27,16 @@ const CheckUp = () => {
   const { loading: declineLoading, error: declineError } = useSelector(
     (state) => state.checkupParentDecline
   );
+  const {
+    checkup: checkupDetail,
+    loading: detailLoading,
+    error: detailError,
+  } = useSelector((state) => state.detailCheckUpParent);
+
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [response, setResponse] = useState({ consent: "yes", reason: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCheckUpParent());
@@ -37,7 +48,7 @@ const CheckUp = () => {
     switch (status) {
       case "ACCEPTED":
         return "completed";
-      case "DECLINED": // THÊM CASE NÀY
+      case "DECLINED":
         return "rejected";
       case "PENDING":
       default:
@@ -68,6 +79,16 @@ const CheckUp = () => {
     setSelectedNotification(notification);
     setResponse({ consent: consnetType, reason: "" });
     setIsModalOpen(true);
+  };
+
+  const handleViewDetail = (healthCheckUpID) => {
+    console.log("Viewing detail for:", healthCheckUpID); // Debug log
+    dispatch(fetchDetailCheckUpParent({ id: healthCheckUpID }));
+    setIsDetailModalOpen(true);
+  };
+
+  const handleCloseDetailModal = () => {
+    setIsDetailModalOpen(false);
   };
 
   const handleConfirm = async () => {
@@ -144,7 +165,12 @@ const CheckUp = () => {
     }
     switch (currentTab) {
       case "completed":
-        return <Completed notifications={notificationItem} />;
+        return (
+          <Completed
+            notifications={notificationItem}
+            onViewDetail={handleViewDetail}
+          />
+        );
       case "rejected":
         return <Rejected notifications={notificationItem} />;
       case "pending":
@@ -225,7 +251,15 @@ const CheckUp = () => {
         loading={modalLoading}
         error={modalError}
       />
+      <DetailModal
+        open={isDetailModalOpen}
+        onclose={handleCloseDetailModal}
+        checkupDetail={checkupDetail}
+        loading={detailLoading}
+        error={detailError}
+      />
     </div>
   );
 };
+
 export default CheckUp;

@@ -1,5 +1,11 @@
-import { Card, Space, Typography } from "antd";
-import { CheckCircleOutlined, CalendarOutlined } from "@ant-design/icons";
+"use client";
+
+import { Card, Space, Typography, Button } from "antd";
+import {
+  CheckCircleOutlined,
+  CalendarOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
 import { Activity, User } from "lucide-react";
 
 const { Title, Paragraph, Text } = Typography;
@@ -15,7 +21,7 @@ const style = {
   },
 };
 
-const Completed = ({ notifications }) => {
+const Completed = ({ notifications, onViewDetail }) => {
   const approvedVaccinations = notifications.filter(
     (n) => n.type === "checkup" && n.status === "completed"
   );
@@ -89,7 +95,17 @@ const Completed = ({ notifications }) => {
               </div>
             )}
           </div>
-          <small className="text-gray-500">Date {notification.date}</small>
+
+          <div className="flex justify-between items-center mt-4">
+            <Button
+              type="primary"
+              icon={<EyeOutlined />}
+              onClick={() => onViewDetail(notification.healthCheckUpID)}
+              style={{ backgroundColor: "#16a34a", borderColor: "#16a34a" }}
+            >
+              View Detail
+            </Button>
+          </div>
         </Card>
       ))}
     </Space>
