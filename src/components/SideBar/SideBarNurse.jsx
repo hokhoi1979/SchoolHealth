@@ -103,6 +103,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
+            onClick={() => {
+              setClick("materials");
+              navigate("/nurse/materials");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -110,7 +114,6 @@ const SideBar = () => {
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              onClick={() => navigate("/nurse/materials")}
             >
               <path
                 fill="none"
@@ -122,11 +125,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("materials")}
-                to={"/nurse/materials"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/materials"} className="text-[18px]">
                 Materials
               </Link>
             )}
@@ -139,13 +138,16 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/student");
+              setClick("profile");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              onClick={() => navigate("/nurse/student")}
             >
               <path
                 fill="#5B5454"
@@ -153,11 +155,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("profile")}
-                to={"/nurse/student"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/student"} className="text-[18px]">
                 Student Profile
               </Link>
             )}
@@ -170,13 +168,16 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/medicalEvent");
+              setClick("medical");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              onClick={() => navigate("/nurse/medicalEvent")}
             >
               <path
                 fill="#5B5454"
@@ -184,11 +185,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("medical")}
-                to={"/nurse/medicalEvent"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/medicalEvent"} className="text-[18px]">
                 Medical Event
               </Link>
             )}
@@ -201,13 +198,16 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/vaccine");
+              setClick("vaccine");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              onClick={() => navigate("/nurse/vaccine")}
             >
               <path
                 fill="none"
@@ -219,11 +219,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("vaccine")}
-                to={"/nurse/vaccine"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/vaccine"} className="text-[18px]">
                 Vaccine Management
               </Link>
             )}
@@ -236,13 +232,16 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/medical");
+              setClick("checkup");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              onClick={() => navigate("/nurse/medical")}
             >
               <path
                 fill="#5B5454"
@@ -250,11 +249,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("checkup")}
-                to={"/nurse/medical"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/medical"} className="text-[18px]">
                 Medical Checkup
               </Link>
             )}
@@ -267,26 +262,25 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/information");
+              setClick("information");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              onClick={() => navigate("/nurse/information")}
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
             >
-              <path fill="#5B5454" />
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              <path
+                fill="currentColor"
+                d="M13 9h-2V7h2m0 10h-2v-6h2m-1-9A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2"
+              />
             </svg>
+
             {!toggle && (
-              <Link
-                onClick={() => setClick("information")}
-                to={"/nurse/information"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/information"} className="text-[18px]">
                 Nurse Information
               </Link>
             )}
@@ -299,12 +293,15 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/change_password");
+              setClick("change_password");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
               height="30"
-              onClick={() => navigate("/nurse/change_password")}
               viewBox="0 0 24 24"
             >
               <path
@@ -313,11 +310,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("change_password")}
-                to={"/nurse/change_password"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/change_password"} className="text-[18px]">
                 Change Password
               </Link>
             )}

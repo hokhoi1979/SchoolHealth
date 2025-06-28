@@ -64,7 +64,6 @@ function Inventory() {
         usage: item?.usage,
         image: item?.image,
         description: item?.description,
-        // classify: item?.classify?.name,
       }));
       setMedicineStore(format);
     }
@@ -129,52 +128,10 @@ function Inventory() {
       key: "description",
       align: "center",
     },
-
-    {
-      title: "Action",
-      key: "action",
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          <Tooltip
-            placement="bottom"
-            title="View"
-            overlayInnerStyle={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "12px",
-            }}
-          >
-            <div style={{ cursor: "pointer" }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
-                ></path>
-              </svg>
-            </div>
-          </Tooltip>
-        </Space>
-      ),
-    },
   ];
 
   return (
     <div>
-      <div className=" mt-5 flex gap-5">
-        <Input
-          style={{ borderRadius: "7px", width: "300px" }}
-          placeholder="Search drugs, materials..."
-        />
-        <Button className="!bg-[#90A8B0] !hover:bg-gray-600" type="secondary">
-          <p className="text-white font-kameron"> Search</p>
-        </Button>
-      </div>
-
       <Table className="mt-5" columns={columns} dataSource={combinedStore} />
     </div>
   );

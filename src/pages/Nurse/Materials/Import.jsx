@@ -115,11 +115,11 @@ function Import() {
     console.log("GET", detailRequest);
   };
 
-  useEffect(() => {
-    if (detailRequest?.data?.id) {
-      setOpenDetail(true);
-    }
-  }, [detailRequest]);
+  // useEffect(() => {
+  //   if (detailRequest?.data?.id) {
+  //     setOpenDetail(true);
+  //   }
+  // }, [detailRequest]);
 
   const columns = [
     {
@@ -188,6 +188,7 @@ function Import() {
                 height={20}
                 viewBox="0 0 24 24"
                 onClick={() => {
+                  setOpenDetail(true);
                   handleDetail(record?.id);
                 }}
               >
@@ -389,71 +390,107 @@ function Import() {
         </h1>
 
         {detailRequest?.data ? (
-          <div className="space-y-2 font-serif text-[16px]">
-            <p>
-              <strong>Created By:</strong> {detailRequest.data.createdBy}
-            </p>
-            <p>
-              <strong>Status:</strong> {detailRequest.data.status}
-            </p>
-            <p>
-              <strong>Note:</strong> {detailRequest.data.note}
-            </p>
+          <div className="space-y-6 font-serif text-gray-800">
+            <div className="border-l-4 border-[#1bd0d8]  rounded-xl p-5 shadow">
+              <div className="flex items-center justify-between mb-3">
+                <div className="space-y-2 font-serif text-[16px] grid grid-cols-2">
+                  <div>
+                    <div className="flex gap-2 mb-5">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <g
+                          fill="none"
+                          stroke="#1bd0d8"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        >
+                          <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+                          <path d="m19 9l-5 5l-4-4l-3 3" />
+                        </g>
+                      </svg>
+                      <h2 className="text-lg font-semibold">
+                        Event # {detailRequest.data.id}
+                      </h2>
+                    </div>
 
-            <h2 className="text-lg mt-4">Requested Items</h2>
-            <Table
-              dataSource={detailRequest.data.items}
-              rowKey={(record, index) => index}
-              pagination={false}
-              columns={[
-                {
-                  title: "Image",
-                  dataIndex: "",
-                  key: "image",
-                  render: (_, record) => {
-                    const img =
-                      record.medicine?.image || record.medicineSupply?.image;
-                    return img ? (
-                      <img
-                        src={img}
-                        alt="img"
-                        style={{ width: 50, height: 50 }}
-                      />
-                    ) : (
-                      "No Image"
-                    );
-                  },
-                },
-                {
-                  title: "Name",
-                  dataIndex: "",
-                  key: "name",
-                  render: (_, record) => {
-                    return (
-                      record.medicine?.name ||
-                      record.medicineSupply?.name ||
-                      "Unknown"
-                    );
-                  },
-                },
-                {
-                  title: "Quantity",
-                  dataIndex: "quantity",
-                  key: "quantity",
-                },
-                {
-                  title: "Urgency",
-                  dataIndex: "urgency",
-                  key: "urgency",
-                },
-                {
-                  title: "Note",
-                  dataIndex: "note",
-                  key: "note",
-                  render: (text) => text || "No Note",
-                },
-              ]}
-            />
+                    <p>
+                      <strong>Created By:</strong>{" "}
+                      {detailRequest.data.createdBy}
+                    </p>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      <Tag color="green">{detailRequest.data.status}</Tag>
+                    </p>
+                    <p>
+                      <strong>Note:</strong> {detailRequest.data.note}
+                    </p>
+                  </div>
+
+                  <div className=" mt-5">
+                    <h2 className="text-lg mt-4 font-bold">Requested Items</h2>
+                    <Table
+                      dataSource={detailRequest.data.items}
+                      rowKey={(record, index) => index}
+                      pagination={false}
+                      columns={[
+                        {
+                          title: "Image",
+                          dataIndex: "",
+                          key: "image",
+                          render: (_, record) => {
+                            const img =
+                              record.medicine?.image ||
+                              record.medicineSupply?.image;
+                            return img ? (
+                              <img
+                                src={img}
+                                alt="img"
+                                style={{ width: 50, height: 50 }}
+                              />
+                            ) : (
+                              "No Image"
+                            );
+                          },
+                        },
+                        {
+                          title: "Name",
+                          dataIndex: "",
+                          key: "name",
+                          render: (_, record) => {
+                            return (
+                              record.medicine?.name ||
+                              record.medicineSupply?.name ||
+                              "Unknown"
+                            );
+                          },
+                        },
+                        {
+                          title: "Quantity",
+                          dataIndex: "quantity",
+                          key: "quantity",
+                        },
+                        {
+                          title: "Urgency",
+                          dataIndex: "urgency",
+                          key: "urgency",
+                        },
+                        {
+                          title: "Note",
+                          dataIndex: "note",
+                          key: "note",
+                          render: (text) => text || "No Note",
+                        },
+                      ]}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <p>Loading...</p>
