@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 import {
   POST__MANAGER__SUPPLY,
@@ -14,7 +14,7 @@ import {
 const URL_API = import.meta.env.VITE_API_URL;
 function* managerCreateSupplySaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
 
     const { name, stock, description, usage, category, image } = action.payload;
 

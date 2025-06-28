@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 
 import { fetchDetailManagerClassify } from "../GetDetallManagerClassify/getDetailManagerClassifySlice";
@@ -7,12 +7,17 @@ import {
   deleteMedicineManagerFail,
   deleteMedicineManagerSuccess,
 } from "./deleteManagerMedicineSlice";
+import toast from "react-hot-toast";
+import {
+  fetchMedicineClasstifyManagerFail,
+  fetchMedicineClasstifyManagerSucess,
+} from "../GetManagerMedineClassify/getManagerMedicineClassifySlice";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
 function* deleteMedicineManagerSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     const { id } = action.payload;
 
     const response = yield call(
@@ -29,7 +34,25 @@ function* deleteMedicineManagerSaga(action) {
     if (response.status === 200 || response.status === 201) {
       console.log("DELETE SUCCESS:", response.data);
       yield put(deleteMedicineManagerSuccess(response.data));
-      yield put(fetchDetailManagerClassify());
+      toast.success("Delete Succes");
+      const fetchData = yield call(
+        axios.get,
+        `${URL_API}/manager/v1/medicine-classify?page=1&limit=8sortBy=createdAt&order=asc`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (fetchData.status === 200 || fetchData.status === 201) {
+        console.log("DUCC", fetchData.data);
+
+        yield put(fetchMedicineClasstifyManagerSucess(fetchData.data));
+      } else {
+        yield put(fetchMedicineClasstifyManagerFail(fetchData.status));
+      }
     } else {
       yield put(deleteMedicineManagerFail(`API ERROR: ${response.statusText}`));
     }

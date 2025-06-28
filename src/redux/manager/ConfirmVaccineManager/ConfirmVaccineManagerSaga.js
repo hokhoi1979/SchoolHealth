@@ -1,4 +1,10 @@
-import { actionChannel, call, put, takeLatest } from "redux-saga/effects";
+import {
+  actionChannel,
+  call,
+  put,
+  select,
+  takeLatest,
+} from "redux-saga/effects";
 import axios from "axios";
 import {
   PATCH__MANAGER__CONFIRM__VACCINE,
@@ -6,12 +12,17 @@ import {
   patchMangerFailConfirmVaccine,
 } from "./ConfirmVaccineManagerSlice";
 import { patchMangerFailVaccine } from "../successVaccineManagerSlice";
+import { toast } from "react-toastify";
+import {
+  fetchVaccineManagerFail,
+  fetchVaccineManagerSucess,
+} from "../getVaccineManagerSlice";
 
 const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 function* patchVaccineConfirmManagerSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     console.log("TOKEN", token);
     const { id, body } = action.payload;
     const response = yield call(
@@ -30,8 +41,29 @@ function* patchVaccineConfirmManagerSaga(action) {
       console.log("DUCC", response.data);
 
       yield put(patchManagerSucessConfirmVaccine(response.data));
+      toast.success("Confirm Success");
+
+      const fetchData = yield call(
+        axios.get,
+        `${URL_API}/manager/v1/vaccinationEvent`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (fetchData.status === 200 || fetchData.status === 201) {
+        console.log("DUCC", fetchData.data);
+
+        yield put(fetchVaccineManagerSucess(fetchData.data));
+      } else {
+        yield put(fetchVaccineManagerFail(fetchData.status));
+      }
     } else {
       yield put(patchMangerFailConfirmVaccine(response.status));
+      toast.error("Confirm Error");
     }
   } catch (error) {
     const errMsg =

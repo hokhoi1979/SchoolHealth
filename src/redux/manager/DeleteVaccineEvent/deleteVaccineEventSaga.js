@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 import {
   DELETE__MANAGER__VACCINE,
@@ -15,7 +15,7 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* managerDeleteVaccineSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     const { id } = action.payload;
     const response = yield call(
       axios.delete,
@@ -32,7 +32,7 @@ function* managerDeleteVaccineSaga(action) {
     if (response.status === 200 || response.status === 201) {
       console.log("DUCC", response.data);
       yield put(deleteManagerSucessVaccine(response.data));
-
+      toast.success("Delete Success");
       const fetchData = yield call(
         axios.get,
         `${URL_API}/manager/v1/vaccinationEvent`,
@@ -46,7 +46,6 @@ function* managerDeleteVaccineSaga(action) {
 
       if (fetchData.status === 200 || fetchData.status === 201) {
         yield put(fetchVaccineManagerSucess(fetchData.data));
-        toast.success("Delete Success");
       } else {
         yield put(fetchVaccineManagerFail(fetchData.status));
         toast.success("Delete FAIL");
