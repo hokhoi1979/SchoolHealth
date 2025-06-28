@@ -1041,10 +1041,6 @@ const MedicalEvent = () => {
             </h2>
             <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-700">
               <p>
-                <span className="font-semibold">Student:</span>{" "}
-                {getMedicalEventDetail.data?.studentInfo?.account?.fullname}
-              </p>
-              <p>
                 <span className="font-semibold">Type:</span> Emergency
               </p>
               <p>
