@@ -14,7 +14,6 @@ import Trend from "../pages/Nurse/Dashboard/Trend";
 import Materials from "../pages/Nurse/Materials/Materials";
 import Inventory from "../pages/Nurse/Materials/Inventory";
 import Import from "../pages/Nurse/Materials/Import";
-import Export from "../pages/Nurse/Materials/Export";
 import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
 import NurseInfor from "../pages/Nurse/NurseInformation/NurseInformation";
 import ChangePasswordNurse from "../pages/Nurse/ChangePassword/ChangePassword";
@@ -101,7 +100,6 @@ const router = createBrowserRouter([
                 children: [
                   { path: "", element: <Inventory /> },
                   { path: "import", element: <Import /> },
-                  { path: "export", element: <Export /> },
                   { path: "medicine", element: <MedicineForStudent /> },
                   { path: "schedule", element: <MedicineSchedule /> },
                 ],

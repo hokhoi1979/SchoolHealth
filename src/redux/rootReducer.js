@@ -91,6 +91,12 @@ import changePasswordReducer from "./ChangePassword/changePasswordSlice";
 import getDetailRequestManagerReducer from "./manager/GetDetailRequestManager/getDetailRequestManagerSlice";
 import createAiChatReducer from "./AI_Chat/chatBoxSlice";
 import getAllChatBoxAiReducer from "./AI_Chat/getChaxBoxSlice";
+import getAllCheckupManagerReducer from "./MedicalCheckUpManager/GetAllCheckUpManager/getAllCheckUpManagerSlice";
+import managerCheckupReducer from "./MedicalCheckUpManager/PostCheckUpManager/PostCheckUpManagerSlice";
+import patchManagerConfirmCheckupReducer from "./MedicalCheckUpManager/ConfirmMedicalCheckupManager/confirmMedicalCheckupManagerSlice";
+import endEventMedicalCheckUpManagerReducer from "./MedicalCheckUpManager/EndEventMedicalCheckUpManager/endEventMedicalCheckUpManagerSlice";
+import deleteMedicalCheckupManagerReducer from "./MedicalCheckUpManager/DeleteMedicalCheckupManager/deleteMedicalCheckupManagerSlice";
+import managerUpdateMedicalCheckupReducer from "./MedicalCheckUpManager/UpdateMedicalCheckupManager/updateMedicalCheckupManagerSlice";
 import checkupReducer from "./checkupNurse/checkupDay/checkupSlice";
 import checkupJoinReducer from "./checkupNurse/checkupJoin/checkupJoinSlice";
 import fetchCheckupDetailResultReducer from "./checkupNurse/checkupDetailResult/checkupDetailResultSlice";
@@ -191,6 +197,12 @@ const rootReducer = combineReducers({
   getManagerMedicalEventDetail: getManagerMedicalEventDetailReducer,
   createAiChat: createAiChatReducer,
   getAllChatBoxAi: getAllChatBoxAiReducer,
+  getAllCheckupManager: getAllCheckupManagerReducer,
+  postManagerCheckup: managerCheckupReducer,
+  patchManagerConfirmCheckup: patchManagerConfirmCheckupReducer,
+  endEventMedicalCheckUpManager: endEventMedicalCheckUpManagerReducer,
+  deleteMedicalCheckupManager: deleteMedicalCheckupManagerReducer,
+  managerUpdateMedicalCheckup: managerUpdateMedicalCheckupReducer,
 
   parentProfileHealth: healthProfileReducer,
 

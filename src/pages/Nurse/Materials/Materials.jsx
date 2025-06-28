@@ -51,16 +51,6 @@ function Materials() {
                   </Link>
                 </div>
 
-                {/* <div
-                  className={`hover:bg-white p-1 rounded-md ${
-                    click === "export" ? "bg-white rounded-md text-black" : ""
-                  }`}
-                >
-                  <Link onClick={() => setClick("export")} to={"export"}>
-                    Export
-                  </Link>
-                </div> */}
-
                 <div
                   className={`hover:bg-white p-1 rounded-md ${
                     click === "medicine" ? "bg-white rounded-md text-black" : ""
@@ -83,19 +73,6 @@ function Materials() {
               </div>
             </div>
 
-            {click === "inventory" && (
-              <>
-                {" "}
-                {/* <Button
-                  type="secondary"
-                  className="!bg-black hover:!bg-gray-600"
-                  onClick={() => setOpen(true)}
-                >
-                  <p className="text-white font-serif p-1">+ Import Medicine</p>
-                </Button> */}
-              </>
-            )}
-
             {click === "medicine" && <> </>}
           </div>
 
@@ -109,7 +86,6 @@ function Materials() {
           {click === "medicine" && <> </>}
         </div>
 
-        {/* Footer nằm dưới cùng */}
         <AppFooter />
       </div>
     </>

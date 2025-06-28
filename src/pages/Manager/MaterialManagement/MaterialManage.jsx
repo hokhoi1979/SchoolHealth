@@ -80,17 +80,6 @@ function MaterialManage() {
           <CommonBreadcrumb role={"Manager"} page={"materialManage"} />
         </h1>
 
-        <div className="grid grid-cols-2 gap-5 mt-5 w-[50%] pl-5 pr-5 font-kameron ">
-          <div className="h-[120px] bg-white rounded-2xl">
-            <p className="flex justify-center mt-5">Total Medicine</p>
-            <p className="flex justify-center text-[50px]">99</p>
-          </div>
-          <div className="h-[120px] bg-white rounded-2xl">
-            <p className="flex justify-center mt-5">Out of Stock</p>
-            <p className="flex justify-center text-[50px]">99</p>
-          </div>
-        </div>
-
         <div className="flex justify-between mt-5">
           <div className="flex bg-[#F3F3F3] font-kameron w-[350px] h-10 items-center rounded-md ml-5">
             <div className="m-auto flex gap-5">
@@ -290,77 +279,90 @@ function MaterialManage() {
             open={open}
             onCancel={() => setOpen(false)}
             footer={false}
-            style={{ marginTop: 110 }}
+            centered
+            width={600}
+            className="custom-add-medicine-modal"
           >
-            <h1 className="font-serif text-2xl flex justify-center mb-4">
+            {/* Title */}
+            <h1 className="text-center text-2xl font-serif font-semibold text-gray-800 mb-6">
               Add New Medicine
             </h1>
+
             {/* Upload Image */}
-            <div>
-              <label className="text-[16px] font-medium">Image *</label>
+            <div className="mb-5">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Image <span className="text-red-500">*</span>
+              </label>
               <Upload
                 showUploadList={false}
                 beforeUpload={(file) => {
-                  setNewMedicineImage(file); // Lưu file gốc, không đọc base64 nữa
-                  return false; // Ngăn tự upload
+                  setNewMedicineImage(file);
+                  return false;
                 }}
               >
                 {newMedicineImage ? (
                   <img
                     src={URL.createObjectURL(newMedicineImage)}
                     alt="medicine preview"
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      objectFit: "cover",
-                    }}
+                    className="w-24 h-24 object-cover rounded border shadow"
                   />
                 ) : (
-                  <Button>Upload Image</Button>
+                  <Button className="text-sm">Upload Image</Button>
                 )}
               </Upload>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 font-serif">
+            {/* Grid Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-serif">
               {/* Name */}
               <div>
-                <label className="text-[16px] font-medium">
-                  Medicine Name *
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Medicine Name <span className="text-red-500">*</span>
                 </label>
                 <Input
                   placeholder="Enter medicine name"
-                  onChange={(e) => setMedicineName(e.target.value)}
                   value={medicineName}
+                  onChange={(e) => setMedicineName(e.target.value)}
+                  className="text-sm"
                 />
               </div>
 
               {/* Stock */}
               <div>
-                <label className="text-[16px] font-medium">Stock *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Stock <span className="text-red-500">*</span>
+                </label>
                 <Input
                   type="number"
                   placeholder="Enter stock quantity"
-                  onChange={(e) => setStock(e.target.value)}
                   value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                  className="text-sm"
                 />
               </div>
 
               {/* Description */}
               <div className="col-span-2">
-                <label className="text-[16px] font-medium">Description</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
                 <TextArea
+                  rows={3}
                   placeholder="e.g., Provides vitamin C for the body"
-                  onChange={(e) => setDescription(e.target.value)}
                   value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="text-sm"
                 />
               </div>
 
               {/* Type */}
               <div>
-                <label className="text-[16px] font-medium">Type *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Type <span className="text-red-500">*</span>
+                </label>
                 <Select
                   placeholder="Choose type"
-                  className="w-full"
+                  className="w-full text-sm"
                   value={type}
                   onChange={(value) => setType(value)}
                 >
@@ -372,12 +374,12 @@ function MaterialManage() {
 
               {/* Classify Name */}
               <div>
-                <label className="text-[16px] font-medium">
-                  Classify Name *
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Classify Name <span className="text-red-500">*</span>
                 </label>
                 <Select
                   placeholder="Select classify name"
-                  className="w-full"
+                  className="w-full text-sm"
                   value={selectedClassifyID}
                   onChange={(value) => {
                     if (value === "Other") {
@@ -401,44 +403,49 @@ function MaterialManage() {
                 </Select>
               </div>
 
+              {/* New Classify Name */}
               {selectedClassify === "Other" && (
                 <div className="col-span-2">
-                  <label className="text-[16px] font-medium">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     New Classify Name
                   </label>
                   <Input
                     placeholder="Enter new classify name"
                     value={newClassify}
                     onChange={(e) => setNewClassify(e.target.value)}
+                    className="text-sm"
                   />
                 </div>
               )}
 
               {/* Usage */}
               <div className="col-span-2">
-                <label className="text-[16px] font-medium">Usage *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Usage <span className="text-red-500">*</span>
+                </label>
                 <TextArea
+                  rows={3}
                   placeholder="e.g., Take one pill after meal"
-                  onChange={(e) => setUsage(e.target.value)}
                   value={usage}
+                  onChange={(e) => setUsage(e.target.value)}
+                  className="text-sm"
                 />
               </div>
             </div>
 
             {/* Buttons */}
-            <div className="mt-6 flex justify-end gap-3 font-serif">
+            <div className="mt-6 flex justify-end gap-3">
               <Button
-                className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
+                className="!bg-red-400 hover:!bg-red-500 text-white w-[100px]"
                 onClick={() => setOpen(false)}
               >
-                <p className="text-white text-xl font-serif p-1">Cancel</p>
+                Cancel
               </Button>
               <Button
-                className=" bg-[#39fa39] "
+                className="!bg-green-500 hover:!bg-green-600 text-white w-[100px]"
                 onClick={async () => {
                   try {
                     let classifyIDToUse = null;
-
                     if (selectedClassify === "Other") {
                       const newClassifyData = await dispatch(
                         postManagerClasstify({
@@ -451,6 +458,7 @@ function MaterialManage() {
                     } else {
                       classifyIDToUse = String(selectedClassifyID);
                     }
+
                     if (!classifyIDToUse || classifyIDToUse === "undefined") {
                       toast.error("Bạn chưa chọn hoặc thêm loại thuốc hợp lệ!");
                       return;
@@ -467,6 +475,7 @@ function MaterialManage() {
                         image: newMedicineImage,
                       })
                     );
+
                     toast.success("Tạo thuốc thành công!");
                     resetForm();
                     setOpen(false);
@@ -475,7 +484,7 @@ function MaterialManage() {
                   }
                 }}
               >
-                <p className="text-white ]  text-xl font-serif p-1">Save</p>
+                Save
               </Button>
             </div>
           </Modal>
