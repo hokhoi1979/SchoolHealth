@@ -1,35 +1,42 @@
-import { call, put, takeLatest } from "redux-saga/effects";
-import { FETCH__VACCINE__STUDENT, fetchVaccineStudentFail, fetchVaccineStudentSucess } from "./vaccineByIdSlice";
+import { call, put, select, takeLatest } from "redux-saga/effects";
+import {
+  FETCH__VACCINE__STUDENT,
+  fetchVaccineStudentFail,
+  fetchVaccineStudentSucess,
+} from "./vaccineByIdSlice";
 import axios from "axios";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
+function* vaccineStudentSaga(action) {
+  try {
+    const token = yield select((state) => state.account.token);
 
-function* vaccineStudentSaga (action){
-    try {
-        const token = localStorage.getItem("accessToken");
-        const id = action.payload;
-        const response = yield call(axios.get, `${URL_API}/nurse/v1/vaccinationEvent/${id}`, {
+    const id = action.payload;
+    const response = yield call(
+      axios.get,
+      `${URL_API}/nurse/v1/vaccinationEvent/${id}`,
+      {
         headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        });
+      }
+    );
 
-        if(response.status === 200 || response.status === 201){
-            console.log("BYID",response.data)
-            yield put(fetchVaccineStudentSucess(response.data))
-        }
-        else{
-            yield put(fetchVaccineStudentFail(response.status))
-        }
-    } catch (error) {
-        yield put(fetchVaccineStudentFail(error))
+    if (response.status === 200 || response.status === 201) {
+      yield put(fetchVaccineStudentSucess(response.data));
+      console.log("BYID", response.data);
+    } else {
+      yield put(fetchVaccineStudentFail(response.status));
     }
+  } catch (error) {
+    yield put(fetchVaccineStudentFail(error));
+  }
 }
 
-function* watchFetchVaccineStudent (){
-    yield takeLatest(FETCH__VACCINE__STUDENT, vaccineStudentSaga);
+function* watchFetchVaccineStudent() {
+  yield takeLatest(FETCH__VACCINE__STUDENT, vaccineStudentSaga);
 }
 
 export default watchFetchVaccineStudent;

@@ -17,6 +17,9 @@ import getMedicineRequestReducer from "./profileParent/medicalRequest/MedicineRe
 import createMedicineReducer from "./profileParent/medicalRequest/createMedicineSlice";
 import deleteMedicineReducer from "./profileParent/medicalRequest/deleteMedicineSlice";
 import getDetailRequestReducer from "./profileParent/medicalRequest/getDetailRequestSlice";
+import stopMedicineReducer from "./profileParent/medicalRequest/stopMedicineSlice";
+import acceptBenefitMedicineReducer from "./profileParent/medicalRequest/acceptBenefitMedicineSlice";
+import rejectBenefitMedicineReducer from "./profileParent/medicalRequest/rejectBenefitMedicineSlice";
 
 import managerMedicalReducer from "./manager/managerSlice";
 import managerVaccineReducer from "./manager/createVaccineManagerSlice";
@@ -28,7 +31,7 @@ import patchManagerVaccineReducer from "./manager/successVaccineManagerSlice";
 import vaccineResultReducer from "./vaccineNurse/vaccineResult/vaccineResultSlice";
 import sendResultVaccineReducer from "./vaccineNurse/sendResult/sendResultSlice";
 import updateVaccineReducer from "./vaccineNurse/updateVaccineResult/updateResultSlice";
-import checkupReducer from "./checkupNurse/checkupSlice";
+
 import profileDetailReducer from "./vaccineNurse/profileDetail/profileStudentSlice";
 import patchManagerConfirmVaccineReducer, {
   patchManagerConfirmVaccine,
@@ -64,6 +67,16 @@ import sendMedicalEnventReducer from "./medicalEventNurse/sendMedicalEvent/sendM
 import hospitalEventReducer from "./medicalEventNurse/editHospitalEvent/editHospitalEventSlice";
 import postMedicineEventReducer from "./medicalEventNurse/createMedicineEvent/createMedicineEventSlice";
 import deleteMedicalEventReducer from "./medicalEventNurse/deleteMedicalEvent/deleteMedicalEventSlice";
+import medicineRequestReducer from "./medicineRequestNurse/getMedicineRequest/getMedicineRequestSlice";
+import medicineDeTailRequestReducer from "./medicineRequestNurse/getDetailMedicineRequest/getMedicineDetailRequestSlice";
+import rejectMedicineRequestReducer from "./medicineRequestNurse/rejectMedicineRequest/rejectMedicineRequestSlice";
+import acceptMedicineRequestReducer from "./medicineRequestNurse/acceptMedicineRequest/acceptMedicineRequestSlice";
+import receiveMedicineRequestReducer from "./medicineRequestNurse/receiveMedicineRequest/receiveMedicineRequestSlice";
+import fetchMedicineScheduleReducer from "./materialsNurse/getMedicineSchedule/getMedicineScheduleSlice";
+import giveMedicineStudentReducer from "./materialsNurse/giveMedicineStudent/giveMedicineStudentSlice";
+import getLowStockReducer from "./materialsNurse/getLowStock/getLowStockSlice";
+import patchQuantityStockReducer from "./materialsNurse/patchMedicineStock/patchMedicineStockSlice";
+import registerReducer from "./register/registerSlice";
 import rejectManagerMedicineSupplyReducer from "./manager/Reject/rejectMedicineSupplySlice";
 import getManagerMedicalEventReducer from "./manager/ManagerMedicalEvent/managerMedicalEventSlice";
 import getManagerMedicalEventDetailReducer from "./manager/ManagerMedicalEvent/managerMedicalEventDetailSlice";
@@ -79,9 +92,17 @@ import patchManagerConfirmCheckupReducer from "./MedicalCheckUpManager/ConfirmMe
 import endEventMedicalCheckUpManagerReducer from "./MedicalCheckUpManager/EndEventMedicalCheckUpManager/endEventMedicalCheckUpManagerSlice";
 import deleteMedicalCheckupManagerReducer from "./MedicalCheckUpManager/DeleteMedicalCheckupManager/deleteMedicalCheckupManagerSlice";
 import managerUpdateMedicalCheckupReducer from "./MedicalCheckUpManager/UpdateMedicalCheckupManager/updateMedicalCheckupManagerSlice";
+import checkupReducer from "./checkupNurse/checkupDay/checkupSlice";
+import checkupJoinReducer from "./checkupNurse/checkupJoin/checkupJoinSlice";
+import fetchCheckupDetailResultReducer from "./checkupNurse/checkupDetailResult/checkupDetailResultSlice";
+import postCheckupDetailResultReducer from "./checkupNurse/sendCheckupDetailResult/sendCheckupDetailResultSlice";
+import studentCheckupReducer from "./checkupNurse/listStudentCheckup/listStudentCheckupSlice";
+import checkupResultReducer from "./checkupNurse/resultCheckup/resultCheckupSlice";
+import sendCheckupParentReducer from "./checkupNurse/sendCheckupToParent/sendCheckupParentSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
+  accountRegister: registerReducer,
   profile: profileReducer,
   vaccine: vaccineReducer,
   vaccineStudent: vaccineStudentReducer,
@@ -97,6 +118,20 @@ const rootReducer = combineReducers({
   hospitalEvent: hospitalEventReducer,
   postMedicineEvent: postMedicineEventReducer,
   deleteMedicalEvent: deleteMedicalEventReducer,
+  medicineRequest: medicineRequestReducer,
+  medicineDeTailRequest: medicineDeTailRequestReducer,
+  rejectMedicineRequest: rejectMedicineRequestReducer,
+  acceptMedicineRequest: acceptMedicineRequestReducer,
+  receiveMedicineRequest: receiveMedicineRequestReducer,
+  medicineSchedule: fetchMedicineScheduleReducer,
+  giveMedicineStudent: giveMedicineStudentReducer,
+  getLowStock: getLowStockReducer,
+  patchQuantityStock: patchQuantityStockReducer,
+  checkupJoin: checkupJoinReducer,
+  fetchCheckupDetailResult: fetchCheckupDetailResultReducer,
+  postCheckupDetailResult: postCheckupDetailResultReducer,
+  studentCheckup: studentCheckupReducer,
+  sendCheckupParent: sendCheckupParentReducer,
 
   //api parent
   studentOfParent: studentOfParentReducer,
@@ -113,6 +148,10 @@ const rootReducer = combineReducers({
   createMedicineRequest: createMedicineReducer,
   deleteMedicineRequest: deleteMedicineReducer,
   getDetailRequest: getDetailRequestReducer,
+  checkupResult: checkupResultReducer,
+  stopMedicine: stopMedicineReducer,
+  acceptBenefitMedicine: acceptBenefitMedicineReducer,
+  rejectBenefitMedicine: rejectBenefitMedicineReducer,
 
   vaccineResult: vaccineResultReducer,
   sendVaccineResult: sendResultVaccineReducer,

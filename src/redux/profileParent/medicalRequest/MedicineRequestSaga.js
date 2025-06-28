@@ -1,26 +1,34 @@
 import { call, put, takeLatest } from "redux-saga/effects";
+import axios from "axios";
 import {
   FETCH_MEDICINE_REQUEST,
   fetchMedicineRequestSuccess,
   fetchMedicineRequestFail,
 } from "./MedicineRequestSlice";
-import axios from "axios";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
-function* medicineRequestSaga() {
+function* medicineRequestSaga(action) {
   try {
     const token = localStorage.getItem("accessToken");
-    const response = yield call(
-      axios.get,
-      `${URL_API}/parent/v1/medicineRequest`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+    const { query } = action.payload || {}; // Sửa đổi ở đây
+    let url = `${URL_API}/parent/v1/medicineRequest`;
+    const params = new URLSearchParams();
+
+    if (query) {
+      if (query.isBenefit !== undefined) {
+        params.append("isBenefit", query.isBenefit);
       }
-    );
+    }
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+    const response = yield call(axios.get, url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     if (response.status === 200 || response.status === 201) {
       yield put(fetchMedicineRequestSuccess(response.data));
       console.log(response.data);
@@ -33,7 +41,8 @@ function* medicineRequestSaga() {
   }
 }
 
-function* watchFetchMedicineRequest() {
+function* watchMedicineRequest() {
   yield takeLatest(FETCH_MEDICINE_REQUEST, medicineRequestSaga);
 }
-export default watchFetchMedicineRequest;
+
+export default watchMedicineRequest;

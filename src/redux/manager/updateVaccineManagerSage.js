@@ -1,4 +1,10 @@
-import { actionChannel, call, put, takeLatest } from "redux-saga/effects";
+import {
+  actionChannel,
+  call,
+  put,
+  select,
+  takeLatest,
+} from "redux-saga/effects";
 import axios from "axios";
 import {
   PUT__MANAGER__VACCINE,
@@ -16,7 +22,7 @@ const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 function* updateVaccineManagerSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     const { id, ...data } = action.payload;
     const response = yield call(
       axios.put,

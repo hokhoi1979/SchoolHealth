@@ -59,7 +59,6 @@ function RequestManager() {
         })),
       };
       setDetail(detailData);
-      setShowModal(true);
     }
   }, [detailRequest]);
 

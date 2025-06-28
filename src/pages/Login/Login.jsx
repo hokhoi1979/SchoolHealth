@@ -6,7 +6,7 @@ import {
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
 import bg from "../../img/background.jpg";
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, message as antdMessage } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { AppFooter } from "../../components/Footer/AppFooter";
 import { useForm } from "antd/es/form/Form";
@@ -18,10 +18,11 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, error } = useSelector((state) => state.account);
-  const [message, setMessage] = useState("");
+  const [customMessage, setCustomMessage] = useState("");
   const handleLogin = async () => {
     try {
       const values = await form.validateFields();
+      console.log("EOOOO", values);
       dispatch(fetchLogin(values));
     } catch (err) {
       console.log("Validation failed:", err);
@@ -48,7 +49,7 @@ function Login() {
     if (error) {
       console.log(error);
 
-      setMessage(error);
+      setCustomMessage(error);
     }
   }, [error]);
 
@@ -119,7 +120,7 @@ function Login() {
                   iconRender={(visible) =>
                     visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
                   }
-                  onChange={() => setMessage("")}
+                  onChange={() => setCustomMessage("")}
                 />
               </Form.Item>
 
@@ -130,7 +131,7 @@ function Login() {
                   </p>
                 </>
               )}
-              {message === "Mật khẩu không đúng " &&
+              {customMessage === "Mật khẩu không đúng" &&
                 form.getFieldError("password").length === 0 && (
                   <p className="text-red-500 font-serif relative bottom-3">
                     Password is not correct!

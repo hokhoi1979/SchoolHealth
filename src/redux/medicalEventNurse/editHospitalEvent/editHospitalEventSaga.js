@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 
 import { fetchMedicalEventSuccess } from "../medicalEvent/getMedicalEventSlice";
@@ -7,11 +7,13 @@ import {
   patchHospitalEventFail,
   patchHospitalEventSuccess,
 } from "./editHospitalEventSlice";
+import { toast } from "react-toastify";
 
 const URL_API = import.meta.env.VITE_API_URL;
 function* hospitalEventSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
+
     const id = action.payload;
     const response = yield call(
       axios.patch,
@@ -27,6 +29,7 @@ function* hospitalEventSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(patchHospitalEventSuccess(response.data));
       console.log("PATCH", response.data);
+      toast.success("Confirm successful!");
       const fetchData = yield call(
         axios.get,
         `${URL_API}/nurse/v1/medicalEvent`,
@@ -45,6 +48,7 @@ function* hospitalEventSaga(action) {
       }
     } else {
       yield put(patchHospitalEventFail(response.status));
+      toast.error("You have already confirmed!");
     }
   } catch (error) {
     yield put(patchHospitalEventFail(error));

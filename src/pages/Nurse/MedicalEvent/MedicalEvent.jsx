@@ -10,6 +10,7 @@ import {
   Select,
   Space,
   Table,
+  Tag,
   Tooltip,
 } from "antd";
 import { Option } from "antd/es/mentions";
@@ -33,11 +34,11 @@ const MedicalEvent = () => {
   const [openSend, setOpenSend] = useState(false);
   const [openHospital, setOpenHospital] = useState(false);
   const [openNormal, setOpenNormal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-
+  const [search, setSearch] = useState(null);
   const [store, setStore] = useState([]);
+  const [searchStore, setSearchStore] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const [idHospital, setIdHospital] = useState(null);
+  const [idStatus, setIdStatus] = useState(null);
 
   const [studentCode, setStudentCode] = useState("");
   const [type, setType] = useState("");
@@ -55,9 +56,6 @@ const MedicalEvent = () => {
     (state) => state.getMedicalEventDetailNurse
   );
 
-  const { createMedicalEvent = [] } = useSelector(
-    (state) => state.postMedicalEventNurse
-  );
   const dispatch = useDispatch();
 
   const { medicine = [] } = useSelector((state) => state.medicineNurse);
@@ -179,6 +177,7 @@ const MedicalEvent = () => {
         isSent: event?.isSent || false,
       }));
       setStore(dataSource);
+      setSearchStore(dataSource);
     }
   };
 
@@ -206,6 +205,13 @@ const MedicalEvent = () => {
     console.log("Payload gửi API: ", payload);
     await dispatch(postMedicalEvent(payload));
     setOpen(false);
+    setStudentCode("");
+    setType(null);
+    setOccurredAt("");
+    setDescription("");
+    setSeverity(null);
+    setHospitalName("");
+    setTransferredAt("");
   };
 
   const handleSendEvent = async (id) => {
@@ -214,17 +220,12 @@ const MedicalEvent = () => {
       if (res?.payload?.success) {
         toast.success("Send successful!");
 
-        // Gọi lại API để cập nhật trạng thái (tốt nhất)
-        dispatch(getMedicalEventAgain());
-
-        // Hoặc cập nhật thủ công nếu không gọi lại:
         setStore((prev) =>
           prev.map((item) =>
             item.id === id ? { ...item, isSent: true } : item
           )
         );
       } else {
-        toast.error("Gửi thất bại hoặc đã gửi rồi!");
       }
 
       setOpenSend(false);
@@ -232,7 +233,7 @@ const MedicalEvent = () => {
   };
 
   const handleStatus = () => {
-    dispatch(patchHospitalEvent(idHospital));
+    dispatch(patchHospitalEvent(idStatus));
     setOpenHospital(false);
   };
 
@@ -241,6 +242,22 @@ const MedicalEvent = () => {
     if (confirmed) {
       dispatch(deleteMedicalEvent(id));
     }
+  };
+
+  const handleSearch = () => {
+    const keyword = search.trim().toLowerCase();
+
+    const data = store.filter(
+      (item) =>
+        item.studentID?.toLowerCase().includes(keyword) ||
+        item.severity?.toLowerCase().includes(keyword) ||
+        item.name?.toLowerCase().includes(keyword) ||
+        item.type?.toLowerCase().includes(keyword)
+    );
+
+    setSearchStore(data);
+    setSearch("");
+    console.log("SEARCH", data);
   };
 
   const columns = [
@@ -286,6 +303,39 @@ const MedicalEvent = () => {
       dataIndex: "status",
       key: "status",
       align: "center",
+      render: (_, record) => (
+        <>
+          {record.status === "PROCESSING" && (
+            <>
+              <Tag color="yellow">{record.status}</Tag>
+            </>
+          )}
+
+          {record.status === "PENDING" && (
+            <>
+              <Tag color="blue">{record.status}</Tag>
+            </>
+          )}
+
+          {record.status === "COMPLETED" && (
+            <>
+              <Tag color="green">{record.status}</Tag>
+            </>
+          )}
+
+          {record.status === "HOSPITALIZED" && (
+            <>
+              <Tag color="orange">{record.status}</Tag>
+            </>
+          )}
+
+          {record.status === "HOSPITALDISCHARGE" && (
+            <>
+              <Tag color="green">{record.status}</Tag>
+            </>
+          )}
+        </>
+      ),
     },
     {
       title: "Time",
@@ -311,12 +361,18 @@ const MedicalEvent = () => {
                   onClick={() => {
                     if (record.severity === "HOSPITAL") {
                       setOpenHospital(true);
-                      setIdHospital(record?.id);
+                      setIdStatus(record?.id);
                       console.log("ID", record?.id);
                     } else {
-                      console.log("ID", record?.id);
-                      setOpenNormal(true);
-                      setIdNormal(record?.id);
+                      if (record.status === "PENDING") {
+                        console.log("ID", record?.id);
+                        setOpenNormal(true);
+                        setIdNormal(record?.id);
+                      } else {
+                        setOpenHospital(true);
+                        setIdStatus(record?.id);
+                        console.log("ID", record?.id);
+                      }
                     }
                   }}
                 >
@@ -417,30 +473,22 @@ const MedicalEvent = () => {
             <CommonBreadcrumb role={"Nurse"} page={"medicalEvent"} />
           </h1>
 
-          <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total Event</p>
-              <p className="flex justify-center text-[50px]">12</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total sick</p>
-              <p className="flex justify-center text-[50px]">12</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total injured</p>
-              <p className="flex justify-center text-[50px]">7</p>
-            </div>
-          </div>
           <div className="pl-5 mt-5 flex justify-between">
             <div className="flex gap-5">
               {" "}
               <Input
                 style={{ borderRadius: "7px", width: "300px" }}
                 placeholder="Search for ID, Name student..."
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  console.log(search);
+                }}
+                value={search}
               />
               <Button
                 className="!bg-[#90A8B0] !hover:bg-gray-600"
                 type="secondary"
+                onClick={handleSearch}
               >
                 <p className="text-white font-kameron"> Search</p>
               </Button>
@@ -461,7 +509,7 @@ const MedicalEvent = () => {
           <Table
             className="mt-5"
             columns={columns}
-            dataSource={store}
+            dataSource={searchStore}
             pagination={{ pageSize: 5 }}
             rowKey="id"
           />
@@ -470,7 +518,12 @@ const MedicalEvent = () => {
 
         <AppFooter />
 
-        <Modal open={open} onCancel={() => setOpen(false)} footer={null}>
+        <Modal
+          open={open}
+          onCancel={() => setOpen(false)}
+          footer={null}
+          className="!w-[500px]"
+        >
           <div className="font-serif">
             <h1 className="text-3xl flex justify-center mb-1">
               Add New Medical Event
@@ -563,7 +616,16 @@ const MedicalEvent = () => {
               <Button
                 type="secondary"
                 className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setStudentCode("");
+                  setType(null);
+                  setOccurredAt("");
+                  setDescription("");
+                  setSeverity(null);
+                  setHospitalName("");
+                  setTransferredAt("");
+                  setOpen(false);
+                }}
               >
                 <p className="text-white text-xl font-serif p-1">Cancel</p>
               </Button>
@@ -583,49 +645,81 @@ const MedicalEvent = () => {
           open={openDetail}
           onCancel={() => setOpenDetail(false)}
           footer={null}
-          width={600}
+          width={700}
         >
-          <h1 className="text-3xl font-bold text-center font-serif mb-6 ">
-            Medical Event Detail
-          </h1>
+          <div className="flex justify-center gap-2 m-auto">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="#f86455"
+                d="m12.1 18.55l-.1.1l-.11-.1C7.14 14.24 4 11.39 4 8.5C4 6.5 5.5 5 7.5 5c1.54 0 3.04 1 3.57 2.36h1.86C13.46 6 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5c0 2.89-3.14 5.74-7.9 10.05M16.5 3c-1.74 0-3.41.81-4.5 2.08C10.91 3.81 9.24 3 7.5 3C4.42 3 2 5.41 2 8.5c0 3.77 3.4 6.86 8.55 11.53L12 21.35l1.45-1.32C18.6 15.36 22 12.27 22 8.5C22 5.41 19.58 3 16.5 3"
+              />
+            </svg>
+            <h1 className="text-2xl font-bold font-serif mb-6">
+              Medical Event Details
+            </h1>
+          </div>
 
           {getMedicalEventDetail?.data?.medicalEventEntity ? (
-            <div className="space-y-6 text-base font-serif text-gray-700">
-              <div className="bg-gray-50 border border-blue-100 p-5 rounded-xl shadow-sm">
-                <h2 className="text-xl font-semibold  mb-4">
-                  Medical Event Info
-                </h2>
-                <div className="space-y-2">
+            <div className="space-y-6 font-serif text-gray-800">
+              <div className="border-l-4 border-[#1bd0d8]  rounded-xl p-5 shadow">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <g
+                        fill="none"
+                        stroke="#1bd0d8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      >
+                        <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+                        <path d="m19 9l-5 5l-4-4l-3 3" />
+                      </g>
+                    </svg>
+                    <h2 className="text-lg font-semibold">
+                      Event #{getMedicalEventDetail.data.medicalEventEntity.id}
+                    </h2>
+                  </div>
+                  <span className="text-sm px-3 py-1 bg-black text-white rounded-full">
+                    {getMedicalEventDetail.data.medicalEventEntity.severity}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                   <p>
-                    <span className="font-semibold"> ID:</span>{" "}
-                    {getMedicalEventDetail.data.medicalEventEntity.id}
-                  </p>
-                  <p>
-                    <span className="font-semibold"> Type:</span>{" "}
+                    <span className="font-semibold">Type:</span>{" "}
                     {getMedicalEventDetail.data.medicalEventEntity.type ||
                       "N/A"}
                   </p>
                   <p>
-                    <span className="font-semibold"> Description:</span>{" "}
+                    <span className="font-semibold">Status:</span>{" "}
+                    {getMedicalEventDetail.data.medicalEventEntity.status}
+                  </p>
+                  <p className="col-span-2">
+                    <span className="font-semibold">Description:</span>{" "}
                     {getMedicalEventDetail.data.medicalEventEntity
                       .description || "N/A"}
                   </p>
+
                   <p>
-                    <span className="font-semibold"> Severity:</span>{" "}
-                    {getMedicalEventDetail.data.medicalEventEntity.severity}
-                  </p>
-                  <p>
-                    <span className="font-semibold"> Status:</span>{" "}
-                    {getMedicalEventDetail.data.medicalEventEntity.status}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Occurred At:</span>{" "}
+                    <span className="font-semibold"> Occurred:</span>{" "}
                     {dayjs(
                       getMedicalEventDetail.data.medicalEventEntity.occurredAt
                     ).format("HH:mm DD/MM/YYYY")}
                   </p>
+
                   <p>
-                    <span className="font-semibold"> Updated At:</span>{" "}
+                    <span className="font-semibold"> Updated:</span>{" "}
                     {dayjs(
                       getMedicalEventDetail.data.medicalEventEntity.updatedAt
                     ).format("HH:mm DD/MM/YYYY")}
@@ -633,87 +727,164 @@ const MedicalEvent = () => {
                 </div>
               </div>
 
-              <div className="bg-gray-50 border border-green-100 p-5 rounded-xl shadow-sm">
-                <h2 className="text-xl font-semibold  mb-4">Student Info</h2>
-                <div className="space-y-2">
-                  <p>
-                    <span className="font-semibold"> Student Code:</span>{" "}
-                    {getMedicalEventDetail.data.studentInfo?.student_code ||
-                      "N/A"}
-                  </p>
-                  <p>
-                    <span className="font-semibold"> Student Name:</span>{" "}
-                    {getMedicalEventDetail.data.studentInfo?.account
-                      ?.fullname || "N/A"}
-                  </p>
-                  <p>
-                    <span className="font-semibold"> Gender:</span>{" "}
-                    {getMedicalEventDetail.data.studentInfo?.gender || "N/A"}
-                  </p>
-                  <p>
-                    <span className="font-semibold"> Date of Birth:</span>{" "}
-                    {dayjs(
-                      getMedicalEventDetail.data.studentInfo?.dateOfBirth
-                    ).format("DD/MM/YYYY")}
-                  </p>
-                  <p>
-                    <span className="font-semibold"> Parent Name:</span>{" "}
-                    {getMedicalEventDetail.data.studentInfo?.ParentInfo
-                      ?.fullname || "N/A"}
-                  </p>
-                  <p>
-                    <span className="font-semibold"> Parent Phone:</span>{" "}
-                    {getMedicalEventDetail.data.studentInfo?.ParentInfo
-                      ?.phone || "N/A"}
-                  </p>
-                  <p>
-                    <span className="font-semibold"> Grade:</span>{" "}
-                    {getMedicalEventDetail.data.studentInfo?.lastAcamedicYear
-                      ?.class?.name || "N/A"}
-                  </p>
+              <div className="border-l-4 border-[#6cc77d]  rounded-xl p-5 shadow">
+                <div className="flex gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="26"
+                    height="26"
+                    viewBox="0 0 256 256"
+                  >
+                    <path
+                      fill="#84d687"
+                      d="m227.79 52.62l-96-32a11.85 11.85 0 0 0-7.58 0l-96 32A12 12 0 0 0 20 63.37a6 6 0 0 0 0 .63v80a12 12 0 0 0 24 0V80.65l23.71 7.9a67.92 67.92 0 0 0 18.42 85A100.36 100.36 0 0 0 46 209.44a12 12 0 1 0 20.1 13.11C80.37 200.59 103 188 128 188s47.63 12.59 61.95 34.55a12 12 0 1 0 20.1-13.11a100.36 100.36 0 0 0-40.18-35.92a67.92 67.92 0 0 0 18.42-85l39.5-13.17a12 12 0 0 0 0-22.76Zm-99.79-8L186.05 64L128 83.35L70 64ZM172 120a44 44 0 1 1-81.06-23.71l33.27 11.09a11.9 11.9 0 0 0 7.58 0l33.27-11.09A43.85 43.85 0 0 1 172 120"
+                    />
+                  </svg>
+                  <h2 className="text-lg font-semibold mb-3">
+                    {getMedicalEventDetail.data.studentInfo?.account?.fullname}
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-4">
+                  <div>
+                    <span className="font-semibold">Student Code</span>{" "}
+                    <p>
+                      {getMedicalEventDetail.data.studentInfo?.student_code ||
+                        "N/A"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <span className="font-semibold">Grade</span>{" "}
+                    <p>
+                      {getMedicalEventDetail.data.studentInfo?.lastAcamedicYear
+                        ?.class?.name || "N/A"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <span className="font-semibold">Gender</span>{" "}
+                    <p>
+                      {getMedicalEventDetail.data.studentInfo?.gender || "N/A"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <span className="font-semibold">Date of Birth</span>{" "}
+                    <p>
+                      {dayjs(
+                        getMedicalEventDetail.data.studentInfo?.dateOfBirth
+                      ).format("DD/MM/YYYY")}
+                    </p>
+                  </div>
+                </div>
+                <div className="h-[1px] w-full bg-gray-200 mt-5 mb-5"></div>
+
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                  <div>
+                    <span className="font-semibold">
+                      Parent/Guardian Contact
+                    </span>{" "}
+                    <p className="col-span-2">
+                      {getMedicalEventDetail.data.studentInfo?.ParentInfo
+                        ?.fullname || "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="">
+                    <span className="font-semibold">Phone</span>
+                    <div className="flex gap-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="black"
+                          d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24c1.12.37 2.33.57 3.57.57c.55 0 1 .45 1 1V20c0 .55-.45 1-1 1c-9.39 0-17-7.61-17-17c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1c0 1.25.2 2.45.57 3.57c.11.35.03.74-.25 1.02z"
+                        />
+                      </svg>
+                      <p className="col-span-2">
+                        {getMedicalEventDetail.data.studentInfo?.ParentInfo
+                          ?.phone || "N/A"}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {getMedicalEventDetail?.data?.medicalEventEntity?.Treatment
-                ?.length > 0 && (
-                <div className="bg-gray-50 border border-purple-200 p-5 rounded-xl shadow-sm">
-                  <h2 className="text-xl font-semibold mb-4">Treatment Info</h2>
-                  <div className="space-y-4">
-                    {getMedicalEventDetail.data.medicalEventEntity.Treatment.map(
-                      (treatmentItem, index) => (
-                        <div
-                          key={index}
-                          className="border border-gray-200 p-3 rounded-md"
-                        >
-                          <p>
-                            <span className="font-semibold">Name:</span>{" "}
+              {/* Section 3: Treatment (if any) */}
+              <div className="border-l-4 border-[#8b0fcb]  rounded-xl p-5 shadow">
+                <div className="flex gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <g class="medicine-outline">
+                      <g
+                        fill="#b861e5"
+                        fill-rule="evenodd"
+                        class="Vector"
+                        clip-rule="evenodd"
+                      >
+                        <path d="m19.873 12.3l-8.033 7.998a5.678 5.678 0 0 1-8.012-8.047l8.033-7.998a5.678 5.678 0 0 1 8.012 8.047m-1.4-6.618a3.68 3.68 0 0 0-5.2-.012l-8.034 7.998a3.678 3.678 0 0 0 5.19 5.213l8.033-7.998a3.68 3.68 0 0 0 .012-5.201Z" />
+                        <path d="M8.118 8.524a1 1 0 0 1 1.414 0l6.05 6.05a1 1 0 0 1-1.414 1.414l-6.05-6.05a1 1 0 0 1 0-1.414" />
+                      </g>
+                    </g>
+                  </svg>
+
+                  <h2 className="text-lg font-semibold mb-3">
+                    Treatment Detail
+                  </h2>
+                </div>
+
+                {getMedicalEventDetail.data.medicalEventEntity.Treatment.map(
+                  (treatmentItem, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-10 p-4 rounded-lg shadow-md border-gray-50  bg-purple-50 mb-2"
+                    >
+                      <div className="w-16 h-16 rounded  flex items-center justify-center overflow-hidden ">
+                        {treatmentItem.medicineSupply?.image ? (
+                          <img
+                            src={treatmentItem.medicineSupply.image}
+                            alt="medicine"
+                            className="object-contain w-full h-full"
+                          />
+                        ) : null}
+                      </div>
+
+                      <div className="flex-1 grid grid-cols-3 gap-2">
+                        <div>
+                          <p className="text-sm text-gray-500">Medicine Name</p>
+                          <p className="font-semibold">
                             {treatmentItem.medicine?.name ||
                               treatmentItem.medicineSupply?.name ||
                               "N/A"}
                           </p>
-                          {treatmentItem.medicineSupply?.image && (
-                            <div className="my-2">
-                              <img
-                                src={treatmentItem.medicineSupply.image}
-                                alt="medicine"
-                                className="w-24 h-24 object-contain rounded shadow"
-                              />
-                            </div>
-                          )}
-                          <p>
-                            <span className="font-semibold">Quantity:</span>{" "}
+                        </div>
+
+                        <div>
+                          <p className="text-sm text-gray-500">Quantity</p>
+                          <p className="font-semibold">
                             {treatmentItem.quantity}
                           </p>
-                          <p>
-                            <span className="font-semibold">Dosage:</span>{" "}
+                        </div>
+
+                        <div>
+                          <p className="text-sm text-gray-500">Dosage</p>
+                          <p className="font-semibold">
                             {treatmentItem.dosage || "N/A"}
                           </p>
                         </div>
-                      )
-                    )}
-                  </div>
-                </div>
-              )}
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
           ) : (
             <div className="text-center text-red-500 font-semibold">
@@ -725,30 +896,34 @@ const MedicalEvent = () => {
         <Modal
           open={openSend}
           onCancel={() => setOpenSend(false)}
-          footer={[
-            <Button
-              key="cancel"
-              className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
-              onClick={() => setOpenSend(false)}
-              style={{
-                backgroundColor: "#f87171",
-                color: "white",
-                border: "none",
-              }}
-            >
-              Cancel
-            </Button>,
-            <Button
-              key="send"
-              disabled={selectedRecord?.isSent}
-              className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
-              onClick={() => {
-                handleSendEvent(selectedRecord?.id);
-              }}
-            >
-              Send to Parent
-            </Button>,
-          ]}
+          sendMedicalEventParent
+          footer={
+            <>
+              <Button
+                key="cancel"
+                className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
+                onClick={() => setOpenSend(false)}
+                style={{
+                  backgroundColor: "#f87171",
+                  color: "white",
+                  border: "none",
+                }}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                key="send"
+                disabled={selectedRecord?.isSent}
+                className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
+                onClick={() => {
+                  handleSendEvent(selectedRecord?.id);
+                }}
+              >
+                Send to Parent
+              </Button>
+            </>
+          }
         >
           <h1 className="text-2xl font-serif justify-center flex">
             Send Vaccination Results
@@ -804,39 +979,99 @@ const MedicalEvent = () => {
         <Modal
           open={openHospital}
           onCancel={() => setOpenHospital(false)}
+          className="!w-[600px]"
           footer={[
-            <Button
-              key="cancel"
-              className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
-              onClick={() => setOpenHospital(false)}
-              style={{
-                backgroundColor: "#f87171",
-                color: "white",
-                border: "none",
-              }}
-            >
-              Cancel
-            </Button>,
-            <Button
-              key="send"
-              disabled={selectedRecord?.isSent}
-              className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
-              onClick={() => {
-                handleStatus();
-              }}
-            >
-              Confirm status
-            </Button>,
+            <>
+              {" "}
+              <Button
+                key="cancel"
+                className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
+                onClick={() => setOpenHospital(false)}
+                style={{
+                  backgroundColor: "#f87171",
+                  color: "white",
+                  border: "none",
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                key="send"
+                disabled={selectedRecord?.isSent}
+                className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
+                onClick={() => handleStatus()}
+              >
+                Confirm
+              </Button>
+            </>,
           ]}
         >
-          <h1 className="text-2xl flex justify-center font-serif">
-            Do you want to confirm status Hospital
-          </h1>
+          <div className="text-center mb-5 font-serif">
+            <h1 className="text-xl font-bold">Status Confirmation</h1>
+            <p className="text-sm">Confirm medical event status</p>
+          </div>
+
+          <div className="border border-orange-200 bg-orange-50 p-4 rounded-lg mb-5">
+            <div className="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="orange"
+                viewBox="0 0 24 24"
+              >
+                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+              </svg>
+              <p className="font-semibold text-orange-700">
+                Pending Confirmation
+                <span className="ml-2 px-2 py-0.5 bg-orange-100 text-orange-800 rounded-full text-xs">
+                  Waiting
+                </span>
+              </p>
+            </div>
+            <p className="text-sm text-gray-600 mt-1">
+              Click confirm to send the medical event status to the hospital
+              system.
+            </p>
+          </div>
+
+          <div className="border border-[#4eccdc] rounded-lg p-4 mb-6 bg-[#effafc]">
+            <h2 className="font-semibold text-[#49cfe0] text-md mb-3 flex items-center gap-2">
+              Event Details
+            </h2>
+            <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-700">
+              <p>
+                <span className="font-semibold">Student:</span>{" "}
+                {getMedicalEventDetail.data?.studentInfo?.account?.fullname}
+              </p>
+              <p>
+                <span className="font-semibold">Type:</span> Emergency
+              </p>
+              <p>
+                <span className="font-semibold">Severity:</span>{" "}
+                <span className="text-white bg-[#4eccdc] px-2 py-0.5 rounded text-xs ml-1">
+                  High
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center font-seri">
+            <h3 className="text-md f mb-2">
+              Do you want to confirm this status?
+            </h3>
+            <p className="text-sm text-gray-500">
+              This action will notify the hospital about the current medical
+              event status.
+            </p>
+          </div>
         </Modal>
+
         <Modal
           open={openNormal}
           onCancel={() => setOpenNormal(false)}
           footer={false}
+          className="!w-[600px]"
         >
           <h1 className="font-serif text-2xl flex justify-center">
             Import medicine/medical supplies

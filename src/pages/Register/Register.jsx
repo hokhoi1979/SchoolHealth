@@ -1,25 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   MailOutlined,
   LockOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
   UserOutlined,
-  PhoneOutlined,
 } from "@ant-design/icons";
 import bg from "../../img/background.jpg";
 import { Button, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { AppFooter } from "../../components/Footer/AppFooter";
-import bs from "../../img/bs.png";
-function Register() {
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+import { useDispatch, useSelector } from "react-redux";
+import { postRegister } from "../../redux/register/registerSlice";
 
+function Register() {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { accountRegister = [], error } = useSelector(
+    (state) => state.accountRegister
+  );
+
+  const handleRegister = async () => {
+    try {
+      const values = await form.validateFields();
+      const actionResult = await dispatch(
+        postRegister({
+          fullname: values.fullname,
+          email: values.email,
+          password: values.password,
+        })
+      );
+
+      if (actionResult.payload) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log("Validation failed:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (error?.message?.includes("Email")) {
+      form.setFields([{ name: "email", errors: [error.message] }]);
+    } else if (error?.message?.includes("Fullname")) {
+      form.setFields([{ name: "fullname", errors: [error.message] }]);
+    } else if (error?.message?.includes("Password")) {
+      form.setFields([{ name: "password", errors: [error.message] }]);
+    }
+  }, [error]);
   return (
     <div className="flex flex-col min-h-screen relative">
       <div
@@ -27,7 +56,7 @@ function Register() {
         style={{ backgroundImage: `url(${bg})` }}
       >
         <div
-          className="mt-5 hover:bg-[#f9f9f9] hover:bg-opacity-50 w-[50px] h-[50px] rounded-[50%] flex items-center justify-center text-center transition duration-200"
+          className="mt-5 hover:bg-[#f9f9f9] hover:bg-opacity-50 w-[50px] h-[50px] rounded-full flex items-center justify-center transition duration-200"
           onClick={() => navigate("/")}
         >
           <svg
@@ -43,43 +72,38 @@ function Register() {
             />
           </svg>
         </div>
-        <div className="w-[35%] bg-white h-auto m-auto justify-center text-center rounded-[15px] pl-5 pr-5 shadow-lg shadow-black/60">
-          <h1 className="text-3xl mt-5 font-serif">Register Page</h1>
-          <p className="font-serif text-[#777777] mt-3 text-[15px]">
+
+        <div className="w-[35%] bg-white m-auto rounded-[15px] p-5 shadow-lg shadow-black/60 text-center">
+          <h1 className="text-3xl mt-3 font-serif">Register Page</h1>
+          <p className="font-serif text-[#777] mt-3 text-[15px]">
             School health is the care, prevention and health promotion of
             students in schools.
           </p>
 
-          <div className="pl-7 pr-7 p-3">
-            <Form>
+          <div className="px-7 pt-3">
+            <Form form={form} layout="vertical">
               <Form.Item
                 name="fullname"
                 rules={[{ required: true, message: "Full Name is not empty!" }]}
               >
                 <Input
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
                   style={{ height: "40px", fontWeight: 600 }}
-                  placeholder={fullName ? "" : "Enter your Full Name"}
-                  prefix={
-                    !fullName && <UserOutlined style={{ color: "#767676" }} />
-                  }
+                  placeholder="Enter your Full Name"
+                  prefix={<UserOutlined style={{ color: "#767676" }} />}
                 />
               </Form.Item>
 
               <Form.Item
                 name="email"
-                rules={[{ required: true, message: "Email is not empty!" }]}
+                rules={[
+                  { required: true, message: "Email is not empty!" },
+                  { type: "email", message: "Email is not valid!" },
+                ]}
               >
                 <Input
-                  value={email}
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
                   style={{ height: "40px", fontWeight: 600 }}
-                  placeholder={email ? "" : "Enter your email"}
-                  prefix={
-                    !email && <MailOutlined style={{ color: "#767676" }} />
-                  }
+                  placeholder="Enter your email"
+                  prefix={<MailOutlined style={{ color: "#767676" }} />}
                 />
               </Form.Item>
 
@@ -88,13 +112,9 @@ function Register() {
                 rules={[{ required: true, message: "Password is not empty!" }]}
               >
                 <Input.Password
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   style={{ height: "40px", fontWeight: 600 }}
-                  placeholder={password ? "" : "Enter your password"}
-                  prefix={
-                    !password && <LockOutlined style={{ color: "#767676" }} />
-                  }
+                  placeholder="Enter your password"
+                  prefix={<LockOutlined style={{ color: "#767676" }} />}
                   iconRender={(visible) =>
                     visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
                   }
@@ -103,26 +123,39 @@ function Register() {
 
               <Form.Item
                 name="confirm"
-                rules={[{ required: true, message: "Confirm is not empty!" }]}
+                dependencies={["password"]}
+                rules={[
+                  { required: true, message: "Confirm password is required!" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject("Passwords do not match!");
+                    },
+                  }),
+                ]}
               >
                 <Input.Password
-                  value={confirm}
-                  onChange={(e) => setConfirm(e.target.value)}
                   style={{ height: "40px", fontWeight: 600 }}
-                  placeholder={confirm ? "" : "Enter confirm password"}
-                  prefix={
-                    !confirm && <LockOutlined style={{ color: "#767676" }} />
-                  }
+                  placeholder="Confirm your password"
+                  prefix={<LockOutlined style={{ color: "#767676" }} />}
                   iconRender={(visible) =>
                     visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
                   }
                 />
               </Form.Item>
+              {error && (
+                <div className="text-red-500">
+                  Account already exists or is incorrect
+                </div>
+              )}
 
               <Button
                 style={{ height: "40px", fontWeight: 300 }}
                 className="!w-full !bg-[#34A0B5] !text-white !text-2xl !font-serif hover:!bg-[#1c606d]"
-                type="secondary"
+                onClick={handleRegister}
+                type="primary"
               >
                 Register
               </Button>
@@ -132,12 +165,13 @@ function Register() {
               to="/login"
               className="font-serif text-[13px] underline flex text-left mt-3 text-[#113d59] mb-3"
             >
-              You have account? Login now!
+              You have an account? Login now!
             </Link>
           </div>
         </div>
 
-        <div className="w-[45%] h-auto items-center justify-center text-left text-[#252424]  m-auto mt-[12%]">
+        {/* Right Section */}
+        <div className="w-[45%] m-auto mt-[12%] text-left text-[#252424]">
           <h1 className="font-serif text-[30px]">
             School health team – Accompanying students' health
           </h1>
@@ -149,7 +183,7 @@ function Register() {
           <Button
             style={{ height: "40px", fontWeight: 300 }}
             className="!w-[150px] !bg-[#34A0B5] !text-white !text-xl !font-serif hover:!bg-[#1c606d] !mt-3"
-            type="secondary"
+            type="primary"
           >
             Read more
           </Button>

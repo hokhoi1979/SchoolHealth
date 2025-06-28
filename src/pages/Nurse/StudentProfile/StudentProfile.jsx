@@ -12,15 +12,8 @@ const StudentProfile = () => {
   const [data, setData] = useState([]);
   const [healthId, setHealthId] = useState(null);
   const [dataDetail, setDataDetail] = useState([]);
-  const [totalStudent, setTotalStudent] = useState(null);
-  const [male, setMale] = useState(null);
-  const [female, setFemale] = useState(null);
 
-  const {
-    student = [],
-    loading,
-    error,
-  } = useSelector((state) => state.profile);
+  const { student = [] } = useSelector((state) => state.profile);
 
   const { profileStudent = [] } = useSelector(
     (state) => state.fetchProfileDetail
@@ -54,8 +47,6 @@ const StudentProfile = () => {
           email: save?.ParentInfo?.email,
         };
       });
-      const total = student.listHealthProfiles.length;
-      setTotalStudent(total);
       setData(formatted);
     }
   };
@@ -205,9 +196,6 @@ const StudentProfile = () => {
         (item) => item?.student?.gender?.toLowerCase() === "nu"
       ).length;
 
-      setMale(totalMale);
-      setFemale(totalFemale);
-
       setDataDetail(formatDetail[0]);
       console.log("HELLO", dataDetail);
     }
@@ -228,24 +216,6 @@ const StudentProfile = () => {
             <CommonBreadcrumb role={"Nurse"} page={"student"} />
           </h1>
 
-          <div className="grid grid-cols-4 gap-5 mt-5 w-[100%] pl-5 pr-5 font-kameron ">
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Total Student</p>
-              <p className="flex justify-center text-[50px]">{totalStudent}</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Male</p>
-              <p className="flex justify-center text-[50px]">{male}</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Female</p>
-              <p className="flex justify-center text-[50px]">{female}</p>
-            </div>
-            <div className="h-[120px] bg-white rounded-2xl">
-              <p className="flex justify-center mt-5">Out of Stock</p>
-              <p className="flex justify-center text-[50px]">12</p>
-            </div>
-          </div>
           <div className="pl-5 mt-5 flex gap-5">
             <Input
               style={{ borderRadius: "7px", width: "300px" }}
@@ -337,155 +307,166 @@ const StudentProfile = () => {
             </div>
           </div>
 
-          <div className="mb-4">
-            <div className="flex gap-1.5">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="#f0b25c"
-                  d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m-1-5h2v2h-2zm0-8h2v6h-2z"
-                />
-              </svg>
-              <h3 className="font-semibold text-[#f0b25c] mb-1">
-                Allergies & Reactions
-              </h3>
-            </div>
-            <p>
-              <b>Have allergies:</b> {dataDetail?.hasAllergy ? "Có" : "Không"}
-            </p>
-            <p>
-              <b>Detail:</b> {dataDetail?.allergy || "Không có"}
-            </p>
-            <p>
-              <b>Method:</b> {dataDetail?.allergyMethod || "Không có"}
-            </p>
-          </div>
+          <div className="bg-gray-100 p-5 rounded-2xl">
+            <div className="grid grid-cols-3">
+              <div className="mb-4">
+                <div className="flex gap-1.5">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="#f0b25c"
+                      d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m-1-5h2v2h-2zm0-8h2v6h-2z"
+                    />
+                  </svg>
+                  <h3 className="font-semibold text-[#f0b25c] mb-1">
+                    Allergies & Reactions
+                  </h3>
+                </div>
+                <p>
+                  <b>Have allergies:</b>{" "}
+                  {dataDetail?.hasAllergy ? "Có" : "Không"}
+                </p>
+                <p>
+                  <b>Detail:</b> {dataDetail?.allergy || "Không có"}
+                </p>
+                <p>
+                  <b>Method:</b> {dataDetail?.allergyMethod || "Không có"}
+                </p>
+              </div>
 
-          <div className="mb-4">
-            <div className="flex gap-1.5">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="#35b7a8"
-                  d="M19 2v2h-2v3a3 3 0 0 1 3 3v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V10a3 3 0 0 1 3-3V4H5V2zm-2 7H7a1 1 0 0 0-1 1v10h12V10a1 1 0 0 0-1-1m-4 2v2h2v2h-2.001L13 17h-2l-.001-2H9v-2h2v-2zm2-7H9v3h6z"
-                />
-              </svg>
-              <h3 className="font-semibold text-[#35b7a8] mb-1">
-                Chronic Diseases & Treatment
-              </h3>
-            </div>
-            <p>
-              <b>Have a chronic illness:</b>{" "}
-              {dataDetail?.hasChronic ? "Có" : "Không"}
-            </p>
-            <p>
-              <b>Detail:</b> {dataDetail?.chronicDisease || "Không có"}
-            </p>
-            <p>
-              <b>Method:</b> {dataDetail?.chronicMethod || "Không có"}
-            </p>
-            <p>
-              <b>Treatment history:</b>{" "}
-              {dataDetail?.treatmentHistory || "Không có"}
-            </p>
-          </div>
+              <div className="mb-4">
+                <div className="flex gap-1.5">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="#35b7a8"
+                      d="M19 2v2h-2v3a3 3 0 0 1 3 3v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V10a3 3 0 0 1 3-3V4H5V2zm-2 7H7a1 1 0 0 0-1 1v10h12V10a1 1 0 0 0-1-1m-4 2v2h2v2h-2.001L13 17h-2l-.001-2H9v-2h2v-2zm2-7H9v3h6z"
+                    />
+                  </svg>
+                  <h3 className="font-semibold text-[#35b7a8] mb-1">
+                    Chronic Diseases & Treatment
+                  </h3>
+                </div>
+                <p>
+                  <b>Have a chronic illness:</b>{" "}
+                  {dataDetail?.hasChronic ? "Có" : "Không"}
+                </p>
+                <p>
+                  <b>Detail:</b> {dataDetail?.chronicDisease || "Không có"}
+                </p>
+                <p>
+                  <b>Method:</b> {dataDetail?.chronicMethod || "Không có"}
+                </p>
+                <p>
+                  <b>Treatment history:</b>{" "}
+                  {dataDetail?.treatmentHistory || "Không có"}
+                </p>
+              </div>
 
-          <div className="mb-4">
-            <div className="flex gap-1.5">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="none"
-                  stroke="#3dce66"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M20.193 12.999a6 6 0 1 1-10.392 6m10.392-6a6 6 0 0 0-10.392 6m10.392-6l-10.392 6m.242-13.457l5.085-3.005c1.872-1.106 4.266-.45 5.347 1.467A4.08 4.08 0 0 1 20 8.682m-9.957-3.14L4.958 8.547c-1.872 1.106-2.514 3.556-1.433 5.472A3.9 3.9 0 0 0 6.5 16m3.543-10.458L11.5 8"
-                  color="#3dce66"
-                />
-              </svg>
-              <h3 className="font-semibold text-green-600 mb-1">
-                Medication & Dosage
-              </h3>
+              <div className="mb-4">
+                <div className="flex gap-1.5">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#3dce66"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M20.193 12.999a6 6 0 1 1-10.392 6m10.392-6a6 6 0 0 0-10.392 6m10.392-6l-10.392 6m.242-13.457l5.085-3.005c1.872-1.106 4.266-.45 5.347 1.467A4.08 4.08 0 0 1 20 8.682m-9.957-3.14L4.958 8.547c-1.872 1.106-2.514 3.556-1.433 5.472A3.9 3.9 0 0 0 6.5 16m3.543-10.458L11.5 8"
+                      color="#3dce66"
+                    />
+                  </svg>
+                  <h3 className="font-semibold text-green-600 mb-1">
+                    Medication & Dosage
+                  </h3>
+                </div>
+                <p>
+                  <b>Descriptions:</b>{" "}
+                  {dataDetail?.medication || "Không có ghi chú"}
+                </p>
+              </div>
             </div>
-            <p>
-              <b>Descriptions:</b>{" "}
-              {dataDetail?.medication || "Không có ghi chú"}
-            </p>
-          </div>
 
-          <div className="mb-4">
-            <div className="flex gap-1.5">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-              >
-                <g
-                  fill="none"
-                  stroke="#3d47ce"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  color="#3d47ce"
-                >
-                  <path d="M2 8s4.477-5 10-5s10 5 10 5" />
-                  <path d="M21.544 13.045c.304.426.456.64.456.955c0 .316-.152.529-.456.955C20.178 16.871 16.689 21 12 21c-4.69 0-8.178-4.13-9.544-6.045C2.152 14.529 2 14.315 2 14c0-.316.152-.529.456-.955C3.822 11.129 7.311 7 12 7c4.69 0 8.178 4.13 9.544 6.045" />
-                  <path d="M15 14a3 3 0 1 0-6 0a3 3 0 0 0 6 0" />
-                </g>
-              </svg>
-              <h3 className="font-semibold text-purple-700 mb-1">
-                Vision & Hearing
-              </h3>
+            <div className="h-[2px] w-full bg-gray-200 mb-5"></div>
+
+            <div className="grid grid-cols-3">
+              <div className="mb-4">
+                <div className="flex gap-1.5">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <g
+                      fill="none"
+                      stroke="#3d47ce"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      color="#3d47ce"
+                    >
+                      <path d="M2 8s4.477-5 10-5s10 5 10 5" />
+                      <path d="M21.544 13.045c.304.426.456.64.456.955c0 .316-.152.529-.456.955C20.178 16.871 16.689 21 12 21c-4.69 0-8.178-4.13-9.544-6.045C2.152 14.529 2 14.315 2 14c0-.316.152-.529.456-.955C3.822 11.129 7.311 7 12 7c4.69 0 8.178 4.13 9.544 6.045" />
+                      <path d="M15 14a3 3 0 1 0-6 0a3 3 0 0 0 6 0" />
+                    </g>
+                  </svg>
+                  <h3 className="font-semibold text-purple-700 mb-1">
+                    Vision & Hearing
+                  </h3>
+                </div>
+                <p>
+                  <b>Eye:</b> Trái {dataDetail?.eyeLeft || "-"} / Phải{" "}
+                  {dataDetail?.eyeRight || "-"}
+                </p>
+                <p>
+                  <b>Vision Notes:</b> {dataDetail?.visionNote || "Không có"}
+                </p>
+                <p>
+                  <b>Hearing:</b> Trái {dataDetail?.hearingLeft || "-"} / Phải{" "}
+                  {dataDetail?.hearingRight || "-"}
+                </p>
+                <p>
+                  <b>Note Hearing:</b> {dataDetail?.hearingNote || "Không có"}
+                </p>
+              </div>
+
+              <div className="mb-4">
+                <h3 className="font-semibold text-cyan-700 mb-1">
+                  💉 Vaccination
+                </h3>
+                <p>
+                  <b>History:</b> {dataDetail?.vaccineHistory || "Không có"}
+                </p>
+                <p>
+                  <b>Side effects:</b> {dataDetail?.sideEffect ? "Có" : "Không"}
+                </p>
+                {dataDetail?.sideEffect && (
+                  <p>
+                    <b>Details:</b> {dataDetail?.sideEffectDetail || "Không rõ"}
+                  </p>
+                )}
+              </div>
             </div>
-            <p>
-              <b>Eye:</b> Trái {dataDetail?.eyeLeft || "-"} / Phải{" "}
-              {dataDetail?.eyeRight || "-"}
-            </p>
-            <p>
-              <b>Vision Notes:</b> {dataDetail?.visionNote || "Không có"}
-            </p>
-            <p>
-              <b>Hearing:</b> Trái {dataDetail?.hearingLeft || "-"} / Phải{" "}
-              {dataDetail?.hearingRight || "-"}
-            </p>
-            <p>
-              <b>Note Hearing:</b> {dataDetail?.hearingNote || "Không có"}
-            </p>
-          </div>
-
-          <div className="mb-4">
-            <h3 className="font-semibold text-cyan-700 mb-1">💉 Vaccination</h3>
-            <p>
-              <b>History:</b> {dataDetail?.vaccineHistory || "Không có"}
-            </p>
-            <p>
-              <b>Side effects:</b> {dataDetail?.sideEffect ? "Có" : "Không"}
-            </p>
-            {dataDetail?.sideEffect && (
-              <p>
-                <b>Details:</b> {dataDetail?.sideEffectDetail || "Không rõ"}
-              </p>
-            )}
           </div>
 
           {/* Notes */}
           {dataDetail?.additionalNote && (
-            <div className="bg-yellow-50 p-3 rounded mb-4">
-              <p className="italic">"{dataDetail.additionalNote}"</p>
+            <div className="bg-yellow-50 p-3  mb-4 mt-3 rounded-xl">
+              <p className="italic">Note: "{dataDetail.additionalNote}"</p>
             </div>
           )}
         </div>

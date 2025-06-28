@@ -26,25 +26,41 @@ function VaccineDay() {
       Array.isArray(vaccine?.data?.vaccinationEvents)
     ) {
       const format = vaccine?.data?.vaccinationEvents.map((item) => {
+        let gradeLabel = "School";
+
+        if (item?.targets?.length > 0) {
+          const hasClass = item.targets.every((t) => t.className);
+          const hasGradeOnly = item.targets.every(
+            (t) => t.grade && !t.className
+          );
+
+          if (hasClass) {
+            const classNames = item.targets.map((t) => t.className).join(", ");
+            gradeLabel = `Class: ${classNames}`;
+          } else if (hasGradeOnly) {
+            const grades = item.targets.map((t) => t.grade).join(", ");
+            gradeLabel = `Grade: ${grades}`;
+          }
+        }
+
         return {
           id: item?.id,
           status: item?.status,
           name: item?.name,
           description: item?.customMailBody,
-          scheduledAt: item?.scheduledAt
+          scheduledAt: dayjs(item.scheduledAt).isValid()
             ? dayjs(item.scheduledAt).format("DD/MM/YYYY HH:mm")
             : "Chưa xác định",
-
-          updatedAt: item?.updatedAt
+          updatedAt: dayjs(item.updatedAt).isValid()
             ? dayjs(item.updatedAt).format("DD/MM/YYYY HH:mm")
             : "Chưa cập nhật",
-
           updatedBy: item?.updatedBy,
-          grade: item?.targets?.map((target) => target.className).join(", "),
+          grade: gradeLabel,
           accept: item?.studentResponseCount?.studentsAcceptCount,
           total: item?.studentResponseCount?.totalStudent,
         };
       });
+
       setData(format);
     }
   };
@@ -80,7 +96,7 @@ function VaccineDay() {
               )}
             </div>
             <h1 className="mt-2 text-2xl">{item.name}</h1>
-            <p className="text-gray-500">Grade: {item?.grade}</p>
+            <p className="text-gray-500"> {item?.grade}</p>
             <p className="text-gray-500">{item.participate}</p>
 
             <div className="flex gap-2.5 mt-1">
@@ -114,11 +130,7 @@ function VaccineDay() {
                   d="M16.95 15.95a7 7 0 1 0-9.9 0L12 20.9zM12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0zM13 11h4v2h-6V6h2z"
                 />
               </svg>
-              <p>
-                {item.updatedAt
-                  ? dayjs(item.updatedAt).format("DD/MM/YYYY HH:mm")
-                  : "Không rõ cập nhật"}
-              </p>
+              <p>{item.updatedAt}</p>
             </div>
 
             <div className="mt-3">

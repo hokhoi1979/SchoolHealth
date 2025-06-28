@@ -14,7 +14,6 @@ import Trend from "../pages/Nurse/Dashboard/Trend";
 import Materials from "../pages/Nurse/Materials/Materials";
 import Inventory from "../pages/Nurse/Materials/Inventory";
 import Import from "../pages/Nurse/Materials/Import";
-import Export from "../pages/Nurse/Materials/Export";
 import MedicineForStudent from "../pages/Nurse/Materials/MedicineForStudent";
 import NurseInfor from "../pages/Nurse/NurseInformation/NurseInformation";
 import ChangePasswordNurse from "../pages/Nurse/ChangePassword/ChangePassword";
@@ -48,6 +47,7 @@ import StudentHealth from "../pages/Parent/StudentHealth/StudentHealth";
 import MedicalRequest from "../pages/Parent/MedicalRequest/MedicalRequest";
 import MedicalUsing from "../pages/Parent/MedicalRequest/MedicationUsing";
 import MedicalHistoryParent from "../pages/Parent/MedicalRequest/MedicationHistory";
+import NotificationRequest from "../pages/Parent/MedicalRequest/Notification";
 import VaccinationConfirm from "../pages/Parent/Vaccination/Vaccination";
 import PendingVaccination from "../pages/Parent/Vaccination/Pending";
 import CompletedVaccination from "../pages/Parent/Vaccination/Completed";
@@ -61,6 +61,7 @@ import AllRecord from "../pages/Parent/StudentHistory/AllRecord";
 import HealthInfor from "../pages/Parent/StudentHistory/HealthInfor";
 import SendResult from "../pages/Parent/StudentHistory/SendResult";
 import Notification from "../pages/Parent/StudentHistory/Notification";
+import MedicineSchedule from "../pages/Nurse/Materials/MedicineSchedule";
 import RequestManager from "../pages/Manager/Request/RequestManager";
 import ManagerMedicalEvent from "../pages/Manager/MedicalEventMedical/managerMedicalEvent";
 import ParentInfor from "../pages/Parent/ParentInformation/ParentInformation";
@@ -70,6 +71,7 @@ import ChangePasswordParent from "../pages/Parent/ChangePassword/ChangePassword"
 import StudentLayout from "../pages/Student/StudentLayout";
 import StudentInformation from "../pages/Student/StudentInformation/StudentInformation";
 import ChangePassword from "../pages/Student/ChangePassword/ChangePassword";
+import PrivateRoute from "./privateRoute";
 
 const router = createBrowserRouter([
   {
@@ -83,65 +85,67 @@ const router = createBrowserRouter([
       // Nurse routes
       {
         path: "nurse",
-        element: <NurseLayout />,
+        // chỉ kiểm tra ở đây
+        element: <PrivateRoute allowedRoles={[3]} />,
         children: [
-          { path: "", element: <Navigate to="materials" /> },
-          // {
-          //   path: "dashboard",
-          //   element: <DashboardNurse />,
-          //   children: [
-          //     { path: "", element: <Medical /> },
-          //     { path: "vaccination", element: <Vaccination /> },
-          //     { path: "checkup", element: <Checkup /> },
-          //     { path: "trend", element: <Trend /> },
-          //   ],
-          // },
           {
-            path: "materials",
-            element: <Materials />,
+            path: "",
+            element: <NurseLayout />,
             children: [
-              { path: "", element: <Inventory /> },
-              { path: "import", element: <Import /> },
-              { path: "export", element: <Export /> },
-              { path: "medicine", element: <MedicineForStudent /> },
+              { path: "", element: <Navigate to="materials" /> },
+
+              {
+                path: "materials",
+                element: <Materials />,
+                children: [
+                  { path: "", element: <Inventory /> },
+                  { path: "import", element: <Import /> },
+                  { path: "medicine", element: <MedicineForStudent /> },
+                  { path: "schedule", element: <MedicineSchedule /> },
+                ],
+              },
+              {
+                path: "student",
+                element: <StudentProfile />,
+              },
+              {
+                path: "vaccine",
+                element: <VaccineNurse />,
+                children: [
+                  { path: "", element: <VaccineDay /> },
+                  { path: "studentList/:id", element: <StudentList /> },
+                  { path: "vaccineHistory", element: <VaccineHistory /> },
+                  { path: "vaccineResult", element: <VaccineResult /> },
+                ],
+              },
+              {
+                path: "medical",
+                element: <MedicalNurse />,
+                children: [
+                  { path: "", element: <MedicalDay /> },
+                  {
+                    path: "studentListCheckup/:id",
+                    element: <StudentListMedical />,
+                  },
+                  { path: "medicalHistory", element: <MedicalHistory /> },
+                  { path: "medicalResult", element: <MedicalResult /> },
+                ],
+              },
+              {
+                path: "medicalEvent",
+                element: <MedicalEvent />,
+              },
+              { path: "information", element: <NurseInfor /> },
+              { path: "change_password", element: <ChangePasswordNurse /> },
             ],
           },
-          {
-            path: "student",
-            element: <StudentProfile />,
-          },
-          {
-            path: "vaccine",
-            element: <VaccineNurse />,
-            children: [
-              { path: "", element: <VaccineDay /> },
-              { path: "studentList/:id", element: <StudentList /> },
-              { path: "vaccineHistory", element: <VaccineHistory /> },
-              { path: "vaccineResult", element: <VaccineResult /> },
-            ],
-          },
-          {
-            path: "medical",
-            element: <MedicalNurse />,
-            children: [
-              { path: "", element: <MedicalDay /> },
-              { path: "studentList", element: <StudentListMedical /> },
-              { path: "medicalHistory", element: <MedicalHistory /> },
-              { path: "medicalResult", element: <MedicalResult /> },
-            ],
-          },
-          {
-            path: "medicalEvent",
-            element: <MedicalEvent />,
-          },
-          { path: "information", element: <NurseInfor /> },
-          { path: "change_password", element: <ChangePasswordNurse /> },
         ],
       },
 
       // Manager routes
       {
         path: "manager",
+        element: <PrivateRoute allowedRoles={[2]} />,
         children: [
           {
             path: "",
@@ -210,6 +214,7 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <MedicalUsing /> },
               { path: "medication_history", element: <MedicalHistoryParent /> },
+              { path: "notification", element: <NotificationRequest /> },
             ],
           },
           {

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Avatar, Spin } from "antd";
+import { Alert, Avatar, Spin } from "antd";
 import { UserOutlined, MailOutlined } from "@ant-design/icons";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { AppFooter } from "../../../components/Footer/AppFooter";

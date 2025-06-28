@@ -12,12 +12,11 @@ export function* fetchLogin(action) {
       `${API_URL}/v1/auth/login`,
       action.payload
     );
-
     const accessToken = response.data?.data?.backendToken?.accessToken;
 
     if (accessToken) {
       const decodedUser = jwtDecode(accessToken);
-      localStorage.setItem("accessToken", accessToken);
+      // localStorage.setItem("accessToken", accessToken);
 
       yield put(
         fetchSuccess({
