@@ -180,13 +180,13 @@ function MedicalResult({ id }) {
     <div className="w-full">
       <div className="flex justify-between mt-2">
         <div></div>
-        <Button
+        {/* <Button
           type="secondary"
           className="!bg-black hover:!bg-gray-600  !text-white"
           onClick={() => setStart(true)}
         >
           Start Vaccination
-        </Button>
+        </Button> */}
       </div>
 
       <div className="w-full bg-white rounded-xl p-5 mt-5">

@@ -20,6 +20,11 @@ import getDetailRequestReducer from "./profileParent/medicalRequest/getDetailReq
 import stopMedicineReducer from "./profileParent/medicalRequest/stopMedicineSlice";
 import acceptBenefitMedicineReducer from "./profileParent/medicalRequest/acceptBenefitMedicineSlice";
 import rejectBenefitMedicineReducer from "./profileParent/medicalRequest/rejectBenefitMedicineSlice";
+import checkupParentReducer from "./getCheckupParent/getCheckupParentSlice";
+import getCheckUpParentAcceptReducer from "./getCheckupParent/getCheckupParentAcceptSlice";
+import getCheckUpParentDeclineReducer from "./getCheckupParent/getCheckupParentDeclineSlice";
+import detailCheckUpParentReducer from "./getCheckupParent/getDetailCheckupParentSlice";
+import resultCheckUpParentReducer from "./getCheckupParent/getResultCheckupParentSlice";
 
 import managerMedicalReducer from "./manager/managerSlice";
 import managerVaccineReducer from "./manager/createVaccineManagerSlice";
@@ -144,14 +149,19 @@ const rootReducer = combineReducers({
   vaccineParentResult: vaccineParentResultReducer,
   vaccineParentAccept: getVaccineParentAcceptReducer,
   vaccineParentDecline: getVaccineParentDeclineReducer,
-  medicineRequest: getMedicineRequestReducer,
+  medicineRequestParent: getMedicineRequestReducer,
   createMedicineRequest: createMedicineReducer,
   deleteMedicineRequest: deleteMedicineReducer,
-  getDetailRequest: getDetailRequestReducer,
+  getDetailRequestParent: getDetailRequestReducer,
   checkupResult: checkupResultReducer,
   stopMedicine: stopMedicineReducer,
   acceptBenefitMedicine: acceptBenefitMedicineReducer,
   rejectBenefitMedicine: rejectBenefitMedicineReducer,
+  checkupParent: checkupParentReducer,
+  checkupParentAccept: getCheckUpParentAcceptReducer,
+  checkupParentDecline: getCheckUpParentDeclineReducer,
+  detailCheckUpParent: detailCheckUpParentReducer,
+  resultCheckUpParent: resultCheckUpParentReducer,
 
   vaccineResult: vaccineResultReducer,
   sendVaccineResult: sendResultVaccineReducer,

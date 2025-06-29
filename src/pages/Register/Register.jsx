@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MailOutlined,
   LockOutlined,
@@ -21,20 +21,28 @@ function Register() {
     (state) => state.accountRegister
   );
 
+  const [localError, setLocalError] = useState(null);
+
+  useEffect(() => {
+    if (accountRegister) {
+      navigate("/login");
+    }
+  }, [accountRegister]);
+
+  useEffect(() => {
+    setLocalError(error);
+  }, [error]);
+
   const handleRegister = async () => {
     try {
       const values = await form.validateFields();
-      const actionResult = await dispatch(
+      dispatch(
         postRegister({
           fullname: values.fullname,
           email: values.email,
           password: values.password,
         })
       );
-
-      if (actionResult.payload) {
-        navigate("/login");
-      }
     } catch (error) {
       console.log("Validation failed:", error);
     }
@@ -49,6 +57,7 @@ function Register() {
       form.setFields([{ name: "password", errors: [error.message] }]);
     }
   }, [error]);
+
   return (
     <div className="flex flex-col min-h-screen relative">
       <div
@@ -81,12 +90,13 @@ function Register() {
           </p>
 
           <div className="px-7 pt-3">
-            <Form form={form} layout="vertical">
+            <Form form={form} layout="vertical" onFinish={handleRegister}>
               <Form.Item
                 name="fullname"
                 rules={[{ required: true, message: "Full Name is not empty!" }]}
               >
                 <Input
+                  onChange={() => setLocalError(null)}
                   style={{ height: "40px", fontWeight: 600 }}
                   placeholder="Enter your Full Name"
                   prefix={<UserOutlined style={{ color: "#767676" }} />}
@@ -101,6 +111,7 @@ function Register() {
                 ]}
               >
                 <Input
+                  onChange={() => setLocalError(null)}
                   style={{ height: "40px", fontWeight: 600 }}
                   placeholder="Enter your email"
                   prefix={<MailOutlined style={{ color: "#767676" }} />}
@@ -112,6 +123,7 @@ function Register() {
                 rules={[{ required: true, message: "Password is not empty!" }]}
               >
                 <Input.Password
+                  onChange={() => setLocalError(null)}
                   style={{ height: "40px", fontWeight: 600 }}
                   placeholder="Enter your password"
                   prefix={<LockOutlined style={{ color: "#767676" }} />}
@@ -137,6 +149,7 @@ function Register() {
                 ]}
               >
                 <Input.Password
+                  onChange={() => setLocalError(null)}
                   style={{ height: "40px", fontWeight: 600 }}
                   placeholder="Confirm your password"
                   prefix={<LockOutlined style={{ color: "#767676" }} />}
@@ -145,17 +158,19 @@ function Register() {
                   }
                 />
               </Form.Item>
-              {error && (
-                <div className="text-red-500">
-                  Account already exists or is incorrect
-                </div>
-              )}
+
+              {localError &&
+                form.getFieldsError().every((f) => f.errors.length === 0) && (
+                  <p className="text-red-500 relative bottom-3">
+                    Account already exists or is incorrect
+                  </p>
+                )}
 
               <Button
                 style={{ height: "40px", fontWeight: 300 }}
                 className="!w-full !bg-[#34A0B5] !text-white !text-2xl !font-serif hover:!bg-[#1c606d]"
-                onClick={handleRegister}
                 type="primary"
+                htmlType="submit"
               >
                 Register
               </Button>
@@ -170,7 +185,6 @@ function Register() {
           </div>
         </div>
 
-        {/* Right Section */}
         <div className="w-[45%] m-auto mt-[12%] text-left text-[#252424]">
           <h1 className="font-serif text-[30px]">
             School health team – Accompanying students' health

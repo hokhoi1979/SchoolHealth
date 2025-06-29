@@ -1,9 +1,8 @@
-import React from "react";
-import { Card, Space, Typography, Button } from "antd";
-import { ClockCircleOutlined } from "@ant-design/icons";
-import { Activity } from "lucide-react";
+import { Card, Space, Typography, Button, Tag } from "antd";
+import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons";
+import { Activity, User } from "lucide-react";
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 const Pending = ({ notifications, onOpenModal }) => {
   const pendingVaccinations = notifications.filter(
@@ -13,7 +12,7 @@ const Pending = ({ notifications, onOpenModal }) => {
   if (pendingVaccinations.length === 0) {
     return (
       <Card className="text-center py-10">
-        <ClockCircleOutlined style={{ fontSize: 40, color: "green" }} />
+        <ClockCircleOutlined style={{ fontSize: 40, color: "orange" }} />
         <Paragraph className="text-gray-400 mt-4">
           No check up notifications pending confirmation
         </Paragraph>
@@ -23,29 +22,75 @@ const Pending = ({ notifications, onOpenModal }) => {
   return (
     <Space direction="vertical" size="middle" className="w-full">
       {pendingVaccinations.map((notification) => (
-        <Card key={notification.id} style={{ borderLeft: `4px solid #00FF00` }}>
-          <div className="flex justify-between items-start">
+        <Card
+          key={notification.id}
+          style={{ borderLeft: `4px solid #d97706` }}
+          className="hover:shadow-md transition-shadow"
+        >
+          <div className="flex justify-between items-start mb-3">
             <div className="flex items-center gap-2">
-              <Activity style={{ fontSize: 20, color: "#00FF00" }} />
+              <Activity style={{ fontSize: 20, color: "#d97706" }} />
               <Title level={5} style={{ margin: 0 }}>
                 {notification.title}
               </Title>
+              <Tag color="orange">PENDING</Tag>
             </div>
-            <small className="text-gray-500">Date {notification.date}</small>
+            <div className="flex items-center gap-1 text-gray-500">
+              <CalendarOutlined />
+              <small>Scheduled: {notification.date}</small>
+            </div>
           </div>
-          <Paragraph className="text-gray-500 mt-2">
+
+          {/* Student Information */}
+          {notification.student && (
+            <div className="flex items-center gap-2 mb-2">
+              <User size={16} className="text-blue-500" />
+              <Text className="text-blue-600">
+                Student: {notification.student.account?.fullname}
+                <span className="text-gray-500 ml-2">
+                  ({notification.student.student_code})
+                </span>
+              </Text>
+            </div>
+          )}
+
+          <Paragraph className="text-gray-600 mt-2 mb-4">
             {notification.description}
           </Paragraph>
+
+          {/* Vaccination Event Details */}
+          <div className="bg-gray-50 p-3 rounded-lg mb-4">
+            <Text strong className="text-sm text-gray-700">
+              Notification ID: {notification.healthCheckUpID}
+            </Text>
+            <div className="mt-1">
+              <Text className="text-sm text-gray-600">
+                Student ID: {notification.studentID}
+              </Text>
+            </div>
+            {notification.healthCheckup?.scheduledAt && (
+              <div className="mt-1">
+                <Text className="text-sm text-gray-600">
+                  Scheduled Date:{" "}
+                  {new Date(
+                    notification.healthCheckup.scheduledAt
+                  ).toLocaleString("vi-VN")}
+                </Text>
+              </div>
+            )}
+          </div>
+
           <div className="flex justify-end gap-2">
-            <Button danger onClick={() => onOpenModal(notification)}>
-              Rejected
+            <Button danger onClick={() => onOpenModal(notification, "no")}>
+              Decline
             </Button>
+
             <Button
               type="primary"
-              style={{ backgroundColor: "#228B22", borderColor: "#228B22" }}
-              onClick={() => onOpenModal(notification)}
+              style={{ backgroundColor: "#d97706", borderColor: "#b45309" }}
+              onClick={() => onOpenModal(notification, "yes")}
             >
-              Confirm
+              Accept
             </Button>
           </div>
         </Card>

@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, Space, Typography, Button, Tag } from "antd";
 import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons";
 import { Syringe, User } from "lucide-react";

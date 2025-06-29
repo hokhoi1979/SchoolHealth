@@ -5,10 +5,6 @@ import SideBar from "../../components/SideBar/SideBarNurse";
 import { toast } from "react-toastify";
 
 const NurseLayout = () => {
-  useEffect(() => {
-    toast.success("Login successful!");
-  }, []);
-
   return (
     <div className="flex h-screen">
       <SideBar />

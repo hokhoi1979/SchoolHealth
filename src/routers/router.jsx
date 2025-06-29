@@ -145,7 +145,6 @@ const router = createBrowserRouter([
       // Manager routes
       {
         path: "manager",
-        element: <PrivateRoute allowedRoles={[2]} />,
         children: [
           {
             path: "",
@@ -212,8 +211,8 @@ const router = createBrowserRouter([
             path: "medical_request",
             element: <MedicalRequest />,
             children: [
-              { path: "", element: <MedicalUsing /> },
-              { path: "medication_history", element: <MedicalHistoryParent /> },
+              { path: "", element: <MedicalHistoryParent /> },
+              // { path: "medication_history", element: <MedicalHistoryParent /> },
               { path: "notification", element: <NotificationRequest /> },
             ],
           },
