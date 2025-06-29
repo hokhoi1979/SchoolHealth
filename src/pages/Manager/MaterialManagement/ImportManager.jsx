@@ -129,30 +129,28 @@ function ImportManager() {
   };
 
   const handleUpdate = async () => {
-    if (!selectedMedicine?.id) {
+    if (!selectedMedicine || !selectedMedicine?.id) {
       console.error("No medicine selected! Cannot update.");
       return;
     }
 
-    let classifyIDToUse =
-      selectedMedicine.classifyID || selectedClassifyID || "";
+    let classifyIDToUse = "";
 
-    // Nếu chọn "Other" thì tạo mới classify
     if (selectedClassify === "Other") {
       if (!newClassify?.trim()) {
         toast.error("Bạn chưa nhập tên loại thuốc mới!");
         return;
       }
 
+      // Gọi API tạo classify mới
       await new Promise((resolve) => {
         dispatch(
           postManagerClasstify({
             body: { name: newClassify.trim() },
             page: 1,
             limit: 8,
-            onSuccess: (id) => {
-              classifyIDToUse = id;
-              console.log("==> New classify ID created for update:", id);
+            onSuccess: (newID) => {
+              classifyIDToUse = newID;
               resolve();
             },
           })
@@ -163,6 +161,9 @@ function ImportManager() {
         toast.error("Không thể lấy ID của classify mới!");
         return;
       }
+    } else {
+      // ✅ Ưu tiên classify mới chọn từ dropdown nếu có
+      classifyIDToUse = selectedClassifyID || selectedMedicine.classifyID || "";
     }
 
     const formData = new FormData();
@@ -184,7 +185,7 @@ function ImportManager() {
       })
     );
 
-    console.log("Updating with formData:");
+    console.log("Updating medicine with formData:");
     for (let pair of formData.entries()) {
       console.log(pair[0] + ": ", pair[1]);
     }

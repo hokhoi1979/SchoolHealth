@@ -35,13 +35,12 @@ function InventoryManager() {
   const [categoryOptions, setCategoryOptions] = useState([]);
 
   const updateStatus = (stock) => {
-    if (stock > 50) return "Bình thường";
-    if (stock <= 50 && stock > 20) return "Cần bổ sung";
-    return "Sắp hết";
+    if (stock > 50) return "Normal";
+    if (stock <= 50 && stock > 20) return "Need To Add";
+    return "Running low";
   };
 
   useEffect(() => {
-    // Ví dụ fix cứng nếu enum có sẵn:
     const CATEGORY_ENUM = ["Vật tư", "Thiết bị", "Tiêu hao"];
     setCategoryOptions(CATEGORY_ENUM);
   }, []);
@@ -86,31 +85,31 @@ function InventoryManager() {
       align: "center",
     },
     {
-      title: "Mặt hàng",
+      title: "Supply",
       dataIndex: "name",
       key: "name",
       align: "center",
     },
     {
-      title: "Danh mục",
+      title: "Category",
       dataIndex: "category",
       key: "category",
       align: "center",
     },
     {
-      title: "Mô tả",
+      title: "Description",
       dataIndex: "description",
       key: "description",
       align: "center",
     },
     {
-      title: "HDSD",
+      title: "Usage",
       dataIndex: "usage",
       key: "usage",
       align: "center",
     },
     {
-      title: "Ảnh",
+      title: "Image",
       dataIndex: "image",
       key: "image",
       align: "center",
@@ -144,11 +143,11 @@ function InventoryManager() {
       align: "center",
       render: (status) => {
         let color;
-        if (status === "Bình thường") {
+        if (status === "Normal") {
           color = "bg-green-500";
-        } else if (status === "Cần bổ sung") {
+        } else if (status === "Need To Add") {
           color = "bg-pink-300";
-        } else if (status === "Sắp hết") {
+        } else if (status === "Running low") {
           color = "bg-yellow-300";
         }
         return (
@@ -191,16 +190,16 @@ function InventoryManager() {
       ),
     },
     {
-      title: "Action",
+      title: "Delete",
       key: "action",
       align: "center",
       render: (_, record) => (
         <Space>
           <Popconfirm
-            title="Xác nhận xoá?"
-            description={`Bạn có chắc muốn xoá bản ghi này?`}
-            okText="Đồng ý"
-            cancelText="Huỷ"
+            title="	Confirm Deletion?"
+            description={`Are you sure you want to delete?`}
+            okText="Yes"
+            cancelText="Cancel"
             onConfirm={() => {
               dispatch(deleteManagerSupply({ id: record?.id }));
             }}
@@ -209,9 +208,8 @@ function InventoryManager() {
               <div className="cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width={20}
-                  height={20}
                   viewBox="0 0 24 24"
+                  className="w-8 h-6"
                 >
                   <path
                     fill="currentColor"
@@ -284,8 +282,8 @@ function InventoryManager() {
 
       <Modal
         title={
-          <div className="text-center text-lg font-semibold text-gray-900">
-            Cập nhật thông tin
+          <div className="text-center text-lg font-bold text-gray-800">
+            Update Medicine Info
           </div>
         }
         open={isModalOpen}
@@ -296,35 +294,36 @@ function InventoryManager() {
         footer={[
           <Button
             key="cancel"
-            className="rounded-md px-4 py-1 text-sm"
+            className="rounded px-4 py-1.5 text-sm"
             onClick={() => {
               setIsModalOpen(false);
               setSelectedRecord(null);
             }}
           >
-            Hủy
+            Cancel
           </Button>,
           <Button
             key="update"
             type="primary"
-            className="bg-blue-600 hover:bg-blue-700 border-none rounded-md px-4 py-1 text-sm"
+            className="bg-blue-600 hover:bg-blue-700 border-none rounded px-4 py-1.5 text-sm"
             onClick={handleUpdate}
           >
-            Cập nhật
+            Update
           </Button>,
         ]}
         centered
-        width={460}
-        className="custom-update-modal"
+        width={220} // ép nhỏ lại
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 p-4">
-          {/* Tên thuốc */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-3 py-3">
+          {/* Name */}
           <div className="col-span-2 flex flex-col">
-            <label className="text-sm font-semibold text-gray-700 mb-1">
-              Tên thuốc <span className="text-red-500">*</span>
+            <label className="text-xs font-medium text-gray-700 mb-1">
+              Medicine Name <span className="text-red-500">*</span>
             </label>
             <Input
-              className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
+              size="small"
+              placeholder="Enter name"
+              className="rounded border-gray-300 text-xs"
               value={selectedRecord?.name}
               onChange={(e) =>
                 setSelectedRecord({ ...selectedRecord, name: e.target.value })
@@ -332,13 +331,15 @@ function InventoryManager() {
             />
           </div>
 
-          {/* Mô tả */}
+          {/* Description */}
           <div className="col-span-2 flex flex-col">
-            <label className="text-sm font-semibold text-gray-700 mb-1">
-              Mô tả
+            <label className="text-xs font-medium text-gray-700 mb-1">
+              Description
             </label>
             <Input
-              className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
+              size="small"
+              placeholder="Short description..."
+              className="rounded border-gray-300 text-xs"
               value={selectedRecord?.description}
               onChange={(e) =>
                 setSelectedRecord({
@@ -349,13 +350,15 @@ function InventoryManager() {
             />
           </div>
 
-          {/* Hướng dẫn sử dụng */}
+          {/* Usage */}
           <div className="col-span-2 flex flex-col">
-            <label className="text-sm font-semibold text-gray-700 mb-1">
-              Hướng dẫn sử dụng
+            <label className="text-xs font-medium text-gray-700 mb-1">
+              Usage Instruction
             </label>
             <Input
-              className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
+              size="small"
+              placeholder="How to use..."
+              className="rounded border-gray-300 text-xs"
               value={selectedRecord?.usage}
               onChange={(e) =>
                 setSelectedRecord({ ...selectedRecord, usage: e.target.value })
@@ -363,15 +366,16 @@ function InventoryManager() {
             />
           </div>
 
-          {/* Danh mục */}
+          {/* Category */}
           <div className="flex flex-col">
-            <label className="text-sm font-semibold text-gray-700 mb-1">
-              Danh mục
+            <label className="text-xs font-medium text-gray-700 mb-1">
+              Category
             </label>
             <Select
-              className="w-full text-sm"
-              dropdownClassName="text-sm"
-              popupClassName="text-sm"
+              size="small"
+              className="w-full text-xs"
+              dropdownClassName="text-xs"
+              popupClassName="text-xs"
               value={selectedRecord?.category}
               onChange={(value) =>
                 setSelectedRecord({ ...selectedRecord, category: value })
@@ -385,15 +389,17 @@ function InventoryManager() {
             </Select>
           </div>
 
-          {/* Số lượng */}
+          {/* Stock */}
           <div className="flex flex-col">
-            <label className="text-sm font-semibold text-gray-700 mb-1">
-              Số lượng
+            <label className="text-xs font-medium text-gray-700 mb-1">
+              Stock Quantity
             </label>
             <Input
+              size="small"
               type="number"
               min={0}
-              className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
+              placeholder="Enter stock"
+              className="rounded border-gray-300 text-xs"
               value={selectedRecord?.stock}
               onChange={(e) =>
                 setSelectedRecord({
@@ -404,10 +410,10 @@ function InventoryManager() {
             />
           </div>
 
-          {/* Ảnh minh họa */}
+          {/* Image Upload */}
           <div className="col-span-2 flex flex-col">
-            <label className="text-sm font-semibold text-gray-700 mb-2">
-              Ảnh minh họa
+            <label className="text-xs font-medium text-gray-700 mb-2">
+              Medicine Image
             </label>
             <Upload
               beforeUpload={handleUpload}
@@ -415,19 +421,20 @@ function InventoryManager() {
               accept="image/*"
             >
               <Button
+                size="small"
                 icon={<UploadOutlined />}
-                className="rounded-md text-sm bg-white hover:bg-gray-50"
+                className="rounded text-xs bg-white hover:bg-gray-50 border border-gray-300"
               >
-                Chọn ảnh
+                Pick Image
               </Button>
             </Upload>
 
             {previewImage && (
-              <div className="flex justify-center mt-4">
+              <div className="flex justify-center mt-3">
                 <img
                   src={previewImage}
                   alt="Preview"
-                  className="w-40 h-28 rounded-lg border object-cover shadow-md"
+                  className="w-36 h-24 rounded-md object-cover border shadow"
                 />
               </div>
             )}

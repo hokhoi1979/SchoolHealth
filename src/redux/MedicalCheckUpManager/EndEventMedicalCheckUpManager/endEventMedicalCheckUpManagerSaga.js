@@ -17,6 +17,7 @@ function* patchEndMedicalCheckupManagerSaga(action) {
     const response = yield call(
       axios.patch,
       `${URL_API}/manager/v1/check-up/${id}/success`,
+      {},
 
       {
         headers: {
@@ -33,11 +34,11 @@ function* patchEndMedicalCheckupManagerSaga(action) {
       yield put(patchManagerFailEndMedicalCheckup(response.status));
     }
   } catch (error) {
-    const errMsg =
-      error?.response?.data?.message || error.message || "Unknown error";
-    yield put(patchManagerFailEndMedicalCheckup(errMsg));
-    toast.error("End Event Fail");
-    console.log(error);
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`End MedicalCheckup Fail: ${errorMessage}`);
+    yield put(patchManagerFailEndMedicalCheckup(errorMessage));
+    console.error("Create Vaccine Error:", error);
   }
 }
 

@@ -54,7 +54,7 @@ const CheckupContentTable = ({
       <div className="flex items-center gap-2 mb-2">
         <Select
           style={{ width: 300 }}
-          placeholder="Chọn nội dung có sẵn"
+          placeholder="Select Available Item"
           onChange={handleAddExisting}
           options={availableContents.map((item) => ({
             label: item.name,
@@ -62,7 +62,7 @@ const CheckupContentTable = ({
           }))}
         />
         <Button type="dashed" onClick={handleAddNewRow}>
-          + Thêm dòng mới
+          + Add new Item
         </Button>
       </div>
 
@@ -74,11 +74,11 @@ const CheckupContentTable = ({
         pagination={false}
         columns={[
           {
-            title: "Nội dung kiểm tra",
+            title: "Content To Check Up",
             dataIndex: "name",
             render: (text, _, index) => (
               <Input
-                placeholder="Nhập nội dung"
+                placeholder="Enter Content"
                 value={text}
                 status={!text?.trim() ? "error" : ""}
                 onChange={(e) => handleUpdate(index, "name", e.target.value)}
@@ -86,7 +86,7 @@ const CheckupContentTable = ({
             ),
           },
           {
-            title: "Mô tả",
+            title: "Description",
             dataIndex: "description",
             render: (text, _, index) => (
               <Input
@@ -100,7 +100,7 @@ const CheckupContentTable = ({
             ),
           },
           {
-            title: "Kiểu dữ liệu",
+            title: "InputType",
             dataIndex: "inputType",
             render: (value, _, index) => (
               <Select
@@ -110,17 +110,17 @@ const CheckupContentTable = ({
                 onChange={(val) => handleUpdate(index, "inputType", val)}
                 style={{ width: 130 }}
               >
-                <Option value="TEXT">Văn bản</Option>
-                <Option value="NUMBER">Số</Option>
-                <Option value="BOOLEAN">Có / Không</Option>
+                <Option value="TEXT">TEXT</Option>
+                <Option value="NUMBER">NUMBER</Option>
+                <Option value="BOOLEAN">YES / NO</Option>
               </Select>
             ),
           },
           {
-            title: "Xoá",
+            title: "DELETE",
             render: (_, __, index) => (
               <Button danger type="link" onClick={() => handleRemove(index)}>
-                Xoá
+                Delete
               </Button>
             ),
           },

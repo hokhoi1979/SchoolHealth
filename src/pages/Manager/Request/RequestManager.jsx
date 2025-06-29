@@ -77,7 +77,7 @@ function RequestManager() {
     <>
       <div>
         <h1 className="text-xl font-inria font-medium  p-10">
-          <CommonBreadcrumb role={"Manager"} page={"Checkup"} />
+          <CommonBreadcrumb role={"Manager"} page={"request"} />
         </h1>
         <div className="grid grid-cols-3 gap-5 mt-5 w-full pl-5 pr-5 font-kameron ">
           {data.map((item) => (
@@ -179,18 +179,18 @@ function RequestManager() {
         )}
       >
         {detail ? (
-          <div className="bg-white rounded-2xl px-6 py-5 max-h-[80vh] overflow-y-auto ">
+          <div className="bg-white rounded-2xl px-6 py-5 max-h-[80vh] overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">
-              Chi tiết yêu cầu
+              Request Details
             </h2>
 
             <div className="space-y-3 mb-5">
               <p className="text-gray-700">
-                <span className="font-semibold">Ghi chú:</span>{" "}
+                <span className="font-semibold">Note:</span>{" "}
                 {detail?.note || "-"}
               </p>
               <p className="text-gray-700">
-                <span className="font-semibold">Trạng thái:</span>{" "}
+                <span className="font-semibold">Status:</span>{" "}
                 <span
                   className={`font-semibold ${
                     detail.status === "PENDING"
@@ -207,7 +207,7 @@ function RequestManager() {
 
             <div>
               <h3 className="text-lg font-semibold mb-3 text-gray-800">
-                Danh sách sản phẩm
+                Product List
               </h3>
               <ul className="space-y-4">
                 {detail?.items?.length > 0 ? (
@@ -227,28 +227,30 @@ function RequestManager() {
                       />
                       <div className="flex-1 space-y-1 text-sm text-gray-800">
                         <p>
-                          <span className="font-semibold">Tên:</span>{" "}
+                          <span className="font-semibold">Name:</span>{" "}
                           {item.medicine?.name ||
                             item.medicineSupply?.name ||
                             "-"}
                         </p>
                         <p>
-                          <span className="font-semibold">SL:</span>{" "}
+                          <span className="font-semibold">Quantity:</span>{" "}
                           {item.quantity}
                         </p>
                         <p>
-                          <span className="font-semibold">Mức độ:</span>{" "}
+                          <span className="font-semibold">Urgency:</span>{" "}
                           {item.urgency}
                         </p>
                         <p>
-                          <span className="font-semibold">Ghi chú:</span>{" "}
-                          {item.note || "Không có"}
+                          <span className="font-semibold">Note:</span>{" "}
+                          {item.note || "None"}
                         </p>
                       </div>
                     </li>
                   ))
                 ) : (
-                  <li className="text-gray-600 italic">Không có sản phẩm</li>
+                  <li className="text-gray-600 italic">
+                    No products available
+                  </li>
                 )}
               </ul>
             </div>
@@ -257,13 +259,11 @@ function RequestManager() {
               onClick={handleCloseModal}
               className="mt-6 w-full py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
             >
-              Đóng
+              Close
             </button>
           </div>
         ) : (
-          <div className="p-6 text-center text-gray-500">
-            Đang tải dữ liệu...
-          </div>
+          <div className="p-6 text-center text-gray-500">Loading data...</div>
         )}
       </Modal>
     </>

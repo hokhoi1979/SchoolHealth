@@ -204,9 +204,8 @@ function Home() {
                 </div>
               </div>
               <div className=" ml-10 mb-10">
-                <img src={newspic}   alt="" className=" rounded-2xl h-[400px]" />
+                <img src={newspic} alt="" className=" rounded-2xl h-[400px]" />
               </div>
-     
             </div>
 
             <AppFooter />

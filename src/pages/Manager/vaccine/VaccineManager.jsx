@@ -291,9 +291,9 @@ const VaccineManager = () => {
       targetIds,
       items: cleanedItems,
     };
-
+    console.log(payload);
     try {
-      const data = await dispatch(postManagerVaccine(payload)).unwrap();
+      const data = await dispatch(postManagerVaccine(payload));
 
       console.log("Create Success:", data);
 
@@ -806,7 +806,7 @@ const VaccineManager = () => {
               </div>
               <div className="flex gap-2.5 mt-5">
                 <div>
-                  {item.status !== "ENDED" && item.status !== "CONFIRMED" && (
+                  {item.status === "DRAFT" && (
                     <Button onClick={() => handleUpdateEvent(item)}>
                       Update Schedule
                     </Button>
@@ -1387,7 +1387,7 @@ const VaccineManager = () => {
         footer={[<Button onClick={handleUpdateSubmit}>Update</Button>]}
       >
         <div>
-          <h2 className="text-xl font-bold mb-4">
+          <h2 className="text-xl font-bold mb-4 text-center">
             Update Vaccination Schedule
           </h2>
           <div className="space-y-3">

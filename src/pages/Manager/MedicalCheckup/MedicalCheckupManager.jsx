@@ -351,24 +351,23 @@ function MedicalCheckup() {
   const availableContents = [
     {
       key: "1",
-      name: "Chiều cao",
+      name: "Height",
       description: "Đo chiều cao",
       inputType: "NUMBER",
     },
     {
       key: "2",
-      name: "Cân nặng",
+      name: "Weight",
       description: "Đo cân nặng",
       inputType: "NUMBER",
     },
     {
       key: "3",
-      name: "Huyết áp",
+      name: "Blood Pressure",
       description: "Kiểm tra huyết áp",
       inputType: "TEXT",
     },
   ];
-
   const handleGradeSection = (grade, checked) => {
     if (checked) {
       setSelectedGrades([...selectedGrades, grade]);
@@ -380,9 +379,7 @@ function MedicalCheckup() {
   const renderTargetSelection = () => {
     switch (targetType) {
       case "school":
-        return (
-          <div className="text-gray-600 italic">Áp dụng cho toàn trường</div>
-        );
+        return <div className="text-gray-600 italic">School</div>;
 
       case "class":
         return (
@@ -402,7 +399,7 @@ function MedicalCheckup() {
             </div>
             {selectedClasses.length > 0 && (
               <div className="text-sm text-blue-600">
-                Đã chọn: {selectedClasses.join(", ")}
+                Picked: {selectedClasses.join(", ")}
               </div>
             )}
           </div>
@@ -411,7 +408,7 @@ function MedicalCheckup() {
       case "grade":
         return (
           <div className="space-y-3">
-            <div className="font-medium mb-2">Chọn khối:</div>
+            <div className="font-medium mb-2">Choose Grade:</div>
             <div className="flex gap-4">
               {availableGrades.map((grade) => (
                 <Checkbox
@@ -542,7 +539,7 @@ function MedicalCheckup() {
                 {item?.status !== "DRAFT" && (
                   <>
                     <div className="flex justify-between text-sm text-gray-600">
-                      <span>Xác nhận tham gia</span>
+                      <span>Confirm Participate</span>
                       <span>
                         {item?.data?.checkUpEntities?.studentResponseCount
                           ?.studentsAcceptCount ?? 0}
@@ -567,26 +564,26 @@ function MedicalCheckup() {
                   {item.status !== "ENDED" && item.status !== "CONFIRMED" && (
                     <>
                       <Button onClick={() => handleUpdateCheckup(item)}>
-                        Cập nhật buổi khám
+                        Update
                       </Button>
                       <Popconfirm
-                        title="Bạn có chắc muốn xoá buổi khám sức khoẻ này không?"
+                        title="Are you sure you want to delete this medical checkup?"
                         onConfirm={() => handleDeleteCheckup(item.id)}
-                        okText="Xoá"
-                        cancelText="Hủy"
+                        okText="Delete"
+                        cancelText="Cancel"
                       >
-                        <Button danger>Xoá</Button>
+                        <Button danger>Delete</Button>
                       </Popconfirm>
                     </>
                   )}
                   {item.status !== "SUCCESSED" && (
                     <Popconfirm
-                      title="Bạn có chắc muốn kết thúc buổi khám này không?"
+                      title="Are you sure you want to end this medical checkup?"
                       onConfirm={() => handleEndCheckup(item?.id)}
-                      okText="Xác nhận"
-                      cancelText="Hủy"
+                      okText="Confirm"
+                      cancelText="Cancel"
                     >
-                      <Button>Kết thúc</Button>
+                      <Button className="w-full">End Event</Button>
                     </Popconfirm>
                   )}
                 </div>
@@ -595,6 +592,7 @@ function MedicalCheckup() {
           );
         })}
       </div>
+      <div className="w-full h-30"></div>
       <AppFooter />
       {/* Modal */}
       <Modal
@@ -772,7 +770,7 @@ function MedicalCheckup() {
                 fontWeight: "500",
               }}
             >
-              + Thêm mới
+              + ADD NEW
             </Button>
             {showCheckupEditor && (
               <div
@@ -948,9 +946,37 @@ function MedicalCheckup() {
       </Modal> */}
       {/* Modal of Notification */}
       <Modal
-        title="Send Confirmation Email to Parents"
+        title={
+          <div style={{ textAlign: "center" }}>
+            <Input
+              value={notificationTitle}
+              onChange={(e) => setNotificationTitle(e.target.value)}
+              placeholder="Enter notification title"
+              bordered={false}
+              style={{
+                fontSize: "20px",
+                fontWeight: "bold",
+                padding: "4px 0",
+                background: "transparent",
+                textAlign: "center",
+              }}
+            />
+          </div>
+        }
         open={notificationModalOpen}
         onCancel={() => setNotificationModalOpen(false)}
+        centered
+        width={600}
+        mask={false}
+        style={{
+          backgroundColor: "#fff",
+          borderRadius: 12,
+          border: "2px solid black",
+          boxShadow: "none",
+        }}
+        bodyStyle={{
+          padding: "16px 0 0",
+        }}
         footer={[
           <Button key="cancel" onClick={() => setNotificationModalOpen(false)}>
             Cancel
@@ -960,22 +986,21 @@ function MedicalCheckup() {
           </Button>,
         ]}
       >
-        <div>
-          <label className="font-medium mb-2 block">Notification Title</label>
-          <Input
-            value={notificationTitle}
-            onChange={(e) => setNotificationTitle(e.target.value)}
-            placeholder="Enter notification title"
-          />
-        </div>
-
-        <div className="mt-4">
-          <label className="font-medium mb-1 block">Notification Content</label>
+        <div
+          style={{
+            padding: "12px 16px",
+            borderRadius: 8,
+            backgroundColor: "#f9f9f9",
+            border: "1px solid #e5e5e5",
+          }}
+        >
           <Input.TextArea
             rows={6}
             value={notificationContent}
             onChange={(e) => setNotificationContent(e.target.value)}
             placeholder="Enter message content"
+            bordered={false}
+            style={{ resize: "none", background: "transparent" }}
           />
         </div>
       </Modal>

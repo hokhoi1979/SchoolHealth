@@ -112,7 +112,7 @@ const MedicalEventList = () => {
         title={
           <div className="text-center">
             <span className="text-xl font-semibold text-gray-800">
-              Chi tiết học sinh & y tế
+              Student & Medical Details
             </span>
           </div>
         }
@@ -128,7 +128,7 @@ const MedicalEventList = () => {
             <div className="space-y-4">
               <div className="border-l-4 border-blue-500 pl-4">
                 <h2 className="text-lg font-bold text-blue-700 mb-3">
-                  Sự kiện y tế
+                  Medical Event
                 </h2>
                 <div className="space-y-2">
                   <p className="text-gray-700">
@@ -136,25 +136,25 @@ const MedicalEventList = () => {
                     {selectedItem.medicalEventEntity?.id}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Loại:</span>{" "}
+                    <span className="font-medium">Type:</span>{" "}
                     {selectedItem.medicalEventEntity?.type}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Thời gian:</span>{" "}
+                    <span className="font-medium">Time:</span>{" "}
                     {new Date(
                       selectedItem.medicalEventEntity?.occurredAt
                     ).toLocaleString()}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Trạng thái:</span>{" "}
+                    <span className="font-medium">Status:</span>{" "}
                     {selectedItem.medicalEventEntity?.status}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Mức độ:</span>{" "}
+                    <span className="font-medium">Severity:</span>{" "}
                     {selectedItem.medicalEventEntity?.severity}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Mô tả:</span>{" "}
+                    <span className="font-medium">Description:</span>{" "}
                     {selectedItem.medicalEventEntity?.description}
                   </p>
                 </div>
@@ -162,9 +162,9 @@ const MedicalEventList = () => {
 
               {/* Nurse Info */}
               <div className="border-l-4 border-pink-500 pl-4">
-                <h2 className="text-lg font-bold text-pink-700 mb-3">Y tá</h2>
+                <h2 className="text-lg font-bold text-pink-700 mb-3">Nurse</h2>
                 <p className="text-gray-700">
-                  <span className="font-medium">Họ tên:</span>{" "}
+                  <span className="font-medium">Full Name:</span>{" "}
                   {selectedItem.nurseInfo?.fullname}
                 </p>
               </div>
@@ -174,33 +174,33 @@ const MedicalEventList = () => {
               {/* Student Info */}
               <div className="border-l-4 border-green-500 pl-4">
                 <h2 className="text-lg font-bold text-green-700 mb-3">
-                  Học sinh
+                  Student
                 </h2>
                 <div className="space-y-2">
                   <p className="text-gray-700">
-                    <span className="font-medium">Mã HS:</span>{" "}
+                    <span className="font-medium">Student Code:</span>{" "}
                     {selectedItem.studentInfo?.student_code}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Họ tên:</span>{" "}
+                    <span className="font-medium">Full Name:</span>{" "}
                     {selectedItem.studentInfo?.account?.fullname}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Ngày sinh:</span>{" "}
+                    <span className="font-medium">Date of Birth:</span>{" "}
                     {new Date(
                       selectedItem.studentInfo?.dateOfBirth
                     ).toLocaleDateString()}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Giới tính:</span>{" "}
+                    <span className="font-medium">Gender:</span>{" "}
                     {selectedItem.studentInfo?.gender}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Lớp:</span>{" "}
+                    <span className="font-medium">Class:</span>{" "}
                     {selectedItem.studentInfo?.lastAcamedicYear?.class?.name}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-medium">Năm học:</span>{" "}
+                    <span className="font-medium">Academic Year:</span>{" "}
                     {
                       selectedItem.studentInfo?.lastAcamedicYear?.academicYear
                         ?.name
@@ -212,11 +212,11 @@ const MedicalEventList = () => {
               {/* Parent Info */}
               <div className="border-l-4 border-purple-500 pl-4">
                 <h2 className="text-lg font-bold text-purple-700 mb-3">
-                  Phụ huynh
+                  Parent
                 </h2>
                 <div className="space-y-2">
                   <p className="text-gray-700">
-                    <span className="font-medium">Họ tên:</span>{" "}
+                    <span className="font-medium">Full Name:</span>{" "}
                     {selectedItem.studentInfo?.ParentInfo?.fullname}
                   </p>
                   <p className="text-gray-700">
@@ -233,7 +233,7 @@ const MedicalEventList = () => {
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-500 text-lg">Không có dữ liệu chi tiết</p>
+            <p className="text-gray-500 text-lg">No detail data available</p>
           </div>
         )}
       </Modal>
