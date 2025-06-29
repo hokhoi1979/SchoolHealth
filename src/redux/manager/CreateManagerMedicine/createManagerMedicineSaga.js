@@ -10,7 +10,10 @@ import {
   fetchMedicineClasstifyManagerSucess,
 } from "../GetManagerMedineClassify/getManagerMedicineClassifySlice";
 import toast from "react-hot-toast";
-import { fetchAllMedicineSupplyManagerSuccess } from "../GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSlice";
+import {
+  fetchAllMedicineSupplyManagerFail,
+  fetchAllMedicineSupplyManagerSuccess,
+} from "../GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSlice";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
@@ -26,7 +29,7 @@ function* managerCreateMedicineSaga(action) {
     formData.append("stock", stock);
     formData.append("description", description);
     formData.append("type", type);
-    formData.append("classifyID", classifyID);
+    formData.append("classifyID", classifyID?.toString?.() ?? "");
     formData.append("usage", usage);
     if (image) {
       formData.append("image", image);
@@ -45,7 +48,7 @@ function* managerCreateMedicineSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(postManagerSucessMedicine(response.data));
-
+      toast.success("Create Medicine Success");
       const { limit, page } = action.payload;
 
       const fetchData = yield call(
@@ -60,7 +63,6 @@ function* managerCreateMedicineSaga(action) {
 
       if (fetchData.status === 200 || fetchData.status === 201) {
         yield put(fetchAllMedicineSupplyManagerSuccess(fetchData.data));
-        toast.success("Create Medicine Success");
       } else {
         yield put(fetchAllMedicineSupplyManagerFail(fetchData.status));
         toast.error("Create Medicine Fail");

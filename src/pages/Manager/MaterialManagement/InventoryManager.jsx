@@ -279,7 +279,6 @@ function InventoryManager() {
         dataSource={supply}
         rowClassName="text-center text-sm"
         rowKey="id"
-        bordered
         pagination={{ pageSize: 4 }}
       />
 

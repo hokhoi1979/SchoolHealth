@@ -1,7 +1,7 @@
 import { Button, Checkbox, Input, Modal, Popconfirm, Radio } from "antd";
 import React, { use, useEffect, useState } from "react";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
-import logo from "../../../img/logo.jpg";
+import logo from "../../../img/icon.png";
 import { useDispatch, useSelector } from "react-redux";
 import { postManagerVaccine } from "../../../redux/manager/createVaccineManagerSlice";
 import { fetchManagerMedical } from "../../../redux/manager/managerSlice";
@@ -578,7 +578,7 @@ const VaccineManager = () => {
 
   return (
     <>
-      <h1 className="text-xl font-inria font-medium mb-4 p-6  ">
+      <h1 className="text-xl font-inria font-medium mb-4 p-10">
         <CommonBreadcrumb role={"Manager"} page={"Vaccine"} />
       </h1>
 
@@ -848,54 +848,183 @@ const VaccineManager = () => {
       <Modal
         open={open}
         onCancel={handleCloseModal}
-        footer={[<Button onClick={handleCreate}>Create</Button>]}
-        style={{ width: "700px!important" }}
+        footer={[
+          <Button
+            key="create"
+            onClick={handleCreate}
+            style={{
+              backgroundColor: "#1890ff",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              fontWeight: "500",
+              height: "36px",
+              paddingLeft: "20px",
+              paddingRight: "20px",
+            }}
+          >
+            Create
+          </Button>,
+        ]}
+        width={700}
         destroyOnClose={true}
+        centered
       >
-        <div>
-          <div>
-            <div className="flex justify-center items-center gap-4 mb-2 pt-2">
-              <h1 className="font-bold text-2xl text-center">
+        <div style={{ fontFamily: "sans-serif" }}>
+          {/* Header */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+              marginBottom: "24px",
+              padding: "16px",
+              backgroundColor: "#f8fafc",
+              borderRadius: "8px",
+              border: "1px solid #e2e8f0",
+            }}
+          >
+            <img
+              src={logo || "/placeholder.svg?height=50&width=50"}
+              alt="Logo"
+              width={50}
+              style={{ borderRadius: "6px" }}
+            />
+            <div style={{ flex: 1 }}>
+              <h1
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "22px",
+                  textAlign: "center",
+                  margin: "0",
+                  color: "#1e293b",
+                }}
+              >
                 New Vaccination
               </h1>
             </div>
+          </div>
 
-            <div className="flex items-center gap-4">
-              <p className="font-serif text-[#7F7F7F] w-40">
+          <div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                marginBottom: "16px",
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "serif",
+                  color: "#7F7F7F",
+                  width: "160px",
+                  margin: "0",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                }}
+              >
                 Vaccination Name:
               </p>
               <Input
                 onChange={(e) => setVaccineName(e.target.value)}
                 value={vaccineName}
-                className="flex-1"
+                style={{
+                  flex: 1,
+                  borderRadius: "6px",
+                  height: "40px",
+                }}
               />
             </div>
 
-            <div className="flex items-start gap-4 pt-2">
-              <p className="font-serif text-[#7F7F7F] w-40">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "16px",
+                paddingTop: "8px",
+                marginBottom: "16px",
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "serif",
+                  color: "#7F7F7F",
+                  width: "160px",
+                  margin: "0",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  paddingTop: "8px",
+                }}
+              >
                 Vaccination Description:
               </p>
               <TextArea
                 onChange={(e) => setVaccineDescription(e.target.value)}
                 value={vaccineDescription}
-                className="flex-1"
-              ></TextArea>
+                style={{
+                  flex: 1,
+                  borderRadius: "6px",
+                  resize: "none",
+                }}
+                rows={3}
+              />
             </div>
 
-            <div className="flex items-center gap-4 pt-2">
-              <p className="font-serif text-[#7F7F7F] w-40">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                paddingTop: "8px",
+                marginBottom: "16px",
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "serif",
+                  color: "#7F7F7F",
+                  width: "160px",
+                  margin: "0",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                }}
+              >
                 Implementation Date:
               </p>
               <Input
                 type="date"
-                className="rounded-full flex-1"
+                style={{
+                  borderRadius: "20px",
+                  flex: 1,
+                  height: "40px",
+                }}
                 onChange={(e) => setVaccineDate(e.target.value)}
                 value={vaccineDate}
               />
             </div>
 
-            <div className="flex items-center gap-4 pt-2">
-              <p className="font-serif text-[#7F7F7F] w-40">Target Class:</p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                paddingTop: "8px",
+                marginBottom: "8px",
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "serif",
+                  color: "#7F7F7F",
+                  width: "160px",
+                  margin: "0",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                }}
+              >
+                Target Class:
+              </p>
             </div>
 
             <Radio.Group
@@ -906,32 +1035,67 @@ const VaccineManager = () => {
                 setSelectedGrades([]);
                 setSelectAllClasses(false);
               }}
-              className="mb-4"
+              style={{ marginBottom: "16px" }}
             >
-              <div className="flex flex-col gap-2">
-                <Radio value="school">School</Radio>
-                <Radio value="class">Classes</Radio>
-                <Radio value="grade">Grades</Radio>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
+                <Radio value="school" style={{ fontSize: "14px" }}>
+                  School
+                </Radio>
+                <Radio value="class" style={{ fontSize: "14px" }}>
+                  Classes
+                </Radio>
+                <Radio value="grade" style={{ fontSize: "14px" }}>
+                  Grades
+                </Radio>
               </div>
             </Radio.Group>
 
-            {renderTargetSelection()}
-            <div className="mt-6 border rounded p-4 bg-gray-50">
-              <div className="flex items-center gap-2 mb-2">
+            <div
+              style={{
+                padding: "16px",
+                border: "1px solid #d9d9d9",
+                backgroundColor: "#fafafa",
+                borderRadius: "6px",
+                marginBottom: "16px",
+              }}
+            >
+              {renderTargetSelection()}
+            </div>
+
+            <div
+              style={{
+                marginTop: "24px",
+                border: "1px solid #d9d9d9",
+                borderRadius: "6px",
+                padding: "16px",
+                backgroundColor: "#f9fafb",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  marginBottom: "12px",
+                }}
+              >
                 <input
                   type="checkbox"
                   checked={items.length > 0}
                   onChange={(e) => {
                     if (!e.target.checked) setItems([]);
                   }}
+                  style={{ width: "16px", height: "16px" }}
                 />
-                <span className="font-semibold">
+                <span style={{ fontWeight: "600", fontSize: "14px" }}>
                   Nội dung kiểm tra (thuốc):
                 </span>
               </div>
 
               <Button
-                size="sm"
+                size="small"
                 onClick={() =>
                   setItems([
                     ...items,
@@ -943,155 +1107,274 @@ const VaccineManager = () => {
                     },
                   ])
                 }
-                className="mb-3"
+                style={{
+                  marginBottom: "12px",
+                  borderRadius: "4px",
+                  height: "32px",
+                  color: "#1890ff",
+                  fontWeight: "500",
+                }}
               >
                 [+] Thêm mục kiểm tra
               </Button>
 
               {items.length > 0 && (
-                <table className="w-full text-left border border-collapse">
-                  <thead>
-                    <tr className="bg-gray-200">
-                      <th className="border px-2">STT</th>
-                      <th className="border px-2">Tên thuốc</th>
-                      <th className="border px-2">Số lượng dự kiến</th>
-                      <th className="border px-2">Image</th>
-
-                      <th className="border px-2">Ghi chú</th>
-                      <th className="border px-2">Xóa</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {items.map((item, index) => (
-                      <tr key={index} className="bg-white">
-                        <td className="border px-2">{index + 1}</td>
-
-                        <td className="border px-2">
-                          <select
-                            value={
-                              item.medicineID !== null
-                                ? `med-${item.medicineID}`
-                                : item.medicineSupplyID !== null
-                                ? `sup-${item.medicineSupplyID}`
-                                : ""
-                            }
-                            onChange={(e) => {
-                              const [type, id] = e.target.value.split("-");
-                              const selectedId = parseInt(id);
-                              const updated = [...items];
-
-                              // Reset trước
-                              updated[index].medicineID = null;
-                              updated[index].medicineSupplyID = null;
-
-                              if (!selectedId) {
-                                setItems(updated);
-                                return;
-                              }
-
-                              if (type === "med") {
-                                updated[index].medicineID = selectedId;
-                              } else if (type === "sup") {
-                                updated[index].medicineSupplyID = selectedId;
-                              }
-
-                              setItems(updated);
-                            }}
-                          >
-                            <option value="">Chọn</option>
-                            <optgroup label="Thuốc">
-                              {medicineSupply
-                                .filter((m) => m.type === "medicine")
-                                .map((m) => (
-                                  <option
-                                    key={`med-${m.id}`}
-                                    value={`med-${m.id}`}
-                                  >
-                                    {m.name}
-                                  </option>
-                                ))}
-                            </optgroup>
-                            <optgroup label="Vật tư">
-                              {medicineSupply
-                                .filter((s) => s.type === "supply")
-                                .map((s) => (
-                                  <option
-                                    key={`sup-${s.id}`}
-                                    value={`sup-${s.id}`}
-                                  >
-                                    {s.name}
-                                  </option>
-                                ))}
-                            </optgroup>
-                          </select>
-                        </td>
-
-                        <td className="border px-2">
-                          <Input
-                            type="number"
-                            value={item.quantityPlanned}
-                            min={1}
-                            onChange={(e) => {
-                              const updated = [...items];
-                              updated[index].quantityPlanned =
-                                parseInt(e.target.value) || 1;
-                              setItems(updated);
-                            }}
-                          />
-                        </td>
-
-                        <td className="border px-2">
-                          {(() => {
-                            const found = item.medicineID
-                              ? formattedData?.medicine?.find(
-                                  (med) => med.id === item.medicineID
-                                )
-                              : formattedData?.supply?.find(
-                                  (sup) => sup.id === item.medicineSupplyID
-                                );
-
-                            return found?.image ? (
-                              <img
-                                src={found.image}
-                                width={90}
-                                alt="medicine"
-                                className="w-12 h-12 object-cover"
-                              />
-                            ) : (
-                              "—"
-                            );
-                          })()}
-                        </td>
-
-                        <td className="border px-2">
-                          <Input
-                            placeholder="Ghi chú"
-                            value={item.notes || ""}
-                            onChange={(e) => {
-                              const updated = [...items];
-                              updated[index].notes = e.target.value;
-                              setItems(updated);
-                            }}
-                          />
-                        </td>
-
-                        <td className="border px-2 text-center">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              const updated = [...items];
-                              updated.splice(index, 1);
-                              setItems(updated);
-                            }}
-                          >
-                            🗑️
-                          </Button>
-                        </td>
+                <div style={{ overflowX: "auto" }}>
+                  <table
+                    style={{
+                      width: "100%",
+                      textAlign: "left",
+                      border: "1px solid #d9d9d9",
+                      borderCollapse: "collapse",
+                      fontSize: "14px",
+                      backgroundColor: "white",
+                      borderRadius: "6px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <thead>
+                      <tr style={{ backgroundColor: "#f5f5f5" }}>
+                        <th
+                          style={{
+                            border: "1px solid #d9d9d9",
+                            padding: "12px 8px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          STT
+                        </th>
+                        <th
+                          style={{
+                            border: "1px solid #d9d9d9",
+                            padding: "12px 8px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Tên thuốc
+                        </th>
+                        <th
+                          style={{
+                            border: "1px solid #d9d9d9",
+                            padding: "12px 8px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Số lượng dự kiến
+                        </th>
+                        <th
+                          style={{
+                            border: "1px solid #d9d9d9",
+                            padding: "12px 8px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Image
+                        </th>
+                        <th
+                          style={{
+                            border: "1px solid #d9d9d9",
+                            padding: "12px 8px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Ghi chú
+                        </th>
+                        <th
+                          style={{
+                            border: "1px solid #d9d9d9",
+                            padding: "12px 8px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Xóa
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {items.map((item, index) => (
+                        <tr key={index} style={{ backgroundColor: "white" }}>
+                          <td
+                            style={{
+                              border: "1px solid #d9d9d9",
+                              padding: "12px 8px",
+                              textAlign: "center",
+                            }}
+                          >
+                            {index + 1}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #d9d9d9",
+                              padding: "8px",
+                            }}
+                          >
+                            <select
+                              value={
+                                item.medicineID !== null
+                                  ? `med-${item.medicineID}`
+                                  : item.medicineSupplyID !== null
+                                  ? `sup-${item.medicineSupplyID}`
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                const [type, id] = e.target.value.split("-");
+                                const selectedId = Number.parseInt(id);
+                                const updated = [...items];
+                                // Reset trước
+                                updated[index].medicineID = null;
+                                updated[index].medicineSupplyID = null;
+                                if (!selectedId) {
+                                  setItems(updated);
+                                  return;
+                                }
+                                if (type === "med") {
+                                  updated[index].medicineID = selectedId;
+                                } else if (type === "sup") {
+                                  updated[index].medicineSupplyID = selectedId;
+                                }
+                                setItems(updated);
+                              }}
+                              style={{
+                                width: "100%",
+                                padding: "6px",
+                                borderRadius: "4px",
+                                border: "1px solid #d9d9d9",
+                                fontSize: "14px",
+                              }}
+                            >
+                              <option value="">Chọn</option>
+                              <optgroup label="Thuốc">
+                                {medicineSupply
+                                  .filter((m) => m.type === "medicine")
+                                  .map((m) => (
+                                    <option
+                                      key={`med-${m.id}`}
+                                      value={`med-${m.id}`}
+                                    >
+                                      {m.name}
+                                    </option>
+                                  ))}
+                              </optgroup>
+                              <optgroup label="Vật tư">
+                                {medicineSupply
+                                  .filter((s) => s.type === "supply")
+                                  .map((s) => (
+                                    <option
+                                      key={`sup-${s.id}`}
+                                      value={`sup-${s.id}`}
+                                    >
+                                      {s.name}
+                                    </option>
+                                  ))}
+                              </optgroup>
+                            </select>
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #d9d9d9",
+                              padding: "8px",
+                            }}
+                          >
+                            <Input
+                              type="number"
+                              value={item.quantityPlanned}
+                              min={1}
+                              onChange={(e) => {
+                                const updated = [...items];
+                                updated[index].quantityPlanned =
+                                  Number.parseInt(e.target.value) || 1;
+                                setItems(updated);
+                              }}
+                              style={{
+                                width: "80px",
+                                height: "32px",
+                                borderRadius: "4px",
+                              }}
+                            />
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #d9d9d9",
+                              padding: "8px",
+                              textAlign: "center",
+                            }}
+                          >
+                            {(() => {
+                              const found = item.medicineID
+                                ? formattedData?.medicine?.find(
+                                    (med) => med.id === item.medicineID
+                                  )
+                                : formattedData?.supply?.find(
+                                    (sup) => sup.id === item.medicineSupplyID
+                                  );
+                              return found?.image ? (
+                                <img
+                                  src={found.image || "/placeholder.svg"}
+                                  width={48}
+                                  height={48}
+                                  alt="medicine"
+                                  style={{
+                                    width: "48px",
+                                    height: "48px",
+                                    objectFit: "cover",
+                                    borderRadius: "6px",
+                                    border: "1px solid #e5e7eb",
+                                  }}
+                                />
+                              ) : (
+                                <span style={{ color: "#9ca3af" }}>—</span>
+                              );
+                            })()}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #d9d9d9",
+                              padding: "8px",
+                            }}
+                          >
+                            <Input
+                              placeholder="Ghi chú"
+                              value={item.notes || ""}
+                              onChange={(e) => {
+                                const updated = [...items];
+                                updated[index].notes = e.target.value;
+                                setItems(updated);
+                              }}
+                              style={{ height: "32px", borderRadius: "4px" }}
+                            />
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #d9d9d9",
+                              padding: "8px",
+                              textAlign: "center",
+                            }}
+                          >
+                            <Button
+                              size="small"
+                              onClick={() => {
+                                const updated = [...items];
+                                updated.splice(index, 1);
+                                setItems(updated);
+                              }}
+                              style={{
+                                border: "1px solid #ef4444",
+                                borderRadius: "4px",
+                                height: "32px",
+                                width: "32px",
+                                padding: "0",
+                                color: "#ef4444",
+                                backgroundColor: "#fef2f2",
+                              }}
+                            >
+                              🗑️
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>

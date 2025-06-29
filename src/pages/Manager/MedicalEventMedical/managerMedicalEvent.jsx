@@ -3,6 +3,7 @@ import { Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchManagerMedicalEvent } from "../../../redux/manager/ManagerMedicalEvent/managerMedicalEventSlice";
 import { fetchManagerMedicalEventDetail } from "../../../redux/manager/ManagerMedicalEvent/managerMedicalEventDetailSlice";
+import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 
 const MedicalEventList = () => {
   const [showModal, setShowModal] = useState(false);
@@ -45,6 +46,9 @@ const MedicalEventList = () => {
 
   return (
     <>
+      <h1 className="text-xl font-inria font-medium mb-4 p-10">
+        <CommonBreadcrumb role={"Manager"} page={"Event"} />
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 font-kameron">
         {data.map((item) => (
           <div
@@ -105,60 +109,132 @@ const MedicalEventList = () => {
 
       {/* Modal Detail */}
       <Modal
-        title="Chi tiết học sinh & y tế"
+        title={
+          <div className="text-center">
+            <span className="text-xl font-semibold text-gray-800">
+              Chi tiết học sinh & y tế
+            </span>
+          </div>
+        }
         open={showModal}
         onCancel={() => setShowModal(false)}
         footer={null}
+        width={800}
+        centered
       >
         {selectedItem ? (
-          <div className="space-y-4 font-kameron grid-cols-2 grid">
+          <div className="space-y-6 font-kameron grid grid-cols-2 gap-8">
             {/* Medical Event Info */}
-            <div>
-              <h2 className="text-lg font-bold text-blue-700">Sự kiện y tế</h2>
-              <p>ID: {selectedItem.medicalEventEntity?.id}</p>
-              <p>Loại: {selectedItem.medicalEventEntity?.type}</p>
-              <p>
-                Thời gian:{" "}
-                {new Date(
-                  selectedItem.medicalEventEntity?.occurredAt
-                ).toLocaleString()}
-              </p>
-              <p>Trạng thái: {selectedItem.medicalEventEntity?.status}</p>
-              <p>Mức độ: {selectedItem.medicalEventEntity?.severity}</p>
-              <p>Mô tả: {selectedItem.medicalEventEntity?.description}</p>
+            <div className="space-y-4">
+              <div className="border-l-4 border-blue-500 pl-4">
+                <h2 className="text-lg font-bold text-blue-700 mb-3">
+                  Sự kiện y tế
+                </h2>
+                <div className="space-y-2">
+                  <p className="text-gray-700">
+                    <span className="font-medium">ID:</span>{" "}
+                    {selectedItem.medicalEventEntity?.id}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Loại:</span>{" "}
+                    {selectedItem.medicalEventEntity?.type}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Thời gian:</span>{" "}
+                    {new Date(
+                      selectedItem.medicalEventEntity?.occurredAt
+                    ).toLocaleString()}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Trạng thái:</span>{" "}
+                    {selectedItem.medicalEventEntity?.status}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Mức độ:</span>{" "}
+                    {selectedItem.medicalEventEntity?.severity}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Mô tả:</span>{" "}
+                    {selectedItem.medicalEventEntity?.description}
+                  </p>
+                </div>
+              </div>
+
               {/* Nurse Info */}
-              <h2 className="text-lg font-bold text-pink-700">Y tá</h2>
-              <p>Họ tên: {selectedItem.nurseInfo?.fullname}</p>
+              <div className="border-l-4 border-pink-500 pl-4">
+                <h2 className="text-lg font-bold text-pink-700 mb-3">Y tá</h2>
+                <p className="text-gray-700">
+                  <span className="font-medium">Họ tên:</span>{" "}
+                  {selectedItem.nurseInfo?.fullname}
+                </p>
+              </div>
             </div>
-            <div>
+
+            <div className="space-y-4">
               {/* Student Info */}
-              <h2 className="text-lg font-bold text-green-700">Học sinh</h2>
-              <p>Mã HS: {selectedItem.studentInfo?.student_code}</p>
-              <p>Họ tên: {selectedItem.studentInfo?.account?.fullname}</p>
-              <p>
-                Ngày sinh:{" "}
-                {new Date(
-                  selectedItem.studentInfo?.dateOfBirth
-                ).toLocaleDateString()}
-              </p>
-              <p>Giới tính: {selectedItem.studentInfo?.gender}</p>
-              <p>
-                Lớp: {selectedItem.studentInfo?.lastAcamedicYear?.class?.name}
-              </p>
-              <p>
-                Năm học:{" "}
-                {selectedItem.studentInfo?.lastAcamedicYear?.academicYear?.name}
-              </p>
+              <div className="border-l-4 border-green-500 pl-4">
+                <h2 className="text-lg font-bold text-green-700 mb-3">
+                  Học sinh
+                </h2>
+                <div className="space-y-2">
+                  <p className="text-gray-700">
+                    <span className="font-medium">Mã HS:</span>{" "}
+                    {selectedItem.studentInfo?.student_code}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Họ tên:</span>{" "}
+                    {selectedItem.studentInfo?.account?.fullname}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Ngày sinh:</span>{" "}
+                    {new Date(
+                      selectedItem.studentInfo?.dateOfBirth
+                    ).toLocaleDateString()}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Giới tính:</span>{" "}
+                    {selectedItem.studentInfo?.gender}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Lớp:</span>{" "}
+                    {selectedItem.studentInfo?.lastAcamedicYear?.class?.name}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Năm học:</span>{" "}
+                    {
+                      selectedItem.studentInfo?.lastAcamedicYear?.academicYear
+                        ?.name
+                    }
+                  </p>
+                </div>
+              </div>
 
               {/* Parent Info */}
-              <h2 className="text-lg font-bold text-purple-700">Phụ huynh</h2>
-              <p>Họ tên: {selectedItem.studentInfo?.ParentInfo?.fullname}</p>
-              <p>Email: {selectedItem.studentInfo?.ParentInfo?.email}</p>
-              <p>Phone: {selectedItem.studentInfo?.ParentInfo?.phone}</p>
+              <div className="border-l-4 border-purple-500 pl-4">
+                <h2 className="text-lg font-bold text-purple-700 mb-3">
+                  Phụ huynh
+                </h2>
+                <div className="space-y-2">
+                  <p className="text-gray-700">
+                    <span className="font-medium">Họ tên:</span>{" "}
+                    {selectedItem.studentInfo?.ParentInfo?.fullname}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Email:</span>{" "}
+                    {selectedItem.studentInfo?.ParentInfo?.email}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Phone:</span>{" "}
+                    {selectedItem.studentInfo?.ParentInfo?.phone}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         ) : (
-          <p>Không có dữ liệu chi tiết</p>
+          <div className="text-center py-8">
+            <p className="text-gray-500 text-lg">Không có dữ liệu chi tiết</p>
+          </div>
         )}
       </Modal>
     </>

@@ -125,6 +125,30 @@ function MedicalCheckup() {
     dispatch(fetchCheckupManager());
   }, [dispatch]);
 
+  const resetForm = () => {
+    setCheckupTitle("");
+    setCheckupContents("");
+    setCheckupDescription("");
+    setCheckupDate(null);
+    setTargetType("school");
+    setSelectedClasses([]);
+    setSelectedGrades([]);
+    setSelectAllClasses(false);
+    setShowCheckupEditor(false);
+
+    setCheckupTitle("");
+    setCheckupDescription("");
+    setCheckupDate(null);
+    setItems([]);
+    setCheckupContents([
+      { name: "", description: "", inputType: "TEXT" }, // reset về mặc định
+    ]);
+
+    setNotificationTitle("");
+    setNotificationContent("");
+    setSelectedEvent(null);
+  };
+
   const handleCreate = async () => {
     const formattedTargetType = targetType.toUpperCase();
     let targetIds = [];
@@ -159,21 +183,16 @@ function MedicalCheckup() {
     try {
       console.log(payload);
       dispatch(postManagerCheckup(payload));
-      setOpen(false);
-      toast.success("Create Success ");
+      toast.success("Create Success");
+      closeModal();
     } catch (error) {
       toast.error("Tạo sự kiện thất bại");
       console.error("API ERROR:", error);
     }
   };
   const [targetTypeState, setTargetTypeState] = useState([]);
-  const [checkupContents, setCheckupContents] = useState([
-    {
-      name: "",
-      description: "",
-      inputType: "TEXT",
-    },
-  ]);
+  const [checkupContents, setCheckupContents] = useState([]);
+
   const [items, setItems] = useState([]);
 
   const addCheckupContent = (newItem = null) => {
@@ -287,13 +306,8 @@ function MedicalCheckup() {
   };
   const closeModal = () => {
     setOpen(false);
-    setTargetType("school");
-    setSelectedClasses([]);
-    setSelectedGrades([]);
-    setSelectAllClasses(false);
 
-    setShowCheckupEditor(false);
-    setCheckupContents([]);
+    resetForm();
   };
   const handleOk = () => {
     setLoading(true);
@@ -425,6 +439,9 @@ function MedicalCheckup() {
   return (
     <>
       {" "}
+      <h1 className="text-xl font-inria font-medium mb-4 p-10">
+        <CommonBreadcrumb role={"Manager"} page={"Checkup"} />
+      </h1>
       <div className="pl-5 mt-5 flex gap-5">
         <div className="">
           <Button className="ml-[1000px]" onClick={showModal}>
@@ -521,7 +538,6 @@ function MedicalCheckup() {
                 </div>
               </div>
 
-              {/* BOTTOM: TIẾN ĐỘ + NÚT */}
               <div className="space-y-3 mt-4">
                 {item?.status !== "DRAFT" && (
                   <>
@@ -585,8 +601,18 @@ function MedicalCheckup() {
         open={open}
         onOk={handleOk}
         onCancel={closeModal}
+        width={800}
+        centered
         footer={[
-          <Button key="cancel" onClick={closeModal}>
+          <Button
+            key="cancel"
+            onClick={closeModal}
+            style={{
+              borderRadius: "6px",
+              height: "36px",
+              fontWeight: "500",
+            }}
+          >
             Cancel
           </Button>,
           <Button
@@ -594,82 +620,188 @@ function MedicalCheckup() {
             type="primary"
             loading={loading}
             onClick={handleCreate}
+            style={{
+              borderRadius: "6px",
+              height: "36px",
+              fontWeight: "500",
+              backgroundColor: "#1890ff",
+            }}
           >
             Submit
           </Button>,
         ]}
       >
-        <div className="font-sans">
+        <div style={{ fontFamily: "sans-serif" }}>
           {/* Header */}
-          <div className="flex items-center gap-4 mb-4">
-            <img src={logo} alt="Logo" width={50} />
-            <div>
-              <h2 className="text-2xl font-bold text-center m-auto">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+              marginBottom: "24px",
+              padding: "16px",
+              backgroundColor: "#f8fafc",
+              borderRadius: "8px",
+              border: "1px solid #e2e8f0",
+            }}
+          >
+            <img
+              src={logo}
+              alt="Logo"
+              width={50}
+              style={{ borderRadius: "6px" }}
+            />
+            <div style={{ flex: 1 }}>
+              <h2
+                style={{
+                  fontSize: "22px",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  margin: "0",
+                  color: "#1e293b",
+                }}
+              >
                 Create New Checkup
               </h2>
             </div>
           </div>
 
-          {/* Checkup Name */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Checkup Name
-            </label>
-            <Input
-              placeholder="Enter checkup title..."
-              onChange={(e) => setCheckupTitle(e.target.value)}
-            />
+          {/* Form Grid */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "20px",
+              marginBottom: "20px",
+            }}
+          >
+            {/* Checkup Name */}
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  color: "#374151",
+                  marginBottom: "6px",
+                }}
+              >
+                Checkup Name
+              </label>
+              <Input
+                placeholder="Enter checkup title..."
+                value={checkupTitle}
+                onChange={(e) => setCheckupTitle(e.target.value)}
+                style={{
+                  borderRadius: "6px",
+                  height: "40px",
+                }}
+              />
+            </div>
+
+            {/* Date */}
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  color: "#374151",
+                  marginBottom: "6px",
+                }}
+              >
+                Date of Implementation
+              </label>
+              <Input
+                type="date"
+                value={checkupDate || ""}
+                onChange={(e) => setCheckupDate(e.target.value)}
+                style={{
+                  borderRadius: "6px",
+                  height: "40px",
+                }}
+              />
+            </div>
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+
+          {/* Description */}
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "14px",
+                fontWeight: "500",
+                color: "#374151",
+                marginBottom: "6px",
+              }}
+            >
               Check up Description
             </label>
-            <Input
+            <Input.TextArea
               placeholder="Enter checkup description..."
+              value={checkupDescription}
               onChange={(e) => setCheckupDescription(e.target.value)}
+              rows={3}
+              style={{
+                borderRadius: "6px",
+                resize: "none",
+              }}
             />
           </div>
 
-          {/* Checkup Items */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          {/* Checkup Contents */}
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "14px",
+                fontWeight: "500",
+                color: "#374151",
+                marginBottom: "8px",
+              }}
+            >
               Checkup Contents
             </label>
-
-            {/* Nút Thêm mới */}
             <Button
               type="link"
-              className="p-0 mb-2"
               onClick={addCheckupContent}
+              style={{
+                padding: "0",
+                marginBottom: "12px",
+                color: "#1890ff",
+                fontWeight: "500",
+              }}
             >
               + Thêm mới
             </Button>
-
-            {/* Chỉ hiển thị bảng nếu có nội dung */}
             {showCheckupEditor && (
-              <CheckupContentTable
-                checkupContents={checkupContents}
-                setCheckupContents={setCheckupContents}
-                availableContents={availableContents}
-              />
+              <div
+                style={{
+                  border: "1px solid #d9d9d9",
+                  borderRadius: "6px",
+                  overflow: "hidden",
+                }}
+              >
+                <CheckupContentTable
+                  checkupContents={checkupContents}
+                  setCheckupContents={setCheckupContents}
+                  availableContents={availableContents}
+                />
+              </div>
             )}
           </div>
 
-          {/* Date */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Date of Implementation
-            </label>
-            <Input
-              type="date"
-              className="rounded"
-              onChange={(e) => setCheckupDate(e.target.value)}
-            />
-          </div>
-
           {/* Target Selection */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "14px",
+                fontWeight: "500",
+                color: "#374151",
+                marginBottom: "8px",
+              }}
+            >
               Target Classes
             </label>
             <Radio.Group
@@ -680,24 +812,47 @@ function MedicalCheckup() {
                 setSelectedGrades([]);
                 setSelectAllClasses(false);
               }}
+              style={{ marginBottom: "16px" }}
             >
               <Space direction="vertical">
-                <Radio value="school">Whole School</Radio>
-                <Radio value="class">Specific Classes</Radio>
-                <Radio value="grade">By Grade</Radio>
+                <Radio value="school" style={{ fontSize: "14px" }}>
+                  Whole School
+                </Radio>
+                <Radio value="class" style={{ fontSize: "14px" }}>
+                  Specific Classes
+                </Radio>
+                <Radio value="grade" style={{ fontSize: "14px" }}>
+                  By Grade
+                </Radio>
               </Space>
             </Radio.Group>
 
-            <div className="mt-4 p-3 border bg-gray-50 rounded">
+            <div
+              style={{
+                padding: "16px",
+                border: "1px solid #d9d9d9",
+                backgroundColor: "#fafafa",
+                borderRadius: "6px",
+                marginBottom: "16px",
+              }}
+            >
               {renderTargetSelection()}
             </div>
 
-            <CheckupItemsTable
-              items={items}
-              setItems={setItems}
-              medicineSupply={medicineSupply}
-              formattedData={formattedData}
-            />
+            <div
+              style={{
+                border: "1px solid #d9d9d9",
+                borderRadius: "6px",
+                overflow: "hidden",
+              }}
+            >
+              <CheckupItemsTable
+                items={items}
+                setItems={setItems}
+                medicineSupply={medicineSupply}
+                formattedData={formattedData}
+              />
+            </div>
           </div>
         </div>
       </Modal>

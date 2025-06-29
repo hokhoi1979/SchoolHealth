@@ -150,10 +150,10 @@ const ChangePassword = () => {
                     className="border-4 border-blue-100"
                   />
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    {userInfo.fullname}
+                    {profile.data.fullname}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    Email: {userInfo.email}
+                    Email: {profile.data.email}
                   </p>
                 </div>
               </Card>

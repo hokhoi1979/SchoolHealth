@@ -21,7 +21,7 @@ const SideBarManager = () => {
     <>
       <div
         className={` h-full bg-white pt-2 pb-2 font-inria flex flex-col ${
-          toggle ? "w-[7%] " : "w-[18%]"
+          toggle ? "w-[8%] " : "w-[20%]"
         }  transition-all duration-400 ease-in-out overflow-hidden`}
       >
         <div className="flex items-center pt-2 pb-2  pl-1 pr-1 gap-3">
@@ -33,7 +33,7 @@ const SideBarManager = () => {
               </p>
             </div>
             {!toggle && (
-              <h1 className="font-inria text-xl pl-6 font-medium text-center justify-center items-center">
+              <h1 className="font-inria text-[15px] pl-6 font-medium text-center justify-center items-center">
                 School Health
               </h1>
             )}
@@ -83,13 +83,13 @@ const SideBarManager = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => navigate("/manager/materials")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              onClick={() => navigate("/manager/materials")}
             >
               <path
                 fill="none"
@@ -118,6 +118,7 @@ const SideBarManager = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => navigate("/manager/requestManager")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -148,6 +149,7 @@ const SideBarManager = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => navigate("/manager/vaccine")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -182,6 +184,7 @@ const SideBarManager = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => navigate("/manager/medicalcheckup")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -212,6 +215,7 @@ const SideBarManager = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => navigate("/manager/managerMedicalEvent")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -237,41 +241,12 @@ const SideBarManager = () => {
 
           <div
             className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
-              click === "information"
-                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
-                : ""
-            } ${toggle && "justify-center"}`}
-            style={{ cursor: "pointer" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-            >
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-            {!toggle && (
-              <Link
-                onClick={() => setClick("information")}
-                to={"/manager/information"}
-                className="text-[18px]"
-              >
-                Manager Information
-              </Link>
-            )}
-          </div>
-
-          <div
-            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
               click === "password"
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => navigate("/manager/change_password")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
