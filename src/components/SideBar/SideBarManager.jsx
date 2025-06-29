@@ -89,6 +89,7 @@ const SideBarManager = () => {
               width="30"
               height="30"
               viewBox="0 0 24 24"
+              onClick={() => navigate("/manager/materials")}
             >
               <path
                 fill="none"

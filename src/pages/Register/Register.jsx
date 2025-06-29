@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MailOutlined,
   LockOutlined,
@@ -21,20 +21,28 @@ function Register() {
     (state) => state.accountRegister
   );
 
+  const [localError, setLocalError] = useState(null);
+
+  useEffect(() => {
+    if (accountRegister) {
+      navigate("/login");
+    }
+  }, [accountRegister]);
+
+  useEffect(() => {
+    setLocalError(error);
+  }, [error]);
+
   const handleRegister = async () => {
     try {
       const values = await form.validateFields();
-      const actionResult = await dispatch(
+      dispatch(
         postRegister({
           fullname: values.fullname,
           email: values.email,
           password: values.password,
         })
       );
-
-      if (actionResult.payload) {
-        navigate("/login");
-      }
     } catch (error) {
       console.log("Validation failed:", error);
     }
@@ -49,12 +57,14 @@ function Register() {
       form.setFields([{ name: "password", errors: [error.message] }]);
     }
   }, [error]);
+
   return (
     <div className="flex flex-col min-h-screen relative">
       <div
         className="flex flex-1 bg-cover bg-center w-full bg-opacity-45 pl-[10%] pr-[10%]"
         style={{ backgroundImage: `url(${bg})` }}
       >
+        {/* Back Home Icon */}
         <div
           className="mt-5 hover:bg-[#f9f9f9] hover:bg-opacity-50 w-[50px] h-[50px] rounded-full flex items-center justify-center transition duration-200"
           onClick={() => navigate("/")}
@@ -73,6 +83,7 @@ function Register() {
           </svg>
         </div>
 
+        {/* Register Form */}
         <div className="w-[35%] bg-white m-auto rounded-[15px] p-5 shadow-lg shadow-black/60 text-center">
           <h1 className="text-3xl mt-3 font-serif">Register Page</h1>
           <p className="font-serif text-[#777] mt-3 text-[15px]">
@@ -87,6 +98,7 @@ function Register() {
                 rules={[{ required: true, message: "Full Name is not empty!" }]}
               >
                 <Input
+                  onChange={() => setLocalError(null)}
                   style={{ height: "40px", fontWeight: 600 }}
                   placeholder="Enter your Full Name"
                   prefix={<UserOutlined style={{ color: "#767676" }} />}
@@ -101,6 +113,7 @@ function Register() {
                 ]}
               >
                 <Input
+                  onChange={() => setLocalError(null)}
                   style={{ height: "40px", fontWeight: 600 }}
                   placeholder="Enter your email"
                   prefix={<MailOutlined style={{ color: "#767676" }} />}
@@ -112,6 +125,7 @@ function Register() {
                 rules={[{ required: true, message: "Password is not empty!" }]}
               >
                 <Input.Password
+                  onChange={() => setLocalError(null)}
                   style={{ height: "40px", fontWeight: 600 }}
                   placeholder="Enter your password"
                   prefix={<LockOutlined style={{ color: "#767676" }} />}
@@ -137,6 +151,7 @@ function Register() {
                 ]}
               >
                 <Input.Password
+                  onChange={() => setLocalError(null)}
                   style={{ height: "40px", fontWeight: 600 }}
                   placeholder="Confirm your password"
                   prefix={<LockOutlined style={{ color: "#767676" }} />}
@@ -145,11 +160,13 @@ function Register() {
                   }
                 />
               </Form.Item>
-              {error && (
-                <div className="text-red-500">
-                  Account already exists or is incorrect
-                </div>
-              )}
+
+              {localError &&
+                form.getFieldsError().every((f) => f.errors.length === 0) && (
+                  <p className="text-red-500 relative bottom-3">
+                    Account already exists or is incorrect
+                  </p>
+                )}
 
               <Button
                 style={{ height: "40px", fontWeight: 300 }}
@@ -170,7 +187,7 @@ function Register() {
           </div>
         </div>
 
-        {/* Right Section */}
+        {/* Right Text Section */}
         <div className="w-[45%] m-auto mt-[12%] text-left text-[#252424]">
           <h1 className="font-serif text-[30px]">
             School health team – Accompanying students' health

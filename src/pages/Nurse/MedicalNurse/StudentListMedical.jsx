@@ -248,9 +248,12 @@ function StudentListMedical() {
                         <span className="font-medium">{item.quantityUsed}</span>
                       </p>
                       {item.notes && (
-                        <p className="text-xs text-gray-500 italic mt-1">
-                          📝 {item.notes}
-                        </p>
+                        <div className="flex">
+                          <p className="text-sm text-gray-600 mt-1">
+                            Number:
+                            <span className="font-medium">{item.notes}</span>
+                          </p>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -448,7 +451,7 @@ function StudentListMedical() {
       )}
       {selectedOption === "send" && (
         <div className="flex gap-5 pl-5">
-          <SentMedicalToParents id={id}/>
+          <SentMedicalToParents id={id} />
         </div>
       )}
       <div className="h-20"></div>

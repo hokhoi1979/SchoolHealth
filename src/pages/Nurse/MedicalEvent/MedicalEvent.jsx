@@ -48,6 +48,9 @@ const MedicalEvent = () => {
   const [hospitalName, setHospitalName] = useState("");
   const [transferredAt, setTransferredAt] = useState("");
 
+  //error
+  const [errors, setErrors] = useState({});
+
   const { getMedicalEvent = [] } = useSelector(
     (state) => state.getMedicalEventNurse
   );
@@ -69,6 +72,18 @@ const MedicalEvent = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [dosageNote, setDosageNote] = useState("");
   const [idNormal, setIdNormal] = useState(null);
+
+  const resetFields = () => {
+    setStudentCode("");
+    setType(null);
+    setOccurredAt("");
+    setDescription("");
+    setSeverity(null);
+    setHospitalName("");
+    setTransferredAt("");
+    setErrors({});
+    setOpen(false);
+  };
 
   useEffect(() => {
     dispatch(fetchAllMedicine());
@@ -190,28 +205,42 @@ const MedicalEvent = () => {
   };
 
   const handleSaveEvent = async () => {
+    const newErrors = {};
+
+    if (!studentCode.trim()) newErrors.studentCode = "Student code is required";
+    if (!type) newErrors.type = "Type is required";
+    if (!occurredAt) newErrors.occurredAt = "Occurred At is required";
+    if (!description.trim()) newErrors.description = "Description is required";
+    if (!severity) newErrors.severity = "Severity is required";
+
+    if (severity === "HOSPITAL") {
+      if (!hospitalName.trim())
+        newErrors.hospitalName = "Hospital name is required";
+      if (!transferredAt)
+        newErrors.transferredAt = "Transferred At is required";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return false; // ❗ Trả về false nếu có lỗi
+    }
+
     const payload = {
-      student_code: studentCode,
+      student_code: studentCode.trim(),
       type,
       occurredAt,
-      description,
+      description: description.trim(),
       severity,
       ...(severity === "HOSPITAL" && {
-        hospitalName,
+        hospitalName: hospitalName.trim(),
         transferredAt,
       }),
     };
 
     console.log("Payload gửi API: ", payload);
     await dispatch(postMedicalEvent(payload));
-    setOpen(false);
-    setStudentCode("");
-    setType(null);
-    setOccurredAt("");
-    setDescription("");
-    setSeverity(null);
-    setHospitalName("");
-    setTransferredAt("");
+
+    return true; // ✅ Trả về true nếu thành công
   };
 
   const handleSendEvent = async (id) => {
@@ -520,7 +549,10 @@ const MedicalEvent = () => {
 
         <Modal
           open={open}
-          onCancel={() => setOpen(false)}
+          onCancel={() => {
+            resetFields();
+            setOpen(false);
+          }}
           footer={null}
           className="!w-[500px]"
         >
@@ -538,8 +570,16 @@ const MedicalEvent = () => {
                 <Input
                   placeholder="Enter Student Code"
                   value={studentCode}
-                  onChange={(e) => setStudentCode(e.target.value)}
+                  onChange={(e) => {
+                    setStudentCode(e.target.value);
+                    if (errors.studentCode && e.target.value.trim()) {
+                      setErrors((prev) => ({ ...prev, studentCode: null }));
+                    }
+                  }}
                 />
+                {errors.studentCode && (
+                  <p className="text-red-500 text-sm">{errors.studentCode}</p>
+                )}
               </div>
 
               <div>
@@ -547,7 +587,12 @@ const MedicalEvent = () => {
                 <Select
                   placeholder="Select type"
                   value={type}
-                  onChange={(value) => setType(value)}
+                  onChange={(value) => {
+                    setType(value);
+                    if (errors.type && value) {
+                      setErrors((prev) => ({ ...prev, type: null }));
+                    }
+                  }}
                   className="w-full rounded-md"
                 >
                   <Option value="Sốt">Sốt</Option>
@@ -555,6 +600,9 @@ const MedicalEvent = () => {
                   <Option value="Cảm cúm">Cảm cúm</Option>
                   <Option value="Khác">Khác</Option>
                 </Select>
+                {errors.type && (
+                  <p className="text-red-500 text-sm">{errors.type}</p>
+                )}
               </div>
 
               <div>
@@ -562,8 +610,16 @@ const MedicalEvent = () => {
                 <Input
                   type="datetime-local"
                   value={occurredAt}
-                  onChange={(e) => setOccurredAt(e.target.value)}
+                  onChange={(e) => {
+                    setOccurredAt(e.target.value);
+                    if (errors.occurredAt && e.target.value) {
+                      setErrors((prev) => ({ ...prev, occurredAt: null }));
+                    }
+                  }}
                 />
+                {errors.occurredAt && (
+                  <p className="text-red-500 text-sm">{errors.occurredAt}</p>
+                )}
               </div>
 
               <div>
@@ -572,8 +628,16 @@ const MedicalEvent = () => {
                   rows={3}
                   placeholder="Enter description"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                    if (errors.description && e.target.value.trim()) {
+                      setErrors((prev) => ({ ...prev, description: null }));
+                    }
+                  }}
                 />
+                {errors.description && (
+                  <p className="text-red-500 text-sm">{errors.description}</p>
+                )}
               </div>
 
               <div>
@@ -581,12 +645,20 @@ const MedicalEvent = () => {
                 <Select
                   placeholder="Select severity"
                   value={severity}
-                  onChange={(value) => setSeverity(value)}
+                  onChange={(value) => {
+                    setSeverity(value);
+                    if (errors.severity && value) {
+                      setErrors((prev) => ({ ...prev, severity: null }));
+                    }
+                  }}
                   className="w-full rounded-md"
                 >
                   <Option value="NORMAL">Normal</Option>
                   <Option value="HOSPITAL">Hospital Transfer</Option>
                 </Select>
+                {errors.severity && (
+                  <p className="text-red-500 text-sm">{errors.severity}</p>
+                )}
               </div>
 
               {severity === "HOSPITAL" && (
@@ -596,8 +668,21 @@ const MedicalEvent = () => {
                     <Input
                       placeholder="Enter hospital name"
                       value={hospitalName}
-                      onChange={(e) => setHospitalName(e.target.value)}
+                      onChange={(e) => {
+                        setHospitalName(e.target.value);
+                        if (errors.hospitalName && e.target.value.trim()) {
+                          setErrors((prev) => ({
+                            ...prev,
+                            hospitalName: null,
+                          }));
+                        }
+                      }}
                     />
+                    {errors.hospitalName && (
+                      <p className="text-red-500 text-sm">
+                        {errors.hospitalName}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -605,8 +690,21 @@ const MedicalEvent = () => {
                     <Input
                       type="datetime-local"
                       value={transferredAt}
-                      onChange={(e) => setTransferredAt(e.target.value)}
+                      onChange={(e) => {
+                        setTransferredAt(e.target.value);
+                        if (errors.transferredAt && e.target.value) {
+                          setErrors((prev) => ({
+                            ...prev,
+                            transferredAt: null,
+                          }));
+                        }
+                      }}
                     />
+                    {errors.transferredAt && (
+                      <p className="text-red-500 text-sm">
+                        {errors.transferredAt}
+                      </p>
+                    )}
                   </div>
                 </>
               )}
@@ -614,26 +712,23 @@ const MedicalEvent = () => {
 
             <div className="flex mt-5 justify-end gap-3">
               <Button
-                type="secondary"
-                className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
                 onClick={() => {
-                  setStudentCode("");
-                  setType(null);
-                  setOccurredAt("");
-                  setDescription("");
-                  setSeverity(null);
-                  setHospitalName("");
-                  setTransferredAt("");
+                  resetFields();
                   setOpen(false);
                 }}
               >
-                <p className="text-white text-xl font-serif p-1">Cancel</p>
+                Cancel
               </Button>
 
               <Button
                 type="secondary"
                 className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
-                onClick={handleSaveEvent}
+                onClick={async () => {
+                  const success = await handleSaveEvent();
+                  if (success) {
+                    resetFields();
+                  }
+                }}
               >
                 <p className="text-white text-xl font-serif p-1">Save</p>
               </Button>
@@ -814,7 +909,6 @@ const MedicalEvent = () => {
                 </div>
               </div>
 
-              {/* Section 3: Treatment (if any) */}
               <div className="border-l-4 border-[#8b0fcb]  rounded-xl p-5 shadow">
                 <div className="flex gap-2">
                   <svg

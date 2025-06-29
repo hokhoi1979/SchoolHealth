@@ -1,9 +1,14 @@
-import { actionChannel, call, put, takeLatest } from "redux-saga/effects";
+import {
+  actionChannel,
+  call,
+  put,
+  select,
+  takeLatest,
+} from "redux-saga/effects";
 import axios from "axios";
 import {
   PATCH__MANAGER__VACCINE,
   patchManagerSucessVaccine,
-  patchManagerVaccine,
   patchMangerFailVaccine,
 } from "./successVaccineManagerSlice";
 import { toast } from "react-toastify";
@@ -12,7 +17,7 @@ const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 function* patchVaccineManagerSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     console.log("TOKEN", token);
     const id = action.payload;
     const response = yield call(
@@ -50,13 +55,14 @@ function* patchVaccineManagerSaga(action) {
 
       yield put(patchManagerSucessVaccine(response.data));
     } else {
-      yield put(patchManagerFailVaccine(response.status));
+      yield put(patchMangerFailVaccine(response.status));
     }
   } catch (error) {
-    const errMsg =
-      error?.response?.data?.message || error.message || "Unknown error";
-    yield put(patchMangerFailVaccine(errMsg));
-    console.log(error);
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`Create Vaccine Fail: ${errorMessage}`);
+    yield put(patchMangerFailVaccine(errorMessage));
+    console.error("Create Vaccine Error:", error);
   }
 }
 

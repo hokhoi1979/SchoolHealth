@@ -124,16 +124,16 @@ function Login() {
                 />
               </Form.Item>
 
-              {error === "Tài khoản không tồn tại" && (
-                <>
-                  <p className="text-red-500 font-serif relative bottom-3">
+              {error === "Tài khoản không tồn tại" &&
+                form.getFieldError("email").length === 0 && (
+                  <p className="text-red-500  relative bottom-3">
                     Account has not exised!
                   </p>
-                </>
-              )}
+                )}
+
               {customMessage === "Mật khẩu không đúng" &&
                 form.getFieldError("password").length === 0 && (
-                  <p className="text-red-500 font-serif relative bottom-3">
+                  <p className="text-red-500  relative bottom-3">
                     Password is not correct!
                   </p>
                 )}
@@ -166,13 +166,6 @@ function Login() {
             conditions for students to develop comprehensively both physically
             and mentally.
           </p>
-          <Button
-            style={{ height: "40px", fontWeight: 300 }}
-            className="!w-[150px] !bg-[#34A0B5] !text-white !text-xl !font-serif hover:!bg-[#1c606d] !mt-3"
-            type="secondary"
-          >
-            Read more
-          </Button>
         </div>
       </div>
 

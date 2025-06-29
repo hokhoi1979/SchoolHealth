@@ -140,7 +140,7 @@ function VaccineResult({ studentList }) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between mt-2">
+      {/* <div className="flex justify-between mt-2">
         <div></div>
         <div>
           <Button
@@ -151,7 +151,7 @@ function VaccineResult({ studentList }) {
             Start Vaccination
           </Button>
         </div>
-      </div>
+      </div> */}
 
       {error && <p className="text-red-500">{error}</p>}
 

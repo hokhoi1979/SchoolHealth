@@ -1,4 +1,14 @@
-import { Button, Input, Modal, Select, Space, Table, Tag, Tooltip } from "antd";
+import {
+  Button,
+  Input,
+  message,
+  Modal,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +29,12 @@ function Import() {
   const { detailRequest = [] } = useSelector(
     (state) => state.getRequestDetailNurse
   );
+
+  const [errors, setErrors] = useState({
+    note: false,
+    selectedItems: false,
+    itemErrors: {},
+  });
 
   const [note, setNote] = useState("");
 
@@ -82,10 +98,50 @@ function Import() {
         ...selectedItems,
         { ...found, quantity: 1, urgency: "NORMAL", note: "" },
       ]);
+
+      // Xoá lỗi khi chọn lại item
+      if (errors.selectedItems) {
+        setErrors((prev) => ({ ...prev, selectedItems: false }));
+      }
     }
   };
 
   const handleSave = () => {
+    const newErrors = {
+      note: false,
+      selectedItems: false,
+      itemErrors: {},
+    };
+
+    let hasError = false;
+
+    if (!note.trim()) {
+      newErrors.note = true;
+      message.error("Please enter notes for request.");
+      hasError = true;
+    }
+
+    if (selectedItems.length === 0) {
+      newErrors.selectedItems = true;
+      message.error("Please select at least one drug or supply.");
+      hasError = true;
+    }
+
+    selectedItems.forEach((item) => {
+      if (!item.quantity || item.quantity < 1) {
+        if (!newErrors.itemErrors[item.id]) {
+          newErrors.itemErrors[item.id] = {};
+        }
+        newErrors.itemErrors[item.id].quantity = true;
+        message.error(`Invalid quantity for: ${item.name}`);
+        hasError = true;
+      }
+    });
+
+    setErrors(newErrors);
+
+    if (hasError) return;
+
     const payload = {
       note,
       items: selectedItems.map((item) => {
@@ -102,12 +158,12 @@ function Import() {
       }),
     };
 
-    console.log("Payload gửi API:", payload);
     dispatch(postRequestMedicine(payload));
-
     setOpen(false);
     setSelectedItems([]);
     setNote("");
+    setErrors({ note: false, selectedItems: false, itemErrors: {} });
+    message.success("Send request successful!");
   };
 
   const handleDetail = (id) => {
@@ -229,21 +285,27 @@ function Import() {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
-      render: (text, record) => (
-        <Input
-          type="number"
-          min={1}
-          value={record.quantity}
-          onChange={(e) => {
-            const updated = selectedItems.map((item) =>
-              item.id === record.id
-                ? { ...item, quantity: Number(e.target.value) }
-                : item
-            );
-            setSelectedItems(updated);
-          }}
-        />
-      ),
+      render: (text, record) => {
+        const error = errors.itemErrors[record.id]?.quantity;
+
+        return (
+          <div>
+            <Input
+              type="number"
+              min={1}
+              value={record.quantity}
+              onChange={(e) => {
+                const updated = selectedItems.map((item) =>
+                  item.id === record.id
+                    ? { ...item, quantity: Number(e.target.value) }
+                    : item
+                );
+                setSelectedItems(updated);
+              }}
+            />
+          </div>
+        );
+      },
     },
     {
       title: "Urgency",
@@ -320,17 +382,31 @@ function Import() {
 
       <Table className="mt-5" columns={columns} dataSource={medicineRequest} />
 
-      <Modal open={open} onCancel={() => setOpen(false)} footer={false}>
+      <Modal
+        open={open}
+        onCancel={() => {
+          setOpen(false);
+          setErrors({ note: false, selectedItems: false, itemErrors: {} });
+        }}
+        footer={false}
+      >
         <h1 className="font-serif text-2xl flex justify-center">
           Import medicine/medical supplies
         </h1>
+
         <div className="font-serif mt-3">
           <h1 className="text-[17px] font-medium font-kameron mb-2">
             Choose medicine/medical
           </h1>
           <Select
             placeholder="--Choose medicine/medical--"
-            className="w-full"
+            style={{
+              width: "100%",
+              borderColor: errors.selectedItems ? "red" : undefined,
+              borderWidth: errors.selectedItems ? 1 : undefined,
+              borderStyle: errors.selectedItems ? "solid" : undefined,
+              borderRadius: 6,
+            }}
             onChange={handleAddItem}
           >
             {combinedStore.map((item) => (
@@ -339,7 +415,13 @@ function Import() {
               </Select.Option>
             ))}
           </Select>
-        </div>{" "}
+          {errors.selectedItems && (
+            <p className="text-red-500 mt-1 text-sm">
+              Please select at least one drug or supply.
+            </p>
+          )}
+        </div>
+
         <div className="font-serif mt-4">
           <h1 className="text-[17px] font-medium font-kameron mb-2">
             Request Note
@@ -347,10 +429,28 @@ function Import() {
           <TextArea
             value={note}
             placeholder="Enter general note for this request"
-            onChange={(e) => setNote(e.target.value)}
+            onChange={(e) => {
+              setNote(e.target.value);
+              if (errors.note && e.target.value.trim()) {
+                setErrors((prev) => ({ ...prev, note: false }));
+              }
+            }}
             rows={3}
+            style={{
+              borderColor: errors.note ? "red" : undefined,
+              borderWidth: errors.note ? 1 : undefined,
+              borderStyle: errors.note ? "solid" : undefined,
+              borderRadius: 6,
+            }}
           />
+
+          {errors.note && (
+            <p className="text-red-500 mt-1 text-sm">
+              Please enter notes for request.
+            </p>
+          )}
         </div>
+
         <Table
           dataSource={selectedItems}
           columns={selectedItemColumns}
@@ -358,13 +458,21 @@ function Import() {
           className="mt-4"
           pagination={false}
         />
+
         <div className="mt-5 flex justify-between font-serif">
           <div></div>
           <div className="flex gap-3">
             <Button
               type="secondary"
               className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                setErrors({
+                  note: false,
+                  selectedItems: false,
+                  itemErrors: {},
+                });
+              }}
             >
               <p className="text-white text-xl font-serif p-1">Cancel</p>
             </Button>

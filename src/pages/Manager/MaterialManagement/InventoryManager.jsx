@@ -284,7 +284,11 @@ function InventoryManager() {
       />
 
       <Modal
-        title="Cập nhật thông tin"
+        title={
+          <div className="text-center text-lg font-semibold text-gray-900">
+            Cập nhật thông tin
+          </div>
+        }
         open={isModalOpen}
         onCancel={() => {
           setIsModalOpen(false);
@@ -293,6 +297,7 @@ function InventoryManager() {
         footer={[
           <Button
             key="cancel"
+            className="rounded-md px-4 py-1 text-sm"
             onClick={() => {
               setIsModalOpen(false);
               setSelectedRecord(null);
@@ -300,28 +305,41 @@ function InventoryManager() {
           >
             Hủy
           </Button>,
-          <Button key="update" type="primary" onClick={handleUpdate}>
+          <Button
+            key="update"
+            type="primary"
+            className="bg-blue-600 hover:bg-blue-700 border-none rounded-md px-4 py-1 text-sm"
+            onClick={handleUpdate}
+          >
             Cập nhật
           </Button>,
         ]}
+        centered
+        width={460}
+        className="custom-update-modal"
       >
-        <div className="p-4">
-          <div className="mb-2">
-            <label className="block mb-1">Tên thuốc:</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 p-4">
+          {/* Tên thuốc */}
+          <div className="col-span-2 flex flex-col">
+            <label className="text-sm font-semibold text-gray-700 mb-1">
+              Tên thuốc <span className="text-red-500">*</span>
+            </label>
             <Input
+              className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
               value={selectedRecord?.name}
               onChange={(e) =>
-                setSelectedRecord({
-                  ...selectedRecord,
-                  name: e.target.value,
-                })
+                setSelectedRecord({ ...selectedRecord, name: e.target.value })
               }
             />
           </div>
 
-          <div className="mb-2">
-            <label className="block mb-1">Mô tả:</label>
+          {/* Mô tả */}
+          <div className="col-span-2 flex flex-col">
+            <label className="text-sm font-semibold text-gray-700 mb-1">
+              Mô tả
+            </label>
             <Input
+              className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
               value={selectedRecord?.description}
               onChange={(e) =>
                 setSelectedRecord({
@@ -332,31 +350,33 @@ function InventoryManager() {
             />
           </div>
 
-          <div className="mb-2">
-            <label className="block mb-1">Hướng dẫn sử dụng:</label>
+          {/* Hướng dẫn sử dụng */}
+          <div className="col-span-2 flex flex-col">
+            <label className="text-sm font-semibold text-gray-700 mb-1">
+              Hướng dẫn sử dụng
+            </label>
             <Input
+              className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
               value={selectedRecord?.usage}
               onChange={(e) =>
-                setSelectedRecord({
-                  ...selectedRecord,
-                  usage: e.target.value,
-                })
+                setSelectedRecord({ ...selectedRecord, usage: e.target.value })
               }
             />
           </div>
 
-          <div className="mb-2">
-            <label className="block mb-1">Danh mục:</label>
+          {/* Danh mục */}
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold text-gray-700 mb-1">
+              Danh mục
+            </label>
             <Select
-              className="w-full"
+              className="w-full text-sm"
+              dropdownClassName="text-sm"
+              popupClassName="text-sm"
               value={selectedRecord?.category}
-              onChange={(value) => {
-                setSelectedRecord({
-                  ...selectedRecord,
-                  category: value,
-                });
-                console.log("Category Options:", categoryOptions);
-              }}
+              onChange={(value) =>
+                setSelectedRecord({ ...selectedRecord, category: value })
+              }
             >
               {categoryOptions.map((cat) => (
                 <Option key={cat} value={cat}>
@@ -366,11 +386,15 @@ function InventoryManager() {
             </Select>
           </div>
 
-          <div className="mb-2">
-            <label className="block mb-1">Số lượng:</label>
+          {/* Số lượng */}
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold text-gray-700 mb-1">
+              Số lượng
+            </label>
             <Input
               type="number"
               min={0}
+              className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
               value={selectedRecord?.stock}
               onChange={(e) =>
                 setSelectedRecord({
@@ -381,26 +405,37 @@ function InventoryManager() {
             />
           </div>
 
-          <div className="mb-2">
-            <label className="block mb-1">Ảnh:</label>
+          {/* Ảnh minh họa */}
+          <div className="col-span-2 flex flex-col">
+            <label className="text-sm font-semibold text-gray-700 mb-2">
+              Ảnh minh họa
+            </label>
             <Upload
               beforeUpload={handleUpload}
               showUploadList={false}
               accept="image/*"
             >
-              <Button icon={<UploadOutlined />}>Chọn file ảnh</Button>
+              <Button
+                icon={<UploadOutlined />}
+                className="rounded-md text-sm bg-white hover:bg-gray-50"
+              >
+                Chọn ảnh
+              </Button>
             </Upload>
+
             {previewImage && (
-              <img
-                src={previewImage}
-                // src={selectedRecord.image}
-                alt="Preview"
-                style={{ marginTop: 10, width: 100, height: 100 }}
-              />
+              <div className="flex justify-center mt-4">
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="w-40 h-28 rounded-lg border object-cover shadow-md"
+                />
+              </div>
             )}
           </div>
         </div>
       </Modal>
+
       <div className="w-full h-10"></div>
     </div>
   );
