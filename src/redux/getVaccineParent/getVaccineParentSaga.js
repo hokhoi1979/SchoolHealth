@@ -1,5 +1,5 @@
 import axios from "axios";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
   FETCH_VACCINE_PARENT,
   fetchVaccineParentSuccess,
@@ -10,7 +10,8 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* vaccineParentSaga() {
   try {
-    const token = localStorage.getItem("accessToken");
+    // const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     const response = yield call(
       axios.get,
       `${URL_API}/parent/v1/vaccinationEvent`,

@@ -36,6 +36,11 @@ import watchFetchDetailRequest from "./profileParent/medicalRequest/getDetailReq
 import watchFetchStopMedicines from "./profileParent/medicalRequest/stopMedicineSaga";
 import watchFetchAcceptBenefit from "./profileParent/medicalRequest/acceptBenefitMedicineSaga";
 import watchFetchRejectBenefit from "./profileParent/medicalRequest/rejectBenefitMedicineSaga";
+import watchFetchCheckUpParent from "./getCheckupParent/getCheckupParentSaga";
+import watchFetchAcceptCheckUp from "./getCheckupParent/getCheckupParentAcceptSaga";
+import watchFetchDeclineCheckUp from "./getCheckupParent/getCheckupParentDeclineSaga";
+import watchFetchDetailCheckUpParent from "./getCheckupParent/getDetailCheckupParentSaga";
+import watchFetchResultCheckUpParent from "./getCheckupParent/getResultCheckupParentSaga";
 
 import watchDeleteManagerVaccine from "./manager/DeleteVaccineEvent/deleteVaccineEventSaga";
 import watchPostManagerMedicine from "./manager/CreateManagerMedicine/createManagerMedicineSaga";
@@ -124,6 +129,11 @@ export default function* rootSaga() {
     watchFetchStopMedicines(),
     watchFetchAcceptBenefit(),
     watchFetchRejectBenefit(),
+    watchFetchCheckUpParent(),
+    watchFetchAcceptCheckUp(),
+    watchFetchDeclineCheckUp(),
+    watchFetchDetailCheckUpParent(),
+    watchFetchResultCheckUpParent(),
 
     watchFetchAllMedicine(),
     watchFetchRequestMedicine(),
@@ -152,22 +162,6 @@ export default function* rootSaga() {
     watchFetchStudentCheckup(),
     watchFetchCheckupResult(),
     watchSendCheckupParent(),
-
-    //Parent
-    watchFetchParentHealth(),
-    watchFetchStudentOfParent(),
-    watchFetchParentForm(),
-    watchFetchHealthStudent(),
-    watchFetchCreateHealth(),
-    watchFetchUpdateHealth(),
-    watchFetchVaccineParent(),
-    watchFetchVaccineParentResult(),
-    watchFetchAcceptVaccine(),
-    watchFetchDeclineVaccine(),
-    watchFetchMedicineRequestNurse(),
-    watchFetchCreateMedicine(),
-    watchFetchDeleteMedicine(),
-    watchFetchDetailRequest(),
 
     //Manager
     watchFetchManagerMedical(),
