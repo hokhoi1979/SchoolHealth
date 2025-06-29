@@ -1,47 +1,50 @@
 {
-    "home": "Home",
-    "Nurse": {
-        "title": "Nurse",
-        "pages": {
-            "dashboard": "Dashboard",
-            "materials": "Materials",
-            "student": "Student Profile",
-            "medicalEvent": "Medical Event",
-            "medicalCheckup": "Medical Checkup",
-            "vaccineManagement":"Vaccine Management",
-            "information": "Information",
-            "password": "Change Password"
-
-        }
-    },
-    "Manager": {
-        "title": "Manager",
-        "pages": {
-            "dashboard": "Dashboard",
-            "materials": "Materials",
-            "student": "Student Profile",
-            "medicalEvent": "Medical Event",
-            "information": "Information",
-            "password": "Change Password"
-        }
-    },
-       "Parent": {
-        "title": "Parent",
-        "pages": {
-            "student": "Student Health",
-            "request": "Medical Request",
-            "vaccination": "Vaccination",
-            "check up": "Medical CheckUp",
-            "history": "History & Report",
-            "information": "Information",
-            "password": "Change Password"
-        }
-    },
-    "Student": {
-        "title": "Student",
-        "pages": {
-            "information": "Student Information",
-            "password": "Change Password"
-        }
+  "home": "Home",
+  "Nurse": {
+    "title": "Nurse",
+    "pages": {
+      "dashboard": "Dashboard",
+      "materials": "Materials",
+      "student": "Student Profile",
+      "medicalEvent": "Medical Event",
+      "medicalCheckup": "Medical Checkup",
+      "vaccineManagement": "Vaccine Management",
+      "information": "Information",
+      "password": "Change Password"
     }
+  },
+  "Manager": {
+    "title": "Manager",
+    "pages": {
+      "dashboard": "Dashboard",
+      "materials": "Materials&Medicine",
+      "student": "Student Profile",
+      "medicalEvent": "Medical Event",
+      "information": "Information",
+      "request": "Resquest from Nusrse",
+      "Vaccine": "VaccineManagement",
+      "Checkup": "CheckupManagement",
+      "Event": "MedicalEvent",
+      "password": "Change Password"
+    }
+  },
+  "Parent": {
+    "title": "Parent",
+    "pages": {
+      "student": "Student Health",
+      "request": "Medical Request",
+      "vaccination": "Vaccination",
+      "check up": "Medical CheckUp",
+      "history": "History & Report",
+      "information": "Information",
+      "password": "Change Password"
+    }
+  },
+  "Student": {
+    "title": "Student",
+    "pages": {
+      "information": "Student Information",
+      "password": "Change Password"
+    }
+  }
 }

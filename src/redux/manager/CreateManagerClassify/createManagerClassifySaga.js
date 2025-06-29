@@ -17,7 +17,7 @@ const URL_API = import.meta.env.VITE_API_URL;
 function* managerClasstifySaga(action) {
   try {
     const token = yield select((state) => state.account.token);
-    const { body, limit, page } = action.payload;
+    const { body, limit, page, onSuccess } = action.payload;
     const response = yield call(
       axios.post,
       `${URL_API}/manager/v1/medicine-classify`,
@@ -31,8 +31,13 @@ function* managerClasstifySaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
+      const createdData = response.data;
+      const newId = response?.data?.data?.id;
       console.log("DUCC CLASSTIFY", response.data);
       yield put(postManagerSuccessClasstify(response.data));
+      if (onSuccess && typeof onSuccess === "function") {
+        yield call(onSuccess, newId); // GỌI CALLBACK VỚI ID
+      }
 
       const { limit, page } = action.payload;
       const fetchData = yield call(
@@ -59,6 +64,7 @@ function* managerClasstifySaga(action) {
       yield put(postManagerFailClasstify(`API ERROR: ${response.data}`));
     }
   } catch (error) {
+    console.log(error);
     yield put(postManagerFailClasstify(`API ERROR: ${error}`));
   }
 }

@@ -26,6 +26,7 @@ import {
 import { deleteManagerMedicineClassify } from "../../../redux/manager/DeleteManagerClassify/deleteManagerMedicineClassifySlice";
 import { deleteMedicineManager } from "../../../redux/manager/DeleteManagerMedicine/deleteManagerMedicineSlice";
 import toast from "react-hot-toast";
+import { postManagerClasstify } from "../../../redux/manager/CreateManagerClassify/createManagerClassifySlice";
 const { Option } = Select;
 
 function ImportManager() {
@@ -57,6 +58,7 @@ function ImportManager() {
       type: item?.type,
       usage: item?.usage,
       image: item?.image,
+      classifyID: selectedCategory?.id || "",
       status: updateStatus(item?.stock),
     }));
 
@@ -109,7 +111,7 @@ function ImportManager() {
     setSelectedCategory(category);
     setIsModalVisible(true);
     dispatch(
-      fetchDetailManagerClassify({ id: category.id, page: 1, limit: 100 })
+      fetchDetailManagerClassify({ id: category.id, page: 1, limit: 8 })
     );
   };
 
@@ -126,44 +128,71 @@ function ImportManager() {
     });
   };
 
-  const handleUpdate = () => {
-    if (selectedMedicine) {
-      const formData = new FormData();
-      if (!selectedMedicine?.id) {
-        console.error("No medicine selected! Cannot update.");
+  const handleUpdate = async () => {
+    if (!selectedMedicine?.id) {
+      console.error("No medicine selected! Cannot update.");
+      return;
+    }
+
+    let classifyIDToUse =
+      selectedMedicine.classifyID || selectedClassifyID || "";
+
+    // Nếu chọn "Other" thì tạo mới classify
+    if (selectedClassify === "Other") {
+      if (!newClassify?.trim()) {
+        toast.error("Bạn chưa nhập tên loại thuốc mới!");
         return;
       }
-      formData.append("name", selectedMedicine.name);
-      formData.append("stock", selectedMedicine.stock);
-      formData.append("usage", selectedMedicine.usage);
-      formData.append("description", selectedMedicine.description);
-      formData.append("type", selectedMedicine.type);
-      formData.append(
-        "classifyID",
-        selectedMedicine.classifyID || selectedClassifyID || ""
-      );
 
-      if (selectedMedicine.image instanceof File) {
-        formData.append("image", selectedMedicine.image);
+      await new Promise((resolve) => {
+        dispatch(
+          postManagerClasstify({
+            body: { name: newClassify.trim() },
+            page: 1,
+            limit: 8,
+            onSuccess: (id) => {
+              classifyIDToUse = id;
+              console.log("==> New classify ID created for update:", id);
+              resolve();
+            },
+          })
+        );
+      });
+
+      if (!classifyIDToUse) {
+        toast.error("Không thể lấy ID của classify mới!");
+        return;
       }
-
-      dispatch(
-        putManagerClassify({
-          id: selectedMedicine?.id,
-          formData: formData,
-        })
-      );
-      console.log(formData);
-
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ": ", pair[1]);
-      }
-
-      setSelectedMedicine(null);
-      setSelectedClassifyID(null);
-      setNewClassify("");
-      setIsModalVisible(false);
     }
+
+    const formData = new FormData();
+    formData.append("name", selectedMedicine.name);
+    formData.append("stock", selectedMedicine.stock);
+    formData.append("usage", selectedMedicine.usage);
+    formData.append("description", selectedMedicine.description);
+    formData.append("type", selectedMedicine.type);
+    formData.append("classifyID", classifyIDToUse);
+
+    if (selectedMedicine.image instanceof File) {
+      formData.append("image", selectedMedicine.image);
+    }
+
+    dispatch(
+      putManagerClassify({
+        id: selectedMedicine.id,
+        formData: formData,
+      })
+    );
+
+    console.log("Updating with formData:");
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ": ", pair[1]);
+    }
+
+    setSelectedMedicine(null);
+    setSelectedClassifyID(null);
+    setNewClassify("");
+    setIsModalVisible(false);
   };
 
   const { deletedMedicineClassify } = useSelector(
@@ -254,7 +283,7 @@ function ImportManager() {
       width: 200,
     },
     {
-      title: "Action",
+      title: "Update",
       key: "action",
       align: "center",
       render: (_, record) => (
@@ -278,7 +307,7 @@ function ImportManager() {
       ),
     },
     {
-      title: "Action",
+      title: "Delete",
       key: "action",
       align: "center",
       render: (_, record) => (
@@ -305,21 +334,21 @@ function ImportManager() {
 
   return (
     <div>
-      <div className="grid grid-cols-4 gap-5 mt-5 w-full px-5 font-kameron">
+      <div className="grid grid-cols-4 gap-4 mt-4 w-full px-4 font-kameron">
         {categories.map((category) => (
           <div
             key={category?.id}
-            className="h-[120px] bg-white rounded-2xl shadow-md cursor-pointer relative"
+            className="h-[100px] bg-white rounded-xl shadow hover:shadow-md cursor-pointer relative  transition-shadow"
           >
-            <p
-              className="flex justify-center mt-5 text-lg font-semibold"
+            <div
+              className="flex flex-col items-center justify-center h-full"
               onClick={() => showModal(category)}
             >
-              {category?.name}
-            </p>
-            <p className="flex justify-center text-[50px] font-bold">
-              {category?.medicinesCount}
-            </p>
+              <p className="text-sm font-semibold text-gray-700 mb-1 text-center px-2">
+                {category?.name}
+              </p>
+              <p className="text-3xl font-bold ">{category?.medicinesCount}</p>
+            </div>
 
             <Popconfirm
               title={`Are you sure DELETE "${category.name}"?`}
@@ -338,10 +367,10 @@ function ImportManager() {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
-                className="absolute right-1 bottom-1"
+                className="absolute right-2 bottom-2 text-red-400 hover:text-red-600"
               >
                 <path
                   fill="currentColor"
@@ -352,6 +381,7 @@ function ImportManager() {
           </div>
         ))}
       </div>
+      <div className="w-full h-10"></div>
       <Pagination
         current={currentPage}
         pageSize={pageSize}
@@ -371,18 +401,11 @@ function ImportManager() {
         footer={null}
         width={900}
       >
-        <Input
-          placeholder="Search medicine by name..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="mb-4"
-        />
         <Table
           columns={columns}
           dataSource={detail}
           rowKey="id"
           pagination={false}
-          bordered
         />
       </Modal>
 
