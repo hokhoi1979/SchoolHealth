@@ -38,31 +38,33 @@ function MedicineForStudent() {
     const raw = getMedicineRequest?.data?.medicineRequestWithStudentInfo;
     if (!Array.isArray(raw)) return;
 
-    const formatted = raw.map((item, index) => {
-      const student = item.studentInfo || {};
-      const parent = student.ParentInfo || {};
-      const studentClass = student.lastAcamedicYear.class || {};
+    const formatted = raw
+      .map((item, index) => {
+        const student = item.studentInfo || {};
+        const parent = student.ParentInfo || {};
+        const studentClass = student.lastAcamedicYear.class || {};
 
-      return {
-        key: index,
-        requestId: item.id || "-",
-        studentCode: student.student_code || "-",
-        studentName: student.account.fullname || "-",
-        gender: student.gender || "-",
-        dob: student.dateOfBirth
-          ? new Date(student.dateOfBirth).toLocaleDateString("vi-VN")
-          : "-",
-        className: studentClass?.name || "-",
-        parentName: parent.fullname || "-",
-        parentPhone: parent.phone || "-",
-        parentEmail: parent.email || "-",
-        status: item.status || "-",
-        note: item.note || "-",
-        createdAt: item.createdAt
-          ? new Date(item.createdAt).toLocaleString("vi-VN")
-          : "-",
-      };
-    });
+        return {
+          key: index,
+          requestId: item.id || "-",
+          studentCode: student.student_code || "-",
+          studentName: student.account.fullname || "-",
+          gender: student.gender || "-",
+          dob: student.dateOfBirth
+            ? new Date(student.dateOfBirth).toLocaleDateString("vi-VN")
+            : "-",
+          className: studentClass?.name || "-",
+          parentName: parent.fullname || "-",
+          parentPhone: parent.phone || "-",
+          parentEmail: parent.email || "-",
+          status: item.status || "-",
+          note: item.note || "-",
+          createdAt: item.createdAt
+            ? new Date(item.createdAt).toLocaleString("vi-VN")
+            : "-",
+        };
+      })
+      .reverse();
 
     setStore(formatted);
   };

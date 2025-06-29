@@ -2,6 +2,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 import { fetchFail, fetchSuccess, FETCH_API_LOGIN } from "./authSlice";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -16,7 +17,6 @@ export function* fetchLogin(action) {
 
     if (accessToken) {
       const decodedUser = jwtDecode(accessToken);
-      // localStorage.setItem("accessToken", accessToken);
 
       yield put(
         fetchSuccess({
@@ -24,6 +24,7 @@ export function* fetchLogin(action) {
           token: accessToken,
         })
       );
+      toast.success("Login successful!");
 
       if (action.onSuccess) action.onSuccess(response);
     } else {

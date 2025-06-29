@@ -25,6 +25,7 @@ function* detailRequestSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchDetailRequestSuccess(response.data)); // response.data already contains the 'data' object with requestID, status, studentName, items
+      console.log("LLL", response.data);
     } else {
       // Handle non-2xx status codes as errors
       yield put(
