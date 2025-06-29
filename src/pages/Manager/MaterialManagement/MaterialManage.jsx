@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { postManagerClasstify } from "../../../redux/manager/CreateManagerClassify/createManagerClassifySlice";
 import { fetchMedicineClasstifyManager } from "../../../redux/manager/GetManagerMedineClassify/getManagerMedicineClassifySlice";
 import { postManagerMedicine } from "../../../redux/manager/CreateManagerMedicine/createManagerMedicineSlice";
-import { CloudHail } from "lucide-react";
+import { CloudHail, FolderPlus, Package, Pill } from "lucide-react";
 import { postManagerSupply } from "../../../redux/manager/CreateManagerSuppy/createManagerSupplySlice";
 import toast from "react-hot-toast";
 
@@ -33,12 +33,36 @@ function MaterialManage() {
   const [image, setImage] = useState(null);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [classifyOptions, setClassifyOptions] = useState([]);
+  const [store, setStore] = useState([]);
+  const [newClassifyToFind, setNewClassifyToFind] = useState(null);
+  const [classifyIDToUse, setClassifyIDToUse] = useState(null);
 
+  useEffect(() => {
+    if (open) {
+      dispatch(fetchMedicineClasstifyManager({ page: 1, limit: 8 }));
+    }
+  }, [open]);
+
+  const { classtify } = useSelector(
+    (state) => state.getMedicineClasstifyManager
+  );
   const {
     medicineClasstifyManager = [],
     loading,
     error,
   } = useSelector((state) => state.getMedicineClasstifyManager);
+  useEffect(() => {
+    const rawList = medicineClasstifyManager?.data?.medicineClassify || [];
+    const format = rawList.map((item) => ({
+      id: item.id,
+      name: item.name,
+      medicinesCount: item._count?.medicines || 0,
+    }));
+
+    setStore(format);
+    console.log("List", store);
+  }, [medicineClasstifyManager]);
+
   const { medicineSupplyManager = [] } = useSelector(
     (state) => state.getAllMedicineSupplyManager
   );
@@ -77,11 +101,11 @@ function MaterialManage() {
     <div className="flex flex-col min-h-screen">
       <div className="p-6 flex flex-col flex-1">
         <h1 className="text-xl font-inria font-medium mb-4">
-          <CommonBreadcrumb role={"Manager"} page={"materialManage"} />
+          <CommonBreadcrumb role={"Manager"} page={"materials"} />
         </h1>
 
         <div className="flex justify-between mt-5">
-          <div className="flex bg-[#F3F3F3] font-kameron w-[350px] h-10 items-center rounded-md ml-5">
+          <div className="flex bg-[#F3F3F3] font-kameron w-[200px] h-10 items-center rounded-md ml-5">
             <div className="m-auto flex gap-5">
               <div
                 className={`hover:bg-white p-1 rounded-md ${
@@ -106,45 +130,57 @@ function MaterialManage() {
 
           {click === "inventory" && (
             <Button
-              type="secondary"
-              className="!bg-black hover:!bg-gray-600"
+              type="primary"
+              size="large"
+              className="!bg-gradient-to-r !from-slate-800 !to-black hover:!from-slate-700 hover:!to-gray-800 !border-none !shadow-lg hover:!shadow-xl !transition-all !duration-300 !rounded-xl !h-12 !px-6"
               onClick={() => setOpen(true)}
             >
-              <p className="text-white font-serif p-1">+ Import Medicine</p>
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 rounded-full p-1">
+                  <Package size={16} className="text-white" />
+                </div>
+                <span className="text-white font-semibold tracking-wide">
+                  Import Supply
+                </span>
+              </div>
             </Button>
           )}
 
           {click === "import" && (
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <Button
-                type="secondary"
-                className="!bg-black hover:!bg-gray-600"
+                type="primary"
+                size="large"
+                className="!bg-gradient-to-r !from-gray-900 !to-black hover:!from-gray-800 hover:!to-gray-700 !border-none !shadow-lg hover:!shadow-xl !transition-all !duration-300 !rounded-xl !h-12 !px-6"
                 onClick={() => setOpen(true)}
               >
-                <p className="text-white font-serif p-1">
-                  + Add medicine for student
-                </p>
+                <div className="flex items-center gap-3">
+                  <div className="bg-emerald-500 rounded-full p-1.5">
+                    <Pill size={14} className="text-white" />
+                  </div>
+                  <span className="text-white font-semibold">
+                    Add Medicine for Student
+                  </span>
+                </div>
               </Button>
 
               <Button
-                type="secondary"
-                className="!bg-[#406AFF] hover:!bg-[#2457f3]"
+                type="primary"
+                size="large"
+                className="!bg-gradient-to-r !from-blue-500 !to-blue-600 hover:!from-blue-600 hover:!to-blue-700 !border-none !shadow-lg hover:!shadow-xl !transition-all !duration-300 !rounded-xl !h-12 !px-6"
                 onClick={() => setOpenCategoryModal(true)}
               >
-                <p className="text-white font-serif p-1">+ Add new category</p>
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/20 rounded-full p-1.5">
+                    <FolderPlus size={14} className="text-white" />
+                  </div>
+                  <span className="text-white font-semibold">
+                    Add New Category
+                  </span>
+                </div>
               </Button>
             </div>
           )}
-        </div>
-
-        <div className="pl-5 mt-5 flex gap-5">
-          <Input
-            style={{ borderRadius: "7px", width: "300px" }}
-            placeholder="Search drugs, materials..."
-          />
-          <Button className="!bg-[#90A8B0] !hover:bg-gray-600" type="secondary">
-            <p className="text-white font-kameron">Search</p>
-          </Button>
         </div>
 
         <div className="flex-1 overflow-auto mt-5 ml-5 mr-5 mb-10">
@@ -160,12 +196,12 @@ function MaterialManage() {
             footer={false}
           >
             <h1 className="font-serif text-2xl flex justify-center">
-              Import medicine/medical supplies
+              Import medical supplies
             </h1>
 
             <div className="font-serif">
               <h1 className="text-[17px] font-medium font-kameron mt-3">
-                Name of medicine/supplies
+                Name of supplies
               </h1>
               <Input
                 placeholder="Enter name"
@@ -280,212 +316,447 @@ function MaterialManage() {
             onCancel={() => setOpen(false)}
             footer={false}
             centered
-            width={600}
+            width={650}
             className="custom-add-medicine-modal"
           >
-            {/* Title */}
-            <h1 className="text-center text-2xl font-serif font-semibold text-gray-800 mb-6">
-              Add New Medicine
-            </h1>
-
-            {/* Upload Image */}
-            <div className="mb-5">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Image <span className="text-red-500">*</span>
-              </label>
-              <Upload
-                showUploadList={false}
-                beforeUpload={(file) => {
-                  setNewMedicineImage(file);
-                  return false;
+            <div style={{ padding: "8px 0" }}>
+              {/* Title */}
+              <div
+                style={{
+                  textAlign: "center",
+                  marginBottom: "32px",
+                  paddingBottom: "16px",
+                  borderBottom: "2px solid #f0f0f0",
                 }}
               >
-                {newMedicineImage ? (
-                  <img
-                    src={URL.createObjectURL(newMedicineImage)}
-                    alt="medicine preview"
-                    className="w-24 h-24 object-cover rounded border shadow"
-                  />
-                ) : (
-                  <Button className="text-sm">Upload Image</Button>
-                )}
-              </Upload>
-            </div>
-
-            {/* Grid Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-serif">
-              {/* Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Medicine Name <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  placeholder="Enter medicine name"
-                  value={medicineName}
-                  onChange={(e) => setMedicineName(e.target.value)}
-                  className="text-sm"
-                />
-              </div>
-
-              {/* Stock */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Stock <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  type="number"
-                  placeholder="Enter stock quantity"
-                  value={stock}
-                  onChange={(e) => setStock(e.target.value)}
-                  className="text-sm"
-                />
-              </div>
-
-              {/* Description */}
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <TextArea
-                  rows={3}
-                  placeholder="e.g., Provides vitamin C for the body"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="text-sm"
-                />
-              </div>
-
-              {/* Type */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Type <span className="text-red-500">*</span>
-                </label>
-                <Select
-                  placeholder="Choose type"
-                  className="w-full text-sm"
-                  value={type}
-                  onChange={(value) => setType(value)}
-                >
-                  <Option value="PELLETS">Pellets</Option>
-                  <Option value="BOTTLE">Bottle</Option>
-                  <Option value="JAR">Jar</Option>
-                </Select>
-              </div>
-
-              {/* Classify Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Classify Name <span className="text-red-500">*</span>
-                </label>
-                <Select
-                  placeholder="Select classify name"
-                  className="w-full text-sm"
-                  value={selectedClassifyID}
-                  onChange={(value) => {
-                    if (value === "Other") {
-                      setSelectedClassifyID("Other");
-                      setSelectedClassify("Other");
-                    } else {
-                      const found = categories.find(
-                        (item) => item.id === value
-                      );
-                      setSelectedClassifyID(value);
-                      setSelectedClassify(found?.name || "");
-                    }
+                <h1
+                  style={{
+                    fontSize: "24px",
+                    fontFamily: "serif",
+                    fontWeight: "600",
+                    color: "#1f2937",
+                    margin: "0 0 8px 0",
                   }}
                 >
-                  {categories.map((item) => (
-                    <Option key={item?.id} value={item?.id}>
-                      {item?.name}
-                    </Option>
-                  ))}
-                  <Option value="Other">Other</Option>
-                </Select>
+                  Add New Medicine
+                </h1>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    color: "#6b7280",
+                    margin: "0",
+                  }}
+                >
+                  Fill in the medicine details below
+                </p>
               </div>
 
-              {/* New Classify Name */}
-              {selectedClassify === "Other" && (
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    New Classify Name
-                  </label>
-                  <Input
-                    placeholder="Enter new classify name"
-                    value={newClassify}
-                    onChange={(e) => setNewClassify(e.target.value)}
-                    className="text-sm"
-                  />
-                </div>
-              )}
-
-              {/* Usage */}
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Usage <span className="text-red-500">*</span>
+              {/* Upload Image */}
+              <div style={{ marginBottom: "24px", textAlign: "center" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    color: "#374151",
+                    marginBottom: "12px",
+                    textAlign: "left",
+                  }}
+                >
+                  Medicine Image <span style={{ color: "#ef4444" }}>*</span>
                 </label>
-                <TextArea
-                  rows={3}
-                  placeholder="e.g., Take one pill after meal"
-                  value={usage}
-                  onChange={(e) => setUsage(e.target.value)}
-                  className="text-sm"
-                />
+                <Upload
+                  showUploadList={false}
+                  beforeUpload={(file) => {
+                    setNewMedicineImage(file);
+                    return false;
+                  }}
+                >
+                  {newMedicineImage ? (
+                    <div
+                      style={{
+                        display: "inline-block",
+                        position: "relative",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <img
+                        src={
+                          URL.createObjectURL(newMedicineImage) ||
+                          "/placeholder.svg"
+                        }
+                        alt="medicine preview"
+                        style={{
+                          width: "96px",
+                          height: "96px",
+                          objectFit: "cover",
+                          borderRadius: "8px",
+                          border: "2px solid #e5e7eb",
+                          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "-6px",
+                          right: "-6px",
+                          width: "20px",
+                          height: "20px",
+                          borderRadius: "50%",
+                          backgroundColor: "#10b981",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "white",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ✓
+                      </div>
+                    </div>
+                  ) : (
+                    <Button
+                      style={{
+                        height: "96px",
+                        width: "96px",
+                        borderRadius: "8px",
+                        border: "2px dashed #d1d5db",
+                        backgroundColor: "#f9fafb",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "12px",
+                        color: "#6b7280",
+                      }}
+                    >
+                      Upload Image
+                    </Button>
+                  )}
+                </Upload>
               </div>
-            </div>
 
-            {/* Buttons */}
-            <div className="mt-6 flex justify-end gap-3">
-              <Button
-                className="!bg-red-400 hover:!bg-red-500 text-white w-[100px]"
-                onClick={() => setOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="!bg-green-500 hover:!bg-green-600 text-white w-[100px]"
-                onClick={async () => {
-                  try {
-                    let classifyIDToUse = null;
-                    if (selectedClassify === "Other") {
-                      const newClassifyData = await dispatch(
-                        postManagerClasstify({
-                          body: { name: newClassify },
-                          limit: 8,
-                          page: 1,
-                        })
-                      ).unwrap();
-                      classifyIDToUse = String(newClassifyData.id);
-                    } else {
-                      classifyIDToUse = String(selectedClassifyID);
-                    }
-
-                    if (!classifyIDToUse || classifyIDToUse === "undefined") {
-                      toast.error("Bạn chưa chọn hoặc thêm loại thuốc hợp lệ!");
-                      return;
-                    }
-
-                    dispatch(
-                      postManagerMedicine({
-                        name: medicineName,
-                        stock,
-                        description,
-                        type: type?.toUpperCase(),
-                        classifyID: classifyIDToUse,
-                        usage,
-                        image: newMedicineImage,
-                      })
-                    );
-
-                    toast.success("Tạo thuốc thành công!");
-                    resetForm();
-                    setOpen(false);
-                  } catch (err) {
-                    console.error("Failed to save:", err);
-                  }
+              {/* Grid Fields */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "20px",
+                  fontFamily: "serif",
                 }}
               >
-                Save
-              </Button>
+                {/* Medicine Name */}
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      color: "#374151",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    Medicine Name <span style={{ color: "#ef4444" }}>*</span>
+                  </label>
+                  <Input
+                    placeholder="Enter medicine name"
+                    value={medicineName}
+                    onChange={(e) => setMedicineName(e.target.value)}
+                    style={{
+                      fontSize: "14px",
+                      borderRadius: "6px",
+                      height: "40px",
+                    }}
+                  />
+                </div>
+
+                {/* Stock */}
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      color: "#374151",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    Stock <span style={{ color: "#ef4444" }}>*</span>
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Enter stock quantity"
+                    value={stock}
+                    onChange={(e) => setStock(e.target.value)}
+                    style={{
+                      fontSize: "14px",
+                      borderRadius: "6px",
+                      height: "40px",
+                    }}
+                  />
+                </div>
+
+                {/* Type */}
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      color: "#374151",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    Type <span style={{ color: "#ef4444" }}>*</span>
+                  </label>
+                  <Select
+                    placeholder="Choose type"
+                    style={{
+                      width: "100%",
+                      fontSize: "14px",
+                    }}
+                    value={type}
+                    onChange={(value) => setType(value)}
+                  >
+                    <Option value="PELLETS">Pellets</Option>
+                    <Option value="BOTTLE">Bottle</Option>
+                    <Option value="JAR">Jar</Option>
+                  </Select>
+                </div>
+
+                {/* Classify Name */}
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      color: "#374151",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    Classify Name <span style={{ color: "#ef4444" }}>*</span>
+                  </label>
+                  <Select
+                    placeholder="Select classify name"
+                    style={{
+                      width: "100%",
+                      fontSize: "14px",
+                    }}
+                    value={selectedClassifyID}
+                    onChange={(value) => {
+                      if (value === "Other") {
+                        setSelectedClassifyID("Other");
+                        setSelectedClassify("Other");
+                      } else {
+                        const found = categories.find(
+                          (item) => item.id === value
+                        );
+                        setSelectedClassifyID(value);
+                        setSelectedClassify(found?.name || "");
+                      }
+                    }}
+                  >
+                    {categories.map((item) => (
+                      <Option key={item?.id} value={item?.id}>
+                        {item?.name}
+                      </Option>
+                    ))}
+                    <Option value="Other">Other</Option>
+                  </Select>
+                </div>
+
+                {/* Description */}
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      color: "#374151",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    Description
+                  </label>
+                  <TextArea
+                    rows={3}
+                    placeholder="e.g., Provides vitamin C for the body"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    style={{
+                      fontSize: "14px",
+                      borderRadius: "6px",
+                      resize: "none",
+                    }}
+                  />
+                </div>
+
+                {/* New Classify Name */}
+                {selectedClassify === "Other" && (
+                  <div style={{ gridColumn: "1 / -1" }}>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "#374151",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      New Classify Name
+                    </label>
+                    <Input
+                      placeholder="Enter new classify name"
+                      value={newClassify}
+                      onChange={(e) => setNewClassify(e.target.value)}
+                      style={{
+                        fontSize: "14px",
+                        borderRadius: "6px",
+                        height: "40px",
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* Usage */}
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      color: "#374151",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    Usage <span style={{ color: "#ef4444" }}>*</span>
+                  </label>
+                  <TextArea
+                    rows={3}
+                    placeholder="e.g., Take one pill after meal"
+                    value={usage}
+                    onChange={(e) => setUsage(e.target.value)}
+                    style={{
+                      fontSize: "14px",
+                      borderRadius: "6px",
+                      resize: "none",
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div
+                style={{
+                  marginTop: "32px",
+                  paddingTop: "20px",
+                  borderTop: "1px solid #e5e7eb",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "12px",
+                }}
+              >
+                <Button
+                  onClick={() => setOpen(false)}
+                  style={{
+                    backgroundColor: "#ef4444",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    fontWeight: "500",
+                    height: "40px",
+                    width: "100px",
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={async () => {
+                    try {
+                      let classifyIDToUse = null;
+
+                      if (selectedClassify === "Other") {
+                        if (!newClassify?.trim()) {
+                          toast.error("Bạn chưa nhập tên loại thuốc mới!");
+                          return;
+                        }
+
+                        await new Promise((resolve) => {
+                          dispatch(
+                            postManagerClasstify({
+                              body: { name: newClassify.trim() },
+                              page: 1,
+                              limit: 8,
+                              onSuccess: (id) => {
+                                console.log("===> onSuccess with id:", id);
+                                classifyIDToUse = id;
+                                resolve();
+                              },
+                            })
+                          );
+                        });
+                      } else {
+                        classifyIDToUse = selectedClassifyID;
+                      }
+
+                      if (!classifyIDToUse) {
+                        toast.error(
+                          "Bạn chưa chọn hoặc tạo loại thuốc hợp lệ!"
+                        );
+                        return;
+                      }
+
+                      const typeToUse = type?.toUpperCase?.();
+                      if (!typeToUse) {
+                        toast.error("Loại thuốc không hợp lệ!");
+                        return;
+                      }
+
+                      const medicineResult = await dispatch(
+                        postManagerMedicine({
+                          name: medicineName,
+                          stock,
+                          description,
+                          type: typeToUse,
+                          classifyID: classifyIDToUse,
+                          usage,
+                          image: newMedicineImage,
+                        })
+                      );
+
+                      const medicinePayload = medicineResult?.payload;
+
+                      if (!medicinePayload || medicinePayload?.error) {
+                        toast.error(
+                          "Tạo thuốc thất bại, kiểm tra lại thông tin!"
+                        );
+                        return;
+                      }
+
+                      resetForm();
+                      setOpen(false);
+                    } catch (err) {
+                      console.error("Lỗi khi tạo thuốc:", err);
+                      toast.error(
+                        "Không thể tạo thuốc. Vui lòng kiểm tra lại!"
+                      );
+                    }
+                  }}
+                  style={{
+                    backgroundColor: "#10b981",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    fontWeight: "500",
+                    height: "40px",
+                    width: "100px",
+                  }}
+                >
+                  Save
+                </Button>
+              </div>
             </div>
           </Modal>
         )}
@@ -496,7 +767,11 @@ function MaterialManage() {
             open={openCategoryModal}
             onCancel={() => setOpenCategoryModal(false)}
             footer={null}
-            title="Add New Medicine Category"
+            title={
+              <div className="text-xl font-bold text-center text-gray-800 font-serif">
+                Add New Medicine Category
+              </div>
+            }
             style={{ marginTop: 110 }}
           >
             <div className="font-serif">
