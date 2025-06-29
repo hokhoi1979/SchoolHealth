@@ -255,7 +255,7 @@ const SideBar = () => {
             )}
           </div>
 
-          <div
+          {/* <div
             className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
               click === "information"
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
@@ -284,7 +284,7 @@ const SideBar = () => {
                 Nurse Information
               </Link>
             )}
-          </div>
+          </div> */}
 
           <div
             className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${

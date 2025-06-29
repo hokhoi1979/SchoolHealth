@@ -253,25 +253,25 @@ function SentMedicalToParents({ id }) {
         <div className="flex justify-between mt-5">
           <div></div>
           <div className="flex gap-5">
-            {sendCheckup.success === false && (
-              <>
-                {" "}
-                <Button
-                  className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
-                  onClick={() => setOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className="!bg-[#6CC76F] !p-2 w-[100px] hover:!bg-[#3BB32B] !text-white !font-serif"
-                  onClick={() => {
-                    handleSend();
-                  }}
-                >
-                  Send Result
-                </Button>
-              </>
-            )}
+            {/* {sendCheckup.success === false && ( */}
+            <>
+              {" "}
+              <Button
+                className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="!bg-[#6CC76F] !p-2 w-[100px] hover:!bg-[#3BB32B] !text-white !font-serif"
+                onClick={() => {
+                  handleSend();
+                }}
+              >
+                Send Result
+              </Button>
+            </>
+            {/* )} */}
           </div>
         </div>
       </Modal>
