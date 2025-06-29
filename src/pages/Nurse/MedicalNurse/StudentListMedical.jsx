@@ -126,7 +126,7 @@ function StudentListMedical() {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.status?.toLowerCase() === "ACCEPTED" ? (
+          {record.status === "ACCEPTED" ? (
             <Tag color="green">ACCEPTED</Tag>
           ) : (
             <Tag color="red">REFUSE</Tag>

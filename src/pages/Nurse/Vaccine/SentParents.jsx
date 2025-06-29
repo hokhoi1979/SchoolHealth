@@ -1,10 +1,11 @@
-import { Button, message, Modal, Space, Table } from "antd";
+import { Button, message, Modal, Space, Table, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVaccineResult } from "../../../redux/vaccineNurse/vaccineResult/vaccineResultSlice";
 import { postResultVaccine } from "../../../redux/vaccineNurse/sendResult/sendResultSlice";
 import { toast } from "react-toastify";
-function SentParents({ studentList }) {
+function SentParents({ studentList, id }) {
+  console.log("Student", studentList);
   const [idVaccine, setIdVaccine] = useState(null);
   const [open, setOpen] = useState(false);
   const [mainData, setMainData] = useState([]);
@@ -27,8 +28,12 @@ function SentParents({ studentList }) {
 
   const { sent = [] } = useSelector((state) => state.sendVaccineResult);
 
+  const { resultVaccine = [] } = useSelector(
+    (state) => state.sendVaccineResult
+  );
+
   useEffect(() => {
-    dispatch(fetchVaccineResult(4));
+    dispatch(fetchVaccineResult(id));
   }, [dispatch]);
 
   useEffect(() => {
@@ -126,13 +131,9 @@ function SentParents({ studentList }) {
       render: (_, record) => (
         <Space>
           {record.status?.toLowerCase() === "success" ? (
-            <p className="rounded-xl w-[80px] p-1 bg-[#6CC76F] text-white">
-              Attended
-            </p>
+            <Tag color="green">Attended</Tag>
           ) : (
-            <p className="rounded-xl w-[80px] p-1 bg-[#E26666] text-white">
-              Absent
-            </p>
+            <Tag color="red">Absent</Tag>
           )}
         </Space>
       ),
@@ -164,25 +165,7 @@ function SentParents({ studentList }) {
       key: "parent",
       align: "center",
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          {record.status?.toLowerCase() === "success" ? (
-            <p className="rounded-2xl w-[80px] text-[#0CC912] font-bold">
-              Attended
-            </p>
-          ) : (
-            <p className="rounded-2xl w-[80px] text-[#EE3B3B] font-bold">
-              Absented
-            </p>
-          )}
-        </Space>
-      ),
-    },
+
     {
       title: "React",
       dataIndex: "kq",
@@ -194,6 +177,35 @@ function SentParents({ studentList }) {
       dataIndex: "note",
       key: "note",
       align: "center",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (_, record) => (
+        <Space>
+          {record.status?.toLowerCase() === "success" ? (
+            <Tag color="green">Attended</Tag>
+          ) : (
+            <Tag color="red">Absent</Tag>
+          )}
+        </Space>
+      ),
+    },
+    {
+      title: "Send",
+      key: "status",
+      align: "center",
+      render: (_, record) => (
+        <Space>
+          {resultVaccine.success === true ? (
+            <Tag color="green">Sent</Tag>
+          ) : (
+            <Tag color="red">Not sent</Tag>
+          )}
+        </Space>
+      ),
     },
   ];
 
@@ -261,7 +273,7 @@ function SentParents({ studentList }) {
               className="!bg-[#6CC76F] !p-2 w-[120px] hover:!bg-[#3BB32B] !text-white !font-serif"
               onClick={handleSendResult}
               loading={sending}
-              disabled={sending || modalData.every((item) => item.sent)}
+              // disabled={sending || modalData.every((item) => item.sent)}
             >
               {sending ? "Sending..." : "Send Result"}
             </Button>
