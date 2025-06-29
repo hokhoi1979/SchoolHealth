@@ -64,7 +64,6 @@ function Register() {
         className="flex flex-1 bg-cover bg-center w-full bg-opacity-45 pl-[10%] pr-[10%]"
         style={{ backgroundImage: `url(${bg})` }}
       >
-        {/* Back Home Icon */}
         <div
           className="mt-5 hover:bg-[#f9f9f9] hover:bg-opacity-50 w-[50px] h-[50px] rounded-full flex items-center justify-center transition duration-200"
           onClick={() => navigate("/")}
@@ -83,7 +82,6 @@ function Register() {
           </svg>
         </div>
 
-        {/* Register Form */}
         <div className="w-[35%] bg-white m-auto rounded-[15px] p-5 shadow-lg shadow-black/60 text-center">
           <h1 className="text-3xl mt-3 font-serif">Register Page</h1>
           <p className="font-serif text-[#777] mt-3 text-[15px]">
@@ -92,7 +90,7 @@ function Register() {
           </p>
 
           <div className="px-7 pt-3">
-            <Form form={form} layout="vertical">
+            <Form form={form} layout="vertical" onFinish={handleRegister}>
               <Form.Item
                 name="fullname"
                 rules={[{ required: true, message: "Full Name is not empty!" }]}
@@ -171,8 +169,8 @@ function Register() {
               <Button
                 style={{ height: "40px", fontWeight: 300 }}
                 className="!w-full !bg-[#34A0B5] !text-white !text-2xl !font-serif hover:!bg-[#1c606d]"
-                onClick={handleRegister}
                 type="primary"
+                htmlType="submit"
               >
                 Register
               </Button>
@@ -187,7 +185,6 @@ function Register() {
           </div>
         </div>
 
-        {/* Right Text Section */}
         <div className="w-[45%] m-auto mt-[12%] text-left text-[#252424]">
           <h1 className="font-serif text-[30px]">
             School health team – Accompanying students' health

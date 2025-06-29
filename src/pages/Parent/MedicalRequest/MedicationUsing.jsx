@@ -87,6 +87,7 @@ const MedicationUsing = () => {
   const columns = [
     { title: "Name", dataIndex: "name" },
     { title: "Dosage", dataIndex: "dosage" },
+    { title: "Quantity", dataIndex: "quantity" },
     {
       title: "Usage Times",
       dataIndex: "usageTimes",
@@ -99,6 +100,11 @@ const MedicationUsing = () => {
         `${dayjs(record.startDate).format("DD/MM/YYYY")} - ${dayjs(
           record.endDate
         ).format("DD/MM/YYYY")}`,
+    },
+    {
+      title: "Note",
+      dataIndex: "note",
+      render: (text) => text || "-",
     },
     {
       title: "Status",
@@ -149,7 +155,7 @@ const MedicationUsing = () => {
         }}
         onOk={handleSave}
         okText="Save"
-        width={600} // Set a width for the modal
+        width={600}
       >
         <Form layout="vertical" form={form}>
           <Row gutter={16}>
@@ -168,6 +174,14 @@ const MedicationUsing = () => {
               </Form.Item>
             </Col>
           </Row>
+
+          <Form.Item
+            label="Quantity"
+            name="quantity"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
 
           <Form.Item
             label="Usage Time"
@@ -198,7 +212,7 @@ const MedicationUsing = () => {
             </Col>
           </Row>
 
-          <Form.Item label="Instructions" name="instructions">
+          <Form.Item label="Note" name="note">
             <TextArea rows={2} />
           </Form.Item>
         </Form>

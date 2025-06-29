@@ -352,3 +352,27 @@ const SideBar = () => {
 };
 
 export default SideBar;
+
+/* <div
+  onClick={() => {
+    setClick("student_health");
+    navigate("/parent");
+  }}
+  className={`flex items-center gap-4 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+    click === "student_health" ? "bg-[#EFEEEE] text-black" : ""
+  } ${toggle && "justify-center"}`}
+  style={{ cursor: "pointer" }}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="30"
+    height="30"
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="#5B5454"
+      d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5zm-8-9a6 6 0 1 1 0-12a6 6 0 0 1 0 12m0-2a4 4 0 1 0 0-8a4 4 0 0 0 0 8"
+    />
+  </svg>
+  {!toggle && <span className="text-[18px]">Student Health</span>}
+</div>*/

@@ -26,6 +26,11 @@ import watchFetchDetailRequest from "./profileParent/medicalRequest/getDetailReq
 import watchFetchStopMedicines from "./profileParent/medicalRequest/stopMedicineSaga";
 import watchFetchAcceptBenefit from "./profileParent/medicalRequest/acceptBenefitMedicineSaga";
 import watchFetchRejectBenefit from "./profileParent/medicalRequest/rejectBenefitMedicineSaga";
+import watchFetchCheckUpParent from "./getCheckupParent/getCheckupParentSaga";
+import watchFetchAcceptCheckUp from "./getCheckupParent/getCheckupParentAcceptSaga";
+import watchFetchDeclineCheckUp from "./getCheckupParent/getCheckupParentDeclineSaga";
+import watchFetchDetailCheckUpParent from "./getCheckupParent/getDetailCheckupParentSaga";
+import watchFetchResultCheckUpParent from "./getCheckupParent/getResultCheckupParentSaga";
 
 // ===== Nurse =====
 import watchFetchProfile from "./profileNurse/profileSaga";
@@ -129,6 +134,11 @@ export default function* rootSaga() {
     watchFetchStopMedicines(),
     watchFetchAcceptBenefit(),
     watchFetchRejectBenefit(),
+    watchFetchCheckUpParent(),
+    watchFetchAcceptCheckUp(),
+    watchFetchDeclineCheckUp(),
+    watchFetchDetailCheckUpParent(),
+    watchFetchResultCheckUpParent(),
 
     // Nurse
     watchFetchProfile(),
@@ -167,7 +177,7 @@ export default function* rootSaga() {
     watchFetchCheckupResult(),
     watchSendCheckupParent(),
 
-    // Manager
+    //Manager
     watchFetchManagerMedical(),
     watchPostManagerVaccine(),
     watchFetchVaccineManager(),

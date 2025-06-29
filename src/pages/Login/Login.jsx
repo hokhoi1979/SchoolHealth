@@ -85,7 +85,7 @@ function Login() {
           </p>
 
           <div className="pl-7 pr-7 p-3">
-            <Form form={form}>
+            <Form form={form} onFinish={handleLogin}>
               <Form.Item
                 name="email"
                 rules={[
@@ -139,10 +139,10 @@ function Login() {
                 )}
 
               <Button
+                htmlType="submit"
                 style={{ height: "40px", fontWeight: 300 }}
                 className="!w-full !bg-[#34A0B5] !text-white !text-2xl !font-serif hover:!bg-[#1c606d]"
                 type="secondary"
-                onClick={handleLogin}
               >
                 Login
               </Button>

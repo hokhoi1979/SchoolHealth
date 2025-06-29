@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
   FETCH_CHANGE_PASSWORD,
   fetchChangePasswordSuccess,
@@ -10,7 +10,8 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* changePasswordSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    // const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     const { currentPassword, newPassword } = action.payload;
 
     console.log("Change Password Saga - Payload:", action.payload);
