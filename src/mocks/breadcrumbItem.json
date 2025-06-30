@@ -13,6 +13,14 @@
       "password": "Change Password"
     }
   },
+  "Admin": {
+    "title": "Admin",
+    "pages": {
+      "dashboard": "Dashboard",
+      "student": "Student",
+      "account": "Account"
+    }
+  },
   "Manager": {
     "title": "Manager",
     "pages": {

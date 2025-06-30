@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -70,16 +70,11 @@ function MedicalDay() {
             onClick={() => navigate(`studentListCheckup/${item.id}`)}
           >
             <div className="flex justify-between">
-              <Button
-                className={
-                  item.status === "CONFIRMED"
-                    ? "!bg-[#6CC76F]"
-                    : "!bg-[#CBD361]"
-                }
-                type="primary"
-              >
-                {item.status}
-              </Button>
+              {item.status === "CONFIRMED" ? (
+                <Tag color="green">{item.status}</Tag>
+              ) : (
+                <Tag color="orange">{item.status}</Tag>
+              )}
             </div>
 
             <h1 className="mt-2 text-2xl">{item.title}</h1>

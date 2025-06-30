@@ -766,7 +766,7 @@ const MedicalEvent = () => {
 
           {getMedicalEventDetail?.data?.medicalEventEntity ? (
             <div className="space-y-6 font-serif text-gray-800">
-              <div className="border-l-4 border-[#1bd0d8]  rounded-xl p-5 shadow">
+              <div className="border-l-4 border-[#f3dbec] bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-5 shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex gap-2">
                     <svg
@@ -827,7 +827,7 @@ const MedicalEvent = () => {
                 </div>
               </div>
 
-              <div className="border-l-4 border-[#6cc77d]  rounded-xl p-5 shadow">
+              <div className="border-l-4 border-[#c9fdd3] bg-gradient-to-br from-green-50 to-white rounded-xl p-5 shadow">
                 <div className="flex gap-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -914,7 +914,7 @@ const MedicalEvent = () => {
                 </div>
               </div>
 
-              <div className="border-l-4 border-[#8b0fcb]  rounded-xl p-5 shadow">
+              <div className="border-l-4 border-[#cc92e9]  rounded-xl p-5 shadow">
                 <div className="flex gap-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -944,7 +944,7 @@ const MedicalEvent = () => {
                   (treatmentItem, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-10 p-4 rounded-lg shadow-md border-gray-50 bg-purple-50 mb-2"
+                      className="flex items-center gap-10 p-4 rounded-lg bg-gradient-to-br from-cyan-50 to-pink-50 mb-2"
                     >
                       <div className="w-16 h-16 rounded flex items-center justify-center overflow-hidden">
                         {treatmentItem.medicineSupply?.image ||
