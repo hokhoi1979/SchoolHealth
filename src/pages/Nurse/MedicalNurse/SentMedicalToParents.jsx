@@ -186,7 +186,7 @@ function SentMedicalToParents({ id }) {
             <div key={idx} className="text-sm text-gray-700 leading-tight">
               <span className="font-medium">{item.contentTitle}:</span>{" "}
               {item.value}{" "}
-              <span className="italic text-gray-500">({item.note})</span>
+              {/* <span className="italic text-gray-500">({item.note})</span> */}
             </div>
           ))}
         </div>

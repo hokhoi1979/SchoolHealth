@@ -175,14 +175,20 @@ function InventoryManager() {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width={20}
-                height={20}
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
               >
-                <path
-                  fill="currentColor"
-                  d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
-                />
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                >
+                  <path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1" />
+                  <path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3" />
+                </g>
               </svg>
             </div>
           </Tooltip>
@@ -208,12 +214,13 @@ function InventoryManager() {
               <div className="cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
-                  className="w-8 h-6"
                 >
                   <path
                     fill="currentColor"
-                    d="M9 3v1H4v2h16V4h-5V3H9m1 4v12h4V7h-4z"
+                    d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6zM8 9h8v10H8zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"
                   />
                 </svg>
               </div>

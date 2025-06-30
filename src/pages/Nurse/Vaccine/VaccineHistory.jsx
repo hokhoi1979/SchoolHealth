@@ -1,7 +1,58 @@
 import { Space, Table, Tooltip } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVaccine } from "../../../redux/vaccineNurse/vaccine/vaccineSlice";
+import dayjs from "dayjs";
 
 function VaccineHistory() {
+  const dispatch = useDispatch();
+  const [data, setData] = useState([]);
+
+  const { vaccine = [], error } = useSelector((state) => state.vaccine);
+  const fetchData = () => {
+    dispatch(fetchVaccine());
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [dispatch]);
+
+  const formatData = () => {
+    if (
+      vaccine?.data?.vaccinationEvents &&
+      Array.isArray(vaccine?.data?.vaccinationEvents)
+    ) {
+      const formatted = vaccine.data.vaccinationEvents
+        .filter((item) => item.status === "SUCCESS") // chỉ lấy những sự kiện thành công
+        .map((item) => {
+          // Tính tỉ lệ tham gia
+          const accept = item?.studentResponseCount?.studentsAcceptCount || 0;
+          const total = item?.studentResponseCount?.totalStudent || 0;
+
+          const rate =
+            total > 0
+              ? `${Math.round((accept / total) * 100)}% (${accept}/${total})`
+              : "N/A";
+
+          return {
+            id: item?.id || "N/A",
+            name: item?.name || "N/A",
+            date: dayjs(item?.scheduledAt).isValid()
+              ? dayjs(item.scheduledAt).format("DD/MM/YYYY")
+              : "Chưa xác định",
+            place: item?.place || "Chưa xác định",
+            rate: rate,
+          };
+        });
+
+      setData(formatted);
+      console.log(formatted);
+    }
+  };
+
+  useEffect(() => {
+    formatData();
+  }, [vaccine]);
   const columns = [
     {
       title: "ID",
@@ -67,47 +118,10 @@ function VaccineHistory() {
     },
   ];
 
-  const dataSource = [
-    {
-      id: "VAC01",
-      name: "Tiêm chủng phòng cúm",
-      place: "	Trung tâm Y tế Quận 1",
-      rate: "	92% (230/250)",
-      date: "24/5/2025",
-    },
-    {
-      id: "VAC02",
-      name: "	Tiêm ngừa viêm gan B",
-      place: "	Trung tâm Y tế Quận 1",
-      rate: "	92% (230/250)",
-      date: "24/5/2025",
-    },
-    {
-      id: "VAC03",
-      name: "	Tiêm ngừa viêm gan B 5ml",
-      place: "	Bệnh viện Nhi Đồng",
-      rate: "	92% (230/250)",
-      date: "24/5/2025",
-    },
-    {
-      id: "VAC04",
-      name: "Tiêm chủng phòng cúm",
-      place: "	Bệnh viện Nhi Đồng",
-      rate: "	92% (230/250)",
-      date: "24/5/2025",
-    },
-    {
-      id: "VAC05",
-      name: "Tiêm chủng phòng cúm",
-      place: "	Bệnh viện Nhi Đồng",
-      rate: "	92% (230/250)",
-      date: "24/5/2025",
-    },
-  ];
   return (
     <div>
       {" "}
-      <Table className="mt-5" columns={columns} dataSource={dataSource} />
+      <Table className="mt-5" columns={columns} dataSource={data} rowKey="id" />
       <div className="h-20"></div>
     </div>
   );

@@ -944,12 +944,16 @@ const MedicalEvent = () => {
                   (treatmentItem, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-10 p-4 rounded-lg shadow-md border-gray-50  bg-purple-50 mb-2"
+                      className="flex items-center gap-10 p-4 rounded-lg shadow-md border-gray-50 bg-purple-50 mb-2"
                     >
-                      <div className="w-16 h-16 rounded  flex items-center justify-center overflow-hidden ">
-                        {treatmentItem.medicineSupply?.image ? (
+                      <div className="w-16 h-16 rounded flex items-center justify-center overflow-hidden">
+                        {treatmentItem.medicineSupply?.image ||
+                        treatmentItem.medicine?.image ? (
                           <img
-                            src={treatmentItem.medicineSupply.image}
+                            src={
+                              treatmentItem.medicineSupply?.image ||
+                              treatmentItem.medicine?.image
+                            }
                             alt="medicine"
                             className="object-contain w-full h-full"
                           />
