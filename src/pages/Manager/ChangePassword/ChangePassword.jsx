@@ -153,10 +153,6 @@ const ChangePassword = () => {
                     {userInfo?.fullname}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    Email: {userInfo?.email}
-                    {profile.data.fullname}
-                  </p>
-                  <p className="text-gray-600 text-sm">
                     Email: {profile.data.email}
                   </p>
                 </div>

@@ -120,7 +120,7 @@ const Completed = ({
                   onClick={() => handleViewDetail(notification)}
                   style={{ backgroundColor: "#16a34a", borderColor: "#16a34a" }}
                 >
-                  Xem chi tiết kết quả
+                  View detail result vaccination
                 </Button>
               </div>
             </Card>
@@ -132,7 +132,7 @@ const Completed = ({
       <Modal
         title={
           <span className="text-xl font-semibold text-green-600">
-            Kết quả tiêm chủng
+            Vaccination Result
           </span>
         }
         open={openModal}
@@ -141,20 +141,20 @@ const Completed = ({
         bodyStyle={{ padding: "24px 24px 12px 24px", borderRadius: 8 }}
       >
         {resultLoading ? (
-          <Paragraph>Đang tải dữ liệu...</Paragraph>
+          <Paragraph>Loading data...</Paragraph>
         ) : resultError ? (
-          <Paragraph type="danger">Lỗi: {resultError}</Paragraph>
+          <Paragraph type="danger">Error: {resultError}</Paragraph>
         ) : result ? (
           <>
             <div className="mb-5 p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-3">
               <div className="flex items-center gap-2">
                 <Text strong className="text-gray-700">
-                  Trạng thái:
+                  Status:
                 </Text>
                 {result.status === "SUCCESS" ? (
-                  <Tag color="green">THÀNH CÔNG</Tag>
+                  <Tag color="green">SUCCESS</Tag>
                 ) : result.status === "SKIPPED" ? (
-                  <Tag color="volcano">VẮNG MẶT</Tag>
+                  <Tag color="volcano">ABSENT</Tag>
                 ) : (
                   <Tag>{result.status}</Tag>
                 )}
@@ -163,32 +163,32 @@ const Completed = ({
               {result.status === "SUCCESS" && (
                 <div className="grid grid-cols-1 gap-2 text-[15px] text-gray-700">
                   <p>
-                    <strong>Mã học sinh:</strong>{" "}
+                    <strong>Student Code:</strong>{" "}
                     <span className="text-gray-800">
                       {result.student.student_code}
                     </span>
                   </p>
                   <p>
-                    <strong>Họ tên:</strong>{" "}
+                    <strong>Full Name:</strong>{" "}
                     <span className="text-gray-800">
                       {result.student.account.fullname}
                     </span>
                   </p>
                   <p>
-                    <strong>Lớp:</strong>{" "}
+                    <strong>Class:</strong>{" "}
                     <span className="text-gray-800">
                       {result.student.classAssignments?.[0]?.class?.name ||
-                        "Chưa có"}
+                        "Not assigned"}
                     </span>
                   </p>
                   <p>
-                    <strong>Kết quả:</strong>{" "}
+                    <strong>Result:</strong>{" "}
                     <span className="text-blue-600 font-medium">
                       {result.result}
                     </span>
                   </p>
                   <p>
-                    <strong>Ghi chú:</strong>{" "}
+                    <strong>Note:</strong>{" "}
                     <span className="text-gray-700">{result.note}</span>
                   </p>
                 </div>
@@ -196,13 +196,13 @@ const Completed = ({
 
               {result.status === "SKIPPED" && (
                 <Paragraph className="italic text-gray-500 mt-2">
-                  Học sinh vắng mặt, không có thông tin kết quả.
+                  Student was absent, no result information available.
                 </Paragraph>
               )}
             </div>
           </>
         ) : (
-          <Paragraph>Không tìm thấy kết quả tương ứng.</Paragraph>
+          <Paragraph>No matching result found.</Paragraph>
         )}
       </Modal>
     </>

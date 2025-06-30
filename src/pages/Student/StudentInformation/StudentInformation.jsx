@@ -135,7 +135,7 @@ const StudentInformation = () => {
           📘 STUDENT INFORMATION
         </h1>
         <p className="pt-2 ml-5 text-gray-500 font-medium">
-          Thông tin chi tiết về học sinh
+          Detailed student information
         </p>
 
         {/* Thông tin cơ bản */}
@@ -155,13 +155,16 @@ const StudentInformation = () => {
                 <div className="flex items-center gap-2">
                   <UserOutlined className="text-blue-500" />
                   <span>
-                    Mã học sinh: <strong>{student?.student_code}</strong>
+                    Lớp:{" "}
+                    <strong>
+                      {student?.lastAcamedicYear?.class?.name || "N/A"}
+                    </strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CalendarOutlined className="text-blue-500" />
                   <span>
-                    Lớp:{" "}
+                    Class:{" "}
                     <strong>
                       {student?.lastAcamedicYear?.class?.name || "N/A"}
                     </strong>
@@ -171,7 +174,7 @@ const StudentInformation = () => {
                   color={student?.graduated ? "green" : "orange"}
                   className="rounded-full px-3"
                 >
-                  {student?.graduated ? "Đã tốt nghiệp" : "Đang học"}
+                  {student?.graduated ? "Graduated" : "Enrolled"}
                 </Tag>
               </div>
             </div>
@@ -180,32 +183,32 @@ const StudentInformation = () => {
 
         {/* Các card */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card title="🧑‍🎓 Thông tin học sinh" className={cardClass}>
+          <Card title="🧑‍🎓 Student Information" className={cardClass}>
             <Descriptions column={1} className="text-sm">
-              <Descriptions.Item label="Họ tên">
+              <Descriptions.Item label="Full Name">
                 {student?.account?.fullname}
               </Descriptions.Item>
-              <Descriptions.Item label="Mã học sinh">
+              <Descriptions.Item label="Student Code">
                 {student?.student_code}
               </Descriptions.Item>
-              <Descriptions.Item label="Ngày sinh">
+              <Descriptions.Item label="Date of Birth">
                 {formDate(student?.dateOfBirth)}
               </Descriptions.Item>
-              <Descriptions.Item label="Giới tính">
+              <Descriptions.Item label="Gender">
                 {student?.gender}
               </Descriptions.Item>
-              <Descriptions.Item label="Trạng thái">
+              <Descriptions.Item label="Status">
                 <Tag
                   color={student?.graduated ? "green" : "orange"}
                   className="rounded-full px-3"
                 >
-                  {student?.graduated ? "Đã tốt nghiệp" : "Đang học"}
+                  {student?.graduated ? "Gradutated" : "Enrolled"}
                 </Tag>
               </Descriptions.Item>
             </Descriptions>
           </Card>
 
-          <Card title="📧 Liên hệ" className={cardClass}>
+          <Card title="📧 Contact" className={cardClass}>
             <Descriptions column={1} className="text-sm">
               <Descriptions.Item label="Email">
                 {student?.account?.email}
@@ -213,43 +216,43 @@ const StudentInformation = () => {
             </Descriptions>
           </Card>
 
-          <Card title="👨‍👩‍👧 Phụ huynh" className={cardClass}>
+          <Card title="👨‍👩‍👧 Parent" className={cardClass}>
             <Descriptions column={1} className="text-sm">
-              <Descriptions.Item label="Họ tên phụ huynh">
+              <Descriptions.Item label="Parent Name">
                 {student?.ParentInfo?.fullname}
               </Descriptions.Item>
               <Descriptions.Item label="Email">
                 {student?.ParentInfo?.email}
               </Descriptions.Item>
-              <Descriptions.Item label="Số điện thoại">
+              <Descriptions.Item label="Phone Number">
                 {student?.ParentInfo?.phone}
               </Descriptions.Item>
             </Descriptions>
           </Card>
 
-          <Card title="🆘 Sự kiện y tế" className={cardClass}>
+          <Card title="🆘 Medicine Event" className={cardClass}>
             {student?.medicalEventHistoty?.map((event, idx) => (
               <div
                 key={idx}
                 className="mb-2 p-3 border rounded bg-red-50 space-y-1"
               >
                 <p>
-                  <strong>Loại:</strong> {event.type}
+                  <strong>Type:</strong> {event.type}
                 </p>
                 <p>
-                  <strong>Mức độ:</strong> {event.severity}
+                  <strong>Severity:</strong> {event.severity}
                 </p>
                 <Button
                   size="small"
                   onClick={() => showResultModal(event, "MEDICAL")}
                 >
-                  Xem chi tiết
+                  View details
                 </Button>
               </div>
             ))}
           </Card>
 
-          <Card title="💉 Lịch sử tiêm chủng" className={cardClass}>
+          <Card title="💉 Vaccination History" className={cardClass}>
             <Timeline className="pl-2">
               {student?.vaccinationEventHistoryFormat?.map((event, index) => (
                 <Timeline.Item key={index}>
@@ -270,12 +273,12 @@ const StudentInformation = () => {
                         onClick={() => showResultModal(event, "VACCINE")}
                       >
                         {event.result.status === "SKIPPED"
-                          ? "Xem chi tiết "
-                          : "Xem chi tiết"}
+                          ? "View details"
+                          : "View details"}
                       </Button>
                     ) : (
                       <span className="text-gray-500 text-sm">
-                        Không có dữ liệu
+                        No Data Available
                       </span>
                     )}
                   </div>
@@ -284,7 +287,7 @@ const StudentInformation = () => {
             </Timeline>
           </Card>
 
-          <Card title="🩺 Khám sức khỏe" className={cardClass}>
+          <Card title="🩺 Health Check" className={cardClass}>
             <Timeline className="pl-2">
               {student?.healthCheckupHistoryFormat?.map((event, index) => (
                 <Timeline.Item key={index}>
@@ -310,7 +313,7 @@ const StudentInformation = () => {
                       </Button>
                     ) : (
                       <span className="text-gray-500 text-sm">
-                        Không có dữ liệu
+                        No Data Available
                       </span>
                     )}
                   </div>
@@ -326,7 +329,7 @@ const StudentInformation = () => {
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
-        title="Chi tiết kết quả"
+        title="Result Details"
         className="custom-result-modal"
         bodyStyle={{
           backgroundColor: "#f9fafb",
@@ -378,8 +381,8 @@ const StudentInformation = () => {
           {selectedResult?.result?.status === "SKIPPED" ? (
             <div className="text-center space-y-4">
               <Alert
-                message="Học sinh vắng mặt"
-                description="Không có thông tin kết quả cho sự kiện này."
+                message="Student Absent"
+                description="No result available for this event."
                 type="warning"
                 showIcon
                 className="rounded max-w-md mx-auto"
@@ -396,17 +399,17 @@ const StudentInformation = () => {
                 contentStyle={{ backgroundColor: "#fff" }}
               >
                 {selectedResult?.title && (
-                  <Descriptions.Item label="📌 Tên sự kiện">
+                  <Descriptions.Item label="📌 Event Name">
                     {selectedResult.title}
                   </Descriptions.Item>
                 )}
-                <Descriptions.Item label="✅ Kết quả">
+                <Descriptions.Item label="✅ Result">
                   {selectedResult?.result?.result || "N/A"}
                 </Descriptions.Item>
-                <Descriptions.Item label="📝 Ghi chú">
+                <Descriptions.Item label="📝 Notes">
                   {selectedResult?.result?.overallNotes ||
                     selectedResult?.result?.note ||
-                    "Không có ghi chú"}
+                    "No notes result"}
                 </Descriptions.Item>
               </Descriptions>
 
@@ -422,11 +425,11 @@ const StudentInformation = () => {
                         📋 {item.name}
                       </h3>
                       <p className="text-sm">
-                        <strong>Giá trị:</strong> {item.value || "N/A"}
+                        <strong>Type:</strong> {item.value || "N/A"}
                       </p>
                       {item.note && (
                         <p className="text-sm">
-                          <strong>Ghi chú:</strong> {item.note}
+                          <strong>Notes:</strong> {item.note}
                         </p>
                       )}
                     </div>
@@ -441,22 +444,23 @@ const StudentInformation = () => {
                     🏥 Thông tin sự kiện y tế
                   </h3>
                   <p>
-                    <strong>📂 Loại:</strong> {selectedResult?.type}
+                    <strong>📂 Type:</strong> {selectedResult?.type}
                   </p>
                   <p>
-                    <strong>⚠️ Mức độ:</strong> {selectedResult?.severity}
+                    <strong>⚠️ Severity:</strong> {selectedResult?.severity}
                   </p>
                   <p>
-                    <strong>📝 Mô tả:</strong> {selectedResult?.description}
+                    <strong>📝 Description:</strong>{" "}
+                    {selectedResult?.description}
                   </p>
                   {selectedResult?.HospitalTransfer ? (
                     <>
                       <p>
-                        <strong>🚑 Chuyển viện:</strong>{" "}
+                        <strong>🚑 Hospital Transfer:</strong>{" "}
                         {selectedResult.HospitalTransfer.hospitalName}
                       </p>
                       <p>
-                        <strong>🕒 Thời gian:</strong>{" "}
+                        <strong>🕒 Time:</strong>{" "}
                         {formDate(
                           selectedResult.HospitalTransfer.transferredAt
                         )}
@@ -464,7 +468,7 @@ const StudentInformation = () => {
                     </>
                   ) : (
                     <p>
-                      <strong>🚫 Chuyển viện:</strong> Không
+                      <strong>🚫 Hospital Transfer:</strong> Không
                     </p>
                   )}
                 </div>
