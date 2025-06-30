@@ -7,9 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { Toaster } from "react-hot-toast";
 
 function ManagerLayout() {
-  useEffect(() => {
-    toast.success("Login successful!");
-  }, []);
   return (
     <div className="flex h-screen">
       <SideBarManager />

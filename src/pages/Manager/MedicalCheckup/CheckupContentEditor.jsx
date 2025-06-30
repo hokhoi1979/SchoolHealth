@@ -12,28 +12,27 @@ const CheckupContentTable = ({
     const selected = availableContents.find((item) => item.key === key);
     if (!selected) return;
 
-    // Tránh trùng lặp theo name
     if (checkupContents.some((item) => item.name === selected.name)) return;
 
     setCheckupContents([
       ...checkupContents,
       {
+        key: Date.now(),
         name: selected.name,
         description: selected.description || "",
-        inputType: selected.inputType || "TEXT",
+        inputType: selected.inputType || "",
       },
     ]);
   };
 
-  // Khi thêm dòng mới: generate key
   const handleAddNewRow = () => {
     setCheckupContents([
       ...checkupContents,
       {
-        key: Date.now(), // hoặc dùng uuid()
+        key: Date.now(),
         name: "",
         description: "",
-        inputType: "TEXT",
+        inputType: "",
       },
     ]);
   };
@@ -79,24 +78,26 @@ const CheckupContentTable = ({
             dataIndex: "name",
             render: (text, _, index) => (
               <Input
+                placeholder="Nhập nội dung"
                 value={text}
+                status={!text?.trim() ? "error" : ""}
                 onChange={(e) => handleUpdate(index, "name", e.target.value)}
               />
             ),
-            require: true,
           },
           {
             title: "Mô tả",
             dataIndex: "description",
             render: (text, _, index) => (
               <Input
+                placeholder="Nhập mô tả"
                 value={text}
+                status={!text?.trim() ? "error" : ""}
                 onChange={(e) =>
                   handleUpdate(index, "description", e.target.value)
                 }
               />
             ),
-            require: true,
           },
           {
             title: "Kiểu dữ liệu",
@@ -104,15 +105,16 @@ const CheckupContentTable = ({
             render: (value, _, index) => (
               <Select
                 value={value}
+                placeholder="Chọn kiểu"
+                status={!value ? "error" : ""}
                 onChange={(val) => handleUpdate(index, "inputType", val)}
-                style={{ width: 120 }}
+                style={{ width: 130 }}
               >
                 <Option value="TEXT">Văn bản</Option>
                 <Option value="NUMBER">Số</Option>
                 <Option value="BOOLEAN">Có / Không</Option>
               </Select>
             ),
-            require: true,
           },
           {
             title: "Xoá",

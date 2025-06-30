@@ -114,22 +114,9 @@ const ChangePassword = () => {
             </p>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <Steps current={currentStep}>
-            <Step
-              title="Enter information"
-              description="Fill out the password change form"
-              icon={<Key size={16} />}
-            />
-            <Step
-              title="Complete"
-              description="Password has been updated"
-              icon={<CheckCircle size={16} />}
-            />
-          </Steps>
-        </div>
+
         {currentStep === 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-5">
             <div className="lg:col-span-1">
               <Card
                 title={
@@ -151,7 +138,7 @@ const ChangePassword = () => {
                     {userInfo.fullname}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    Email: {userInfo.email}
+                    Email: {profile?.data?.email}
                   </p>
                 </div>
               </Card>

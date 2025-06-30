@@ -10,7 +10,6 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* medicineRequestSaga(action) {
   try {
-    // const token = localStorage.getItem("accessToken");
     const token = yield select((state) => state.account.token);
     const { query } = action.payload || {}; // Sửa đổi ở đây
     let url = `${URL_API}/parent/v1/medicineRequest`;

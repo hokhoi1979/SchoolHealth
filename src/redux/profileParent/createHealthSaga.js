@@ -32,7 +32,7 @@ function* createHealthSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchCreateHealthSucess(response.data));
-      toast.success(response.data.message);
+      toast.success("Create student health successful!");
       const fetch = yield call(axios.get, `${URL_API}/parent/v1/health`, {
         headers: {
           Authorization: `Bearer ${token}`, // 👈 Add "Bearer"

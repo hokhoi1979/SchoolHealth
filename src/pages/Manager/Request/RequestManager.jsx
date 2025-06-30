@@ -6,6 +6,7 @@ import { Modal, Popconfirm } from "antd";
 import { fetchDetailRequest } from "../../../redux/manager/GetDetailRequestManager/getDetailRequestManagerSlice";
 import { updateManagerSupply } from "../../../redux/manager/RejectRequestManager/rejectRequestManagerSlice";
 import { rejectManagerMedicineSupply } from "../../../redux/manager/Reject/rejectMedicineSupplySlice";
+import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 
 function RequestManager() {
   const [data, setData] = useState([]);
@@ -75,6 +76,9 @@ function RequestManager() {
   return (
     <>
       <div>
+        <h1 className="text-xl font-inria font-medium  p-10">
+          <CommonBreadcrumb role={"Manager"} page={"Checkup"} />
+        </h1>
         <div className="grid grid-cols-3 gap-5 mt-5 w-full pl-5 pr-5 font-kameron ">
           {data.map((item) => (
             <div

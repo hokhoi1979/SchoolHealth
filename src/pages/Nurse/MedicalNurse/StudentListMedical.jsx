@@ -126,42 +126,9 @@ function StudentListMedical() {
       align: "center",
       render: (_, record) => (
         <Space>
-          {record.status?.toLowerCase() === "ACCEPTED" ? (
-            <Tag color="green">ACCEPTED</Tag>
-          ) : (
-            <Tag color="red">REFUSE</Tag>
-          )}
-        </Space>
-      ),
-    },
-    {
-      title: "Action",
-      key: "action",
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          <Tooltip
-            placement="bottom"
-            title="View"
-            overlayInnerStyle={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "12px",
-            }}
-          >
-            <div style={{ cursor: "pointer" }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
-                ></path>
-              </svg>
-            </div>
-          </Tooltip>
+          {record.status === "ACCEPTED" && <Tag color="green">ACCEPTED</Tag>}
+          {record.status === "PENDING" && <Tag color="blue">PENDING</Tag>}
+          {record.status === "DECLINED" && <Tag color="red">DECLINED</Tag>}
         </Space>
       ),
     },
@@ -248,9 +215,12 @@ function StudentListMedical() {
                         <span className="font-medium">{item.quantityUsed}</span>
                       </p>
                       {item.notes && (
-                        <p className="text-xs text-gray-500 italic mt-1">
-                          📝 {item.notes}
-                        </p>
+                        <div className="flex">
+                          <p className="text-sm text-gray-600 mt-1">
+                            Number:
+                            <span className="font-medium">{item.notes}</span>
+                          </p>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -448,7 +418,7 @@ function StudentListMedical() {
       )}
       {selectedOption === "send" && (
         <div className="flex gap-5 pl-5">
-          <SentMedicalToParents id={id}/>
+          <SentMedicalToParents id={id} />
         </div>
       )}
       <div className="h-20"></div>
