@@ -105,14 +105,14 @@ function StudentList() {
       render: (_, record) => (
         <Space>
           {record.status?.toLowerCase() === "accepted" && (
-            <Tag color="green">ACCEPT</Tag>
+            <Tag color="green">ACCEPTED</Tag>
           )}
           {record.status?.toLowerCase() === "pending" && (
-            <Tag color="orange">PENDING</Tag>
+            <Tag color="blue">PENDING</Tag>
           )}
 
           {record.status?.toLowerCase() === "declined" && (
-            <Tag color="red">ACCEPT</Tag>
+            <Tag color="red">DECLINED</Tag>
           )}
         </Space>
       ),
@@ -123,37 +123,6 @@ function StudentList() {
       key: "note",
       align: "center",
     },
-    {
-      title: "Action",
-      key: "action",
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          <Tooltip
-            placement="bottom"
-            title="View"
-            overlayInnerStyle={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "12px",
-            }}
-          >
-            <div style={{ cursor: "pointer" }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
-                ></path>
-              </svg>
-            </div>
-          </Tooltip>
-        </Space>
-      ),
-    },
   ];
 
   return (
@@ -162,7 +131,7 @@ function StudentList() {
       <div className="flex justify-between">
         {selectedOption === "student" ? (
           <div className="flex gap-5 pl-5">
-            <Input
+            {/* <Input
               style={{ borderRadius: "7px", width: "300px" }}
               placeholder="Search vaccination"
             />
@@ -171,7 +140,7 @@ function StudentList() {
               type="secondary"
             >
               <p className="text-white font-kameron"> Search</p>
-            </Button>
+            </Button> */}
           </div>
         ) : (
           <>
