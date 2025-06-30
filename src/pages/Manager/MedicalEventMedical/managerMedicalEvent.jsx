@@ -5,10 +5,12 @@ import { fetchManagerMedicalEvent } from "../../../redux/manager/ManagerMedicalE
 import { fetchManagerMedicalEventDetail } from "../../../redux/manager/ManagerMedicalEvent/managerMedicalEventDetailSlice";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { AppFooter } from "../../../components/Footer/AppFooter";
+import dayjs from "dayjs";
 
 const MedicalEventList = () => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState([]);
+  const [treatMent, setTreatMent] = useState([]);
   const {
     managerMedicalEvent = [],
     loading,
@@ -37,14 +39,37 @@ const MedicalEventList = () => {
     dispatch(fetchManagerMedicalEvent());
   }, [dispatch]);
 
+  const detail = useSelector((state) => state.getManagerMedicalEventDetail);
+
   const handleViewDetail = (item) => {
     console.log(item?.id);
     dispatch(fetchManagerMedicalEventDetail(item.id));
     setSelectedItem(item.raw);
     setShowModal(true);
   };
-  const detail = useSelector((state) => state.getManagerMedicalEventDetail);
 
+  const formatData = () => {
+    const treatmentList =
+      detail?.detail?.data?.medicalEventEntity?.Treatment || [];
+    const data = treatmentList.map((item) => ({
+      image: item?.medicine?.image || item?.medicineSupply?.image || "Unknown",
+      name: item?.medicine?.name || item?.medicineSupply?.name || "Unknown",
+      quantity: item?.quantity,
+      dosage: item?.dosage || "N/A",
+    }));
+
+    setTreatMent(data);
+  };
+
+  useEffect(() => {
+    formatData();
+  }, [detail]);
+
+  useEffect(() => {
+    if (selectedItem) {
+      console.log("Updated selectedItem", selectedItem);
+    }
+  }, [selectedItem]);
   return (
     <>
       <h1 className="text-xl font-inria font-medium mb-4 p-10">
@@ -111,126 +136,144 @@ const MedicalEventList = () => {
       <AppFooter />
       {/* Modal Detail */}
       <Modal
-        title={
-          <div className="text-center">
-            <span className="text-xl font-semibold text-gray-800">
-              Student & Medical Details
-            </span>
-          </div>
-        }
         open={showModal}
         onCancel={() => setShowModal(false)}
         footer={null}
-        width={800}
+        width={900}
         centered
+        title={
+          <div className="flex justify-center items-center">
+            <span className="text-2xl font-bold text-red-600 flex items-center gap-x-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="#e11717"
+                  d="m12.1 18.55l-.1.1l-.11-.1C7.14 14.24 4 11.39 4 8.5C4 6.5 5.5 5 7.5 5c1.54 0 3.04 1 3.57 2.36h1.86C13.46 6 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5c0 2.89-3.14 5.74-7.9 10.05M16.5 3c-1.74 0-3.41.81-4.5 2.08C10.91 3.81 9.24 3 7.5 3C4.42 3 2 5.41 2 8.5c0 3.77 3.4 6.86 8.55 11.53L12 21.35l1.45-1.32C18.6 15.36 22 12.27 22 8.5C22 5.41 19.58 3 16.5 3"
+                />
+              </svg>
+              Medical Event Details
+            </span>
+          </div>
+        }
       >
         {selectedItem ? (
-          <div className="space-y-6 font-kameron grid grid-cols-2 gap-8">
+          <div className="space-y-6 text-[16px] font-kameron">
             {/* Medical Event Info */}
-            <div className="space-y-4">
-              <div className="border-l-4 border-blue-500 pl-4">
-                <h2 className="text-lg font-bold text-blue-700 mb-3">
-                  Medical Event
-                </h2>
-                <div className="space-y-2">
-                  <p className="text-gray-700">
-                    <span className="font-medium">ID:</span>{" "}
-                    {selectedItem.medicalEventEntity?.id}
+            <div className="rounded-xl border p-4 bg-orange-50 shadow">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="font-bold text-lg text-gray-800">
+                    📉 Event #{selectedItem.id}
+                  </h2>
+                  <p>
+                    <span className="font-semibold">Type:</span>{" "}
+                    {selectedItem.type}
                   </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Type:</span>{" "}
-                    {selectedItem.medicalEventEntity?.type}
+                  <p>
+                    <span className="font-semibold">Description:</span>{" "}
+                    {selectedItem.description}
                   </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Time:</span>{" "}
-                    {new Date(
-                      selectedItem.medicalEventEntity?.occurredAt
-                    ).toLocaleString()}
+                  <p>
+                    <span className="font-semibold">Occurred:</span>{" "}
+                    {dayjs(selectedItem.occurredAt).format("HH:mm DD/MM/YYYY")}
                   </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Status:</span>{" "}
-                    {selectedItem.medicalEventEntity?.status}
+                </div>
+                <div className="text-right space-y-1">
+                  <span className="inline-block px-3 py-1 bg-black text-white rounded-full">
+                    {selectedItem.severity || "NORMAL"}
+                  </span>
+                  <p>
+                    <span className="font-semibold">Status:</span>{" "}
+                    {selectedItem.status}
                   </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Severity:</span>{" "}
-                    {selectedItem.medicalEventEntity?.severity}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Description:</span>{" "}
-                    {selectedItem.medicalEventEntity?.description}
+                  <p>
+                    <span className="font-semibold">Updated:</span>{" "}
+                    {dayjs(selectedItem.updatedAt || new Date()).format(
+                      "HH:mm DD/MM/YYYY"
+                    )}
                   </p>
                 </div>
               </div>
+            </div>
 
-              {/* Nurse Info */}
-              <div className="border-l-4 border-pink-500 pl-4">
-                <h2 className="text-lg font-bold text-pink-700 mb-3">Nurse</h2>
-                <p className="text-gray-700">
-                  <span className="font-medium">Full Name:</span>{" "}
-                  {selectedItem.nurseInfo?.fullname}
+            {/* Student Info */}
+            <div className="rounded-xl border p-4 bg-green-50 shadow">
+              <h2 className="text-xl font-bold text-green-800 mb-2">
+                🎓 Học sinh {selectedItem.studentInfo?.account?.fullname}
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-gray-800">
+                <p>
+                  <strong>Student Code:</strong>{" "}
+                  {selectedItem.studentInfo?.student_code}
+                </p>
+                <p>
+                  <strong>Grade:</strong>{" "}
+                  {selectedItem.studentInfo?.lastAcamedicYear?.class?.name}
+                </p>
+                <p>
+                  <strong>Gender:</strong> {selectedItem.studentInfo?.gender}
+                </p>
+                <p>
+                  <strong>Date of Birth:</strong>{" "}
+                  {dayjs(selectedItem.studentInfo?.dateOfBirth).format(
+                    "DD/MM/YYYY"
+                  )}
+                </p>
+                <p>
+                  <strong>Parent/Guardian Contact:</strong>{" "}
+                  {selectedItem.studentInfo?.ParentInfo?.fullname}
+                </p>
+                <p>
+                  <strong>Phone:</strong>{" "}
+                  {selectedItem.studentInfo?.ParentInfo?.phone}
                 </p>
               </div>
             </div>
 
-            <div className="space-y-4">
-              {/* Student Info */}
-              <div className="border-l-4 border-green-500 pl-4">
-                <h2 className="text-lg font-bold text-green-700 mb-3">
-                  Student
-                </h2>
-                <div className="space-y-2">
-                  <p className="text-gray-700">
-                    <span className="font-medium">Student Code:</span>{" "}
-                    {selectedItem.studentInfo?.student_code}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Full Name:</span>{" "}
-                    {selectedItem.studentInfo?.account?.fullname}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Date of Birth:</span>{" "}
-                    {new Date(
-                      selectedItem.studentInfo?.dateOfBirth
-                    ).toLocaleDateString()}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Gender:</span>{" "}
-                    {selectedItem.studentInfo?.gender}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Class:</span>{" "}
-                    {selectedItem.studentInfo?.lastAcamedicYear?.class?.name}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Academic Year:</span>{" "}
-                    {
-                      selectedItem.studentInfo?.lastAcamedicYear?.academicYear
-                        ?.name
-                    }
-                  </p>
-                </div>
-              </div>
+            {/* Treatment Info */}
+            <div className="rounded-xl border p-4 bg-purple-50 shadow">
+              <h2 className="text-xl font-bold text-purple-800 mb-4">
+                💊 Treatment Detail
+              </h2>
 
-              {/* Parent Info */}
-              <div className="border-l-4 border-purple-500 pl-4">
-                <h2 className="text-lg font-bold text-purple-700 mb-3">
-                  Parent
-                </h2>
+              {treatMent.length > 0 ? (
                 <div className="space-y-2">
-                  <p className="text-gray-700">
-                    <span className="font-medium">Full Name:</span>{" "}
-                    {selectedItem.studentInfo?.ParentInfo?.fullname}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Email:</span>{" "}
-                    {selectedItem.studentInfo?.ParentInfo?.email}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-medium">Phone:</span>{" "}
-                    {selectedItem.studentInfo?.ParentInfo?.phone}
-                  </p>
+                  {/* Header row */}
+                  <div className="grid grid-cols-4 bg-purple-100 px-4 py-2 rounded-md font-semibold text-gray-700">
+                    <div className="col-span-1">Image</div>
+                    <div className="col-span-1">Medicine Name</div>
+                    <div className="col-span-1">Quantity</div>
+                    <div className="col-span-1">Dosage</div>
+                  </div>
+
+                  {/* Data rows */}
+                  {treatMent.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="grid grid-cols-4 items-center bg-purple-50 hover:bg-purple-100 px-4 py-3 rounded-lg shadow-sm transition"
+                    >
+                      <div className="col-span-1">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-12 h-12 object-cover rounded-md"
+                        />
+                      </div>
+                      <div className="col-span-1 font-medium">{item.name}</div>
+                      <div className="col-span-1">{item.quantity}</div>
+                      <div className="col-span-1">{item.dosage}</div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              ) : (
+                <p className="text-gray-500 italic">
+                  No treatment detail provided.
+                </p>
+              )}
             </div>
           </div>
         ) : (

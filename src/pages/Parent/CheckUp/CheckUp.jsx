@@ -8,12 +8,14 @@ import Completed from "./Completed";
 import Rejected from "./Rejected";
 import ModalResponse from "./ModalResponse";
 import DetailModal from "./DetailModal";
+import ResultModal from "./ResultModal";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { fetchCheckUpParent } from "../../../redux/getCheckupParent/getCheckupParentSlice";
 import { fetchAcceptCheckUp } from "../../../redux/getCheckupParent/getCheckupParentAcceptSlice";
 import { fetchDeclineCheckUp } from "../../../redux/getCheckupParent/getCheckupParentDeclineSlice";
 import { fetchDetailCheckUpParent } from "../../../redux/getCheckupParent/getDetailCheckupParentSlice";
+import { fetchResultCheckUpParent } from "../../../redux/getCheckupParent/getResultCheckupParentSlice";
 import { Spin, Alert, message } from "antd";
 
 const CheckUp = () => {
@@ -33,10 +35,17 @@ const CheckUp = () => {
     error: detailError,
   } = useSelector((state) => state.detailCheckUpParent);
 
+  const {
+    checkup: resultData,
+    loading: resultLoading,
+    error: resultError,
+  } = useSelector((state) => state.resultCheckUpParent);
+
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [response, setResponse] = useState({ consent: "yes", reason: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCheckUpParent());
@@ -89,6 +98,15 @@ const CheckUp = () => {
 
   const handleCloseDetailModal = () => {
     setIsDetailModalOpen(false);
+  };
+
+  const handleViewResult = (healthCheckUpID, studentID) => {
+    dispatch(fetchResultCheckUpParent({ id: healthCheckUpID, studentID }));
+    setIsResultModalOpen(true);
+  };
+
+  const handleCloseResultModal = () => {
+    setIsResultModalOpen(false);
   };
 
   const handleConfirm = async () => {
@@ -169,6 +187,7 @@ const CheckUp = () => {
           <Completed
             notifications={notificationItem}
             onViewDetail={handleViewDetail}
+            onViewResult={handleViewResult}
           />
         );
       case "rejected":
@@ -257,6 +276,13 @@ const CheckUp = () => {
         checkupDetail={checkupDetail}
         loading={detailLoading}
         error={detailError}
+      />
+      <ResultModal
+        open={isResultModalOpen}
+        onClose={handleCloseResultModal}
+        resultData={resultData}
+        loading={resultLoading}
+        error={resultError}
       />
     </div>
   );

@@ -97,6 +97,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"} `}
+            onClick={() => {
+              setClick("student_information");
+              navigate("/student/student_information");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -111,11 +115,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("student_information")}
-                to={"/student"}
-                className="text-[18px]"
-              >
+              <Link to={"/student/student_information"} className="text-[18px]">
                 Student Information
               </Link>
             )}
@@ -127,6 +127,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
+            onClick={() => {
+              setClick("change_password");
+              navigate("/student/change_password");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -141,11 +145,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("change_password")}
-                to={"/student/change_password"}
-                className="text-[18px]"
-              >
+              <Link to={"/student/change_password"} className="text-[18px]">
                 Change Password
               </Link>
             )}

@@ -105,6 +105,8 @@ import studentCheckupReducer from "./checkupNurse/listStudentCheckup/listStudent
 import checkupResultReducer from "./checkupNurse/resultCheckup/resultCheckupSlice";
 import sendCheckupParentReducer from "./checkupNurse/sendCheckupToParent/sendCheckupParentSlice";
 
+import studentDetailProfileReducer from "./getProflie/getProfileStudentSlice";
+
 const rootReducer = combineReducers({
   account: accountReducers,
   accountRegister: registerReducer,
@@ -208,6 +210,7 @@ const rootReducer = combineReducers({
 
   getProfile: getProfileReducer,
   changePassword: changePasswordReducer,
+  getProfileStudent: studentDetailProfileReducer,
 });
 
 export default rootReducer;

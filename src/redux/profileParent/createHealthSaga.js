@@ -6,6 +6,10 @@ import {
 } from "./createHealthSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
+import {
+  fetchParentHealthFail,
+  fetchParentHealthSuccess,
+} from "./parentGetHealth/parentGetHealthSlice";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
@@ -28,7 +32,20 @@ function* createHealthSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchCreateHealthSucess(response.data));
-      toast.success(response.data.message);
+      toast.success("Create student health successful!");
+      const fetch = yield call(axios.get, `${URL_API}/parent/v1/health`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // 👈 Add "Bearer"
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (fetch.status === 200 || fetch.status === 201) {
+        yield put(fetchParentHealthSuccess(fetch.data.data));
+        console.log(fetch.data);
+      } else {
+        yield put(fetchParentHealthFail(error));
+      }
     } else {
       yield put(fetchCreateHealthFail(`Status: ${response.status}`));
       console.log("EROR", response.status);

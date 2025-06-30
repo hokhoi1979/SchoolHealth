@@ -9,7 +9,7 @@ import home1 from "../../img/home1.jpeg";
 const Header = ({ object }) => {
   return (
     <>
-      <header className="fixed w-full top-0 z-50 bg-white shadow mb-[20px]">
+      <header className="fixed w-full top-0 z-50 bg-white mb-[20px]">
         <div className="container w-full   mt-2 mb-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center flex-col gap-2">
@@ -187,7 +187,6 @@ const Header = ({ object }) => {
           </div>
         </div>
       </header>
-      <div className="mb-2"></div>
       <div className="relative w-full h-[600px] pt-[100px]">
         <img
           src={bs3}

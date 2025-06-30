@@ -77,15 +77,15 @@ function RequestManager() {
   };
   return (
     <>
-      <div>
+      <div className="">
         <h1 className="text-xl font-inria font-medium  p-10">
           <CommonBreadcrumb role={"Manager"} page={"request"} />
         </h1>
-        <div className="grid grid-cols-3 gap-5 mt-5 w-full pl-5 pr-5 font-kameron ">
+        <div className="grid grid-cols-3 gap-5 mt-5 w-full  pl-5 pr-5 font-kameron ">
           {data.map((item) => (
             <div
               key={item.id}
-              className="h-auto bg-white rounded-2xl p-5 relative flex flex-col justify-between"
+              className="h-[380px] bg-white rounded-2xl p-5 relative flex flex-col justify-between"
             >
               <div className="w-full flex justify-center items-center mb-4">
                 <div>
@@ -104,7 +104,21 @@ function RequestManager() {
                 </div>
                 <div>
                   <p className="font-semibold">Status:</p>
-                  <p className="capitalize">{item.status}</p>
+                  <p
+                    className={`capitalize text-sm font-medium ${
+                      item.status === "REJECTED"
+                        ? "text-red-500"
+                        : item.status === "APPROVED"
+                        ? "text-green-600"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {item.status === "PENDING"
+                      ? "PENDING"
+                      : item.status === "APPROVED"
+                      ? "APPROVED"
+                      : item.status}
+                  </p>
                 </div>
 
                 <div>
@@ -200,88 +214,103 @@ function RequestManager() {
         )}
       >
         {detail ? (
-          <div className="bg-white rounded-2xl px-6 py-5 max-h-[80vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">
-              Request Details
-            </h2>
-
-            <div className="space-y-3 mb-5">
-              <p className="text-gray-700">
-                <span className="font-semibold">Note:</span>{" "}
-                {detail?.note || "-"}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Status:</span>{" "}
-                <span
-                  className={`font-semibold ${
-                    detail.status === "PENDING"
-                      ? "text-red-500"
-                      : detail.status === "APPROVED"
-                      ? "text-green-600"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {detail?.status || "-"}
-                </span>
+          <div className="bg-white rounded-2xl overflow-hidden max-h-[80vh]">
+            {/* Header Gradient */}
+            <div className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-6 py-5 text-center">
+              <h2 className="text-2xl font-bold flex items-center justify-center gap-2">
+                <span>📦</span> Request Details
+              </h2>
+              <p className="text-sm mt-1 font-medium">
+                Product request information
               </p>
             </div>
 
-            <div>
-              <h3 className="text-lg font-semibold mb-3 text-gray-800">
-                Product List
-              </h3>
-              <ul className="space-y-4">
-                {detail?.items?.length > 0 ? (
-                  detail.items.map((item, idx) => (
-                    <li
-                      key={idx}
-                      className="border rounded-md p-3 shadow-sm flex items-start gap-4"
-                    >
-                      <img
-                        src={
-                          item.medicine?.image ||
-                          item.medicineSupply?.image ||
-                          ""
-                        }
-                        alt="Product"
-                        className="w-20 h-20 object-cover rounded border bg-gray-100"
-                      />
-                      <div className="flex-1 space-y-1 text-sm text-gray-800">
-                        <p>
-                          <span className="font-semibold">Name:</span>{" "}
-                          {item.medicine?.name ||
-                            item.medicineSupply?.name ||
-                            "-"}
-                        </p>
-                        <p>
-                          <span className="font-semibold">Quantity:</span>{" "}
-                          {item.quantity}
-                        </p>
-                        <p>
-                          <span className="font-semibold">Urgency:</span>{" "}
-                          {item.urgency}
-                        </p>
-                        <p>
-                          <span className="font-semibold">Note:</span>{" "}
-                          {item.note || "None"}
-                        </p>
-                      </div>
+            {/* Body */}
+            <div className="px-6 py-5 overflow-y-auto space-y-6 max-h-[70vh]">
+              {/* General Info */}
+              <div className="space-y-3">
+                <p className="text-gray-700">
+                  <span className="font-semibold">Note:</span>{" "}
+                  {detail?.note || "-"}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-semibold">Status:</span>{" "}
+                  <span
+                    className={`font-semibold ${
+                      detail.status === "PENDING"
+                        ? "  text-gray-500"
+                        : detail.status === "APPROVED"
+                        ? "text-green-600"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {detail?.status || "-"}
+                  </span>
+                </p>
+              </div>
+
+              {/* Product List */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-gray-800">
+                  Product List
+                </h3>
+                <ul className="space-y-4">
+                  {detail?.items?.length > 0 ? (
+                    detail.items.map((item, idx) => (
+                      <li
+                        key={idx}
+                        className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 shadow flex gap-4 items-start"
+                      >
+                        <img
+                          src={
+                            item.medicine?.image ||
+                            item.medicineSupply?.image ||
+                            "/placeholder.png"
+                          }
+                          alt="Product"
+                          className="w-16 h-16 object-cover rounded-lg border bg-white"
+                          onError={(e) => (e.target.src = "/placeholder.png")}
+                        />
+                        <div className="flex-1 space-y-1 text-sm text-gray-800">
+                          <p>
+                            <span className="font-semibold">Name:</span>{" "}
+                            {item.medicine?.name ||
+                              item.medicineSupply?.name ||
+                              "-"}
+                          </p>
+                          <p>
+                            <span className="font-semibold">Quantity:</span>{" "}
+                            {item.quantity}
+                          </p>
+                          <p>
+                            <span className="font-semibold">Urgency:</span>{" "}
+                            {item.urgency}
+                          </p>
+                          <p>
+                            <span className="font-semibold">Note:</span>{" "}
+                            {item.note || "None"}
+                          </p>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-gray-600 italic">
+                      No products available
                     </li>
-                  ))
-                ) : (
-                  <li className="text-gray-600 italic">
-                    No products available
-                  </li>
-                )}
-              </ul>
-            </div>
+                  )}
+                </ul>
+              </div>
 
-            <button
-              onClick={handleCloseModal}
-              className="mt-6 w-full py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
-            >
-              Close
-            </button>
+              {/* Footer */}
+              <div className="flex justify-end">
+                <button
+                  onClick={handleCloseModal}
+                  className="mt-2 px-6 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="p-6 text-center text-gray-500">Loading data...</div>
