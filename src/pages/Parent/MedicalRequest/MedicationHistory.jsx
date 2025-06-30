@@ -63,14 +63,12 @@ const MedicationHistory = () => {
   }, [deleteSuccess, deleteError, dispatch]);
 
   useEffect(() => {
-    if (requestDetail && !detailLoading && !detailError) {
-      setIsModalVisible(true); // Hiển thị modal khi có thông tin chi tiết
-    } else if (detailError) {
+    if (detailError && currentViewingId) {
       message.error("Failed to fetch medication detail!");
-      setIsModalVisible(false); // Đóng modal nếu có lỗi
+      setIsModalVisible(false);
       setCurrentViewingId(null);
     }
-  }, [requestDetail, detailLoading, detailError]);
+  }, [detailError, currentViewingId]);
 
   useEffect(() => {
     if (stopSuccess) {
@@ -89,6 +87,7 @@ const MedicationHistory = () => {
     if (requestID) {
       setCurrentViewingId(requestID);
       dispatch(fetchDetailRequest({ requestID: requestID }));
+      setIsModalVisible(true);
     } else {
       message.error("Invalid request ID");
     }

@@ -187,7 +187,7 @@ function StudentListMedical() {
                 {medicine.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start gap-4 bg-gray-50 hover:bg-gray-100 transition duration-200 p-4 rounded-xl shadow-sm border border-gray-200"
+                    className="flex items-start gap-4 bg-gradient-to-br from-cyan-50 to-pink-50 hover:bg-gray-100 transition duration-200 p-4 rounded-xl shadow-sm border border-gray-200"
                   >
                     <img
                       src={item.image}
@@ -253,7 +253,7 @@ function StudentListMedical() {
                 {content.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-gray-50 hover:bg-gray-100 transition duration-200 p-4 rounded-xl shadow-sm border border-gray-200"
+                    className="bg-gradient-to-br from-cyan-50 to-pink-50 hover:bg-gray-100 transition duration-200 p-4 rounded-xl shadow-sm border border-gray-200"
                   >
                     <h4 className="text-lg font-semibold text-gray-700">
                       {item.name}

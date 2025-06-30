@@ -382,7 +382,7 @@ const MedicalRequest = () => {
           </Form>
         </Modal>
 
-        <div className="flex mt-5 bg-[#F3F3F3] w-full h-10 rounded-xl">
+        <div className="flex mt-5 bg-[#F3F3F3] w-[300px] h-10 rounded-xl">
           <div className="m-auto flex gap-10">
             <Link to={""}>Medication in use</Link>
             <Link to={"notification"}>Notification</Link>

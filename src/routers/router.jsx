@@ -77,12 +77,21 @@ import AccountAdmin from "../pages/Admin/AccountAdmin/AccountAdmin";
 import StudentAdmin from "../pages/Admin/StudentAdmin/StudentAdmin";
 import DashboardAdmin from "../pages/Admin/DashboardAdmin/DashboardAdmin";
 
+import New from "../pages/News/New";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     children: [
-      { path: "", element: <Home /> },
+      {
+        path: "",
+        element: <Home />,
+      },
+      {
+        path: "/news",
+        element: <New />,
+      },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
 
@@ -220,65 +229,78 @@ const router = createBrowserRouter([
       //Parents route
       {
         path: "parent",
-        element: <ParentLayout />,
+        element: <PrivateRoute allowedRoles={[4]} />,
         children: [
-          { path: "", element: <Navigate to="student_health" /> },
           {
-            path: "student_health",
-            element: <StudentHealth />,
-          },
-          {
-            path: "medical_request",
-            element: <MedicalRequest />,
+            path: "",
+            element: <ParentLayout />,
             children: [
-              { path: "", element: <MedicalHistoryParent /> },
-              // { path: "medication_history", element: <MedicalHistoryParent /> },
-              { path: "notification", element: <NotificationRequest /> },
+              { path: "", element: <Navigate to="student_health" /> },
+              {
+                path: "student_health",
+                element: <StudentHealth />,
+              },
+              {
+                path: "medical_request",
+                element: <MedicalRequest />,
+                children: [
+                  { path: "", element: <MedicalHistoryParent /> },
+                  // { path: "medication_history", element: <MedicalHistoryParent /> },
+                  { path: "notification", element: <NotificationRequest /> },
+                ],
+              },
+              {
+                path: "vaccination_confirm",
+                element: <VaccinationConfirm />,
+                children: [
+                  { path: "", element: <PendingVaccination /> },
+                  { path: "completed", element: <CompletedVaccination /> },
+                  { path: "rejected", element: <RejectedVaccination /> },
+                ],
+              },
+              {
+                path: "check_up_confirm",
+                element: <CheckUpConfirm />,
+                children: [
+                  { path: "", element: <PendingCheckUp /> },
+                  { path: "completed", element: <CompletedCheckUp /> },
+                  { path: "rejected", element: <RejectedCheckUp /> },
+                ],
+              },
+              {
+                path: "history",
+                element: <StudentHistory />,
+                children: [
+                  { path: "", element: <AllRecord /> },
+                  { path: "health_infor", element: <HealthInfor /> },
+                  { path: "send_result", element: <SendResult /> },
+                  { path: "notification", element: <Notification /> },
+                ],
+              },
+              {
+                path: "information",
+                element: <ParentInfor />,
+              },
+              { path: "change_password", element: <ChangePasswordParent /> },
             ],
           },
-          {
-            path: "vaccination_confirm",
-            element: <VaccinationConfirm />,
-            children: [
-              { path: "", element: <PendingVaccination /> },
-              { path: "completed", element: <CompletedVaccination /> },
-              { path: "rejected", element: <RejectedVaccination /> },
-            ],
-          },
-          {
-            path: "check_up_confirm",
-            element: <CheckUpConfirm />,
-            children: [
-              { path: "", element: <PendingCheckUp /> },
-              { path: "completed", element: <CompletedCheckUp /> },
-              { path: "rejected", element: <RejectedCheckUp /> },
-            ],
-          },
-          {
-            path: "history",
-            element: <StudentHistory />,
-            children: [
-              { path: "", element: <AllRecord /> },
-              { path: "health_infor", element: <HealthInfor /> },
-              { path: "send_result", element: <SendResult /> },
-              { path: "notification", element: <Notification /> },
-            ],
-          },
-          {
-            path: "information",
-            element: <ParentInfor />,
-          },
-          { path: "change_password", element: <ChangePasswordParent /> },
         ],
       },
+
       //Student route
       {
         path: "student",
-        element: <StudentLayout />,
+        element: <PrivateRoute allowedRoles={[5]} />,
         children: [
-          { path: "", element: <Navigate to="student_information" /> },
-          { path: "student_information", element: <StudentInformation /> },
-          { path: "change_password", element: <ChangePassword /> },
+          {
+            path: "",
+            element: <StudentLayout />,
+            children: [
+              { path: "", element: <Navigate to="student_information" /> },
+              { path: "student_information", element: <StudentInformation /> },
+              { path: "change_password", element: <ChangePassword /> },
+            ],
+          },
         ],
       },
     ],

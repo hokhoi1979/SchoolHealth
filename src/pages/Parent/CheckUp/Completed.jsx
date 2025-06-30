@@ -21,7 +21,7 @@ const style = {
   },
 };
 
-const Completed = ({ notifications, onViewDetail }) => {
+const Completed = ({ notifications, onViewDetail, onViewResult }) => {
   const approvedVaccinations = notifications.filter(
     (n) => n.type === "checkup" && n.status === "completed"
   );
@@ -104,6 +104,19 @@ const Completed = ({ notifications, onViewDetail }) => {
               style={{ backgroundColor: "#16a34a", borderColor: "#16a34a" }}
             >
               View Detail
+            </Button>
+            <Button
+              type="primary"
+              icon={<EyeOutlined />}
+              onClick={() =>
+                onViewResult(
+                  notification.healthCheckUpID,
+                  notification.studentID
+                )
+              }
+              style={{ backgroundColor: "#16a34a", borderColor: "#16a34a" }}
+            >
+              View Result
             </Button>
           </div>
         </Card>

@@ -376,6 +376,8 @@ const StudentHealth = () => {
       if (selectedStudent) {
         dispatch(fetchHealth(selectedStudent));
       }
+
+      window.location.reload();
     } catch (error) {
       console.error("Failed to create health record:", error);
     }
@@ -543,9 +545,16 @@ const StudentHealth = () => {
                   </p>
                   <div className="flex gap-3 mt-3">
                     <Button
-                      type="primary"
+                      type="default"
                       onClick={openModalWithData}
-                      className="bg-blue-500 hover:bg-blue-600"
+                      style={{
+                        backgroundColor: "#10b981", // emerald-500
+                        color: "white",
+                        fontWeight: "600",
+                        borderRadius: "8px",
+                        padding: "8px 16px",
+                        boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+                      }}
                     >
                       View Details
                     </Button>
@@ -561,9 +570,25 @@ const StudentHealth = () => {
                     school.
                   </p>
                   <Button
-                    type="primary"
+                    type="default"
                     onClick={() => setShowHealthForm(true)}
-                    className="mt-3 bg-green-500 hover:bg-green-600"
+                    style={{
+                      marginTop: "12px",
+                      backgroundColor: "#3b82f6", // Tailwind blue-500
+                      color: "white",
+                      fontWeight: "600",
+                      borderRadius: "8px",
+                      padding: "8px 16px",
+                      border: "none",
+                      boxShadow: "0 2px 6px rgba(0, 0, 0, 0.15)",
+                      transition: "background-color 0.3s ease",
+                    }}
+                    onMouseOver={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#2563eb")
+                    } // hover blue-600
+                    onMouseOut={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#3b82f6")
+                    }
                   >
                     Create Health Profile
                   </Button>
@@ -1204,11 +1229,44 @@ const StudentHealth = () => {
               {/* Single Save Button */}
               <div className="text-center mt-8">
                 <Button
-                  type="primary"
+                  type="default"
                   icon={<SaveOutlined />}
                   onClick={handleSave}
                   loading={createLoading}
-                  className="w-full md:w-1/3 h-12 text-lg font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg transform transition-transform hover:scale-105"
+                  style={{
+                    width: "100%",
+                    maxWidth: "400px",
+                    height: "3rem",
+                    fontSize: "1.125rem", // text-lg
+                    fontWeight: 600,
+                    borderRadius: "12px",
+                    background: "linear-gradient(135deg, #3b82f6, #6366f1)", // blue-500 to indigo-500
+                    color: "white",
+                    boxShadow: "0 8px 20px rgba(59, 130, 246, 0.3)", // mạnh hơn chút
+                    border: "none",
+                    transition: "all 0.3s ease-in-out",
+                    transform: "translateY(0)",
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.background =
+                      "linear-gradient(135deg, #2563eb, #4f46e5)";
+                    e.currentTarget.style.boxShadow =
+                      "0 12px 24px rgba(59, 130, 246, 0.4)";
+                    e.currentTarget.style.transform = "scale(1.03)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.background =
+                      "linear-gradient(135deg, #3b82f6, #6366f1)";
+                    e.currentTarget.style.boxShadow =
+                      "0 8px 20px rgba(59, 130, 246, 0.3)";
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
+                  onMouseDown={(e) => {
+                    e.currentTarget.style.transform = "scale(0.98)";
+                  }}
+                  onMouseUp={(e) => {
+                    e.currentTarget.style.transform = "scale(1.03)";
+                  }}
                 >
                   {createLoading ? "Saving..." : "Save All Information"}
                 </Button>
@@ -1235,25 +1293,83 @@ const StudentHealth = () => {
                 icon={<CloseOutlined />}
                 onClick={() => setModalIsEditing(false)}
                 disabled={updateLoading}
+                style={{
+                  backgroundColor: "#f3f4f6", // Tailwind gray-100
+                  color: "#374151", // Tailwind gray-700
+                  fontWeight: 500,
+                  borderRadius: "8px",
+                  padding: "8px 16px",
+                  marginRight: "10px",
+                  border: "none",
+                }}
               >
                 Cancel
               </Button>
+
               <Button
-                type="primary"
+                type="default"
                 icon={<SaveOutlined />}
                 onClick={handleModalSave}
                 loading={updateLoading}
+                style={{
+                  background: "linear-gradient(to right, #3b82f6, #6366f1)", // blue to indigo
+                  color: "white",
+                  fontWeight: 600,
+                  borderRadius: "8px",
+                  padding: "8px 20px",
+                  border: "none",
+                  boxShadow: "0 4px 12px rgba(59, 130, 246, 0.25)",
+                  transition: "all 0.3s ease-in-out",
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background =
+                    "linear-gradient(to right, #2563eb, #4f46e5)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background =
+                    "linear-gradient(to right, #3b82f6, #6366f1)";
+                }}
               >
                 Save
               </Button>
             </>
           ) : (
             <>
-              <Button onClick={() => setViewModal(false)}>Close</Button>
               <Button
-                type="primary"
+                onClick={() => setViewModal(false)}
+                style={{
+                  backgroundColor: "#f3f4f6", // light gray
+                  color: "#374151",
+                  fontWeight: 500,
+                  borderRadius: "8px",
+                  padding: "8px 16px",
+                  marginRight: "10px",
+                  border: "none",
+                }}
+              >
+                Close
+              </Button>
+
+              <Button
+                type="default"
                 icon={<EditOutlined />}
                 onClick={() => setModalIsEditing(true)}
+                style={{
+                  backgroundColor: "#10b981", // Tailwind green-500
+                  color: "white",
+                  fontWeight: 600,
+                  borderRadius: "8px",
+                  padding: "8px 20px",
+                  border: "none",
+                  boxShadow: "0 3px 10px rgba(16, 185, 129, 0.3)",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = "#059669"; // green-600
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = "#10b981"; // reset
+                }}
               >
                 Update
               </Button>

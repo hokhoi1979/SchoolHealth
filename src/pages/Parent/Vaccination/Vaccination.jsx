@@ -10,35 +10,45 @@ import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcr
 import { fetchVaccineParent } from "../../../redux/getVaccineParent/getVaccineParentSlice";
 import { fetchAcceptVaccine } from "../../../redux/getVaccineParent/getVaccineParentAcceptSlice";
 import { fetchDeclineVaccine } from "../../../redux/getVaccineParent/getVaccineParentDeclineSlice";
+import { fetchVaccineParentResult } from "../../../redux/getVaccineParent/getVaccineParentResultSlice";
 import { Spin, Alert, message } from "antd";
 
 const Vaccination = () => {
   const dispatch = useDispatch();
+
+  // Main data
   const { vaccine, loading, error } = useSelector(
     (state) => state.vaccineParent
   );
+  const {
+    vaccine: resultDetail,
+    loading: resultLoading,
+    error: resultError,
+  } = useSelector((state) => state.vaccineParentResult);
+
   const { loading: acceptLoading, error: acceptError } = useSelector(
     (state) => state.vaccineParentAccept
   );
   const { loading: declineLoading, error: declineError } = useSelector(
     (state) => state.vaccineParentDecline
   );
+
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [response, setResponse] = useState({ consent: "yes", reason: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false); // ✅
 
   useEffect(() => {
     dispatch(fetchVaccineParent());
+    dispatch(fetchVaccineParentResult());
   }, [dispatch]);
 
-  // Hàm mapping status từ API sang UI - SỬA LẠI ĐỂ XỬ LÝ CẢ DECLINED VÀ REJECTED
   const mapStatus = (apiStatus) => {
     const status = apiStatus?.toUpperCase();
-
     switch (status) {
       case "ACCEPTED":
         return "completed";
-      case "DECLINED": // THÊM CASE NÀY
+      case "DECLINED":
         return "rejected";
       case "PENDING":
       default:
@@ -60,13 +70,19 @@ const Vaccination = () => {
           )
         : "No date",
       type: "vaccination",
-      status: mapStatus(item.status), // Sử dụng hàm mapping
-      originalStatus: item.status, // Giữ lại status gốc để debug
+      status: mapStatus(item.status),
+      originalStatus: item.status,
       note: item.note,
       respondedAt: item.respondedAt,
       student: item.student,
       vaccinationEvent: item.vaccinationEvent,
     })) || [];
+
+  // ✅ View Detail Handler
+  const handleViewDetail = () => {
+    dispatch(fetchVaccineParentResult());
+    setIsDetailModalOpen(true);
+  };
 
   const handleOpenModal = (notification, consentType = "yes") => {
     setSelectedNotification(notification);
@@ -78,12 +94,11 @@ const Vaccination = () => {
     if (!selectedNotification) return;
     const payload = {
       studentID: selectedNotification.studentID,
-      vaccinationEventID: selectedNotification.vaccinationEventID, // Thêm dòng này
+      vaccinationEventID: selectedNotification.vaccinationEventID,
     };
 
     try {
       if (response.consent === "yes") {
-        console.log("Accepting vaccination with payload:", payload);
         await dispatch(fetchAcceptVaccine(payload));
         message.success("Vaccination accepted successfully!");
       } else {
@@ -91,10 +106,6 @@ const Vaccination = () => {
           message.error("Please provide a reason for rejection");
           return;
         }
-        console.log("Declining vaccination with payload:", {
-          ...payload,
-          note: response.reason,
-        });
         await dispatch(
           fetchDeclineVaccine({
             ...payload,
@@ -109,7 +120,6 @@ const Vaccination = () => {
       setResponse({ consent: "yes", reason: "" });
 
       setTimeout(() => {
-        console.log("Refreshing data...");
         dispatch(fetchVaccineParent());
       }, 1000);
     } catch (error) {
@@ -146,9 +156,17 @@ const Vaccination = () => {
         />
       );
     }
+
     switch (currentTab) {
       case "completed":
-        return <Completed notifications={notificationsItem} />;
+        return (
+          <Completed
+            notifications={notificationsItem}
+            resultsList={resultDetail?.data || []}
+            resultLoading={resultLoading}
+            resultError={resultError}
+          />
+        );
       case "rejected":
         return <Rejected notifications={notificationsItem} />;
       case "pending":
@@ -236,4 +254,5 @@ const Vaccination = () => {
     </div>
   );
 };
+
 export default Vaccination;
