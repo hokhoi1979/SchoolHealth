@@ -3,9 +3,6 @@ import { Outlet } from "react-router-dom";
 import SideBar from "../../components/SideBar/SideBarParent";
 import { toast } from "react-toastify";
 const ParentLayout = () => {
-  useEffect(() => {
-    toast.success("Login successful!");
-  }, []);
   return (
     <div className="flex h-screen">
       <SideBar />

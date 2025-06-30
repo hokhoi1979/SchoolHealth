@@ -26,8 +26,8 @@ const ChangePassword = () => {
   const { loading, error, data } = useSelector((state) => state.changePassword);
 
   const userInfo = {
-    fullname: profile?.fullname,
-    email: profile?.email,
+    fullname: profile?.data?.fullname,
+    email: profile?.data?.email,
   };
 
   useEffect(() => {

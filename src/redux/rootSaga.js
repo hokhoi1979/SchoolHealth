@@ -85,6 +85,7 @@ import watchFetchManagerMedicalEvent from "./manager/ManagerMedicalEvent/manager
 import watchFetchManagerMedicalEventDetail from "./manager/ManagerMedicalEvent/managerMedicalEventDetailSaga";
 
 import watchGetProfileSaga from "./getProflie/getProfileSaga";
+import watchFetchStudentDetailProfile from "./getProflie/getProfileStudentSaga";
 import watchFetchChangePassword from "./ChangePassword/changePasswordSaga";
 import watchFetchDetailRequestManager from "./manager/GetDetailRequestManager/getDetailRequestManagerSaga";
 import watchPostAiChat from "./AI_Chat/chatBoxSaga";
@@ -210,5 +211,6 @@ export default function* rootSaga() {
 
     watchGetProfileSaga(),
     watchFetchChangePassword(),
+    watchFetchStudentDetailProfile(),
   ]);
 }
