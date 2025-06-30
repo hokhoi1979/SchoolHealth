@@ -6,6 +6,10 @@ import {
 } from "./stopMedicineSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
+import {
+  fetchMedicineRequestFail,
+  fetchMedicineRequestSuccess,
+} from "./MedicineRequestSlice";
 
 const URL_API = import.meta.env.VITE_API_URL;
 
@@ -28,6 +32,20 @@ function* stopMedicineSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(fetchStopMedicineSuccess(response.data));
       toast.success(response.data.message);
+
+      let url = `${URL_API}/parent/v1/medicineRequest`;
+      const fetch = yield call(axios.get, url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (fetch.status === 200 || fetch.status === 201) {
+        yield put(fetchMedicineRequestSuccess(fetch.data));
+        console.log(fetch.data);
+      } else {
+        yield put(fetchMedicineRequestFail(error));
+      }
     } else {
       yield put(fetchStopMedicineFail(error));
       toast.error(response.data.message);

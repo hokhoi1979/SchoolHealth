@@ -26,8 +26,8 @@ const ChangePassword = () => {
   const { loading, error, data } = useSelector((state) => state.changePassword);
 
   const userInfo = {
-    fullname: profile?.fullname,
-    email: profile?.email,
+    fullname: profile?.data?.fullname,
+    email: profile?.data?.email,
   };
 
   useEffect(() => {
@@ -150,8 +150,12 @@ const ChangePassword = () => {
                     className="border-4 border-blue-100"
                   />
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    {profile.data.fullname}
+                    {userInfo?.fullname}
                   </h3>
+                  <p className="text-gray-600 text-sm">
+                    Email: {userInfo?.email}
+                    {profile.data.fullname}
+                  </p>
                   <p className="text-gray-600 text-sm">
                     Email: {profile.data.email}
                   </p>

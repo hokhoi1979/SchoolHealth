@@ -116,13 +116,26 @@ const DetailModal = ({ open, onclose, checkupDetail, loading, error }) => {
 
         {/* Target Grades */}
         {detail.targets && detail.targets.length > 0 && (
-          <Card title="Target Grades" size="small">
+          <Card title="Targets" size="small">
             <div className="flex flex-wrap gap-2">
-              {detail.targets.map((target, index) => (
-                <Tag key={index} color="blue">
-                  Grade {target.grade}
-                </Tag>
-              ))}
+              {/* {detail.targetType === "SCHOOL" &&
+                detail.targets.map((school, idx) => (
+                  <Tag key={idx} color="blue">
+                    {school.school || "All Schools"}
+                  </Tag>
+                ))} */}
+              {detail.targetType === "GRADE" &&
+                detail.targets.map((grade, idx) => (
+                  <Tag key={idx} color="purple">
+                    Grade {grade.grade}
+                  </Tag>
+                ))}
+              {detail.targetType === "CLASS" &&
+                detail.targets.map((cls, idx) => (
+                  <Tag key={idx} color="geekblue">
+                    {cls.className}
+                  </Tag>
+                ))}
             </div>
           </Card>
         )}
@@ -144,15 +157,6 @@ const DetailModal = ({ open, onclose, checkupDetail, loading, error }) => {
                           {item.description || "N/A"}
                         </Text>
                       )}
-                      <div className="flex items-center gap-4">
-                        <Tag color="purple" size="small">
-                          {item.inputType}
-                        </Tag>
-                        <Text className="text-xs text-gray-500">
-                          Added:{" "}
-                          {new Date(item.createdAt).toLocaleDateString("vi-VN")}
-                        </Text>
-                      </div>
                     </div>
                   </div>
                 </Card>

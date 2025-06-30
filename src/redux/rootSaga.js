@@ -96,6 +96,9 @@ import watchUpdateManagerSupply from "./manager/RejectRequestManager/rejectReque
 import watchRejectMedicineSupplyManager from "./manager/Reject/rejectMedicineSupplySaga";
 import watchFetchManagerMedicalEvent from "./manager/ManagerMedicalEvent/managerMedicalEventSaga";
 import watchFetchManagerMedicalEventDetail from "./manager/ManagerMedicalEvent/managerMedicalEventDetailSaga";
+
+import watchFetchStudentDetailProfile from "./getProflie/getProfileStudentSaga";
+import watchPostAiChat from "./AI_Chat/chatBoxSaga";
 import watchFetchCheckupManager from "./MedicalCheckUpManager/GetAllCheckUpManager/getAllCheckUpManagerSaga";
 import watchPostManagerCheckup from "./MedicalCheckUpManager/PostCheckUpManager/postCheckUpManagerSaga";
 import watchPatchCheckupConfirmManager from "./MedicalCheckUpManager/ConfirmMedicalCheckupManager/confirmMedicalCheckupManagerSaga";
@@ -211,6 +214,16 @@ export default function* rootSaga() {
     watchDeleteManagerMedicalCheckup(),
     watchUpdateMedicalCheckupManager(),
 
+    // watchFetchVaccineResult(),
+    watchFetchVaccineResult(),
+    watchPostResultSaga(),
+    watchFetchCheckup(),
+    watchUpdateVaccineResult(),
+    watchFetchProfileDetail(),
+
+    watchHealthProfileSaga(),
+
+    watchFetchStudentDetailProfile(),
     // AI Chat
     watchAiChat(),
     watchGetAllChatBoxAi(),

@@ -97,6 +97,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"} `}
+            onClick={() => {
+              setClick("student_health");
+              navigate("/parent/student_health");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -111,11 +115,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("student_health")}
-                to={"/parent"}
-                className="text-[18px]"
-              >
+              <Link to={"/parent/student_health"} className="text-[18px]">
                 Student Health
               </Link>
             )}
@@ -127,6 +127,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
+            onClick={() => {
+              setClick("medical_request");
+              navigate("/parent/medical_request");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -141,11 +145,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("medical_request")}
-                to={"/parent/medical_request"}
-                className="text-[18px]"
-              >
+              <Link to={"/parent/medical_request"} className="text-[18px]">
                 Medical Request
               </Link>
             )}
@@ -157,6 +157,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
+            onClick={() => {
+              setClick("vaccination_confirm");
+              navigate("/parent/vaccination_confirm");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -175,11 +179,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("vaccination_confirm")}
-                to={"/parent/vaccination_confirm"}
-                className="text-[18px]"
-              >
+              <Link to={"/parent/vaccination_confirm"} className="text-[18px]">
                 Vaccination
               </Link>
             )}
@@ -191,6 +191,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
+            onClick={() => {
+              setClick("check_up_confirm");
+              navigate("/parent/check_up_confirm");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -205,11 +209,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("check_up_confirm")}
-                to={"/parent/check_up_confirm"}
-                className="text-[18px]"
-              >
+              <Link to={"/parent/check_up_confirm"} className="text-[18px]">
                 Medical Checkup
               </Link>
             )}
@@ -221,6 +221,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
+            onClick={() => {
+              setClick("history");
+              navigate("/parent/history");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -235,11 +239,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("history")}
-                to={"/parent/history"}
-                className="text-[18px]"
-              >
+              <Link to={"/parent/history"} className="text-[18px]">
                 History & Report
               </Link>
             )}
@@ -251,6 +251,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
+            onClick={() => {
+              setClick("information");
+              navigate("/parent/information");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -265,11 +269,7 @@ const SideBar = () => {
               <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("information")}
-                to={"/parent/information"}
-                className="text-[18px]"
-              >
+              <Link to={"/parent/information"} className="text-[18px]">
                 Parent Information
               </Link>
             )}
@@ -281,6 +281,10 @@ const SideBar = () => {
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
+            onClick={() => {
+              setClick("change_password");
+              navigate("/parent/change_password");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -295,11 +299,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("change_password")}
-                to={"/parent/change_password"}
-                className="text-[18px]"
-              >
+              <Link to={"/parent/change_password"} className="text-[18px]">
                 Change Password
               </Link>
             )}
