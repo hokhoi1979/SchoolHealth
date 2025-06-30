@@ -399,6 +399,12 @@ function MaterialManage() {
                         image,
                       })
                     );
+                    setName("");
+                    setStock("");
+                    setDescription("");
+                    setUsage("");
+                    setCategory(null);
+                    setImage(null);
                     setOpen(false);
                   }}
                   style={{

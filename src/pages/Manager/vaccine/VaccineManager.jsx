@@ -18,6 +18,7 @@ import "./style.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TextArea from "antd/es/input/TextArea";
+import { AppFooter } from "../../../components/Footer/AppFooter";
 
 const VaccineManager = () => {
   const [open, setOpen] = useState(false);
@@ -484,9 +485,7 @@ const VaccineManager = () => {
   const renderTargetSelection = () => {
     switch (targetType) {
       case "school":
-        return (
-          <div className="text-gray-600 italic">Áp dụng cho toàn trường</div>
-        );
+        return <div className="text-gray-600 italic">School</div>;
 
       case "class":
         return (
@@ -516,7 +515,7 @@ const VaccineManager = () => {
       case "grade":
         return (
           <div className="space-y-3">
-            <div className="font-medium mb-2">Chọn khối:</div>
+            <div className="font-medium mb-2">Pick Grade:</div>
             <div className="flex gap-4">
               {availableGrades.map((grade) => (
                 <Checkbox
@@ -800,6 +799,12 @@ const VaccineManager = () => {
                           }%`,
                         }}
                       ></div>
+                      <div className="text-right text-sm text-gray-500">
+                        {item.total && item.total > 0
+                          ? Math.round((item.participate / item.total) * 100)
+                          : 0}
+                        %
+                      </div>
                     </div>
                   </div>
                 )}
@@ -814,11 +819,11 @@ const VaccineManager = () => {
                 </div>
 
                 <div>
-                  {item.status !== "CONFIRMED" && (
+                  {item.status == "DRAFT" && (
                     <Popconfirm
-                      title="Bạn có chắc muốn xoá vaccine này không?"
+                      title="Are you sure about delete this vaccine ?"
                       okText="DELETE"
-                      cancelText="Hủy"
+                      cancelText="Cancel"
                       onConfirm={() => handleDeleteVaccine(item?.id)}
                     >
                       <Button danger>DELETE</Button>
@@ -829,9 +834,9 @@ const VaccineManager = () => {
                 <div className="w-full mr-10 ">
                   {item.status !== "SUCCESSED" && (
                     <Popconfirm
-                      title="Bạn có chắc muốn xác nhận vaccine này không?"
+                      title="Are you sure about confirm this vaccine ?"
                       okText="CONFIRM"
-                      cancelText="Hủy"
+                      cancelText="Cancel"
                       onConfirm={() => handleEndEvent(item?.id)}
                     >
                       <Button className="w-full">End Event</Button>
@@ -843,7 +848,8 @@ const VaccineManager = () => {
           ))}
         </div>
       </div>
-
+      <div className="w-full h-30"></div>
+      <AppFooter />
       {/* modal for create new medical checkup */}
       <Modal
         open={open}
@@ -1090,7 +1096,7 @@ const VaccineManager = () => {
                   style={{ width: "16px", height: "16px" }}
                 />
                 <span style={{ fontWeight: "600", fontSize: "14px" }}>
-                  Nội dung kiểm tra (thuốc):
+                  Content Check
                 </span>
               </div>
 
@@ -1115,7 +1121,7 @@ const VaccineManager = () => {
                   fontWeight: "500",
                 }}
               >
-                [+] Thêm mục kiểm tra
+                [+] Add check
               </Button>
 
               {items.length > 0 && (
@@ -1150,7 +1156,7 @@ const VaccineManager = () => {
                             fontWeight: "600",
                           }}
                         >
-                          Tên thuốc
+                          Name of Medicine/Supply
                         </th>
                         <th
                           style={{
@@ -1159,7 +1165,7 @@ const VaccineManager = () => {
                             fontWeight: "600",
                           }}
                         >
-                          Số lượng dự kiến
+                          Quantity Planned
                         </th>
                         <th
                           style={{
@@ -1177,7 +1183,7 @@ const VaccineManager = () => {
                             fontWeight: "600",
                           }}
                         >
-                          Ghi chú
+                          Notes
                         </th>
                         <th
                           style={{
@@ -1186,7 +1192,7 @@ const VaccineManager = () => {
                             fontWeight: "600",
                           }}
                         >
-                          Xóa
+                          Delete
                         </th>
                       </tr>
                     </thead>
@@ -1242,8 +1248,8 @@ const VaccineManager = () => {
                                 fontSize: "14px",
                               }}
                             >
-                              <option value="">Chọn</option>
-                              <optgroup label="Thuốc">
+                              <option value="">Pick</option>
+                              <optgroup label="Medicine">
                                 {medicineSupply
                                   .filter((m) => m.type === "medicine")
                                   .map((m) => (
@@ -1255,7 +1261,7 @@ const VaccineManager = () => {
                                     </option>
                                   ))}
                               </optgroup>
-                              <optgroup label="Vật tư">
+                              <optgroup label="Supply">
                                 {medicineSupply
                                   .filter((s) => s.type === "supply")
                                   .map((s) => (

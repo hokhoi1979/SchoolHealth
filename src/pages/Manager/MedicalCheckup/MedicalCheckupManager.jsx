@@ -58,6 +58,7 @@ function MedicalCheckup() {
   useEffect(() => {
     dispatch(fetchClassManager());
   }, []);
+
   const { classManager } = useSelector((state) => state.getManagerClass);
   const classList = classManager?.data || [];
 
@@ -112,15 +113,17 @@ function MedicalCheckup() {
         date: isValid ? scheduledDate.format("DD/MM/YYYY") : null,
         time: isValid ? scheduledDate.format("HH:mm") : null,
         status: item.status,
-        totalStudent: item.studentResponseCount?.totalStudent || 0,
-        participate: item.studentResponseCount?.studentsAcceptCount || 0,
+        totalStudent: item.studentResponseCount?.totalStudent,
+        participate: item.studentResponseCount?.studentsAcceptCount,
         targets: item.HealthCheckupTarget || [],
       };
     });
 
     setData(formatted);
   }, [checkupManagerList]);
-
+  const avg = (Number(data.participate) / Number(data.totalStudent)) * 100;
+  console.log("avg", avg);
+  console.log("Student", data);
   useEffect(() => {
     dispatch(fetchCheckupManager());
   }, [dispatch]);
@@ -441,7 +444,7 @@ function MedicalCheckup() {
       </h1>
       <div className="pl-5 mt-5 flex gap-5">
         <div className="">
-          <Button className="ml-[1000px]" onClick={showModal}>
+          <Button className="ml-[950px]" onClick={showModal}>
             Create a new medical event
           </Button>
         </div>
@@ -449,18 +452,16 @@ function MedicalCheckup() {
       <div className="grid grid-cols-3 mt-5 pl-5 gap-6 items-stretch">
         {data.map((item) => {
           const percentage =
-            item.totalStudent.length > 0
-              ? (
-                  (item.studentResponseCount.studentsAcceptCount /
-                    item.studentResponseCount.totalStudent) *
-                  100
-                ).toFixed(0)
+            Number(item.totalStudent) > 0
+              ? Math.round(
+                  (Number(item.participate) / Number(item.totalStudent)) * 100
+                )
               : 0;
 
           return (
             <div
               key={item.id}
-              className="bg-white p-6 rounded-2xl flex flex-col justify-between shadow-sm h-[420px]"
+              className="bg-white p-6 rounded-2xl flex flex-col justify-between shadow-sm h-[370px]"
             >
               {/* TOP: Trạng thái + icon */}
               <div className="flex justify-between">
@@ -475,7 +476,7 @@ function MedicalCheckup() {
                 </Button>
 
                 <div className="flex gap-2">
-                  <Tooltip title="Xem chi tiết">
+                  {/* <Tooltip title="Xem chi tiết">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width={25}
@@ -489,9 +490,9 @@ function MedicalCheckup() {
                         d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
                       ></path>
                     </svg>
-                  </Tooltip>
+                  </Tooltip> */}
 
-                  <Tooltip title="Gửi xác nhận phụ huynh">
+                  <Tooltip title="Send To Parent">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width={25}
@@ -512,40 +513,159 @@ function MedicalCheckup() {
                 {(item?.targets ?? []).length === 0 ? (
                   <span>SCHOOL</span>
                 ) : (
-                  item.targets.map((target, index) => (
-                    <span key={index}>
-                      {target.className
-                        ? target.className
-                        : target.grade !== undefined
-                        ? `Khối ${target.grade}`
-                        : target.name ?? "?"}
-                      ,{" "}
-                    </span>
-                  ))
+                  <span>
+                    {item.targets
+                      .map((target) =>
+                        target.className
+                          ? target.className
+                          : target.grade !== undefined
+                          ? ` ${target.grade}`
+                          : target.name ?? "?"
+                      )
+                      .join(", ")}
+                  </span>
                 )}
-
+                <div className="flex gap-2.5 mt-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <mask id="lineMdFileDocumentMinus0">
+                      <g
+                        fill="none"
+                        stroke="#fff"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-dasharray="64"
+                          stroke-dashoffset="64"
+                          d="M13.5 3l5.5 5.5v11.5c0 0.55 -0.45 1 -1 1h-12c-0.55 0 -1 -0.45 -1 -1v-16c0 -0.55 0.45 -1 1 -1Z"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            dur="0.6s"
+                            values="64;0"
+                          />
+                        </path>
+                        <path d="M14.5 3.5l2.25 2.25l2.25 2.25z" opacity="0">
+                          <animate
+                            fill="freeze"
+                            attributeName="d"
+                            begin="0.6s"
+                            dur="0.2s"
+                            values="M14.5 3.5l2.25 2.25l2.25 2.25z;M14.5 3.5l0 4.5l4.5 0z"
+                          />
+                          <set
+                            fill="freeze"
+                            attributeName="opacity"
+                            begin="0.6s"
+                            to="1"
+                          />
+                        </path>
+                        <path
+                          stroke-dasharray="8"
+                          stroke-dashoffset="8"
+                          d="M9 13h6"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            begin="0.8s"
+                            dur="0.2s"
+                            values="8;0"
+                          />
+                        </path>
+                        <path
+                          stroke-dasharray="4"
+                          stroke-dashoffset="4"
+                          d="M9 17h3"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            begin="1s"
+                            dur="0.2s"
+                            values="4;0"
+                          />
+                        </path>
+                        <path
+                          fill="#000"
+                          fill-opacity="0"
+                          stroke="none"
+                          d="M19 13c3.31 0 6 2.69 6 6c0 3.31 -2.69 6 -6 6c-3.31 0 -6 -2.69 -6 -6c0 -3.31 2.69 -6 6 -6Z"
+                        >
+                          <set
+                            fill="freeze"
+                            attributeName="fill-opacity"
+                            begin="1.2s"
+                            to="1"
+                          />
+                        </path>
+                        <path
+                          stroke-dasharray="8"
+                          stroke-dashoffset="8"
+                          d="M16 19h6"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            begin="1.2s"
+                            dur="0.2s"
+                            values="8;0"
+                          />
+                        </path>
+                      </g>
+                    </mask>
+                    <rect
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      mask="url(#lineMdFileDocumentMinus0)"
+                    />
+                  </svg>
+                  <p>{item.description}</p>
+                </div>
                 <div className="flex gap-2.5 mt-3">
                   <CalendarIcon />
                   <p>{item.date || "Chưa có ngày"}</p>
                 </div>
 
-                <div className="flex gap-2.5 mt-3">
+                {/* <div className="flex gap-2.5 mt-3">
                   <ClockIcon />
                   <p>{item.time || "Chưa có giờ"}</p>
+                </div> */}
+                <div className="flex gap-2.5 mt-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#5B5454"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m17 3l4 4m-2-2l-4.5 4.5m-3-3l6 6m-1-1L10 18H6v-4l6.5-6.5m-5 5L9 14m1.5-4.5L12 11M3 21l3-3"
+                    />
+                  </svg>
+                  <p>School</p>
                 </div>
               </div>
 
-              <div className="space-y-3 mt-4">
+              <div className="space-y-3 ">
                 {item?.status !== "DRAFT" && (
                   <>
                     <div className="flex justify-between text-sm text-gray-600">
                       <span>Confirm Participate</span>
                       <span>
-                        {item?.data?.checkUpEntities?.studentResponseCount
-                          ?.studentsAcceptCount ?? 0}
-                        /
-                        {item?.data?.checkUpEntities?.studentResponseCount
-                          ?.totalStudent ?? 0}
+                        {item.participate ?? 0}/{item.totalStudent ?? 0}
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -560,10 +680,13 @@ function MedicalCheckup() {
                   </>
                 )}
 
-                <div className="flex gap-2.5">
-                  {item.status !== "ENDED" && item.status !== "CONFIRMED" && (
+                <div className="flex gap-2.5 ">
+                  {item.status == "DRAFT" && (
                     <>
-                      <Button onClick={() => handleUpdateCheckup(item)}>
+                      <Button
+                        className="w-[700px]"
+                        onClick={() => handleUpdateCheckup(item)}
+                      >
                         Update
                       </Button>
                       <Popconfirm
@@ -576,16 +699,18 @@ function MedicalCheckup() {
                       </Popconfirm>
                     </>
                   )}
-                  {item.status !== "SUCCESSED" && (
-                    <Popconfirm
-                      title="Are you sure you want to end this medical checkup?"
-                      onConfirm={() => handleEndCheckup(item?.id)}
-                      okText="Confirm"
-                      cancelText="Cancel"
-                    >
-                      <Button className="w-full">End Event</Button>
-                    </Popconfirm>
-                  )}
+                  <div className="w-full  ">
+                    {item.status !== "SUCCESSED" && (
+                      <Popconfirm
+                        title="Are you sure you want to end this medical checkup?"
+                        onConfirm={() => handleEndCheckup(item?.id)}
+                        okText="Confirm"
+                        cancelText="Cancel"
+                      >
+                        <Button className="w-full">End Event</Button>
+                      </Popconfirm>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

@@ -40,7 +40,7 @@ function ImportManager() {
   const [selectedClassify, setSelectedClassify] = useState("");
   const [newClassify, setNewClassify] = useState("");
   const paginatedCategories = categories;
-
+  const [imageFile, setImageFile] = useState(null);
   const { detailManagerClassify = [] } = useSelector(
     (state) => state.getDetailManagerClassify
   );
@@ -174,8 +174,8 @@ function ImportManager() {
     formData.append("type", selectedMedicine.type);
     formData.append("classifyID", classifyIDToUse);
 
-    if (selectedMedicine.image instanceof File) {
-      formData.append("image", selectedMedicine.image);
+    if (imageFile) {
+      formData.append("image", imageFile); // dùng file thật để gửi
     }
 
     dispatch(
@@ -396,7 +396,13 @@ function ImportManager() {
 
       {/* Category Modal */}
       <Modal
-        title={`Medicines in ${selectedCategory?.name}`}
+        title={
+          <div
+            style={{ textAlign: "center", fontWeight: "600", fontSize: "18px" }}
+          >
+            Medicines in {selectedCategory?.name}
+          </div>
+        }
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
@@ -448,13 +454,15 @@ function ImportManager() {
                 showUploadList={false}
                 beforeUpload={(file) => {
                   const reader = new FileReader();
+
                   reader.onload = (e) => {
-                    const newImage = e.target.result;
-                    handleFieldChange("image", file);
-                    handleFieldChange("previewImage", newImage);
+                    const preview = e.target.result;
+                    handleFieldChange("previewImage", preview); // chỉ để xem
+                    setImageFile(file); // 👉 lưu lại file gốc
                   };
+
                   reader.readAsDataURL(file);
-                  return false;
+                  return false; // ngăn upload tự động
                 }}
               >
                 <div className="w-40 h-32 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center hover:border-blue-400 cursor-pointer overflow-hidden">

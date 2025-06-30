@@ -109,7 +109,6 @@ const UpdateCheckupModal = ({
         })
       );
       onCancel();
-      toast.success("Update Success");
     } catch (error) {
       toast.error("Update Failed");
       console.error("API ERROR:", error);

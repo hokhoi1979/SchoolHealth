@@ -6,6 +6,10 @@ import {
   patchManagerSuccessEndMedicalCheckup,
 } from "./endEventMedicalCheckUpManagerSlice";
 import { toast } from "react-toastify";
+import {
+  fetchCheckupManagerFail,
+  fetchCheckupManagerSuccess,
+} from "../GetAllCheckUpManager/getAllCheckUpManagerSlice";
 
 const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
@@ -30,6 +34,19 @@ function* patchEndMedicalCheckupManagerSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(patchManagerSuccessEndMedicalCheckup(response.data));
       toast.success("End Event Success");
+
+      const fetch = yield call(axios.get, `${URL_API}/manager/v1/check-up`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (fetch.status === 200 || fetch.status === 201) {
+        yield put(fetchCheckupManagerSuccess(fetch.data));
+      } else {
+        yield put(fetchCheckupManagerFail(fetch.status));
+      }
     } else {
       yield put(patchManagerFailEndMedicalCheckup(response.status));
     }

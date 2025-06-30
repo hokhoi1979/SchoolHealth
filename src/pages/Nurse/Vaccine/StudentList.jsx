@@ -400,7 +400,7 @@ function StudentList() {
       )}
       {selectedOption === "send" && (
         <div className="flex gap-5 pl-5">
-          <SentParents studentList={data} />
+          <SentParents studentList={data} id={id} />
         </div>
       )}
       <div className="h-20"></div>

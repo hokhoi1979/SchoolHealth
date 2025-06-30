@@ -7,6 +7,8 @@ import { fetchDetailRequest } from "../../../redux/manager/GetDetailRequestManag
 import { updateManagerSupply } from "../../../redux/manager/RejectRequestManager/rejectRequestManagerSlice";
 import { rejectManagerMedicineSupply } from "../../../redux/manager/Reject/rejectMedicineSupplySlice";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
+import { AppFooter } from "../../../components/Footer/AppFooter";
+import img from "../../../img/12945646.png";
 
 function RequestManager() {
   const [data, setData] = useState([]);
@@ -85,17 +87,35 @@ function RequestManager() {
               key={item.id}
               className="h-auto bg-white rounded-2xl p-5 relative flex flex-col justify-between"
             >
-              <p className="text-lg font-semibold">Note:</p>
-              <p className="mb-3">{item.note}</p>
+              <div className="w-full flex justify-center items-center mb-4">
+                <div>
+                  <img
+                    src={img}
+                    alt="supply"
+                    className="w-16 h-16 object-contain"
+                  />
+                </div>
+              </div>
 
-              <p className="text-lg font-semibold">Status:</p>
-              <p className="mb-3">{item.status}</p>
+              <div className="grid grid-cols-2 gap-x-30 text-[18px] text-gray-700 mt-4">
+                <div>
+                  <p className="font-semibold">Note:</p>
+                  <p>{item.note}</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Status:</p>
+                  <p className="capitalize">{item.status}</p>
+                </div>
 
-              <p className="text-lg font-semibold">Created At:</p>
-              <p className="mb-3">{item.createdAt}</p>
-
-              <p className="text-lg font-semibold">Created By:</p>
-              <p>{item.createdBy}</p>
+                <div>
+                  <p className="font-semibold">Created At:</p>
+                  <p>{new Date(item.createdAt).toLocaleDateString("en-GB")}</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Created By:</p>
+                  <p>{item.createdBy}</p>
+                </div>
+              </div>
 
               <div
                 className="absolute right-2 top-2 cursor-pointer"
@@ -168,8 +188,9 @@ function RequestManager() {
           ))}
         </div>
       </div>
+      <div className="w-full h-30 mt-13 "></div>
+      <AppFooter />
 
-      {/* 👉 Modal hiển thị chi tiết */}
       <Modal
         open={showModal}
         onCancel={handleCloseModal}

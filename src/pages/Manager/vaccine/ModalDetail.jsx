@@ -27,7 +27,7 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
       }}
       footer={[
         <Button key="cancel" onClick={cancel}>
-          Huỷ
+          Cancel
         </Button>,
         <Button
           key="confirm"
@@ -37,7 +37,7 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
             cancel(); // đóng modal sau khi gửi
           }}
         >
-          Gửi thông báo
+          Send Notification
         </Button>,
       ]}
       title={

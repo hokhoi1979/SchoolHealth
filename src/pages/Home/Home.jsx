@@ -17,11 +17,12 @@ import bs from "../../img/bs.png";
 import { AppFooter } from "../../components/Footer/AppFooter";
 import newspic from "../../img/newspic.jpg";
 import { Button } from "antd";
+import AIChatWidget from "../Student/AI/AIChatWidget ";
 
 function Home() {
   return (
     <>
-      <Header />
+      <Header className="sticyky" />
       <div className="flex flex-col min-h-screen">
         <div className="flex flex-col flex-1">
           <div className="container w-full h-[100px] mt-20 mb-4">
@@ -134,7 +135,9 @@ function Home() {
                 </div>
               </div>
             </div>
-
+            <div className=" fixed bottom-8 right-8 z-[9999]">
+              <AIChatWidget />
+            </div>
             <div className="relative mt-10 w-full h-[500px] ">
               <img
                 src={bs3}

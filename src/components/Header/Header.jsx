@@ -1,6 +1,6 @@
 import logo from "../../img/icon.png";
 import { Link } from "react-router";
-import bs3 from "../../img/bs3.jpg";
+import bs3 from "../../img/nen2.jpg";
 import user from "../../img/user.png";
 import logout from "../../img/logout.png";
 import contact from "../../img/contact.png";
@@ -104,7 +104,7 @@ const Header = ({ object }) => {
                 </Link>
               </div>
 
-              <div className="flex gap-2">
+              {/* <div className="flex gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
@@ -134,7 +134,7 @@ const Header = ({ object }) => {
                 >
                   Contact
                 </Link>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex items-center gap-5 font-bold text-lg">
@@ -187,21 +187,21 @@ const Header = ({ object }) => {
           </div>
         </div>
       </header>
-
+      <div className="mb-2"></div>
       <div className="relative w-full h-[600px] pt-[100px]">
         <img
           src={bs3}
           alt="Health Care Background"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-[100%] object-cover object-center"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-black bold text-center px-4">
           <h1 className="text-5xl font-serif mb-2">Health Care</h1>
           <p className="text-lg mb-4">
             School health team - Accompanying students’ health
           </p>
-          <button className="bg-white text-black py-1 px-3 text-sm rounded hover:bg-gray-200 transition">
+          {/* <button className="bg-white text-black py-1 px-3 text-sm rounded hover:bg-gray-200 transition">
             <p className="font-serif">Click here</p>
-          </button>
+          </button> */}
         </div>
       </div>
     </>

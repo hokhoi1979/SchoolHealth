@@ -72,6 +72,7 @@ import StudentLayout from "../pages/Student/StudentLayout";
 import StudentInformation from "../pages/Student/StudentInformation/StudentInformation";
 import ChangePassword from "../pages/Student/ChangePassword/ChangePassword";
 import PrivateRoute from "./privateRoute";
+import News from "../pages/News/news";
 
 const router = createBrowserRouter([
   {
@@ -79,6 +80,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "", element: <Home /> },
+      { path: "/news", element: <News /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
 

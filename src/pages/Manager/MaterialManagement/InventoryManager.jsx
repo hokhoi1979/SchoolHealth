@@ -312,7 +312,7 @@ function InventoryManager() {
           </Button>,
         ]}
         centered
-        width={220} // ép nhỏ lại
+        width={220}
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-3 py-3">
           {/* Name */}

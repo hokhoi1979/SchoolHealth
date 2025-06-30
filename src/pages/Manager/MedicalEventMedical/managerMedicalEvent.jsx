@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchManagerMedicalEvent } from "../../../redux/manager/ManagerMedicalEvent/managerMedicalEventSlice";
 import { fetchManagerMedicalEventDetail } from "../../../redux/manager/ManagerMedicalEvent/managerMedicalEventDetailSlice";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
+import { AppFooter } from "../../../components/Footer/AppFooter";
 
 const MedicalEventList = () => {
   const [showModal, setShowModal] = useState(false);
@@ -106,7 +107,8 @@ const MedicalEventList = () => {
           </div>
         ))}
       </div>
-
+      <div className="w-full h-30 mt-13"></div>
+      <AppFooter />
       {/* Modal Detail */}
       <Modal
         title={
