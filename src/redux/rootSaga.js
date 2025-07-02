@@ -110,6 +110,12 @@ import watchUpdateMedicalCheckupManager from "./MedicalCheckUpManager/UpdateMedi
 import watchAiChat from "./AI_Chat/chatBoxSaga";
 import watchGetAllChatBoxAi from "./AI_Chat/getChaxBoxSaga";
 import watchStopProvideMedicine from "./medicineRequestNurse/stopProvideMedicine/stopProvideMedicineSaga";
+import watchStudentMeeting from "./checkupNurse/listStudentMeeting/listStudentMeetingSaga";
+import watchCheckTime from "./checkupNurse/checkTime/checkTimeSaga";
+import watchCreateMeeting from "./checkupNurse/createMeeting/createMeetingSaga";
+import watchMeeted from "./checkupNurse/meeted/meetedSaga";
+import watchDeleteMeeting from "./checkupNurse/deleteMeeting/deleteMeetingSaga";
+import watchDeleteStudent from "./checkupNurse/deleteStudent/deleteStudentSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -181,6 +187,12 @@ export default function* rootSaga() {
     watchFetchCheckupResult(),
     watchSendCheckupParent(),
     watchStopProvideMedicine(),
+    watchStudentMeeting(),
+    watchCheckTime(),
+    watchCreateMeeting(),
+    watchMeeted(),
+    watchDeleteMeeting(),
+    watchDeleteStudent(),
 
     //Manager
     watchFetchManagerMedical(),

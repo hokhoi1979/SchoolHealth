@@ -508,10 +508,10 @@ function Import() {
           </p>
         </div>
 
-        <div className=" p-6 space-y-6 font-serif text-gray-800 rounded-2xl mt-5">
+        <div className=" p-6 space-y-6 font-serif text-gray-800 rounded-2xl mt-5 bg-gradient-to-br from-pink-50 to-blue-50 ">
           {detailRequest?.data ? (
             <>
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-6 ">
                 <div className="space-y-3 ">
                   <h3 className="text-lg font-semibold flex items-center gap-2">
                     <svg
