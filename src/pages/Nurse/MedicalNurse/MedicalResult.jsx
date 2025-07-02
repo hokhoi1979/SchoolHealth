@@ -196,11 +196,6 @@ function MedicalResult({ id }) {
         </p>
 
         <div className="mt-5">
-          <p className="font-serif text-sm">
-            Vaccination day:{" "}
-            <span className="text-gray-500">Flu vaccination (15/06/2025)</span>
-          </p>
-
           <Table
             columns={columnsRecord}
             dataSource={dataRecord}
