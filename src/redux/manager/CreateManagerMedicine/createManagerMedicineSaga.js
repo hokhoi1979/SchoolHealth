@@ -49,7 +49,7 @@ function* managerCreateMedicineSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(postManagerSucessMedicine(response.data));
       toast.success("Create Medicine Success");
-      const { page, limit } = action.payload || {};
+      const { page, limit = 100 } = action.payload || {};
 
       const fetch = yield call(
         axios.get,

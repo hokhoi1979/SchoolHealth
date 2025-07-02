@@ -106,6 +106,8 @@ import checkupResultReducer from "./checkupNurse/resultCheckup/resultCheckupSlic
 import sendCheckupParentReducer from "./checkupNurse/sendCheckupToParent/sendCheckupParentSlice";
 
 import studentDetailProfileReducer from "./getProflie/getProfileStudentSlice";
+import getDetailCheckupManagerReducer from "./MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSlice";
+import getDetailVaccineManagerReducer from "./manager/GetDetailVaccineManager/getDetailVaccineManagerSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -205,6 +207,8 @@ const rootReducer = combineReducers({
   endEventMedicalCheckUpManager: endEventMedicalCheckUpManagerReducer,
   deleteMedicalCheckupManager: deleteMedicalCheckupManagerReducer,
   managerUpdateMedicalCheckup: managerUpdateMedicalCheckupReducer,
+  getDetailCheckupManager: getDetailCheckupManagerReducer,
+  getDetailVaccineManager: getDetailVaccineManagerReducer,
 
   parentProfileHealth: healthProfileReducer,
 

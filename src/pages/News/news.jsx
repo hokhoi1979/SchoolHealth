@@ -11,6 +11,7 @@ const New = () => {
       <div>
         <Content />
       </div>
+      <div className="h-50"></div>
       <AppFooter />
     </div>
   );

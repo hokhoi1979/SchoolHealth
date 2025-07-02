@@ -66,9 +66,11 @@ function* patchVaccineConfirmManagerSaga(action) {
       toast.error("Confirm Error");
     }
   } catch (error) {
-    const errMsg =
-      error?.response?.data?.message || error.message || "Unknown error";
-    yield put(patchMangerFailConfirmVaccine(errMsg));
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`Confirm Vaccine Fail: ${errorMessage}`);
+    yield put(patchMangerFailConfirmVaccine(errorMessage));
+    console.error("Confirm Vaccine Error:", error);
   }
 }
 

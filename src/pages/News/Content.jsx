@@ -1,39 +1,24 @@
 import { useState } from "react";
 import {
   Layout,
-  Menu,
   Input,
   Button,
   Card,
-  Badge,
-  Avatar,
   Typography,
   Row,
   Col,
   Space,
   Drawer,
-  Form,
-  List,
   Tag,
-  Divider,
 } from "antd";
 import {
-  HeartOutlined,
-  SearchOutlined,
   CalendarOutlined,
   UserOutlined,
   ArrowRightOutlined,
-  MedicineBoxOutlined,
-  BookOutlined,
-  TeamOutlined,
-  SafetyOutlined,
-  MenuOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router";
 
-const { Header, Content: AntContent, Footer } = Layout;
+const { Content: AntContent } = Layout;
 const { Title, Paragraph, Text } = Typography;
-const { Meta } = Card;
 
 const SchoolHealthNewsAntd = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,107 +27,56 @@ const SchoolHealthNewsAntd = () => {
   const featuredNews = [
     {
       id: 1,
-      title: "Annual Health Check Program for Students 2024-2025",
+      title: "Implementation of Vietnam School Health Program 2021–2025",
       excerpt:
-        "Implementing a comprehensive health check program for students with in-depth examination packages and nutritional counseling.",
+        "A national program providing primary health care for over 22 million students, promoting health education, protection, and school-based health services.",
       image:
         "https://i.pinimg.com/736x/84/4c/9b/844c9bcd12e68b128c4e19abaecaf18e.jpg",
-      category: "Health Check",
-      date: "15/12/2024",
-      author: "Dr. Nguyen Thi Lan",
-      featured: true,
+      category: "Policy",
+      date: "06/10/2021",
+      author: "Ministry of Health & Ministry of Education",
+      url: "https://vietnamnews.vn/society/1053385/new-school-programme-focuses-on-students-health.html",
     },
     {
       id: 2,
-      title: "Guidelines for Preventing Seasonal Flu in Schools",
+      title: "Hanoi Expands Young Health Program Phase II",
       excerpt:
-        "Preventive measures and handling when flu cases occur in school environments.",
+        "A joint initiative by MOET, AstraZeneca, and Plan International to improve health awareness and student well-being across Hanoi schools.",
       image:
         "https://i.pinimg.com/736x/56/3f/f1/563ff11b32c3b797a897086d63869366.jpg",
-      category: "Disease Prevention",
-      date: "12/12/2024",
-      author: "Dr. Tran Van Minh",
+      category: "Local Program",
+      date: "29/09/2023",
+      author: "Hanoi Department of Education",
+      url: "https://hanoitimes.vn/hanoi-schools-join-young-health-program-vietnam-324917.html",
     },
     {
       id: 3,
-      title: "School Nutrition: Balanced Menus for Students",
-      excerpt: "Developing age-appropriate nutritional menus for students.",
+      title: "WHO Releases Vietnam Student Health Survey 2019",
+      excerpt:
+        "A national report on the health status of students aged 13–17, highlighting key risk behaviors for noncommunicable diseases and areas for health improvement.",
       image:
         "https://i.pinimg.com/736x/3c/27/7a/3c277aa06b20e187864d39111d00a11b.jpg",
-      category: "Nutrition",
-      date: "10/12/2024",
-      author: "Nutritionist Le Thi Hoa",
+      category: "Research",
+      date: "24/05/2022",
+      author: "WHO & Ministry of Health",
+      url: "https://www.who.int/vietnam/vi/news/detail/24-05-2022-who--ministry-of-health-and-ministry-of-education-and-training--launch-report-on-vietnamese-students--health",
     },
     {
       id: 4,
-      title: "Student Mental Health: Early Detection and Support",
+      title: "Vietnam Approves School Health Plan Through 2026",
       excerpt:
-        "Recognizing signs of stress and anxiety in students and effective intervention strategies.",
+        "Decision No. 2616/QD-BYT (2024) provides guidelines for school health programs in preschools and general education, linked to local health stations.",
       image:
         "https://i.pinimg.com/736x/bb/97/6f/bb976f0e31ef90f95b465b0c6a0c1491.jpg",
-      category: "Mental Health",
-      date: "08/12/2024",
-      author: "MSc. Pham Minh Tuan",
-    },
-  ];
-
-  const categories = [
-    {
-      name: "Health Check",
-      icon: <MedicineBoxOutlined />,
-      count: 24,
-      color: "blue",
-    },
-    { name: "Nutrition", icon: <HeartOutlined />, count: 18, color: "green" },
-    {
-      name: "Mental Health",
-      icon: <TeamOutlined />,
-      count: 15,
-      color: "purple",
-    },
-    {
-      name: "Disease Prevention",
-      icon: <SafetyOutlined />,
-      count: 12,
-      color: "red",
-    },
-    {
-      name: "Health Education",
-      icon: <BookOutlined />,
-      count: 20,
-      color: "orange",
-    },
-  ];
-
-  const recentNews = [
-    {
-      title: "First Aid Training for Teachers",
-      date: "05/12/2024",
-      category: "Training",
-    },
-    {
-      title: "Vision Screening Program for Students",
-      date: "03/12/2024",
-      category: "Health Check",
-    },
-    {
-      title: "Seminar on School Food Safety",
-      date: "01/12/2024",
-      category: "Food Safety",
+      category: "Policy",
+      date: "04/09/2024",
+      author: "Ministry of Health",
+      url: "https://thuvienphapluat.vn/phap-luat/ho-tro-phap-luat/ke-hoach-thuc-hien-chuong-trinh-suc-khoe-hoc-duong-y-te-truong-hoc-nam-hoc-2024-2025-nhu-the-nao-58146-174623.html",
     },
   ];
 
   const handleSearch = (value) => {
-    console.log("Search:", value);
     setSearchTerm(value);
-  };
-
-  const handleCategoryClick = (categoryName) => {
-    console.log("Category selected:", categoryName);
-  };
-
-  const handleNewsClick = (newsId) => {
-    console.log("View news:", newsId);
   };
 
   return (
@@ -159,18 +93,6 @@ const SchoolHealthNewsAntd = () => {
         open={isMenuOpen}
         width={280}
       >
-        <Menu
-          mode="vertical"
-          defaultSelectedKeys={["news"]}
-          items={[
-            { key: "home", label: "Home" },
-            { key: "news", label: "News" },
-            { key: "services", label: "Services" },
-            { key: "contact", label: "Contact" },
-          ]}
-          style={{ border: "none" }}
-        />
-        <Divider />
         <Input.Search
           placeholder="Search news..."
           allowClear
@@ -182,26 +104,23 @@ const SchoolHealthNewsAntd = () => {
       <AntContent
         style={{
           padding: "24px",
-          maxWidth: "1200px",
+          maxWidth: "1100px",
           margin: "0 auto",
           width: "100%",
         }}
       >
         <Row gutter={[24, 24]}>
-          <Col xs={24} lg={18}>
+          <Col span={24}>
+            {/* FEATURED */}
             <div style={{ marginBottom: "32px" }}>
               <Title level={2} style={{ marginBottom: "24px" }}>
                 Featured News
               </Title>
-              <Card
-                hoverable
-                style={{ borderRadius: "12px", overflow: "hidden" }}
-                onClick={() => handleNewsClick(featuredNews[0].id)}
-              >
+              <Card hoverable style={{ borderRadius: "12px" }}>
                 <Row gutter={[16, 16]}>
                   <Col xs={24} md={12}>
                     <img
-                      src={featuredNews[0].image || "/placeholder.svg"}
+                      src={featuredNews[0].image}
                       alt={featuredNews[0].title}
                       style={{
                         width: "100%",
@@ -212,11 +131,7 @@ const SchoolHealthNewsAntd = () => {
                     />
                   </Col>
                   <Col xs={24} md={12}>
-                    <Space
-                      direction="vertical"
-                      size="middle"
-                      style={{ width: "100%" }}
-                    >
+                    <Space direction="vertical" size="middle">
                       <Space>
                         <Tag color="blue">{featuredNews[0].category}</Tag>
                         <Text type="secondary">
@@ -235,10 +150,13 @@ const SchoolHealthNewsAntd = () => {
                           <Text type="secondary">{featuredNews[0].author}</Text>
                         </Space>
                         <Button type="primary" ghost>
-                          <Link to="https://suckhoedoisong.vn/phat-trien-y-te-hoc-duong-uom-mam-tai-nang-tuong-lai-cho-dat-nuoc-169250226133930257.htm">
-                            {" "}
+                          <a
+                            href={featuredNews[0].url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             Read More <ArrowRightOutlined />
-                          </Link>
+                          </a>
                         </Button>
                       </Row>
                     </Space>
@@ -247,7 +165,8 @@ const SchoolHealthNewsAntd = () => {
               </Card>
             </div>
 
-            <div style={{ marginBottom: "32px" }}>
+            {/* LATEST */}
+            <div>
               <Title level={2} style={{ marginBottom: "24px" }}>
                 Latest News
               </Title>
@@ -256,12 +175,18 @@ const SchoolHealthNewsAntd = () => {
                   <Col xs={24} sm={12} lg={8} key={article.id}>
                     <Card
                       hoverable
+                      className="h-full flex flex-col justify-between"
+                      style={{ borderRadius: "12px", height: "100%" }}
                       cover={
                         <div style={{ position: "relative" }}>
                           <img
-                            src={article.image || "/placeholder.svg"}
+                            src={article.image}
                             alt={article.title}
-                            style={{ height: "200px", objectFit: "cover" }}
+                            style={{
+                              height: "200px",
+                              objectFit: "cover",
+                              width: "100%",
+                            }}
                           />
                           <Tag
                             color="blue"
@@ -277,138 +202,49 @@ const SchoolHealthNewsAntd = () => {
                           </Tag>
                         </div>
                       }
-                      style={{ borderRadius: "12px", overflow: "hidden" }}
-                      onClick={() => handleNewsClick(article.id)}
                     >
-                      <Meta
-                        title={
+                      <div className="flex flex-col justify-between h-full">
+                        <div>
                           <Title
                             level={5}
+                            style={{ marginBottom: 8 }}
                             ellipsis={{ rows: 2 }}
-                            style={{ margin: 0 }}
                           >
                             {article.title}
                           </Title>
-                        }
-                        description={
-                          <Space
-                            direction="vertical"
-                            size="small"
-                            style={{ width: "100%" }}
+                          <Text type="secondary">
+                            <CalendarOutlined /> {article.date}
+                          </Text>
+                          <Paragraph
+                            style={{ minHeight: "60px", margin: "8px 0" }}
+                            ellipsis={{ rows: 3 }}
                           >
-                            <Text type="secondary">
-                              <CalendarOutlined /> {article.date}
+                            {article.excerpt}
+                          </Paragraph>
+                        </div>
+                        <Row justify="space-between" align="middle">
+                          <Space size="small">
+                            <UserOutlined style={{ fontSize: "12px" }} />
+                            <Text type="secondary" style={{ fontSize: "12px" }}>
+                              {article.author}
                             </Text>
-                            <Paragraph
-                              ellipsis={{ rows: 2 }}
-                              style={{ margin: 0 }}
-                            >
-                              {article.excerpt}
-                            </Paragraph>
-                            <Row justify="space-between" align="middle">
-                              <Space size="small">
-                                <UserOutlined style={{ fontSize: "12px" }} />
-                                <Text
-                                  type="secondary"
-                                  style={{ fontSize: "12px" }}
-                                >
-                                  {article.author}
-                                </Text>
-                              </Space>
-                              <Button type="primary" ghost>
-                                <Link to="https://baothanhhoa.vn/chu-trong-hoat-dong-nbsp-y-te-hoc-duong-244736.htm">
-                                  {" "}
-                                  View More <ArrowRightOutlined />
-                                </Link>
-                              </Button>
-                            </Row>
                           </Space>
-                        }
-                      />
+                          <Button type="primary" ghost size="small">
+                            <a
+                              href={article.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              View More <ArrowRightOutlined />
+                            </a>
+                          </Button>
+                        </Row>
+                      </div>
                     </Card>
                   </Col>
                 ))}
               </Row>
             </div>
-          </Col>
-
-          <Col xs={24} lg={6}>
-            <Space direction="vertical" size="large" style={{ width: "100%" }}>
-              <Card title="Categories" style={{ borderRadius: "12px" }}>
-                <Space
-                  direction="vertical"
-                  size="middle"
-                  style={{ width: "100%" }}
-                >
-                  {categories.map((category, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "8px 12px",
-                        borderRadius: "8px",
-                        cursor: "pointer",
-                        transition: "background-color 0.3s",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#f5f5f5";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                      }}
-                      onClick={() => handleCategoryClick(category.name)}
-                    >
-                      <Space>
-                        <Avatar
-                          size="small"
-                          style={{
-                            backgroundColor: `var(--ant-${category.color}-6)`,
-                          }}
-                          icon={category.icon}
-                        />
-                        <Text strong>{category.name}</Text>
-                      </Space>
-                      <Badge
-                        count={category.count}
-                        style={{ backgroundColor: "#f0f0f0", color: "#666" }}
-                      />
-                    </div>
-                  ))}
-                </Space>
-              </Card>
-
-              <Card title="Recent News" style={{ borderRadius: "12px" }}>
-                <List
-                  dataSource={recentNews}
-                  renderItem={(item, index) => (
-                    <List.Item
-                      style={{ cursor: "pointer", padding: "12px 0" }}
-                      onClick={() =>
-                        console.log("View recent news:", item.title)
-                      }
-                    >
-                      <List.Item.Meta
-                        title={
-                          <Text strong ellipsis style={{ color: "#1890ff" }}>
-                            {item.title}
-                          </Text>
-                        }
-                        description={
-                          <Row justify="space-between">
-                            <Tag size="small">{item.category}</Tag>
-                            <Text type="secondary" style={{ fontSize: "12px" }}>
-                              {item.date}
-                            </Text>
-                          </Row>
-                        }
-                      />
-                    </List.Item>
-                  )}
-                />
-              </Card>
-            </Space>
           </Col>
         </Row>
       </AntContent>

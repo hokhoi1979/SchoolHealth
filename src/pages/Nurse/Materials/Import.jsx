@@ -492,117 +492,147 @@ function Import() {
         onCancel={() => setOpenDetail(false)}
         footer={null}
         width={800}
+        closable={false}
+        className="!rounded-xl !overflow-hidden"
       >
-        <h1 className="font-serif text-2xl flex justify-center mb-4 font-bold">
-          Request Detail
-        </h1>
+        {/* Header */}
+        <div className="bg-gradient-to-br from-cyan-100 to-pink-100 p-6 text-black text-center rounded-2xl">
+          <img
+            src="https://img.icons8.com/emoji/48/clipboard-emoji.png"
+            alt="event-icon"
+            className="mx-auto mb-2"
+          />
+          <h2 className="text-2xl font-bold">Request Detail</h2>
+          <p className="text-sm">
+            Detailed view of the requested medical event
+          </p>
+        </div>
 
-        {detailRequest?.data ? (
-          <div className="space-y-6 font-serif text-gray-800">
-            <div className="border-l-4 border-[#1bd0d8]  rounded-xl p-5 shadow">
-              <div className="flex items-center justify-between mb-3">
-                <div className="space-y-2 font-serif text-[16px] grid grid-cols-2">
-                  <div>
-                    <div className="flex gap-2 mb-5">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
+        {/* Body */}
+        <div className="bg-gradient-to-br from-orange-100 to-red-50 p-6 space-y-6 font-serif text-gray-800 rounded-2xl mt-5">
+          {detailRequest?.data ? (
+            <>
+              {/* Info section */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                    >
+                      <g
+                        fill="none"
+                        stroke="#1bd0d8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                       >
-                        <g
-                          fill="none"
-                          stroke="#1bd0d8"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        >
-                          <path d="M3 3v16a2 2 0 0 0 2 2h16" />
-                          <path d="m19 9l-5 5l-4-4l-3 3" />
-                        </g>
-                      </svg>
-                      <h2 className="text-lg font-semibold">
-                        Event # {detailRequest.data.id}
-                      </h2>
-                    </div>
+                        <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+                        <path d="m19 9l-5 5l-4-4l-3 3" />
+                      </g>
+                    </svg>
+                    Event #{detailRequest.data.id}
+                  </h3>
+                  <p>
+                    <strong>Created By:</strong> {detailRequest.data.createdBy}
+                  </p>
+                  <p>
+                    <strong>Status:</strong>{" "}
+                    <Tag color="green">{detailRequest.data.status}</Tag>
+                  </p>
+                  <p>
+                    <strong>Note:</strong>{" "}
+                    {detailRequest.data.note || (
+                      <span className="text-gray-400 italic">No Note</span>
+                    )}
+                  </p>
+                </div>
 
-                    <p>
-                      <strong>Created By:</strong>{" "}
-                      {detailRequest.data.createdBy}
-                    </p>
-                    <p>
-                      <strong>Status:</strong>{" "}
-                      <Tag color="green">{detailRequest.data.status}</Tag>
-                    </p>
-                    <p>
-                      <strong>Note:</strong> {detailRequest.data.note}
-                    </p>
-                  </div>
-
-                  <div className=" mt-5">
-                    <h2 className="text-lg mt-4 font-bold">Requested Items</h2>
-                    <Table
-                      dataSource={detailRequest.data.items}
-                      rowKey={(record, index) => index}
-                      pagination={false}
-                      columns={[
-                        {
-                          title: "Image",
-                          dataIndex: "",
-                          key: "image",
-                          render: (_, record) => {
-                            const img =
-                              record.medicine?.image ||
-                              record.medicineSupply?.image;
-                            return img ? (
-                              <img
-                                src={img}
-                                alt="img"
-                                style={{ width: 50, height: 50 }}
-                              />
-                            ) : (
-                              "No Image"
-                            );
-                          },
+                {/* Items Table */}
+                <div>
+                  <h3 className="text-lg font-bold mb-2">Requested Items</h3>
+                  <Table
+                    dataSource={detailRequest.data.items}
+                    rowKey={(record, index) => index}
+                    pagination={false}
+                    bordered
+                    size="small"
+                    columns={[
+                      {
+                        title: "Image",
+                        dataIndex: "",
+                        key: "image",
+                        align: "center",
+                        render: (_, record) => {
+                          const img =
+                            record.medicine?.image ||
+                            record.medicineSupply?.image;
+                          return img ? (
+                            <img
+                              src={img}
+                              alt="img"
+                              className="w-10 h-10 object-cover rounded-md mx-auto"
+                            />
+                          ) : (
+                            <span className="text-gray-400 italic">
+                              No Image
+                            </span>
+                          );
                         },
-                        {
-                          title: "Name",
-                          dataIndex: "",
-                          key: "name",
-                          render: (_, record) => {
-                            return (
-                              record.medicine?.name ||
-                              record.medicineSupply?.name ||
-                              "Unknown"
-                            );
-                          },
-                        },
-                        {
-                          title: "Quantity",
-                          dataIndex: "quantity",
-                          key: "quantity",
-                        },
-                        {
-                          title: "Urgency",
-                          dataIndex: "urgency",
-                          key: "urgency",
-                        },
-                        {
-                          title: "Note",
-                          dataIndex: "note",
-                          key: "note",
-                          render: (text) => text || "No Note",
-                        },
-                      ]}
-                    />
-                  </div>
+                      },
+                      {
+                        title: "Name",
+                        dataIndex: "",
+                        key: "name",
+                        render: (_, record) =>
+                          record.medicine?.name ||
+                          record.medicineSupply?.name ||
+                          "Unknown",
+                      },
+                      {
+                        title: "Quantity",
+                        dataIndex: "quantity",
+                        key: "quantity",
+                        align: "center",
+                      },
+                      {
+                        title: "Urgency",
+                        dataIndex: "urgency",
+                        key: "urgency",
+                        align: "center",
+                        render: (urgency) => (
+                          <Tag color={urgency === "High" ? "red" : "orange"}>
+                            {urgency}
+                          </Tag>
+                        ),
+                      },
+                      {
+                        title: "Note",
+                        dataIndex: "note",
+                        key: "note",
+                        render: (text) =>
+                          text || (
+                            <span className="text-gray-400 italic">
+                              No Note
+                            </span>
+                          ),
+                      },
+                    ]}
+                  />
                 </div>
               </div>
-            </div>
-          </div>
-        ) : (
-          <p>Loading...</p>
-        )}
+
+              {/* Footer actions */}
+              <div className="flex justify-end mt-6">
+                <Button onClick={() => setOpenDetail(false)}>Close</Button>
+              </div>
+            </>
+          ) : (
+            <p className="text-center">Loading...</p>
+          )}
+        </div>
       </Modal>
     </div>
   );

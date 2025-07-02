@@ -39,7 +39,7 @@ function MaterialManage() {
 
   useEffect(() => {
     if (open) {
-      dispatch(fetchMedicineClasstifyManager({ page: 1, limit: 8 }));
+      dispatch(fetchMedicineClasstifyManager({ page: 1, limit: 100 }));
     }
   }, [open]);
 
@@ -803,7 +803,7 @@ function MaterialManage() {
                             postManagerClasstify({
                               body: { name: newClassify.trim() },
                               page: 1,
-                              limit: 8,
+                              limit: 100,
                               onSuccess: (id) => {
                                 console.log("===> onSuccess with id:", id);
                                 classifyIDToUse = id;
@@ -919,7 +919,7 @@ function MaterialManage() {
                           await dispatch(
                             postManagerClasstify({
                               body: { name: categoryName },
-                              limit: 8,
+                              limit: 100,
                               page: 1,
                             })
                           );

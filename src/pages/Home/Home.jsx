@@ -18,12 +18,14 @@ import { AppFooter } from "../../components/Footer/AppFooter";
 import newspic from "../../img/newspic.jpg";
 import { Button } from "antd";
 import AIChatWidget from "../Student/AI/AIChatWidget ";
+import CauroselIntro from "../Home/CauroselIntro";
 
 function Home() {
   return (
     <>
-      <Header className="sticyky" />
-      <div className="flex flex-col min-h-screen">
+      <Header />
+      <CauroselIntro />
+      <div className="flex flex-col min-h-screen ">
         <div className="flex flex-col flex-1">
           <div className="container w-full h-[100px] mt-20 mb-4">
             <div className="flex justify-between gap-6">

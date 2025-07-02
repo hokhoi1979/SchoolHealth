@@ -22,8 +22,8 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
       style={{
         backgroundColor: "#fff",
         borderRadius: 12,
-        border: "2px solid black", // ✅ Viền đen rõ ràng
-        boxShadow: "none", // ✅ Tắt hoàn toàn bóng đổ
+        border: "2px solid black",
+        boxShadow: "none",
       }}
       footer={[
         <Button key="cancel" onClick={cancel}>

@@ -79,34 +79,52 @@ const MedicalEventList = () => {
         {data.map((item) => (
           <div
             key={item.id}
-            className="relative bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition"
+            className="relative bg-white  bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec]  border border-gray-200    shadow-md rounded-2xl p-5 h-full min-h-[370px] max-w-[420px] hover:shadow-lg transition"
           >
-            <h2 className="text-xl font-bold mb-3 text-blue-700">
+            {/* Tiêu đề */}
+            <h2 className="text-2xl font-bold mb-4 text-black text-center">
               Medical Event
             </h2>
 
-            <div className="mb-2 flex gap-2">
+            {/* Nội dung chi tiết */}
+            <div className="mb-3 flex gap-2 text-[17px]">
               <p className="font-semibold">ID:</p>
               <p>{item.id}</p>
             </div>
-            <div className="mb-2  flex gap-2">
+            <div className="mb-3 flex gap-2 text-[17px]">
               <p className="font-semibold">Type:</p>
               <p>{item.type}</p>
             </div>
-            <div className="mb-2  flex gap-2">
+            <div className="mb-3 flex gap-2 text-[17px]">
               <p className="font-semibold">Occurred At:</p>
-              <p>{new Date(item.occurredAt).toLocaleString()}</p>
+              <p>{dayjs(item.occurredAt).format("DD/MM/YYYY HH:mm:ss")}</p>
             </div>
-            <div className="mb-2">
+            <div className="mb-3 text-[17px]">
               <p className="font-semibold">Status:</p>
-              <p className="font-bold text-yellow-600">{item.status}</p>
+              <p
+                className={`  font-bold ${
+                  item.status === "PENDING"
+                    ? "text-blue-400"
+                    : item.status === "PROCESSING"
+                    ? "text-yellow-500"
+                    : "text-green-400"
+                }`}
+              >
+                {item.status}
+              </p>
             </div>
-            <div className="mb-4">
+            <div className="mb-3 text-[17px]">
               <p className="font-semibold">Severity:</p>
-              <p>{item.severity}</p>
+              <p
+                className={`${
+                  item.severity === "HOSPITAL" ? "text-red-500" : "text-black"
+                }`}
+              >
+                {item.severity}
+              </p>
             </div>
 
-            {/* Eye icon */}
+            {/* Nút icon xem chi tiết */}
             <button
               className="absolute top-4 right-4 text-gray-600 hover:text-blue-600"
               onClick={() => handleViewDetail(item)}
@@ -132,6 +150,7 @@ const MedicalEventList = () => {
           </div>
         ))}
       </div>
+
       <div className="w-full h-30 mt-13"></div>
       <AppFooter />
       {/* Modal Detail */}
@@ -143,7 +162,7 @@ const MedicalEventList = () => {
         centered
         title={
           <div className="flex justify-center items-center">
-            <span className="text-2xl font-bold text-red-600 flex items-center gap-x-2">
+            <span className="text-2xl font-bold text-black-600 flex items-center gap-x-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -183,7 +202,13 @@ const MedicalEventList = () => {
                   </p>
                 </div>
                 <div className="text-right space-y-1">
-                  <span className="inline-block px-3 py-1 bg-black text-white rounded-full">
+                  <span
+                    className={`inline-block px-3 py-1 bg-white rounded-full ${
+                      selectedItem.severity === "HOSPITAL"
+                        ? "text-red-500"
+                        : "text-black"
+                    }`}
+                  >
                     {selectedItem.severity || "NORMAL"}
                   </span>
                   <p>
@@ -203,7 +228,7 @@ const MedicalEventList = () => {
             {/* Student Info */}
             <div className="rounded-xl border p-4 bg-green-50 shadow">
               <h2 className="text-xl font-bold text-green-800 mb-2">
-                🎓 Học sinh {selectedItem.studentInfo?.account?.fullname}
+                🎓 {selectedItem.studentInfo?.account?.fullname}
               </h2>
               <div className="grid grid-cols-2 gap-4 text-gray-800">
                 <p>

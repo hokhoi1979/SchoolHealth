@@ -34,15 +34,18 @@ const AIChatWidget = () => {
 
   const combinedMessages = [...getMessages, ...postMessages];
 
-  // Load trang đầu tiên khi mở khung chat
   useEffect(() => {
     if (visible) {
       setPage(1);
       dispatch(getAiChat({ page: 1 }));
 
+      // ✅ Delay để chờ animation xong → rồi scroll xuống
       setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 250); // đợi animation xong
+        requestAnimationFrame(() => {
+          const el = scrollContainerRef.current;
+          if (el) el.scrollTop = el.scrollHeight;
+        });
+      }, 300);
     }
   }, [visible]);
 
@@ -122,14 +125,18 @@ const AIChatWidget = () => {
             transition={{ duration: 0.3 }}
             onAnimationComplete={() => {
               requestAnimationFrame(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+                setTimeout(() => {
+                  messagesEndRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                  });
+                }, 50); // Đợi frame DOM render hoàn tất
               });
             }}
             className="fixed ml-[100px] bottom-8 right-8 w-80 h-96 bg-white rounded-lg shadow-lg flex flex-col overflow-hidden z-50"
           >
             {/* Header */}
             <div className="bg-blue-500 text-white px-4 py-2 flex justify-between items-center ">
-              <span className="font-semibold">Chat với AI</span>
+              <span className="font-semibold">Chat with AI</span>
               <Button
                 type="text"
                 icon={<CloseOutlined />}
@@ -153,7 +160,7 @@ const AIChatWidget = () => {
             >
               {loadingMore && (
                 <div className="text-center text-gray-500 text-sm mb-2">
-                  Đang tải tin nhắn cũ...
+                  Loading old messeage
                 </div>
               )}
 
@@ -191,7 +198,7 @@ const AIChatWidget = () => {
                   }}
                 >
                   <div className="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg text-sm">
-                    AI đang trả lời...
+                    AI is responding
                   </div>
                 </motion.div>
               )}
@@ -202,7 +209,7 @@ const AIChatWidget = () => {
             {/* Footer */}
             <div className="p-2 border-t flex gap-2">
               <Input
-                placeholder="Nhập tin nhắn..."
+                placeholder="Enter Message"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onPressEnter={handleSend}

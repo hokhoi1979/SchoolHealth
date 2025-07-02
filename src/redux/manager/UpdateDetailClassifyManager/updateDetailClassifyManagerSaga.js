@@ -42,7 +42,7 @@ function* updateClassifyManagerSaga(action) {
 
       const fetchData = yield call(
         axios.get,
-        `${URL_API}/manager/v1/medicine-classify?page=1&limit=8sortBy=createdAt&order=asc`,
+        `${URL_API}/manager/v1/medicine-classify?page=1&limit=100sortBy=createdAt&order=asc`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

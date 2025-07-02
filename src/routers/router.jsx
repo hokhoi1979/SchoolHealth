@@ -73,8 +73,10 @@ import StudentInformation from "../pages/Student/StudentInformation/StudentInfor
 import ChangePassword from "../pages/Student/ChangePassword/ChangePassword";
 import PrivateRoute from "./privateRoute";
 import News from "../pages/News/news";
-
-import New from "../pages/News/New";
+import AdminLayout from "../pages/Admin/AdminLayout";
+import AccountAdmin from "../pages/Admin/AccountAdmin/AccountAdmin";
+import StudentAdmin from "../pages/Admin/StudentAdmin/StudentAdmin";
+import DashboardAdmin from "../pages/Admin/DashboardAdmin/DashboardAdmin";
 
 const router = createBrowserRouter([
   {
@@ -86,6 +88,22 @@ const router = createBrowserRouter([
 
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
+
+      {
+        path: "admin",
+        element: <PrivateRoute allowedRoles={[1]} />,
+        children: [
+          {
+            path: "",
+            element: <AdminLayout />,
+            children: [
+              { path: "", element: <DashboardAdmin /> },
+              { path: "studentAdmin", element: <StudentAdmin /> },
+              { path: "accountAdmin", element: <AccountAdmin /> },
+            ],
+          },
+        ],
+      },
 
       // Nurse routes
       {

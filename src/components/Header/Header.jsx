@@ -1,6 +1,6 @@
 import logo from "../../img/icon.png";
 import { Link } from "react-router";
-import bs3 from "../../img/nen2.jpg";
+import bs3 from "../../img/pngtree-asian-doctor-with-stethoscope-writing-on-board-healthcare-and-medicine-concept-picture-image_15514760.jpg";
 import user from "../../img/user.png";
 import logout from "../../img/logout.png";
 import contact from "../../img/contact.png";
@@ -194,8 +194,8 @@ const Header = ({ object }) => {
           className="w-full h-[100%] object-cover object-center"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-black bold text-center px-4">
-          <h1 className="text-5xl font-serif mb-2">Health Care</h1>
-          <p className="text-lg mb-4">
+          <h1 className="text-5xl font-serif mb-2 ">Health Care</h1>
+          <p className="text-lg mb-4 bold">
             School health team - Accompanying students’ health
           </p>
           {/* <button className="bg-white text-black py-1 px-3 text-sm rounded hover:bg-gray-200 transition">

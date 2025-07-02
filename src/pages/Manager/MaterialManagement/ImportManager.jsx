@@ -33,7 +33,7 @@ function ImportManager() {
   const [categories, setCategories] = useState([]);
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8;
+  const pageSize = 100;
   const [total, setTotal] = useState(0);
   const [detail, setDetail] = useState([]);
   const [selectedClassifyID, setSelectedClassifyID] = useState("");
@@ -111,7 +111,7 @@ function ImportManager() {
     setSelectedCategory(category);
     setIsModalVisible(true);
     dispatch(
-      fetchDetailManagerClassify({ id: category.id, page: 1, limit: 8 })
+      fetchDetailManagerClassify({ id: category.id, page: 1, limit: 15 })
     );
   };
 
@@ -148,7 +148,7 @@ function ImportManager() {
           postManagerClasstify({
             body: { name: newClassify.trim() },
             page: 1,
-            limit: 8,
+            limit: 100,
             onSuccess: (newID) => {
               classifyIDToUse = newID;
               resolve();
@@ -335,11 +335,11 @@ function ImportManager() {
 
   return (
     <div>
-      <div className="grid grid-cols-4 gap-4 mt-4 w-full px-4 font-kameron">
+      <div className="grid grid-cols-4 gap-4 mt-4 w-full px-4 font-kameron ">
         {categories.map((category) => (
           <div
             key={category?.id}
-            className="h-[100px] bg-white rounded-xl shadow hover:shadow-md cursor-pointer relative  transition-shadow"
+            className="h-[100px] bg-white rounded-xl shadow hover:shadow-md cursor-pointer relative  transition-shadow bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec]  border border-gray-200 p-5  flex flex-col justify-between  duration-300"
           >
             <div
               className="flex flex-col items-center justify-center h-full"
@@ -383,7 +383,7 @@ function ImportManager() {
         ))}
       </div>
       <div className="w-full h-10"></div>
-      <Pagination
+      {/* <Pagination
         current={currentPage}
         pageSize={pageSize}
         total={total}
@@ -392,7 +392,7 @@ function ImportManager() {
         }}
         showSizeChanger={false}
         className="mt-[20px] flex justify-center "
-      />
+      /> */}
 
       {/* Category Modal */}
       <Modal

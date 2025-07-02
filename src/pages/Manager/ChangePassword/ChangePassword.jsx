@@ -150,9 +150,9 @@ const ChangePassword = () => {
                     className="border-4 border-blue-100"
                   />
 
-                  <p className="text-gray-600 text-sm">{userInfo.fullname}</p>
+                  <p className="text-gray-600 text-sm">{userInfo?.fullname}</p>
                   <p className="text-gray-600 text-sm">
-                    Email: {userInfo.email}
+                    Email: {userInfo?.email}
                   </p>
                 </div>
               </Card>

@@ -283,14 +283,14 @@ const StudentProfile = () => {
           </div>
 
           <div className="grid grid-cols-3 gap-4 mb-4 text-center">
-            <div className="bg-gray-100 p-3 rounded-2xl">
+            <div className="bg-gradient-to-br from-orange-100 to-red-50 shadow-sm p-3 rounded-2xl">
               <div className="text-sm text-gray-600">Height</div>
               <div className="text-xl font-semibold">
                 {dataDetail?.height || "--"}
               </div>
               <div className="text-xs text-gray-500">cm</div>
             </div>
-            <div className="bg-gray-100 p-3 rounded-2xl">
+            <div className="bg-gradient-to-br from-orange-100 to-red-50 shadow-sm p-3 rounded-2xl">
               <div className="text-sm text-gray-600">Weight</div>
               <div className="text-xl font-semibold">
                 {dataDetail?.weight || "--"}
@@ -298,7 +298,7 @@ const StudentProfile = () => {
               <div className="text-xs text-gray-500">kg</div>
             </div>
 
-            <div className="bg-gray-100 p-3 rounded-2xl">
+            <div className="bg-gradient-to-br from-orange-100 to-red-50 shadow-sm p-3 rounded-2xl">
               <div className="text-sm text-gray-600">Eye</div>
               <div className="text-xl font-semibold">{`${
                 dataDetail?.eyeLeft || "-"
@@ -307,7 +307,7 @@ const StudentProfile = () => {
             </div>
           </div>
 
-          <div className="bg-gray-100 p-5 rounded-2xl">
+          <div className="bg-gradient-to-br from-cyan-100 to-pink-100 p-5 rounded-2xl">
             <div className="grid grid-cols-3">
               <div className="mb-4">
                 <div className="flex gap-1.5">
@@ -463,7 +463,6 @@ const StudentProfile = () => {
             </div>
           </div>
 
-          {/* Notes */}
           {dataDetail?.additionalNote && (
             <div className="bg-yellow-50 p-3  mb-4 mt-3 rounded-xl">
               <p className="italic">Note: "{dataDetail.additionalNote}"</p>

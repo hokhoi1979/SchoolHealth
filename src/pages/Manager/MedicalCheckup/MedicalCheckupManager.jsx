@@ -31,6 +31,8 @@ import { patchManagerEndMedicalCheckup } from "../../../redux/MedicalCheckUpMana
 import { deleteManagerMedicalCheckup } from "../../../redux/MedicalCheckUpManager/DeleteMedicalCheckupManager/deleteMedicalCheckupManagerSlice";
 import UpdateCheckupModal from "./UpdateCheckupModal";
 import { putManagerMedicalCheckup } from "../../../redux/MedicalCheckUpManager/UpdateMedicalCheckupManager/updateMedicalCheckupManagerSlice";
+import CheckupDetailModal from "./CheckupDetailModal";
+import { fetchDetailCheckupManager } from "../../../redux/MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSlice";
 
 function MedicalCheckup() {
   const [loading, setLoading] = useState(false);
@@ -70,6 +72,19 @@ function MedicalCheckup() {
     medicine: medicineSupply.filter((item) => item.type === "medicine"),
     supply: medicineSupply.filter((item) => item.type === "supply"),
   };
+
+  const [detailEvent, setDetailEvent] = useState(null);
+  const { checkupDetail } = useSelector(
+    (state) => state.getDetailCheckupManager
+  );
+  const detail = checkupDetail?.data || {};
+  const handleViewMore = (event) => {
+    if (!event?.id) return;
+    dispatch(fetchDetailCheckupManager(event.id));
+    console.log(event);
+    setViewModalOpen(true);
+  };
+
   const formatMedicineAndSupply = () => {
     const medicine = medicineSupply
       .filter((item) => item.type === "medicine")
@@ -230,7 +245,7 @@ function MedicalCheckup() {
 
     try {
       await dispatch(patchManagerConfirmCheckup({ id }));
-      toast.success("Sent confirmation successfully");
+
       setNotificationModalOpen(false);
     } catch (error) {
       console.error("API Error:", error?.response?.data || error?.message);
@@ -291,8 +306,8 @@ function MedicalCheckup() {
       targetText = "all students";
     }
 
-    const formattedDate = dayjs(event?.scheduledAt).isValid()
-      ? dayjs(event.scheduledAt).format("DD/MM/YYYY")
+    const formattedDate = dayjs(event?.date, "DD/MM/YYYY").isValid()
+      ? dayjs(event.date, "DD/MM/YYYY").format("DD/MM/YYYY")
       : "Not scheduled";
     setNotificationContent(
       `Dear Parents,\n\nOur school will organize the ${event?.title.toLowerCase()} for students in ${targetText} on ${formattedDate}.\n\nPlease confirm your participation and support us in ensuring the best preparation.\n\nSincerely,`
@@ -461,14 +476,16 @@ function MedicalCheckup() {
           return (
             <div
               key={item.id}
-              className="bg-white p-6 rounded-2xl flex flex-col justify-between shadow-sm h-[370px]"
+              className="flex flex-col justify-between h-[370px] bg-white bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec] rounded-2xl border border-gray-200 shadow-md hover:shadow-lg p-5 transition-all duration-300"
             >
               {/* TOP: Trạng thái + icon */}
               <div className="flex justify-between">
                 <Button
                   className={`!text-white ${
-                    item.status === "SUCCESSED" || item.status === "CONFIRMED"
+                    item.status === "SUCCESSED"
                       ? "!bg-[#6CC76F]"
+                      : item.status === "CONFIRMED"
+                      ? "!bg-[#62d49f]"
                       : "!bg-[#CBD361]"
                   }`}
                 >
@@ -476,7 +493,7 @@ function MedicalCheckup() {
                 </Button>
 
                 <div className="flex gap-2">
-                  {/* <Tooltip title="Xem chi tiết">
+                  <Tooltip title="Xem chi tiết">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width={25}
@@ -490,7 +507,7 @@ function MedicalCheckup() {
                         d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
                       ></path>
                     </svg>
-                  </Tooltip> */}
+                  </Tooltip>
 
                   <Tooltip title="Send To Parent">
                     <svg
@@ -525,7 +542,7 @@ function MedicalCheckup() {
                       .join(", ")}
                   </span>
                 )}
-                <div className="flex gap-2.5 mt-3">
+                <div className="flex gap-2.5 mt-3 ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -659,32 +676,50 @@ function MedicalCheckup() {
                 </div>
               </div>
 
-              <div className="space-y-3 ">
+              <div className="mt-3">
                 {item?.status !== "DRAFT" && (
-                  <>
-                    <div className="flex justify-between text-sm text-gray-600">
+                  <div>
+                    <div className="flex justify-between mb-1 text-sm text-gray-600">
                       <span>Confirm Participate</span>
                       <span>
                         {item.participate ?? 0}/{item.totalStudent ?? 0}
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-3">
                       <div
                         className="bg-teal-500 h-2.5 rounded-full"
-                        style={{ width: `${percentage}%` }}
+                        style={{
+                          width: `${
+                            item.totalStudent && item.totalStudent > 0
+                              ? (
+                                  (item.participate / item.totalStudent) *
+                                  100
+                                ).toFixed(0)
+                              : 0
+                          }%`,
+                        }}
                       ></div>
                     </div>
-                    <div className="text-right text-sm text-gray-500">
-                      {percentage}%
-                    </div>
-                  </>
-                )}
 
+                    <div className="text-right text-sm text-gray-500 mt-1">
+                      {item.totalStudent && item.totalStudent > 0
+                        ? Math.round(
+                            (item.participate / item.totalStudent) * 100
+                          )
+                        : 0}
+                      %
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3 ">
                 <div className="flex gap-2.5 ">
                   {item.status == "DRAFT" && (
                     <>
                       <Button
-                        className="w-[700px]"
+                        className="w-full"
                         onClick={() => handleUpdateCheckup(item)}
                       >
                         Update
@@ -979,96 +1014,6 @@ function MedicalCheckup() {
           </div>
         </div>
       </Modal>
-      {/* Modal View More */}
-      {/* <Modal
-        open={viewModalOpen}
-        onCancel={handleCloseViewMore}
-        footer={[<Button onClick={handleCloseViewMore}>Close</Button>]}
-      >
-        {selectedEvent && (
-          <div className="font-sans px-4">
-            <h2 className="text-xl font-bold">
-              Campaign Name - {selectedEvent.title}
-            </h2>
-            <p className="text-sm text-gray-500 mt-1 mb-4">
-              {" "}
-              Detailed information about the vaccination campaign
-            </p>
-
-            <div className="grid grid-cols-2 gap-y-4 text-sm mb-4">
-              <div>
-                <p className="text-gray-500"> Campaign Name</p>
-                <p className="font-semibold flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M22 2.25h-3.25V.75a.75.75 0 0 0-1.5-.001V2.25h-4.5V.75a.75.75 0 0 0-1.5-.001V2.25h-4.5V.75a.75.75 0 0 0-1.5-.001V2.25H2a2 2 0 0 0-2 1.999v17.75a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V4.249a2 2 0 0 0-2-1.999M22.5 22a.5.5 0 0 1-.499.5H2a.5.5 0 0 1-.5-.5V4.25a.5.5 0 0 1 .5-.499h3.25v1.5a.75.75 0 0 0 1.5.001V3.751h4.5v1.5a.75.75 0 0 0 1.5.001V3.751h4.5v1.5a.75.75 0 0 0 1.5.001V3.751H22a.5.5 0 0 1 .499.499z"
-                    />
-                    <path
-                      fill="currentColor"
-                      d="M5.25 9h3v2.25h-3zm0 3.75h3V15h-3zm0 3.75h3v2.25h-3zm5.25 0h3v2.25h-3zm0-3.75h3V15h-3zm0-3.75h3v2.25h-3zm5.25 7.5h3v2.25h-3zm0-3.75h3V15h-3zm0-3.75h3v2.25h-3z"
-                    />
-                  </svg>
-                  {selectedEvent.title}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <p className="text-gray-500">Execution Date</p>
-                <p className=" font-semibold flex items-center gap-1 mb-5 ">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2a10 10 0 1 1 0 20a10 10 0 0 1 0-20m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m1 3v5.586l2.707 2.707a1 1 0 1 1-1.414 1.414l-3-3A1 1 0 0 1 11 12V7a1 1 0 0 1 2 0" />
-                  </svg>
-                  {selectedEvent.date}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <p className="text-gray-500">Number: </p>
-                <p className="font-semibold flex items-center gap-1 mb-5 ">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2m-1.5 5h3a2 2 0 0 1 2 2v5.5H14V22h-4v-7.5H8.5V9a2 2 0 0 1 2-2" />
-                  </svg>
-                  {selectedEvent.students} students
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <p className="text-gray-500">Status</p>
-                <span className="inline-block bg-black text-white px-2 py-1 rounded-full text-xs  flex items-center gap-1 mb-5 ">
-                  {selectedEvent.status}
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-4 ">
-              <p className="text-gray-500 text-sm mb-2">Joined Classes</p>
-              <div className="flex flex-wrap gap-2">
-                {selectedEvent.classes.map((cls, idx) => (
-                  <span
-                    key={idx}
-                    className="border border-gray-300 rounded-full px-3 py-1 text-sm"
-                  >
-                    {cls}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal> */}
       {/* Modal of Notification */}
       <Modal
         title={
@@ -1141,6 +1086,22 @@ function MedicalCheckup() {
         setSelectedClasses={setSelectedClasses}
         checkupContents={checkupContents}
         setCheckupContents={setCheckupContents}
+      />
+      <CheckupDetailModal
+        visible={viewModalOpen}
+        onClose={() => setViewModalOpen(false)}
+        event={detail} // <-- dùng biến mới đã trích ra
+        onUseAsTemplate={(detail) => {
+          setCheckupTitle(detail.title);
+          setCheckupDescription(detail.description);
+          setCheckupDate(dayjs(detail.scheduledAt).format("YYYY-MM-DD"));
+          setTargetType(detail.targetType?.toLowerCase());
+          setSelectedClasses(detail.targets?.map((t) => t.className));
+          setCheckupContents(detail.content || []);
+          setItems(detail.vaccineEventStock || []);
+          setViewModalOpen(false);
+          setOpen(true);
+        }}
       />
     </>
   );

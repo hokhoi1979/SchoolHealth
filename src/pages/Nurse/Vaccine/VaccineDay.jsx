@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -85,14 +85,10 @@ function VaccineDay() {
             <div className="flex justify-between">
               {item.status === "CONFIRMED" ? (
                 <>
-                  <Button className="!bg-[#6CC76F] !text-white">
-                    {item.status}
-                  </Button>
+                  <Tag color="green">{item.status}</Tag>
                 </>
               ) : (
-                <Button className="!bg-[#CBD361] !text-white">
-                  {item.status}
-                </Button>
+                <Tag color="orange">{item.status}</Tag>
               )}
             </div>
             <h1 className="mt-2 text-2xl">{item.name}</h1>
