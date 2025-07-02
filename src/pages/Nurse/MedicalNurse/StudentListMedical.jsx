@@ -5,6 +5,7 @@ import SentMedicalToParents from "./SentMedicalToParents";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStudentCheckup } from "../../../redux/checkupNurse/listStudentCheckup/listStudentCheckupSlice";
+import SpecialStudent from "./SpecialStudent";
 
 function StudentListMedical() {
   const { id } = useParams();
@@ -151,6 +152,7 @@ function StudentListMedical() {
             <Option value="student">Student List</Option>
             <Option value="record">Recording Vaccination Results</Option>
             <Option value="send">Send to Vaccination Results</Option>
+            <Option value="special">Special case</Option>
           </Select>
         </div>
       </div>
@@ -419,6 +421,11 @@ function StudentListMedical() {
       {selectedOption === "send" && (
         <div className="flex gap-5 pl-5">
           <SentMedicalToParents id={id} />
+        </div>
+      )}
+      {selectedOption === "special" && (
+        <div className="flex gap-5 pl-5">
+          <SpecialStudent id={id} />
         </div>
       )}
       <div className="h-20"></div>
