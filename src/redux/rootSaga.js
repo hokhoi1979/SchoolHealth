@@ -109,6 +109,7 @@ import watchUpdateMedicalCheckupManager from "./MedicalCheckUpManager/UpdateMedi
 // ===== AI Chat =====
 import watchAiChat from "./AI_Chat/chatBoxSaga";
 import watchGetAllChatBoxAi from "./AI_Chat/getChaxBoxSaga";
+import watchStopProvideMedicine from "./medicineRequestNurse/stopProvideMedicine/stopProvideMedicineSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -179,6 +180,7 @@ export default function* rootSaga() {
     watchFetchStudentCheckup(),
     watchFetchCheckupResult(),
     watchSendCheckupParent(),
+    watchStopProvideMedicine(),
 
     //Manager
     watchFetchManagerMedical(),
@@ -215,13 +217,6 @@ export default function* rootSaga() {
     watchUpdateMedicalCheckupManager(),
 
     // watchFetchVaccineResult(),
-    watchFetchVaccineResult(),
-    watchPostResultSaga(),
-    watchFetchCheckup(),
-    watchUpdateVaccineResult(),
-    watchFetchProfileDetail(),
-
-    watchHealthProfileSaga(),
 
     watchFetchStudentDetailProfile(),
     // AI Chat

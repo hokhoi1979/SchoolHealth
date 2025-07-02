@@ -106,6 +106,7 @@ import checkupResultReducer from "./checkupNurse/resultCheckup/resultCheckupSlic
 import sendCheckupParentReducer from "./checkupNurse/sendCheckupToParent/sendCheckupParentSlice";
 
 import studentDetailProfileReducer from "./getProflie/getProfileStudentSlice";
+import stopProvideMedicineReducer from "./medicineRequestNurse/stopProvideMedicine/stopProvideMedicineSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -139,6 +140,7 @@ const rootReducer = combineReducers({
   postCheckupDetailResult: postCheckupDetailResultReducer,
   studentCheckup: studentCheckupReducer,
   sendCheckupParent: sendCheckupParentReducer,
+  stopProvideMedicine: stopProvideMedicineReducer,
 
   //api parent
   studentOfParent: studentOfParentReducer,

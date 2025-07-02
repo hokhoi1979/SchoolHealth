@@ -60,35 +60,6 @@ const VaccineNurse = () => {
             <CommonBreadcrumb role={"Nurse"} page={"vaccineManagement"} />
           </h1>
 
-          <div className="flex bg-[#F3F3F3] font-kameron w-[300px] h-10 items-center rounded-md ml-5 mt-5">
-            <div className="m-auto flex gap-5">
-              <div
-                className={`hover:bg-white p-1 rounded-md ${
-                  click === "vaccineDay" ? "bg-white rounded-md text-black" : ""
-                }`}
-              >
-                <Link onClick={() => setClick("vaccineDay")} to={""}>
-                  Vaccination day
-                </Link>
-              </div>
-
-              <div
-                className={`hover:bg-white p-1 rounded-md ${
-                  click === "vaccineHistory"
-                    ? "bg-white rounded-md text-black"
-                    : ""
-                }`}
-              >
-                <Link
-                  onClick={() => setClick("vaccineHistory")}
-                  to={"vaccineHistory"}
-                >
-                  Vaccination history
-                </Link>
-              </div>
-            </div>
-          </div>
-
           <div className="flex-1 overflow-auto mr-5 mt-5 mb-10">
             <Outlet />
           </div>
