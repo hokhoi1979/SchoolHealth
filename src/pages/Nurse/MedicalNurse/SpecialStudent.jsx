@@ -118,11 +118,11 @@ function SpecialStudent() {
       dataIndex: "id",
       key: "id",
     },
-    {
-      title: "healthCheckUpID",
-      dataIndex: "healthCheckUpID",
-      key: "healthCheckUpID",
-    },
+    // {
+    //   title: "healthCheckUpID",
+    //   dataIndex: "healthCheckUpID",
+    //   key: "healthCheckUpID",
+    // },
     {
       title: "StudentCode",
       dataIndex: "studentCode",
@@ -219,11 +219,11 @@ function SpecialStudent() {
       dataIndex: "id",
       key: "id",
     },
-    {
-      title: "Checkup ID",
-      dataIndex: "healthCheckUpID",
-      key: "healthCheckUpID",
-    },
+    // {
+    //   title: "Checkup ID",
+    //   dataIndex: "healthCheckUpID",
+    //   key: "healthCheckUpID",
+    // },
     {
       title: "Student ID",
       dataIndex: "studentID",
