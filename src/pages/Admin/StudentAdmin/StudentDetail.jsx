@@ -23,7 +23,8 @@ import checkUpSuccess from "../../../img/successCheckUp.png";
 import checkUpReject from "../../../img/rejectCheckUp.png";
 import eventSuccess from "../../../img/successMedicineEvent.png";
 import eventReject from "../../../img/rejectMedicineEvent.png";
-import AIChatWidget from "../AI/AIChatWidget ";
+import AIChatWidget from "../../Student/AI/AIChatWidget ";
+import { useParams } from "react-router";
 
 const StudentInformation = () => {
   const dispatch = useDispatch();
@@ -75,11 +76,14 @@ const StudentInformation = () => {
     dispatch(fetchGetProfile());
   }, [dispatch]);
 
+  const { id } = useParams();
+
+  // Gọi API lấy detail theo id đó
   useEffect(() => {
-    if (profile?.data?.id) {
-      dispatch(fetchStudentDetail(profile?.data?.id));
+    if (id) {
+      dispatch(fetchStudentDetail(id));
     }
-  }, [dispatch, profile?.data?.id]);
+  }, [dispatch, id]);
 
   const formDate = (date) =>
     date ? new Date(date).toLocaleDateString("vi-VN") : "N/A";
@@ -128,7 +132,7 @@ const StudentInformation = () => {
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
       <h1 className="pl-10 pt-5 text-xl font-inria font-medium mb-4">
-        <CommonBreadcrumb role={"Student"} page={"information"} />
+        <CommonBreadcrumb role={"Admin"} page={"detail"} />
       </h1>
       <div className="p-6 flex-1">
         <h1 className="text-3xl font-extrabold text-blue-500 ml-5 underline underline-offset-4 decoration-blue-300">

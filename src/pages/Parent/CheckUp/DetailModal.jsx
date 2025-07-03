@@ -1,4 +1,13 @@
-import { Modal, Card, Typography, Tag, Spin, Alert, Descriptions } from "antd";
+import {
+  Modal,
+  Card,
+  Typography,
+  Tag,
+  Spin,
+  Alert,
+  Descriptions,
+  Tooltip,
+} from "antd";
 import {
   CalendarOutlined,
   CheckCircleOutlined,
@@ -38,7 +47,7 @@ const DetailModal = ({ open, onclose, checkupDetail, loading, error }) => {
   const renderContent = () => {
     if (loading) {
       return (
-        <div className="flex justify-center items-center py-10">
+        <div className="flex justify-center items-center py-12">
           <Spin size="large" />
         </div>
       );
@@ -69,35 +78,47 @@ const DetailModal = ({ open, onclose, checkupDetail, loading, error }) => {
     const detail = checkupDetail.data.data;
 
     return (
-      <div className="space-y-4">
-        {/* Header Information */}
-        <Card className="border-l-4 border-l-green-500">
-          <div className="flex items-start justify-between mb-4">
+      <div className="space-y-5">
+        {/* Header */}
+        <Card
+          className="border-0 shadow-md rounded-xl bg-gradient-to-br from-blue-50 via-green-50 to-lime-100"
+          bodyStyle={{ padding: "24px" }}
+        >
+          <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <Activity className="text-green-600" size={24} />
+              <Activity className="text-emerald-600" size={28} />
               <div>
-                <Title level={4} className="mb-1">
+                <Title level={4} className="mb-1 text-emerald-700">
                   {detail.title}
                 </Title>
-                <Text className="text-gray-600">ID: {detail.id}</Text>
+                <Text type="secondary" className="text-sm text-gray-600">
+                  ID: {detail.id}
+                </Text>
               </div>
             </div>
             <Tag
               color={getStatusColor(detail.status)}
-              className="text-sm px-3 py-1"
+              className="text-sm px-4 py-1 rounded-full font-semibold shadow-sm"
             >
               {getStatusText(detail.status)}
             </Tag>
           </div>
 
-          <Paragraph className="text-gray-700 mb-4">
-            {detail.description}
-          </Paragraph>
+          {detail.description && (
+            <Paragraph className="mt-4 text-gray-800 leading-relaxed">
+              {detail.description}
+            </Paragraph>
+          )}
 
-          <Descriptions column={1} size="small">
+          <Descriptions
+            column={1}
+            size="small"
+            labelStyle={{ fontWeight: 600 }}
+            className="mt-4"
+          >
             <Descriptions.Item
               label={
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 text-blue-700">
                   <CalendarOutlined />
                   Scheduled Date
                 </span>
@@ -106,7 +127,9 @@ const DetailModal = ({ open, onclose, checkupDetail, loading, error }) => {
               {new Date(detail.scheduledAt).toLocaleString("vi-VN")}
             </Descriptions.Item>
             <Descriptions.Item label="Target Type">
-              <Tag color="blue">{detail.targetType}</Tag>
+              <Tag color="cyan" className="rounded-full px-3">
+                {detail.targetType}
+              </Tag>
             </Descriptions.Item>
             <Descriptions.Item label="Created Date">
               {new Date(detail.createdAt).toLocaleString("vi-VN")}
@@ -161,9 +184,57 @@ const DetailModal = ({ open, onclose, checkupDetail, loading, error }) => {
                   </div>
                 </Card>
               ))}
+              {detail.targetType === "CLASS" &&
+                detail.targets.map((cls, idx) => (
+                  <Tag
+                    key={idx}
+                    color="geekblue"
+                    className="rounded-full px-4 py-1 text-sm font-medium"
+                  >
+                    {cls.className}
+                  </Tag>
+                ))}
             </div>
           </Card>
         )}
+        {/* Checkup Items */}
+        <Card
+          title={
+            <span className="text-green-600 font-medium text-base">
+              🩺 Checkup Items
+            </span>
+          }
+          size="small"
+          className="bg-white border border-green-100 rounded-xl shadow-sm"
+        >
+          <div className="space-y-3">
+            {detail.content.map((item) => (
+              <Card
+                key={item.id}
+                size="small"
+                className="bg-[#f0fdf4] hover:bg-green-50 transition-all duration-200 border border-emerald-100 rounded-lg shadow-sm"
+                bodyStyle={{ padding: "12px 16px" }}
+              >
+                <div className="flex items-start gap-3">
+                  <CheckCircleOutlined className="text-green-500 mt-1" />
+                  <div>
+                    <Text strong className="text-gray-800">
+                      {item.name}
+                    </Text>
+                    {item.description && (
+                      <Text
+                        type="secondary"
+                        className="text-sm block mt-1 text-gray-600"
+                      >
+                        {item.description}
+                      </Text>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </Card>
       </div>
     );
   };
@@ -171,19 +242,21 @@ const DetailModal = ({ open, onclose, checkupDetail, loading, error }) => {
   return (
     <Modal
       title={
-        <div className="flex items-center gap-2">
-          <InfoCircleOutlined className="text-blue-500" />
-          <span>Checkup Details</span>
+        <div className="flex items-center gap-2 text-xl font-semibold text-blue-600">
+          <InfoCircleOutlined />
+          Checkup Details
         </div>
       }
       open={open}
       onCancel={onclose}
       footer={null}
-      width={800}
+      width={820}
       className="checkup-detail-modal"
+      bodyStyle={{ backgroundColor: "#f9fafb", padding: "24px" }}
     >
       {renderContent()}
     </Modal>
   );
 };
+
 export default DetailModal;

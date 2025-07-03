@@ -6,7 +6,28 @@ import { fetchMedicineRequest } from "../../../redux/profileParent/medicalReques
 import { fetchDetailRequest } from "../../../redux/profileParent/medicalRequest/getDetailRequestSlice";
 import { fetchAcceptBenefitMedicine } from "../../../redux/profileParent/medicalRequest/acceptBenefitMedicineSlice";
 import { fetchRejectBenefitMedicine } from "../../../redux/profileParent/medicalRequest/rejectBenefitMedicineSlice";
-import { Card, Button, Descriptions, Tag, Modal, message, Alert } from "antd";
+import {
+  Modal,
+  Tag,
+  Spin,
+  Alert,
+  Card,
+  Divider,
+  Typography,
+  Row,
+  Col,
+  Descriptions,
+  Button,
+} from "antd";
+import {
+  MedicineBoxOutlined,
+  ExperimentOutlined,
+  UserOutlined,
+  NumberOutlined,
+  CheckCircleOutlined,
+} from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 const statusColor = {
   PENDING: "orange",
@@ -39,6 +60,7 @@ const Notification = () => {
   const [currentViewingId, setCurrentViewingId] = useState(null);
   const [hiddenRequestID, setHiddenRequestID] = useState([]);
   const [alertMessage, setAlertMessage] = useState(null);
+  const [shouldOpenModal, setShouldOpenModal] = useState(false);
 
   useEffect(() => {
     // Fetch medicine requests with status CONFIRMED_RECEIVED and isBenefit true
@@ -48,14 +70,16 @@ const Notification = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (requestDetail && !detailLoading && !detailError) {
+    if (shouldOpenModal && requestDetail && !detailLoading && !detailError) {
       setIsModalVisible(true);
+      setShouldOpenModal(false); // reset lại sau khi mở
     } else if (detailError) {
       message.error("Failed to fetch medication detail!");
       setIsModalVisible(false);
       setCurrentViewingId(null);
+      setShouldOpenModal(false);
     }
-  }, [requestDetail, detailLoading, detailError]);
+  }, [requestDetail, detailLoading, detailError, shouldOpenModal]);
 
   const handleAccept = async (requestID) => {
     try {
@@ -100,8 +124,9 @@ const Notification = () => {
   };
 
   const handleViewDetail = (requestID) => {
+    setShouldOpenModal(true); // đánh dấu: sau khi fetch xong thì mở modal
     setCurrentViewingId(requestID);
-    dispatch(fetchDetailRequest({ requestID: requestID }));
+    dispatch(fetchDetailRequest({ requestID }));
   };
 
   const handleModalClose = () => {
@@ -155,113 +180,225 @@ const Notification = () => {
       {notifications.map((request) => (
         <Card
           key={request.id}
-          className="shadow-md rounded-lg"
-          title={`Request for ${
-            request.studentInfo?.account?.fullname || "N/A"
-          }`}
-          extra={
-            <Tag color={statusColor[request.status] || "default"}>
-              {request.status}
-            </Tag>
-          }
+          bordered={false}
+          hoverable
+          style={{
+            borderRadius: 16,
+            background: "#ffffff",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+            transition: "all 0.3s ease",
+          }}
+          bodyStyle={{ padding: 24 }}
         >
-          <Descriptions column={1} bordered size="small">
-            <Descriptions.Item label="Student Name">
-              {request.studentInfo?.account?.fullname || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Class">
-              {request.studentInfo?.lastAcamedicYear?.class?.name || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Nurse's Note">
-              {request.note || "No note provided."}
-            </Descriptions.Item>
-            <Descriptions.Item label="Medicine Detail">
-              <Button type="link" onClick={() => handleViewDetail(request.id)}>
-                View Detail
-              </Button>
-            </Descriptions.Item>
-          </Descriptions>
+          {/* Tiêu đề và trạng thái */}
+          <Row
+            align="middle"
+            justify="space-between"
+            style={{ marginBottom: 16 }}
+          >
+            <Col>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <UserOutlined style={{ color: "#1890ff", fontSize: 18 }} />
+                <Text strong style={{ fontSize: 16 }}>
+                  {request.studentInfo?.account?.fullname || "Unnamed Student"}
+                </Text>
+              </div>
+            </Col>
+            <Col>
+              <Tag color={statusColor[request.status] || "default"}>
+                {request.status}
+              </Tag>
+            </Col>
+          </Row>
 
-          <div className="mt-4 flex justify-end gap-2">
+          {/* Nội dung thông tin */}
+          <Row gutter={16} style={{ marginBottom: 16 }}>
+            <Col span={12}>
+              <Text type="secondary">Class</Text>
+              <div>
+                <Text>
+                  {request.studentInfo?.lastAcamedicYear?.class?.name || "N/A"}
+                </Text>
+              </div>
+            </Col>
+            <Col span={12}>
+              <Text type="secondary">Nurse’s Note</Text>
+              <div>
+                <Text>{request.note || "No note provided."}</Text>
+              </div>
+            </Col>
+          </Row>
+
+          {/* View detail link */}
+          <div style={{ marginBottom: 16 }}>
             <Button
-              type="primary"
-              className="bg-green-500 hover:bg-green-600"
-              onClick={() => handleAccept(request.id)}
-              loading={accepting}
+              type="link"
+              onClick={() => handleViewDetail(request.id)}
+              style={{ padding: 0 }}
             >
-              Accept
-            </Button>
-            <Button
-              danger
-              onClick={() => handleReject(request.id)}
-              loading={rejecting}
-            >
-              Reject
+              🔍 View Medicine Detail
             </Button>
           </div>
+
+          {/* Nút Accept / Reject */}
+          <Row justify="end" gutter={12}>
+            <Col>
+              <Button
+                type="primary"
+                onClick={() => handleAccept(request.id)}
+                loading={accepting}
+                style={{
+                  backgroundColor: "#52c41a", // Màu xanh lá cây
+                  borderColor: "#389e0d", // Viền xanh đậm hơn
+                  color: "#fff", // Màu chữ trắng
+                  boxShadow: "0 2px 0 rgba(0,0,0,0.045)", // Nhẹ bóng đổ
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#389e0d";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#52c41a";
+                }}
+              >
+                ✅ Accept
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                onClick={() => handleReject(request.id)}
+                loading={rejecting}
+                style={{
+                  backgroundColor: "#ff4d4f", // Đỏ tươi mặc định
+                  borderColor: "#d9363e", // Đỏ đậm cho viền
+                  color: "#fff", // Màu chữ trắng
+                  boxShadow: "0 2px 0 rgba(0,0,0,0.045)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#d9363e";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#ff4d4f";
+                }}
+              >
+                ❌ Reject
+              </Button>
+            </Col>
+          </Row>
         </Card>
       ))}
 
       {/* Modal for medicine request detail */}
       <Modal
-        title="Medication Request Detail"
+        title={
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <MedicineBoxOutlined style={{ color: "#52c41a", fontSize: 20 }} />
+            <span style={{ fontWeight: 600 }}>Medication Request Detail</span>
+          </div>
+        }
         open={isModalVisible}
         onCancel={handleModalClose}
         footer={null}
         width={800}
+        style={{ borderRadius: 12 }}
+        bodyStyle={{ background: "#fff", borderRadius: 12, padding: 24 }}
       >
         {detailLoading ? (
-          <div>Loading detailed information...</div>
+          <Spin tip="Loading detailed information..." size="large" />
         ) : detailError ? (
-          <div style={{ color: "red" }}>
-            Error: {detailError.message || "Failed to load details."}
-          </div>
+          <Alert
+            message="Error"
+            description={detailError.message || "Failed to load details."}
+            type="error"
+            showIcon
+          />
         ) : requestDetail ? (
-          <Descriptions column={1} bordered>
-            <Descriptions.Item label="Request ID">
-              {requestDetail.requestID}
-            </Descriptions.Item>
-            <Descriptions.Item label="Student Name">
-              {requestDetail.studentName || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Status">
-              <Tag color={statusColor[requestDetail.status] || "default"}>
-                {requestDetail.status}
-              </Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="Medicine Details">
-              {requestDetail.items && requestDetail.items.length > 0 ? (
-                requestDetail.items.map((item, index) => (
-                  <div
-                    key={item.medicineItemID || index}
-                    style={{
-                      marginBottom: "10px",
-                      borderBottom: "1px dashed #eee",
-                      paddingBottom: "10px",
-                    }}
-                  >
-                    <p>
-                      <strong>Medicine Name:</strong> {item.medicineName}
-                    </p>
-                    <p>
-                      <strong>Dosage:</strong> {item.dosage}
-                    </p>
-                    <p>
-                      <strong>Quantity Remaining:</strong>{" "}
+          <div>
+            {/* Info section */}
+            <Divider orientation="left">
+              <UserOutlined style={{ marginRight: 6, color: "#1890ff" }} />
+              <Text strong>Request Information</Text>
+            </Divider>
+
+            <Row gutter={16} style={{ marginBottom: 16 }}>
+              <Col span={12}>
+                <Card bordered>
+                  <NumberOutlined
+                    style={{ color: "#722ed1", marginRight: 6 }}
+                  />
+                  <Text strong>Request ID:</Text> {requestDetail.requestID}
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card bordered>
+                  <UserOutlined style={{ color: "#1890ff", marginRight: 6 }} />
+                  <Text strong>Student Name:</Text>{" "}
+                  {requestDetail.studentName || "N/A"}
+                </Card>
+              </Col>
+            </Row>
+
+            <Row gutter={16} style={{ marginBottom: 24 }}>
+              <Col span={12}>
+                <Card bordered>
+                  <CheckCircleOutlined
+                    style={{ color: "#13c2c2", marginRight: 6 }}
+                  />
+                  <Text strong>Status:</Text>{" "}
+                  <Tag color={statusColor[requestDetail.status] || "default"}>
+                    {requestDetail.status}
+                  </Tag>
+                </Card>
+              </Col>
+            </Row>
+
+            {/* Medicine details */}
+            <Divider orientation="left">
+              <ExperimentOutlined
+                style={{ marginRight: 6, color: "#fa8c16" }}
+              />
+              <Text strong>Medicine Details</Text>
+            </Divider>
+
+            {requestDetail.items && requestDetail.items.length > 0 ? (
+              requestDetail.items.map((item, index) => (
+                <Card
+                  key={item.medicineItemID || index}
+                  title={
+                    <span style={{ color: "#389e0d", fontWeight: 600 }}>
+                      <ExperimentOutlined style={{ marginRight: 8 }} />
+                      {item.medicineName}
+                    </span>
+                  }
+                  style={{
+                    marginBottom: 16,
+                    background: "#f6ffed",
+                    border: "1px solid #b7eb8f",
+                    borderRadius: 10,
+                  }}
+                >
+                  <Row gutter={16}>
+                    <Col span={8}>
+                      <Text strong>Dosage:</Text> {item.dosage}
+                    </Col>
+                    <Col span={8}>
+                      <Text strong>Quantity Remaining:</Text>{" "}
                       {item.quantityRemaining}
-                    </p>
-                    <p>
-                      <strong>Usage Times:</strong> {item.usageTimes.join(", ")}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <div>No detailed medicine items available.</div>
-              )}
-            </Descriptions.Item>
-          </Descriptions>
+                    </Col>
+                    <Col span={8}>
+                      <Text strong>Usage Times:</Text>{" "}
+                      {item.usageTimes?.join(", ") || "N/A"}
+                    </Col>
+                  </Row>
+                </Card>
+              ))
+            ) : (
+              <div style={{ color: "#999" }}>
+                No detailed medicine items available.
+              </div>
+            )}
+          </div>
         ) : (
-          <div>Select an item to view details.</div>
+          <div style={{ color: "#999" }}>Select an item to view details.</div>
         )}
       </Modal>
     </div>

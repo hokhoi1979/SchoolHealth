@@ -31,6 +31,9 @@ import watchFetchAcceptCheckUp from "./getCheckupParent/getCheckupParentAcceptSa
 import watchFetchDeclineCheckUp from "./getCheckupParent/getCheckupParentDeclineSaga";
 import watchFetchDetailCheckUpParent from "./getCheckupParent/getDetailCheckupParentSaga";
 import watchFetchResultCheckUpParent from "./getCheckupParent/getResultCheckupParentSaga";
+import watchFetchMeetingParent from "./getMettingParent/getAllMettingParentSaga";
+import watchFetchAcceptMeeting from "./getMettingParent/getMeetingParentAcceptSaga";
+import watchFetchDeclineMeeting from "./getMettingParent/getMeetingParentDeclineSaga";
 
 // ===== Nurse =====
 import watchFetchProfile from "./profileNurse/profileSaga";
@@ -119,6 +122,13 @@ import watchMeeted from "./checkupNurse/meeted/meetedSaga";
 import watchDeleteMeeting from "./checkupNurse/deleteMeeting/deleteMeetingSaga";
 import watchDeleteStudent from "./checkupNurse/deleteStudent/deleteStudentSaga";
 
+// api admin
+import watchFetchGetAllStudent from "./admin/getAllStudentSaga";
+import watchFetchGetAllAccount from "./admin/getAllAccountSaga";
+import watchFetchDetailAccount from "./admin/getDetailAccountSaga";
+import watchFetchChangeStatusUser from "./admin/changeStatusUserSaga";
+import { watchCreateStudentAdmin } from "./admin/createStudentAdminSaga";
+
 export default function* rootSaga() {
   yield all([
     // Common
@@ -151,6 +161,9 @@ export default function* rootSaga() {
     watchFetchDeclineCheckUp(),
     watchFetchDetailCheckUpParent(),
     watchFetchResultCheckUpParent(),
+    watchFetchMeetingParent(),
+    watchFetchAcceptMeeting(),
+    watchFetchDeclineMeeting(),
 
     // Nurse
     watchFetchProfile(),
@@ -241,5 +254,11 @@ export default function* rootSaga() {
     // AI Chat
     watchAiChat(),
     watchGetAllChatBoxAi(),
+    //api admin
+    watchFetchGetAllStudent(),
+    watchFetchGetAllAccount(),
+    watchFetchDetailAccount(),
+    watchFetchChangeStatusUser(),
+    watchCreateStudentAdmin(),
   ]);
 }

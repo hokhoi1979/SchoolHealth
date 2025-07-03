@@ -22,7 +22,7 @@ const ResultModal = ({ open, onClose, resultData, loading, error }) => {
     if (error) {
       return (
         <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md">
-          ❌ Không thể tải kết quả khám sức khỏe. Vui lòng thử lại sau.
+          ❌ Failed to load the health check result. Please try again later.
         </div>
       );
     }
@@ -30,7 +30,7 @@ const ResultModal = ({ open, onClose, resultData, loading, error }) => {
     if (!student) {
       return (
         <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded-md">
-          ⚠️ Không tìm thấy thông tin học sinh.
+          ⚠️ Student information not found.
         </div>
       );
     }
@@ -40,7 +40,7 @@ const ResultModal = ({ open, onClose, resultData, loading, error }) => {
         <div className="flex flex-col items-center text-center py-10 space-y-3">
           <CloseCircleOutlined className="text-5xl text-red-500" />
           <p className="text-red-600 text-lg font-semibold">
-            Học sinh vắng mặt, không có thông tin kết quả.
+            Student was absent. No result available.
           </p>
         </div>
       );
@@ -48,46 +48,44 @@ const ResultModal = ({ open, onClose, resultData, loading, error }) => {
 
     return (
       <div className="space-y-6">
-        {/* Học sinh */}
+        {/* Student Info */}
         <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl shadow-sm">
           <h2 className="text-xl font-semibold text-blue-700 mb-2">
-            📘 Thông tin học sinh
+            📘 Student Information
           </h2>
           <ul className="text-blue-900 space-y-1">
             <li>
-              <strong>Họ tên:</strong> {student.fullname}
+              <strong>Full Name:</strong> {student.fullname}
             </li>
             <li>
-              <strong>Mã học sinh:</strong> {student.student_code}
+              <strong>Student Code:</strong> {student.student_code}
             </li>
             <li>
-              <strong>Lớp:</strong> {student.className}
+              <strong>Class:</strong> {student.className}
             </li>
             <li>
-              <strong>Ghi chú chung:</strong>{" "}
-              {student.overallNotes || "Không có"}
+              <strong>General Note:</strong> {student.overallNotes || "None"}
             </li>
           </ul>
         </div>
 
-        {/* Kết quả khám */}
+        {/* Health Check Results */}
         <div className="bg-green-50 border border-green-200 p-4 rounded-xl shadow-sm">
           <h2 className="text-xl font-semibold text-green-700 mb-3">
-            🩺 Kết quả kiểm tra sức khỏe
+            🩺 Health Check Results
           </h2>
 
           {student.results?.length > 0 ? (
             <ul className="space-y-2 list-disc list-inside text-green-900">
               {student.results.map((res) => (
                 <li key={res.contentID}>
-                  <strong>{res.contentTitle}:</strong>{" "}
-                  {res.value || "Không có dữ liệu"}
+                  <strong>{res.contentTitle}:</strong> {res.value || "No data"}
                   {res.note && ` (${res.note})`}
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-green-700">Không có kết quả chi tiết.</p>
+            <p className="text-green-700">No detailed results available.</p>
           )}
         </div>
       </div>
@@ -102,7 +100,7 @@ const ResultModal = ({ open, onClose, resultData, loading, error }) => {
       title={
         <div className="flex items-center gap-2 text-green-600">
           <CheckCircleOutlined className="text-2xl" />
-          <span className="text-xl font-semibold">Kết quả khám sức khỏe</span>
+          <span className="text-xl font-semibold">Health Check Result</span>
         </div>
       }
       width={650}
