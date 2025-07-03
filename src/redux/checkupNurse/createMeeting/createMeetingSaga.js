@@ -8,6 +8,10 @@ import {
   createMeetingFail,
   createMeetingSuccess,
 } from "./createMeetingSlice";
+import {
+  studentMeetingFail,
+  studentMeetingSuccess,
+} from "../listStudentMeeting/listStudentMeetingSlice";
 
 const URL_API = import.meta.env.VITE_API_URL;
 console.log("🧠 Saga file loaded");
@@ -31,8 +35,23 @@ function* createMeetingSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(createMeetingSuccess(response.data));
-      console.log("SUCCESS", response.data);
       toast.success("Create meeting successful!");
+
+      const fetch = yield call(
+        axios.get,
+        `${URL_API}/nurse/v1/check-up/meeting/students`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (fetch.status === 200 || fetch.status === 201) {
+        yield put(studentMeetingSuccess(fetch.data));
+      } else {
+        yield put(studentMeetingFail(fetch.status));
+      }
     } else {
       yield put(createMeetingFail(response.status));
       toast.error("Create meeting fail!");
@@ -45,7 +64,6 @@ function* createMeetingSaga(action) {
 }
 
 function* watchCreateMeeting() {
-  console.log("🟢 Saga watcher: watchCreateMeeting is registered");
   yield takeLatest(CREATE__MEETING, createMeetingSaga);
 }
 
