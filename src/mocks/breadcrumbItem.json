@@ -13,6 +13,15 @@
       "password": "Change Password"
     }
   },
+  "Admin": {
+    "title": "Admin",
+    "pages": {
+      "dashboard": "Dashboard",
+      "student": "Student",
+      "detail": "Detail",
+      "account": "Account"
+    }
+  },
   "Manager": {
     "title": "Manager",
     "pages": {
@@ -37,7 +46,8 @@
       "check up": "Medical CheckUp",
       "history": "History & Report",
       "information": "Information",
-      "password": "Change Password"
+      "password": "Change Password",
+      "meeting": "Meeting"
     }
   },
   "Student": {

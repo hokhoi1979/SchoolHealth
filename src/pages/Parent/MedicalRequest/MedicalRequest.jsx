@@ -12,7 +12,7 @@ import {
   Col,
   Select,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { MedicineBoxOutlined, PlusOutlined } from "@ant-design/icons";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "../../../components/Footer/AppFooter";
@@ -165,7 +165,18 @@ const MedicalRequest = () => {
 
         {/* Modal Add Medication - FIXED */}
         <Modal
-          title="Add new medication"
+          title={
+            <div className="flex items-center">
+              <MedicineBoxOutlined
+                style={{
+                  fontSize: "24px",
+                  color: "#1890ff",
+                  marginRight: "8px",
+                }}
+              />
+              <span>Add new medication</span>
+            </div>
+          }
           open={isAddVisible}
           onCancel={handleCancel}
           footer={null} // Remove custom footer to prevent duplicate submission
@@ -182,9 +193,11 @@ const MedicalRequest = () => {
                   className="w-full rounded border"
                 >
                   {student.map((stu) => (
-                    <Select.Option key={stu.id} value={stu.id}>
-                      {stu.name}
-                    </Select.Option>
+                    <Option key={stu.id} value={stu.id}>
+                      {`${stu.account?.fullname} - ${stu.student_code} (${
+                        stu.classAssignments?.[0]?.class?.name || "No Class"
+                      })`}
+                    </Option>
                   ))}
                 </Select>
               </Form.Item>

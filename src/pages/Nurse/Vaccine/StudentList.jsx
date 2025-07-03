@@ -190,7 +190,7 @@ function StudentList() {
                 {student.data.vaccineEventStock.map((item, index) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between  rounded-xl px-4 py-3 shadow-sm bg-[#f9f9f9]"
+                    className="flex items-center justify-between  rounded-xl px-4 py-3  bg-gradient-to-br from-cyan-50 to-pink-50 shadow-sm"
                   >
                     <div className="flex items-center gap-4">
                       <img

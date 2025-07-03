@@ -25,6 +25,9 @@ import getCheckUpParentAcceptReducer from "./getCheckupParent/getCheckupParentAc
 import getCheckUpParentDeclineReducer from "./getCheckupParent/getCheckupParentDeclineSlice";
 import detailCheckUpParentReducer from "./getCheckupParent/getDetailCheckupParentSlice";
 import resultCheckUpParentReducer from "./getCheckupParent/getResultCheckupParentSlice";
+import meetingParentReducer from "./getMettingParent/getAllMettingParentSlice";
+import getMeetingParentAcceptReducer from "./getMettingParent/getMeetingParentAcceptSlice";
+import getMeetingParentDeclineReducer from "./getMettingParent/getMeetingParentDeclineSlice";
 
 import managerMedicalReducer from "./manager/managerSlice";
 import managerVaccineReducer from "./manager/createVaccineManagerSlice";
@@ -107,6 +110,12 @@ import sendCheckupParentReducer from "./checkupNurse/sendCheckupToParent/sendChe
 
 import studentDetailProfileReducer from "./getProflie/getProfileStudentSlice";
 
+import getAllStudentReducer from "./admin/getAllStudentSlice";
+import getAllAccountReducer from "./admin/getAllAccountSlice";
+import detailAccountReducer from "./admin/getDetailAccountSlice";
+import changeStatusUserReducer from "./admin/changeStatusUserSlice";
+import createInformationStudentAdminReducer from "./admin/createStudentAdminSlice";
+
 const rootReducer = combineReducers({
   account: accountReducers,
   accountRegister: registerReducer,
@@ -164,6 +173,9 @@ const rootReducer = combineReducers({
   checkupParentDecline: getCheckUpParentDeclineReducer,
   detailCheckUpParent: detailCheckUpParentReducer,
   resultCheckUpParent: resultCheckUpParentReducer,
+  meetingParent: meetingParentReducer,
+  meetingParentAccept: getMeetingParentAcceptReducer,
+  meetingParentDecline: getMeetingParentDeclineReducer,
 
   vaccineResult: vaccineResultReducer,
   sendVaccineResult: sendResultVaccineReducer,
@@ -208,9 +220,17 @@ const rootReducer = combineReducers({
 
   parentProfileHealth: healthProfileReducer,
 
+  //api student
   getProfile: getProfileReducer,
   changePassword: changePasswordReducer,
   getProfileStudent: studentDetailProfileReducer,
+
+  //api admin
+  getAllStudent: getAllStudentReducer,
+  getAllAccount: getAllAccountReducer,
+  getDetailAccount: detailAccountReducer,
+  changeStatusUser: changeStatusUserReducer,
+  createInformationStudentAdmin: createInformationStudentAdminReducer,
 });
 
 export default rootReducer;

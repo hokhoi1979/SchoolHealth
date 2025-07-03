@@ -66,13 +66,21 @@ import RequestManager from "../pages/Manager/Request/RequestManager";
 import ManagerMedicalEvent from "../pages/Manager/MedicalEventMedical/managerMedicalEvent";
 import ParentInfor from "../pages/Parent/ParentInformation/ParentInformation";
 import ChangePasswordParent from "../pages/Parent/ChangePassword/ChangePassword";
+import MeetingParent from "../pages/Parent/Meeting/Meeting";
+import PendingMetting from "../pages/Parent/Meeting/Pending";
+import CompleteMeeting from "../pages/Parent/Meeting/Completed";
+import RejectMeeting from "../pages/Parent/Meeting/Rejected";
 
 //Students import
 import StudentLayout from "../pages/Student/StudentLayout";
 import StudentInformation from "../pages/Student/StudentInformation/StudentInformation";
 import ChangePassword from "../pages/Student/ChangePassword/ChangePassword";
 import PrivateRoute from "./privateRoute";
-
+import AdminLayout from "../pages/Admin/AdminLayout";
+import AccountAdmin from "../pages/Admin/AccountAdmin/AccountAdmin";
+import StudentAdmin from "../pages/Admin/StudentAdmin/StudentAdmin";
+import DashboardAdmin from "../pages/Admin/DashboardAdmin/DashboardAdmin";
+import StudentDetail from "../pages/Admin/StudentAdmin/StudentDetail";
 import New from "../pages/News/New";
 
 const router = createBrowserRouter([
@@ -90,6 +98,29 @@ const router = createBrowserRouter([
       },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
+
+      {
+        path: "admin",
+        element: <PrivateRoute allowedRoles={[1]} />,
+        children: [
+          {
+            path: "",
+            element: <AdminLayout />,
+            children: [
+              { path: "", element: <DashboardAdmin /> },
+              {
+                path: "studentAdmin",
+                element: <StudentAdmin />,
+              },
+              {
+                path: "studentAdmin/studentDetail/:id",
+                element: <StudentDetail />,
+              },
+              { path: "accountAdmin", element: <AccountAdmin /> },
+            ],
+          },
+        ],
+      },
 
       // Nurse routes
       {
@@ -255,6 +286,15 @@ const router = createBrowserRouter([
                   { path: "health_infor", element: <HealthInfor /> },
                   { path: "send_result", element: <SendResult /> },
                   { path: "notification", element: <Notification /> },
+                ],
+              },
+              {
+                path: "meeting",
+                element: <MeetingParent />,
+                children: [
+                  { path: "", element: <PendingMetting /> },
+                  { path: "completed", element: <CompleteMeeting /> },
+                  { path: "rejected", element: <RejectMeeting /> },
                 ],
               },
               {

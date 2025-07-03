@@ -4,6 +4,9 @@ import {
   CheckCircleOutlined,
   CalendarOutlined,
   EyeOutlined,
+  CheckCircleTwoTone,
+  CloseCircleTwoTone,
+  ExclamationCircleTwoTone,
 } from "@ant-design/icons";
 import { Syringe, User } from "lucide-react";
 
@@ -131,76 +134,99 @@ const Completed = ({
       {/* Modal hiển thị kết quả */}
       <Modal
         title={
-          <span className="text-xl font-semibold text-green-600">
+          <div className="flex items-center gap-3 text-2xl font-semibold text-green-600">
+            <CheckCircleTwoTone twoToneColor="#52c41a" />
             Vaccination Result
-          </span>
+          </div>
         }
         open={openModal}
         onCancel={() => setOpenModal(false)}
         footer={null}
-        bodyStyle={{ padding: "24px 24px 12px 24px", borderRadius: 8 }}
+        bodyStyle={{ padding: "24px 24px 16px 24px", borderRadius: 12 }}
       >
         {resultLoading ? (
-          <Paragraph>Loading data...</Paragraph>
+          <div className="text-center py-8 text-base text-gray-500">
+            <ExclamationCircleTwoTone twoToneColor="#faad14" className="mr-2" />
+            Loading data...
+          </div>
         ) : resultError ? (
-          <Paragraph type="danger">Error: {resultError}</Paragraph>
+          <Paragraph type="danger">
+            <CloseCircleTwoTone twoToneColor="#ff4d4f" className="mr-2" />
+            Error: {resultError}
+          </Paragraph>
         ) : result ? (
-          <>
-            <div className="mb-5 p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-3">
-              <div className="flex items-center gap-2">
-                <Text strong className="text-gray-700">
-                  Status:
-                </Text>
-                {result.status === "SUCCESS" ? (
-                  <Tag color="green">SUCCESS</Tag>
-                ) : result.status === "SKIPPED" ? (
-                  <Tag color="volcano">ABSENT</Tag>
-                ) : (
-                  <Tag>{result.status}</Tag>
-                )}
-              </div>
+          <div className="p-6 rounded-2xl border border-gray-200 bg-gradient-to-br from-white via-green-50 to-emerald-100 shadow-lg space-y-6">
+            {/* STATUS */}
+            <div className="flex items-center space-x-2 text-lg">
+              <span className="font-semibold text-gray-800">Status:</span>
+              {result.status === "SUCCESS" ? (
+                <Tag
+                  color="green"
+                  className="text-sm px-4 py-1 rounded-full font-medium"
+                >
+                  SUCCESS
+                </Tag>
+              ) : result.status === "SKIPPED" ? (
+                <Tag
+                  color="volcano"
+                  className="text-sm px-4 py-1 rounded-full font-medium"
+                >
+                  ABSENT
+                </Tag>
+              ) : (
+                <Tag
+                  color="default"
+                  className="text-sm px-4 py-1 rounded-full font-medium"
+                >
+                  {result.status}
+                </Tag>
+              )}
+            </div>
 
-              {result.status === "SUCCESS" && (
-                <div className="grid grid-cols-1 gap-2 text-[15px] text-gray-700">
+            {/* DETAILS */}
+            {result.status === "SUCCESS" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[15px] text-gray-700">
+                <div className="bg-white rounded-xl shadow p-4 border border-green-100">
                   <p>
-                    <strong>Student Code:</strong>{" "}
-                    <span className="text-gray-800">
-                      {result.student.student_code}
-                    </span>
+                    <span className="font-semibold text-gray-800">
+                      Student Code:
+                    </span>{" "}
+                    {result.student.student_code}
                   </p>
                   <p>
-                    <strong>Full Name:</strong>{" "}
-                    <span className="text-gray-800">
-                      {result.student.account.fullname}
-                    </span>
+                    <span className="font-semibold text-gray-800">
+                      Full Name:
+                    </span>{" "}
+                    {result.student.account.fullname}
                   </p>
                   <p>
-                    <strong>Class:</strong>{" "}
-                    <span className="text-gray-800">
-                      {result.student.classAssignments?.[0]?.class?.name ||
-                        "Not assigned"}
-                    </span>
+                    <span className="font-semibold text-gray-800">Class:</span>{" "}
+                    {result.student.classAssignments?.[0]?.class?.name ||
+                      "Not assigned"}
                   </p>
+                </div>
+                <div className="bg-white rounded-xl shadow p-4 border border-blue-100">
                   <p>
-                    <strong>Result:</strong>{" "}
-                    <span className="text-blue-600 font-medium">
+                    <span className="font-semibold text-gray-800">Result:</span>{" "}
+                    <span className="text-blue-600 font-semibold">
                       {result.result}
                     </span>
                   </p>
                   <p>
-                    <strong>Note:</strong>{" "}
-                    <span className="text-gray-700">{result.note}</span>
+                    <span className="font-semibold text-gray-800">Note:</span>{" "}
+                    <span className="italic text-gray-600">{result.note}</span>
                   </p>
                 </div>
-              )}
+              </div>
+            )}
 
-              {result.status === "SKIPPED" && (
-                <Paragraph className="italic text-gray-500 mt-2">
-                  Student was absent, no result information available.
-                </Paragraph>
-              )}
-            </div>
-          </>
+            {/* ABSENT */}
+            {result.status === "SKIPPED" && (
+              <div className="bg-yellow-50 text-yellow-700 rounded-lg px-4 py-3 text-sm border border-yellow-200 italic">
+                Student was absent, no result information available.
+              </div>
+            )}
+          </div>
         ) : (
           <Paragraph>No matching result found.</Paragraph>
         )}
