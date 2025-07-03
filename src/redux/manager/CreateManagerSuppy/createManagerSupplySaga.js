@@ -62,8 +62,11 @@ function* managerCreateSupplySaga(action) {
       yield put(postManagerFailSupply(`API ERROR: ${response.status}`));
     }
   } catch (error) {
-    console.error(error);
-    yield put(postManagerFailSupply(`API ERROR: ${error.message}`));
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`Create Supply Fail: ${errorMessage}`);
+    yield put(postManagerFailSupply(errorMessage));
+    console.error("Create Supply Error:", error);
   }
 }
 

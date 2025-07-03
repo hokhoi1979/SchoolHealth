@@ -31,6 +31,8 @@ import { patchManagerEndMedicalCheckup } from "../../../redux/MedicalCheckUpMana
 import { deleteManagerMedicalCheckup } from "../../../redux/MedicalCheckUpManager/DeleteMedicalCheckupManager/deleteMedicalCheckupManagerSlice";
 import UpdateCheckupModal from "./UpdateCheckupModal";
 import { putManagerMedicalCheckup } from "../../../redux/MedicalCheckUpManager/UpdateMedicalCheckupManager/updateMedicalCheckupManagerSlice";
+import CheckupDetailModal from "./CheckupDetailModal";
+import { fetchDetailCheckupManager } from "../../../redux/MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSlice";
 
 function MedicalCheckup() {
   const [loading, setLoading] = useState(false);
@@ -58,6 +60,7 @@ function MedicalCheckup() {
   useEffect(() => {
     dispatch(fetchClassManager());
   }, []);
+
   const { classManager } = useSelector((state) => state.getManagerClass);
   const classList = classManager?.data || [];
 
@@ -69,6 +72,19 @@ function MedicalCheckup() {
     medicine: medicineSupply.filter((item) => item.type === "medicine"),
     supply: medicineSupply.filter((item) => item.type === "supply"),
   };
+
+  const [detailEvent, setDetailEvent] = useState(null);
+  const { checkupDetail } = useSelector(
+    (state) => state.getDetailCheckupManager
+  );
+  const detail = checkupDetail?.data || {};
+  const handleViewMore = (event) => {
+    if (!event?.id) return;
+    dispatch(fetchDetailCheckupManager(event.id));
+    console.log(event);
+    setViewModalOpen(true);
+  };
+
   const formatMedicineAndSupply = () => {
     const medicine = medicineSupply
       .filter((item) => item.type === "medicine")
@@ -112,15 +128,17 @@ function MedicalCheckup() {
         date: isValid ? scheduledDate.format("DD/MM/YYYY") : null,
         time: isValid ? scheduledDate.format("HH:mm") : null,
         status: item.status,
-        totalStudent: item.studentResponseCount?.totalStudent || 0,
-        participate: item.studentResponseCount?.studentsAcceptCount || 0,
+        totalStudent: item.studentResponseCount?.totalStudent,
+        participate: item.studentResponseCount?.studentsAcceptCount,
         targets: item.HealthCheckupTarget || [],
       };
     });
 
     setData(formatted);
   }, [checkupManagerList]);
-
+  const avg = (Number(data.participate) / Number(data.totalStudent)) * 100;
+  console.log("avg", avg);
+  console.log("Student", data);
   useEffect(() => {
     dispatch(fetchCheckupManager());
   }, [dispatch]);
@@ -227,7 +245,7 @@ function MedicalCheckup() {
 
     try {
       await dispatch(patchManagerConfirmCheckup({ id }));
-      toast.success("Sent confirmation successfully");
+
       setNotificationModalOpen(false);
     } catch (error) {
       console.error("API Error:", error?.response?.data || error?.message);
@@ -288,8 +306,8 @@ function MedicalCheckup() {
       targetText = "all students";
     }
 
-    const formattedDate = dayjs(event?.scheduledAt).isValid()
-      ? dayjs(event.scheduledAt).format("DD/MM/YYYY")
+    const formattedDate = dayjs(event?.date, "DD/MM/YYYY").isValid()
+      ? dayjs(event.date, "DD/MM/YYYY").format("DD/MM/YYYY")
       : "Not scheduled";
     setNotificationContent(
       `Dear Parents,\n\nOur school will organize the ${event?.title.toLowerCase()} for students in ${targetText} on ${formattedDate}.\n\nPlease confirm your participation and support us in ensuring the best preparation.\n\nSincerely,`
@@ -351,24 +369,23 @@ function MedicalCheckup() {
   const availableContents = [
     {
       key: "1",
-      name: "Chiều cao",
+      name: "Height",
       description: "Đo chiều cao",
       inputType: "NUMBER",
     },
     {
       key: "2",
-      name: "Cân nặng",
+      name: "Weight",
       description: "Đo cân nặng",
       inputType: "NUMBER",
     },
     {
       key: "3",
-      name: "Huyết áp",
+      name: "Blood Pressure",
       description: "Kiểm tra huyết áp",
       inputType: "TEXT",
     },
   ];
-
   const handleGradeSection = (grade, checked) => {
     if (checked) {
       setSelectedGrades([...selectedGrades, grade]);
@@ -380,9 +397,7 @@ function MedicalCheckup() {
   const renderTargetSelection = () => {
     switch (targetType) {
       case "school":
-        return (
-          <div className="text-gray-600 italic">Áp dụng cho toàn trường</div>
-        );
+        return <div className="text-gray-600 italic">School</div>;
 
       case "class":
         return (
@@ -402,7 +417,7 @@ function MedicalCheckup() {
             </div>
             {selectedClasses.length > 0 && (
               <div className="text-sm text-blue-600">
-                Đã chọn: {selectedClasses.join(", ")}
+                Picked: {selectedClasses.join(", ")}
               </div>
             )}
           </div>
@@ -411,7 +426,7 @@ function MedicalCheckup() {
       case "grade":
         return (
           <div className="space-y-3">
-            <div className="font-medium mb-2">Chọn khối:</div>
+            <div className="font-medium mb-2">Choose Grade:</div>
             <div className="flex gap-4">
               {availableGrades.map((grade) => (
                 <Checkbox
@@ -444,7 +459,7 @@ function MedicalCheckup() {
       </h1>
       <div className="pl-5 mt-5 flex gap-5">
         <div className="">
-          <Button className="ml-[1000px]" onClick={showModal}>
+          <Button className="ml-[950px]" onClick={showModal}>
             Create a new medical event
           </Button>
         </div>
@@ -452,25 +467,25 @@ function MedicalCheckup() {
       <div className="grid grid-cols-3 mt-5 pl-5 gap-6 items-stretch">
         {data.map((item) => {
           const percentage =
-            item.totalStudent.length > 0
-              ? (
-                  (item.studentResponseCount.studentsAcceptCount /
-                    item.studentResponseCount.totalStudent) *
-                  100
-                ).toFixed(0)
+            Number(item.totalStudent) > 0
+              ? Math.round(
+                  (Number(item.participate) / Number(item.totalStudent)) * 100
+                )
               : 0;
 
           return (
             <div
               key={item.id}
-              className="bg-white p-6 rounded-2xl flex flex-col justify-between shadow-sm h-[420px]"
+              className="flex flex-col justify-between h-[370px] bg-white bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec] rounded-2xl border border-gray-200 shadow-md hover:shadow-lg p-5 transition-all duration-300"
             >
               {/* TOP: Trạng thái + icon */}
               <div className="flex justify-between">
                 <Button
                   className={`!text-white ${
-                    item.status === "SUCCESSED" || item.status === "CONFIRMED"
+                    item.status === "SUCCESSED"
                       ? "!bg-[#6CC76F]"
+                      : item.status === "CONFIRMED"
+                      ? "!bg-[#62d49f]"
                       : "!bg-[#CBD361]"
                   }`}
                 >
@@ -494,7 +509,7 @@ function MedicalCheckup() {
                     </svg>
                   </Tooltip>
 
-                  <Tooltip title="Gửi xác nhận phụ huynh">
+                  <Tooltip title="Send To Parent">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width={25}
@@ -515,86 +530,229 @@ function MedicalCheckup() {
                 {(item?.targets ?? []).length === 0 ? (
                   <span>SCHOOL</span>
                 ) : (
-                  item.targets.map((target, index) => (
-                    <span key={index}>
-                      {target.className
-                        ? target.className
-                        : target.grade !== undefined
-                        ? `Khối ${target.grade}`
-                        : target.name ?? "?"}
-                      ,{" "}
-                    </span>
-                  ))
+                  <span>
+                    {item.targets
+                      .map((target) =>
+                        target.className
+                          ? target.className
+                          : target.grade !== undefined
+                          ? ` ${target.grade}`
+                          : target.name ?? "?"
+                      )
+                      .join(", ")}
+                  </span>
                 )}
-
+                <div className="flex gap-2.5 mt-3 ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <mask id="lineMdFileDocumentMinus0">
+                      <g
+                        fill="none"
+                        stroke="#fff"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-dasharray="64"
+                          stroke-dashoffset="64"
+                          d="M13.5 3l5.5 5.5v11.5c0 0.55 -0.45 1 -1 1h-12c-0.55 0 -1 -0.45 -1 -1v-16c0 -0.55 0.45 -1 1 -1Z"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            dur="0.6s"
+                            values="64;0"
+                          />
+                        </path>
+                        <path d="M14.5 3.5l2.25 2.25l2.25 2.25z" opacity="0">
+                          <animate
+                            fill="freeze"
+                            attributeName="d"
+                            begin="0.6s"
+                            dur="0.2s"
+                            values="M14.5 3.5l2.25 2.25l2.25 2.25z;M14.5 3.5l0 4.5l4.5 0z"
+                          />
+                          <set
+                            fill="freeze"
+                            attributeName="opacity"
+                            begin="0.6s"
+                            to="1"
+                          />
+                        </path>
+                        <path
+                          stroke-dasharray="8"
+                          stroke-dashoffset="8"
+                          d="M9 13h6"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            begin="0.8s"
+                            dur="0.2s"
+                            values="8;0"
+                          />
+                        </path>
+                        <path
+                          stroke-dasharray="4"
+                          stroke-dashoffset="4"
+                          d="M9 17h3"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            begin="1s"
+                            dur="0.2s"
+                            values="4;0"
+                          />
+                        </path>
+                        <path
+                          fill="#000"
+                          fill-opacity="0"
+                          stroke="none"
+                          d="M19 13c3.31 0 6 2.69 6 6c0 3.31 -2.69 6 -6 6c-3.31 0 -6 -2.69 -6 -6c0 -3.31 2.69 -6 6 -6Z"
+                        >
+                          <set
+                            fill="freeze"
+                            attributeName="fill-opacity"
+                            begin="1.2s"
+                            to="1"
+                          />
+                        </path>
+                        <path
+                          stroke-dasharray="8"
+                          stroke-dashoffset="8"
+                          d="M16 19h6"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            begin="1.2s"
+                            dur="0.2s"
+                            values="8;0"
+                          />
+                        </path>
+                      </g>
+                    </mask>
+                    <rect
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      mask="url(#lineMdFileDocumentMinus0)"
+                    />
+                  </svg>
+                  <p>{item.description}</p>
+                </div>
                 <div className="flex gap-2.5 mt-3">
                   <CalendarIcon />
                   <p>{item.date || "Chưa có ngày"}</p>
                 </div>
 
-                <div className="flex gap-2.5 mt-3">
+                {/* <div className="flex gap-2.5 mt-3">
                   <ClockIcon />
                   <p>{item.time || "Chưa có giờ"}</p>
+                </div> */}
+                <div className="flex gap-2.5 mt-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#5B5454"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m17 3l4 4m-2-2l-4.5 4.5m-3-3l6 6m-1-1L10 18H6v-4l6.5-6.5m-5 5L9 14m1.5-4.5L12 11M3 21l3-3"
+                    />
+                  </svg>
+                  <p>School</p>
                 </div>
               </div>
 
-              <div className="space-y-3 mt-4">
+              <div className="mt-3">
                 {item?.status !== "DRAFT" && (
-                  <>
-                    <div className="flex justify-between text-sm text-gray-600">
-                      <span>Xác nhận tham gia</span>
+                  <div>
+                    <div className="flex justify-between mb-1 text-sm text-gray-600">
+                      <span>Confirm Participate</span>
                       <span>
-                        {item?.data?.checkUpEntities?.studentResponseCount
-                          ?.studentsAcceptCount ?? 0}
-                        /
-                        {item?.data?.checkUpEntities?.studentResponseCount
-                          ?.totalStudent ?? 0}
+                        {item.participate ?? 0}/{item.totalStudent ?? 0}
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-3">
                       <div
                         className="bg-teal-500 h-2.5 rounded-full"
-                        style={{ width: `${percentage}%` }}
+                        style={{
+                          width: `${
+                            item.totalStudent && item.totalStudent > 0
+                              ? (
+                                  (item.participate / item.totalStudent) *
+                                  100
+                                ).toFixed(0)
+                              : 0
+                          }%`,
+                        }}
                       ></div>
                     </div>
-                    <div className="text-right text-sm text-gray-500">
-                      {percentage}%
-                    </div>
-                  </>
-                )}
 
-                <div className="flex gap-2.5">
-                  {item.status !== "ENDED" && item.status !== "CONFIRMED" && (
+                    <div className="text-right text-sm text-gray-500 mt-1">
+                      {item.totalStudent && item.totalStudent > 0
+                        ? Math.round(
+                            (item.participate / item.totalStudent) * 100
+                          )
+                        : 0}
+                      %
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3 ">
+                <div className="flex gap-2.5 ">
+                  {item.status == "DRAFT" && (
                     <>
-                      <Button onClick={() => handleUpdateCheckup(item)}>
-                        Cập nhật buổi khám
+                      <Button
+                        className="w-full"
+                        onClick={() => handleUpdateCheckup(item)}
+                      >
+                        Update
                       </Button>
                       <Popconfirm
-                        title="Bạn có chắc muốn xoá buổi khám sức khoẻ này không?"
+                        title="Are you sure you want to delete this medical checkup?"
                         onConfirm={() => handleDeleteCheckup(item.id)}
-                        okText="Xoá"
-                        cancelText="Hủy"
+                        okText="Delete"
+                        cancelText="Cancel"
                       >
-                        <Button danger>Xoá</Button>
+                        <Button danger>Delete</Button>
                       </Popconfirm>
                     </>
                   )}
-                  {item.status !== "SUCCESSED" && (
-                    <Popconfirm
-                      title="Bạn có chắc muốn kết thúc buổi khám này không?"
-                      onConfirm={() => handleEndCheckup(item?.id)}
-                      okText="Xác nhận"
-                      cancelText="Hủy"
-                    >
-                      <Button>Kết thúc</Button>
-                    </Popconfirm>
-                  )}
+                  <div className="w-full  ">
+                    {item.status !== "SUCCESSED" && (
+                      <Popconfirm
+                        title="Are you sure you want to end this medical checkup?"
+                        onConfirm={() => handleEndCheckup(item?.id)}
+                        okText="Confirm"
+                        cancelText="Cancel"
+                      >
+                        <Button className="w-full">End Event</Button>
+                      </Popconfirm>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+      <div className="w-full h-30"></div>
       <AppFooter />
       {/* Modal */}
       <Modal
@@ -772,7 +930,7 @@ function MedicalCheckup() {
                 fontWeight: "500",
               }}
             >
-              + Thêm mới
+              + ADD NEW
             </Button>
             {showCheckupEditor && (
               <div
@@ -856,101 +1014,39 @@ function MedicalCheckup() {
           </div>
         </div>
       </Modal>
-      {/* Modal View More */}
-      {/* <Modal
-        open={viewModalOpen}
-        onCancel={handleCloseViewMore}
-        footer={[<Button onClick={handleCloseViewMore}>Close</Button>]}
-      >
-        {selectedEvent && (
-          <div className="font-sans px-4">
-            <h2 className="text-xl font-bold">
-              Campaign Name - {selectedEvent.title}
-            </h2>
-            <p className="text-sm text-gray-500 mt-1 mb-4">
-              {" "}
-              Detailed information about the vaccination campaign
-            </p>
-
-            <div className="grid grid-cols-2 gap-y-4 text-sm mb-4">
-              <div>
-                <p className="text-gray-500"> Campaign Name</p>
-                <p className="font-semibold flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M22 2.25h-3.25V.75a.75.75 0 0 0-1.5-.001V2.25h-4.5V.75a.75.75 0 0 0-1.5-.001V2.25h-4.5V.75a.75.75 0 0 0-1.5-.001V2.25H2a2 2 0 0 0-2 1.999v17.75a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V4.249a2 2 0 0 0-2-1.999M22.5 22a.5.5 0 0 1-.499.5H2a.5.5 0 0 1-.5-.5V4.25a.5.5 0 0 1 .5-.499h3.25v1.5a.75.75 0 0 0 1.5.001V3.751h4.5v1.5a.75.75 0 0 0 1.5.001V3.751h4.5v1.5a.75.75 0 0 0 1.5.001V3.751H22a.5.5 0 0 1 .499.499z"
-                    />
-                    <path
-                      fill="currentColor"
-                      d="M5.25 9h3v2.25h-3zm0 3.75h3V15h-3zm0 3.75h3v2.25h-3zm5.25 0h3v2.25h-3zm0-3.75h3V15h-3zm0-3.75h3v2.25h-3zm5.25 7.5h3v2.25h-3zm0-3.75h3V15h-3zm0-3.75h3v2.25h-3z"
-                    />
-                  </svg>
-                  {selectedEvent.title}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <p className="text-gray-500">Execution Date</p>
-                <p className=" font-semibold flex items-center gap-1 mb-5 ">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2a10 10 0 1 1 0 20a10 10 0 0 1 0-20m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m1 3v5.586l2.707 2.707a1 1 0 1 1-1.414 1.414l-3-3A1 1 0 0 1 11 12V7a1 1 0 0 1 2 0" />
-                  </svg>
-                  {selectedEvent.date}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <p className="text-gray-500">Number: </p>
-                <p className="font-semibold flex items-center gap-1 mb-5 ">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2m-1.5 5h3a2 2 0 0 1 2 2v5.5H14V22h-4v-7.5H8.5V9a2 2 0 0 1 2-2" />
-                  </svg>
-                  {selectedEvent.students} students
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <p className="text-gray-500">Status</p>
-                <span className="inline-block bg-black text-white px-2 py-1 rounded-full text-xs  flex items-center gap-1 mb-5 ">
-                  {selectedEvent.status}
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-4 ">
-              <p className="text-gray-500 text-sm mb-2">Joined Classes</p>
-              <div className="flex flex-wrap gap-2">
-                {selectedEvent.classes.map((cls, idx) => (
-                  <span
-                    key={idx}
-                    className="border border-gray-300 rounded-full px-3 py-1 text-sm"
-                  >
-                    {cls}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal> */}
       {/* Modal of Notification */}
       <Modal
-        title="Send Confirmation Email to Parents"
+        title={
+          <div style={{ textAlign: "center" }}>
+            <Input
+              value={notificationTitle}
+              onChange={(e) => setNotificationTitle(e.target.value)}
+              placeholder="Enter notification title"
+              bordered={false}
+              style={{
+                fontSize: "20px",
+                fontWeight: "bold",
+                padding: "4px 0",
+                background: "transparent",
+                textAlign: "center",
+              }}
+            />
+          </div>
+        }
         open={notificationModalOpen}
         onCancel={() => setNotificationModalOpen(false)}
+        centered
+        width={600}
+        mask={false}
+        style={{
+          backgroundColor: "#fff",
+          borderRadius: 12,
+          border: "2px solid black",
+          boxShadow: "none",
+        }}
+        bodyStyle={{
+          padding: "16px 0 0",
+        }}
         footer={[
           <Button key="cancel" onClick={() => setNotificationModalOpen(false)}>
             Cancel
@@ -960,22 +1056,21 @@ function MedicalCheckup() {
           </Button>,
         ]}
       >
-        <div>
-          <label className="font-medium mb-2 block">Notification Title</label>
-          <Input
-            value={notificationTitle}
-            onChange={(e) => setNotificationTitle(e.target.value)}
-            placeholder="Enter notification title"
-          />
-        </div>
-
-        <div className="mt-4">
-          <label className="font-medium mb-1 block">Notification Content</label>
+        <div
+          style={{
+            padding: "12px 16px",
+            borderRadius: 8,
+            backgroundColor: "#f9f9f9",
+            border: "1px solid #e5e5e5",
+          }}
+        >
           <Input.TextArea
             rows={6}
             value={notificationContent}
             onChange={(e) => setNotificationContent(e.target.value)}
             placeholder="Enter message content"
+            bordered={false}
+            style={{ resize: "none", background: "transparent" }}
           />
         </div>
       </Modal>
@@ -991,6 +1086,22 @@ function MedicalCheckup() {
         setSelectedClasses={setSelectedClasses}
         checkupContents={checkupContents}
         setCheckupContents={setCheckupContents}
+      />
+      <CheckupDetailModal
+        visible={viewModalOpen}
+        onClose={() => setViewModalOpen(false)}
+        event={detail} // <-- dùng biến mới đã trích ra
+        onUseAsTemplate={(detail) => {
+          setCheckupTitle(detail.title);
+          setCheckupDescription(detail.description);
+          setCheckupDate(dayjs(detail.scheduledAt).format("YYYY-MM-DD"));
+          setTargetType(detail.targetType?.toLowerCase());
+          setSelectedClasses(detail.targets?.map((t) => t.className));
+          setCheckupContents(detail.content || []);
+          setItems(detail.vaccineEventStock || []);
+          setViewModalOpen(false);
+          setOpen(true);
+        }}
       />
     </>
   );

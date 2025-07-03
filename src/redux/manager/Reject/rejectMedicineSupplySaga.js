@@ -9,6 +9,7 @@ import {
   fetchAllRequestFail,
   fetchAllRequestSuccess,
 } from "../GetAllRequest/getAllRequestSlice";
+import toast from "react-hot-toast";
 
 const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
@@ -31,7 +32,7 @@ function* rejectMedicineSupplyManagerSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(rejectManagerMedicineSupplySuccess(response.data));
-
+      toast.success("Reject Success");
       const fetchData = yield call(axios.get, `${URL_API}/manager/v1/request`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -42,7 +43,6 @@ function* rejectMedicineSupplyManagerSaga(action) {
       if (fetchData.status === 200 || fetchData.status === 201) {
         console.log("DUCC", fetchData.data);
         yield put(fetchAllRequestSuccess(fetchData.data));
-        toast.success("Reject Success");
       } else {
         yield put(fetchAllRequestFail(fetchData.status));
         toast.error("Reject Fail");
@@ -51,10 +51,11 @@ function* rejectMedicineSupplyManagerSaga(action) {
       yield put(rejectManagerMedicineSupplyFail(response.status));
     }
   } catch (error) {
-    const errMsg =
-      error?.response?.data?.message || error.message || "Unknown error";
-    yield put(rejectManagerMedicineSupplyFail(errMsg));
-    console.log(error);
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`Reject Fail: ${errorMessage}`);
+    yield put(rejectManagerMedicineSupplyFail(errorMessage));
+    console.error("Reject Error:", error);
   }
 }
 

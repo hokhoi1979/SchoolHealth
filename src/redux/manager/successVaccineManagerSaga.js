@@ -12,6 +12,10 @@ import {
   patchMangerFailVaccine,
 } from "./successVaccineManagerSlice";
 import { toast } from "react-toastify";
+import {
+  fetchVaccineManagerFail,
+  fetchVaccineManagerSucess,
+} from "./getVaccineManagerSlice";
 
 const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 

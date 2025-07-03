@@ -12,7 +12,7 @@ import {
   Col,
   Select,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { MedicineBoxOutlined, PlusOutlined } from "@ant-design/icons";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "../../../components/Footer/AppFooter";
@@ -154,231 +154,241 @@ const MedicalRequest = () => {
               Register medications for students and track medication history.
             </p>
           </div>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
+          <button
             onClick={() => setIsAddVisible(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow transition-all duration-200"
           >
+            <PlusOutlined />
             Add new medication
-          </Button>
+          </button>
         </div>
 
         {/* Modal Add Medication - FIXED */}
         <Modal
-          title="Add new medication"
+          title={
+            <div className="flex items-center">
+              <MedicineBoxOutlined
+                style={{
+                  fontSize: "24px",
+                  color: "#1890ff",
+                  marginRight: "8px",
+                }}
+              />
+              <span>Add new medication</span>
+            </div>
+          }
           open={isAddVisible}
           onCancel={handleCancel}
           footer={null} // Remove custom footer to prevent duplicate submission
           width={800}
         >
-          <Form
-            layout="vertical"
-            form={form}
-            onFinish={handleAdd} // Only use form's onFinish
-          >
-            <Form.Item
-              label="Student"
-              name="studentID"
-              rules={[{ required: true, message: "Please select a student" }]}
-            >
-              <Select placeholder="Select student" loading={loading}>
-                {student.map((stu) => (
-                  <Select.Option key={stu.id} value={stu.id}>
-                    {stu.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="Name"
-                  name="name"
-                  rules={[{ required: true }]}
+          <Form layout="vertical" form={form} onFinish={handleAdd}>
+            {/* Student */}
+            <div className="mb-4">
+              <label className="block font-medium text-sm mb-1">Student</label>
+              <Form.Item name="studentID" noStyle rules={[{ required: true }]}>
+                <Select
+                  placeholder="Select student"
+                  loading={loading}
+                  className="w-full rounded border"
                 >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="Dosage"
-                  name="dosage"
-                  rules={[{ required: true }]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-            </Row>
+                  {student.map((stu) => (
+                    <Option key={stu.id} value={stu.id}>
+                      {`${stu.account?.fullname} - ${stu.student_code} (${
+                        stu.classAssignments?.[0]?.class?.name || "No Class"
+                      })`}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </div>
 
-            <Row gutter={16}>
-              <Col span={12}>
+            {/* Main Medicine Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-medium text-sm mb-1">Name</label>
+                <Form.Item name="name" noStyle rules={[{ required: true }]}>
+                  <Input className="w-full rounded border px-3 py-2" />
+                </Form.Item>
+              </div>
+
+              <div>
+                <label className="block font-medium text-sm mb-1">Dosage</label>
+                <Form.Item name="dosage" noStyle rules={[{ required: true }]}>
+                  <Input className="w-full rounded border px-3 py-2" />
+                </Form.Item>
+              </div>
+
+              <div>
+                <label className="block font-medium text-sm mb-1">
+                  Quantity Sent
+                </label>
                 <Form.Item
-                  label="Quantity Sent"
                   name="quantitySent"
+                  noStyle
                   rules={[{ required: true }]}
                 >
-                  <Input />
+                  <Input className="w-full rounded border px-3 py-2" />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
+              </div>
+
+              <div>
+                <label className="block font-medium text-sm mb-1">
+                  Usage Times
+                </label>
                 <Form.Item
-                  label="Usage Times"
                   name="usageTimes"
+                  noStyle
                   rules={[{ required: true }]}
                 >
-                  <Input placeholder="e.g. 08:00, 14:00" />
+                  <Input
+                    placeholder="e.g. 08:00, 14:00"
+                    className="w-full rounded border px-3 py-2"
+                  />
                 </Form.Item>
-              </Col>
-            </Row>
+              </div>
 
-            <Row gutter={16}>
-              <Col span={12}>
+              <div>
+                <label className="block font-medium text-sm mb-1">
+                  Start Date
+                </label>
                 <Form.Item
-                  label="Start Date"
                   name="startDate"
+                  noStyle
                   rules={[{ required: true }]}
                 >
-                  <DatePicker style={{ width: "100%" }} />
+                  <DatePicker className="w-full rounded border px-2 py-2" />
                 </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="End Date"
-                  name="endDate"
-                  rules={[{ required: true }]}
-                >
-                  <DatePicker style={{ width: "100%" }} />
+              </div>
+
+              <div>
+                <label className="block font-medium text-sm mb-1">
+                  End Date
+                </label>
+                <Form.Item name="endDate" noStyle rules={[{ required: true }]}>
+                  <DatePicker className="w-full rounded border px-2 py-2" />
                 </Form.Item>
-              </Col>
-            </Row>
+              </div>
+            </div>
 
-            <Form.Item label="Note" name="note" rules={[{ required: true }]}>
-              <TextArea rows={2} />
-            </Form.Item>
+            <div className="mt-4">
+              <label className="block font-medium text-sm mb-1">Note</label>
+              <Form.Item name="note" noStyle rules={[{ required: true }]}>
+                <TextArea
+                  rows={2}
+                  className="w-full rounded border px-3 py-2"
+                />
+              </Form.Item>
+            </div>
 
-            <Form.Item>
-              <div
-                style={{
-                  border: "1px solid #d9d9d9",
-                  borderRadius: 8,
-                  padding: 16,
-                  marginTop: 16,
-                  backgroundColor: "#fafafa",
-                }}
-              >
-                <h3 className="text-lg font-semibold mb-4">
-                  Additional Medications
-                </h3>
+            {/* Extra Medications */}
+            <div className="mt-8 bg-gray-50 p-4 rounded-lg border">
+              <h3 className="text-lg font-semibold text-blue-600 mb-4">
+                Additional Medications
+              </h3>
+
+              <div className="space-y-4">
                 {extraMedications.map((item, index) => (
-                  <Row
-                    gutter={8}
+                  <div
                     key={index}
-                    align="middle"
-                    style={{ marginBottom: 12 }}
+                    className="flex flex-wrap gap-3 bg-white p-3 rounded-md shadow-sm border"
                   >
-                    <Col span={4}>
-                      <Input
-                        placeholder="Name"
-                        value={item.name}
-                        onChange={(e) =>
-                          updateExtraMedication(index, "name", e.target.value)
-                        }
-                      />
-                    </Col>
-                    <Col span={3}>
-                      <Input
-                        placeholder="Dosage"
-                        value={item.dosage}
-                        onChange={(e) =>
-                          updateExtraMedication(index, "dosage", e.target.value)
-                        }
-                      />
-                    </Col>
-                    <Col span={3}>
-                      <Input
-                        placeholder="Qty"
-                        value={item.quantitySent}
-                        onChange={(e) =>
-                          updateExtraMedication(
-                            index,
-                            "quantitySent",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </Col>
-                    <Col span={4}>
-                      <Input
-                        placeholder="Times"
-                        value={item.usageTimes}
-                        onChange={(e) =>
-                          updateExtraMedication(
-                            index,
-                            "usageTimes",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </Col>
-                    <Col span={3}>
-                      <DatePicker
-                        placeholder="Start"
-                        value={item.startDate}
-                        onChange={(date) =>
-                          updateExtraMedication(index, "startDate", date)
-                        }
-                        style={{ width: "100%" }}
-                      />
-                    </Col>
-                    <Col span={3}>
-                      <DatePicker
-                        placeholder="End"
-                        value={item.endDate}
-                        onChange={(date) =>
-                          updateExtraMedication(index, "endDate", date)
-                        }
-                        style={{ width: "100%" }}
-                      />
-                    </Col>
-                    <Col span={4}>
-                      <Input.TextArea
-                        placeholder="Note"
-                        value={item.note}
-                        onChange={(e) =>
-                          updateExtraMedication(index, "note", e.target.value)
-                        }
-                        rows={1}
-                      />
-                    </Col>
-                    <Col span={2}>
-                      <Button
-                        danger
-                        onClick={() => removeExtraMedication(index)}
-                        className="mt-3"
-                      >
-                        Remove
-                      </Button>
-                    </Col>
-                  </Row>
+                    <Input
+                      className="w-[120px] rounded border"
+                      placeholder="Name"
+                      value={item.name}
+                      onChange={(e) =>
+                        updateExtraMedication(index, "name", e.target.value)
+                      }
+                    />
+                    <Input
+                      className="w-[100px] rounded border"
+                      placeholder="Dosage"
+                      value={item.dosage}
+                      onChange={(e) =>
+                        updateExtraMedication(index, "dosage", e.target.value)
+                      }
+                    />
+                    <Input
+                      className="w-[80px] rounded border"
+                      placeholder="Qty"
+                      value={item.quantitySent}
+                      onChange={(e) =>
+                        updateExtraMedication(
+                          index,
+                          "quantitySent",
+                          e.target.value
+                        )
+                      }
+                    />
+                    <Input
+                      className="w-[140px] rounded border"
+                      placeholder="Times"
+                      value={item.usageTimes}
+                      onChange={(e) =>
+                        updateExtraMedication(
+                          index,
+                          "usageTimes",
+                          e.target.value
+                        )
+                      }
+                    />
+                    <DatePicker
+                      placeholder="Start"
+                      value={item.startDate}
+                      onChange={(date) =>
+                        updateExtraMedication(index, "startDate", date)
+                      }
+                      className="w-[140px] border rounded"
+                    />
+                    <DatePicker
+                      placeholder="End"
+                      value={item.endDate}
+                      onChange={(date) =>
+                        updateExtraMedication(index, "endDate", date)
+                      }
+                      className="w-[140px] border rounded"
+                    />
+                    <TextArea
+                      rows={1}
+                      placeholder="Note"
+                      className="w-[180px] rounded border"
+                      value={item.note}
+                      onChange={(e) =>
+                        updateExtraMedication(index, "note", e.target.value)
+                      }
+                    />
+                    <Button
+                      danger
+                      onClick={() => removeExtraMedication(index)}
+                      className="mt-1"
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 ))}
-                <Button onClick={addExtraMedication} icon={<PlusOutlined />}>
+              </div>
+
+              <div className="mt-4 text-center">
+                <Button
+                  type="dashed"
+                  onClick={addExtraMedication}
+                  icon={<PlusOutlined />}
+                >
                   Add another medication
                 </Button>
               </div>
-            </Form.Item>
+            </div>
 
-            {/* Form buttons - moved inside Form */}
-            <Form.Item>
-              <div className="flex justify-end gap-2">
-                <Button onClick={handleCancel} disabled={isSubmitting}>
-                  Cancel
-                </Button>
-                <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                  OK
-                </Button>
-              </div>
-            </Form.Item>
+            {/* Submit + Cancel Buttons */}
+            <div className="flex justify-end gap-2 mt-6">
+              <Button onClick={handleCancel} disabled={isSubmitting}>
+                Cancel
+              </Button>
+              <Button type="primary" htmlType="submit" loading={isSubmitting}>
+                OK
+              </Button>
+            </div>
           </Form>
         </Modal>
 

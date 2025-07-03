@@ -11,11 +11,13 @@ import {
   postAiChatSuccess,
 } from "../../../redux/AI_Chat/chatBoxSlice";
 import { getAiChat } from "../../../redux/AI_Chat/getChaxBoxSlice";
+import { motion, AnimatePresence } from "framer-motion";
 
 const AIChatWidget = () => {
   const messagesEndRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const scrollHeightBeforeLoadRef = useRef(0);
+
   const [visible, setVisible] = useState(false);
   const [input, setInput] = useState("");
   const [page, setPage] = useState(1);
@@ -30,25 +32,30 @@ const AIChatWidget = () => {
   );
   const dispatch = useDispatch();
 
-  // Gộp tin nhắn đã lấy và tin nhắn mới (mới nhất ở dưới)
   const combinedMessages = [...getMessages, ...postMessages];
 
-  // Khi mở chat, load trang đầu tiên
   useEffect(() => {
     if (visible) {
       setPage(1);
       dispatch(getAiChat({ page: 1 }));
-    }
-  }, [visible, dispatch]);
 
-  // Khi có tin nhắn mới, scroll xuống cuối (trừ khi đang load thêm)
+      // ✅ Delay để chờ animation xong → rồi scroll xuống
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          const el = scrollContainerRef.current;
+          if (el) el.scrollTop = el.scrollHeight;
+        });
+      }, 300);
+    }
+  }, [visible]);
+
+  // Scroll xuống cuối khi có tin nhắn mới
   useEffect(() => {
     if (!loadingMore) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [combinedMessages, loadingMore]);
 
-  // Theo dõi trạng thái loading để giữ scroll vị trí sau khi load tin nhắn cũ
   const prevLoadingMore = useRef(false);
   useEffect(() => {
     if (prevLoadingMore.current && !loadingMore) {
@@ -61,7 +68,6 @@ const AIChatWidget = () => {
     prevLoadingMore.current = loadingMore;
   }, [loadingMore]);
 
-  // Cuộn lên trên để load tin nhắn cũ
   const handleScroll = () => {
     const el = scrollContainerRef.current;
     if (!el || loadingMore) return;
@@ -75,14 +81,12 @@ const AIChatWidget = () => {
     }
   };
 
-  // Reset loadingMore khi getAiChat xong (theo flag loading của slice get)
   useEffect(() => {
     if (!loadingGet) {
       setLoadingMore(false);
     }
   }, [loadingGet]);
 
-  // Gửi tin nhắn
   const handleSend = () => {
     const trimmed = input.trim();
     if (!trimmed) return;
@@ -99,7 +103,6 @@ const AIChatWidget = () => {
 
   return (
     <>
-      {/* Nút mở chat */}
       {!visible && (
         <Button
           type="primary"
@@ -107,81 +110,119 @@ const AIChatWidget = () => {
           icon={<MessageOutlined />}
           size="large"
           onClick={() => setVisible(true)}
-          className="fixed bottom-[180px] right-8 shadow-lg z-50"
+          className="fixed bottom-[180px] right-8 shadow-lg z-50 transition-transform duration-200 hover:scale-110 ml-[1500px]"
         />
       )}
 
-      {/* Khung chat */}
-      {visible && (
-        <div className="fixed ml-[100px] bottom-8 right-8 w-80 h-96 bg-white rounded-lg shadow-lg flex flex-col overflow-hidden">
-          {/* Header */}
-          <div className="bg-blue-500 text-white px-4 py-2 flex justify-between items-center">
-            <span className="font-semibold">Chat với AI</span>
-            <Button
-              type="text"
-              icon={<CloseOutlined />}
-              onClick={() => setVisible(false)}
-            />
-          </div>
-
-          {/* Nội dung chat */}
-          <div
-            className="flex-1 p-4 overflow-y-auto space-y-2 bg-gray-50"
-            onScroll={handleScroll}
-            ref={scrollContainerRef}
+      {/* Chatbox với animation */}
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            key="chat-box"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
+            transition={{ duration: 0.3 }}
+            onAnimationComplete={() => {
+              requestAnimationFrame(() => {
+                setTimeout(() => {
+                  messagesEndRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                  });
+                }, 50); // Đợi frame DOM render hoàn tất
+              });
+            }}
+            className="fixed ml-[100px] bottom-8 right-8 w-80 h-96 bg-white rounded-lg shadow-lg flex flex-col overflow-hidden z-50"
           >
-            {loadingMore && (
-              <div className="text-center text-gray-500 text-sm mb-2">
-                Đang tải tin nhắn cũ...
-              </div>
-            )}
+            {/* Header */}
+            <div className="bg-blue-500 text-white px-4 py-2 flex justify-between items-center ">
+              <span className="font-semibold">Chat with AI</span>
+              <Button
+                type="text"
+                icon={<CloseOutlined />}
+                onClick={() => {
+                  setVisible(false);
+                  setTimeout(() => {
+                    requestAnimationFrame(() => {
+                      const el = scrollContainerRef.current;
+                      if (el) el.scrollTop = el.scrollHeight;
+                    });
+                  }, 150);
+                }}
+              />
+            </div>
 
-            {combinedMessages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`flex ${
-                  msg.from === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`max-w-[80%] px-3 py-2 rounded-lg text-sm leading-relaxed break-words whitespace-pre-wrap shadow-sm ${
-                    msg.from === "user"
-                      ? "bg-blue-500 text-white rounded-br-none"
-                      : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
+            {/* Nội dung chat */}
+            <div
+              className="flex-1 p-4 overflow-y-auto space-y-2 bg-gray-50 scroll-smooth"
+              onScroll={handleScroll}
+              ref={scrollContainerRef}
+            >
+              {loadingMore && (
+                <div className="text-center text-gray-500 text-sm mb-2">
+                  Loading old messeage
+                </div>
+              )}
+
+              {combinedMessages.map((msg, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: msg.from === "user" ? 30 : -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className={`flex ${
+                    msg.from === "user" ? "justify-end" : "justify-start"
                   }`}
                 >
-                  {msg.text}
-                </div>
-              </div>
-            ))}
+                  <div
+                    className={`max-w-[80%] px-3 py-2 rounded-lg text-sm leading-relaxed break-words whitespace-pre-wrap shadow-sm ${
+                      msg.from === "user"
+                        ? "bg-blue-500 text-white rounded-br-none"
+                        : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                </motion.div>
+              ))}
 
-            {loading && !loadingMore && (
-              <div className="flex justify-start">
-                <div className="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg text-sm animate-pulse">
-                  AI đang trả lời...
-                </div>
-              </div>
-            )}
+              {loading && !loadingMore && (
+                <motion.div
+                  className="flex justify-start"
+                  initial={{ opacity: 0.4 }}
+                  animate={{ opacity: 1 }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 1,
+                    repeatType: "mirror",
+                  }}
+                >
+                  <div className="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg text-sm">
+                    AI is responding
+                  </div>
+                </motion.div>
+              )}
 
-            <div ref={messagesEndRef} />
-          </div>
+              <div ref={messagesEndRef} />
+            </div>
 
-          {/* Footer */}
-          <div className="p-2 border-t flex gap-2">
-            <Input
-              placeholder="Nhập tin nhắn..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onPressEnter={handleSend}
-            />
-            <Button
-              type="primary"
-              icon={<SendOutlined />}
-              onClick={handleSend}
-            />
-          </div>
-        </div>
-      )}
+            {/* Footer */}
+            <div className="p-2 border-t flex gap-2">
+              <Input
+                placeholder="Enter Message"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onPressEnter={handleSend}
+              />
+              <Button
+                type="primary"
+                icon={<SendOutlined />}
+                onClick={handleSend}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

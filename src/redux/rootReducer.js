@@ -25,6 +25,9 @@ import getCheckUpParentAcceptReducer from "./getCheckupParent/getCheckupParentAc
 import getCheckUpParentDeclineReducer from "./getCheckupParent/getCheckupParentDeclineSlice";
 import detailCheckUpParentReducer from "./getCheckupParent/getDetailCheckupParentSlice";
 import resultCheckUpParentReducer from "./getCheckupParent/getResultCheckupParentSlice";
+import meetingParentReducer from "./getMettingParent/getAllMettingParentSlice";
+import getMeetingParentAcceptReducer from "./getMettingParent/getMeetingParentAcceptSlice";
+import getMeetingParentDeclineReducer from "./getMettingParent/getMeetingParentDeclineSlice";
 
 import managerMedicalReducer from "./manager/managerSlice";
 import managerVaccineReducer from "./manager/createVaccineManagerSlice";
@@ -106,6 +109,8 @@ import checkupResultReducer from "./checkupNurse/resultCheckup/resultCheckupSlic
 import sendCheckupParentReducer from "./checkupNurse/sendCheckupToParent/sendCheckupParentSlice";
 
 import studentDetailProfileReducer from "./getProflie/getProfileStudentSlice";
+import getDetailCheckupManagerReducer from "./MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSlice";
+import getDetailVaccineManagerReducer from "./manager/GetDetailVaccineManager/getDetailVaccineManagerSlice";
 import stopProvideMedicineReducer from "./medicineRequestNurse/stopProvideMedicine/stopProvideMedicineSlice";
 import studentMeetingReducer from "./checkupNurse/listStudentMeeting/listStudentMeetingSlice";
 import checkScheduleReducer from "./checkupNurse/checkTime/checkTimeSlice";
@@ -113,6 +118,13 @@ import createMeetingReducer from "./checkupNurse/createMeeting/createMeetingSlic
 import meetedReducer from "./checkupNurse/meeted/meetedSlice";
 import deleteMeetingReducer from "./checkupNurse/deleteMeeting/deleteMeetingSlice";
 import deleteStudentReducer from "./checkupNurse/deleteStudent/deleteStudentSlice";
+
+import getAllStudentReducer from "./admin/getAllStudentSlice";
+import getAllAccountReducer from "./admin/getAllAccountSlice";
+import detailAccountReducer from "./admin/getDetailAccountSlice";
+import changeStatusUserReducer from "./admin/changeStatusUserSlice";
+import createInformationStudentAdminReducer from "./admin/createStudentAdminSlice";
+import completeMeetingReducer from "./checkupNurse/completeMeeting/completeMeetingSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -153,6 +165,7 @@ const rootReducer = combineReducers({
   meeted: meetedReducer,
   deleteMeeting: deleteMeetingReducer,
   deleteStudent: deleteStudentReducer,
+  completeMeeting: completeMeetingReducer,
 
   //api parent
   studentOfParent: studentOfParentReducer,
@@ -178,6 +191,9 @@ const rootReducer = combineReducers({
   checkupParentDecline: getCheckUpParentDeclineReducer,
   detailCheckUpParent: detailCheckUpParentReducer,
   resultCheckUpParent: resultCheckUpParentReducer,
+  meetingParent: meetingParentReducer,
+  meetingParentAccept: getMeetingParentAcceptReducer,
+  meetingParentDecline: getMeetingParentDeclineReducer,
 
   vaccineResult: vaccineResultReducer,
   sendVaccineResult: sendResultVaccineReducer,
@@ -219,12 +235,26 @@ const rootReducer = combineReducers({
   endEventMedicalCheckUpManager: endEventMedicalCheckUpManagerReducer,
   deleteMedicalCheckupManager: deleteMedicalCheckupManagerReducer,
   managerUpdateMedicalCheckup: managerUpdateMedicalCheckupReducer,
+  getDetailCheckupManager: getDetailCheckupManagerReducer,
+  getDetailVaccineManager: getDetailVaccineManagerReducer,
+  //admin
+  // getAllStudentAdmin: getAllStudentAdminReducer,
+  // createInformationStudentAdmin: createInformationStudentAdminReducer,
 
+  //
   parentProfileHealth: healthProfileReducer,
 
+  //api student
   getProfile: getProfileReducer,
   changePassword: changePasswordReducer,
   getProfileStudent: studentDetailProfileReducer,
+
+  //api admin
+  getAllStudent: getAllStudentReducer,
+  getAllAccount: getAllAccountReducer,
+  getDetailAccount: detailAccountReducer,
+  changeStatusUser: changeStatusUserReducer,
+  createInformationStudentAdmin: createInformationStudentAdminReducer,
 });
 
 export default rootReducer;

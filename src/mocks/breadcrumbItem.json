@@ -18,6 +18,7 @@
     "pages": {
       "dashboard": "Dashboard",
       "student": "Student",
+      "detail": "Detail",
       "account": "Account"
     }
   },
@@ -45,7 +46,8 @@
       "check up": "Medical CheckUp",
       "history": "History & Report",
       "information": "Information",
-      "password": "Change Password"
+      "password": "Change Password",
+      "meeting": "Meeting"
     }
   },
   "Student": {

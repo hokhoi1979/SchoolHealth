@@ -51,7 +51,7 @@ function* deleteMeetSaga(action) {
     }
   } catch (error) {
     yield put(deleteMeetingFail(error));
-    toast.error("You can not delete because status is PENDING");
+    toast.error("Delete Fail: Status is PENDING!");
   }
 }
 

@@ -31,6 +31,9 @@ import watchFetchAcceptCheckUp from "./getCheckupParent/getCheckupParentAcceptSa
 import watchFetchDeclineCheckUp from "./getCheckupParent/getCheckupParentDeclineSaga";
 import watchFetchDetailCheckUpParent from "./getCheckupParent/getDetailCheckupParentSaga";
 import watchFetchResultCheckUpParent from "./getCheckupParent/getResultCheckupParentSaga";
+import watchFetchMeetingParent from "./getMettingParent/getAllMettingParentSaga";
+import watchFetchAcceptMeeting from "./getMettingParent/getMeetingParentAcceptSaga";
+import watchFetchDeclineMeeting from "./getMettingParent/getMeetingParentDeclineSaga";
 
 // ===== Nurse =====
 import watchFetchProfile from "./profileNurse/profileSaga";
@@ -109,6 +112,8 @@ import watchUpdateMedicalCheckupManager from "./MedicalCheckUpManager/UpdateMedi
 // ===== AI Chat =====
 import watchAiChat from "./AI_Chat/chatBoxSaga";
 import watchGetAllChatBoxAi from "./AI_Chat/getChaxBoxSaga";
+import watchFetchDetailCheckupManager from "./MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSaga";
+import watchFetchDetailVaccineManager from "./manager/GetDetailVaccineManager/getDetailVaccineManagerSaga";
 import watchStopProvideMedicine from "./medicineRequestNurse/stopProvideMedicine/stopProvideMedicineSaga";
 import watchStudentMeeting from "./checkupNurse/listStudentMeeting/listStudentMeetingSaga";
 import watchCheckTime from "./checkupNurse/checkTime/checkTimeSaga";
@@ -116,6 +121,14 @@ import watchCreateMeeting from "./checkupNurse/createMeeting/createMeetingSaga";
 import watchMeeted from "./checkupNurse/meeted/meetedSaga";
 import watchDeleteMeeting from "./checkupNurse/deleteMeeting/deleteMeetingSaga";
 import watchDeleteStudent from "./checkupNurse/deleteStudent/deleteStudentSaga";
+
+// api admin
+import watchFetchGetAllStudent from "./admin/getAllStudentSaga";
+import watchFetchGetAllAccount from "./admin/getAllAccountSaga";
+import watchFetchDetailAccount from "./admin/getDetailAccountSaga";
+import watchFetchChangeStatusUser from "./admin/changeStatusUserSaga";
+import { watchCreateStudentAdmin } from "./admin/createStudentAdminSaga";
+import watchCompleteMeeting from "./checkupNurse/completeMeeting/completeMeetingSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -149,6 +162,9 @@ export default function* rootSaga() {
     watchFetchDeclineCheckUp(),
     watchFetchDetailCheckUpParent(),
     watchFetchResultCheckUpParent(),
+    watchFetchMeetingParent(),
+    watchFetchAcceptMeeting(),
+    watchFetchDeclineMeeting(),
 
     // Nurse
     watchFetchProfile(),
@@ -193,7 +209,7 @@ export default function* rootSaga() {
     watchMeeted(),
     watchDeleteMeeting(),
     watchDeleteStudent(),
-
+    watchCompleteMeeting(),
     //Manager
     watchFetchManagerMedical(),
     watchPostManagerVaccine(),
@@ -227,12 +243,23 @@ export default function* rootSaga() {
     watchPatchEndMedicalCheckupManager(),
     watchDeleteManagerMedicalCheckup(),
     watchUpdateMedicalCheckupManager(),
+    watchFetchDetailCheckupManager(),
+    watchFetchDetailVaccineManager(),
 
     // watchFetchVaccineResult(),
+    //admin
+    // watchFetchStudentAdmin(),
+    // watchCreateStudentAdmin(),
 
     watchFetchStudentDetailProfile(),
     // AI Chat
     watchAiChat(),
     watchGetAllChatBoxAi(),
+    //api admin
+    watchFetchGetAllStudent(),
+    watchFetchGetAllAccount(),
+    watchFetchDetailAccount(),
+    watchFetchChangeStatusUser(),
+    watchCreateStudentAdmin(),
   ]);
 }

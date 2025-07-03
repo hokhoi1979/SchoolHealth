@@ -185,7 +185,7 @@ const MedicalEvent = () => {
         name: event?.studentInfo?.account?.fullname || "N/A",
         grade: event?.studentInfo?.lastAcamedicYear?.class?.name || "N/A",
         type: event?.type || "N/A",
-        description: "Đang cập nhật",
+        description: event?.description,
         severity: event?.severity,
         gender: event?.studentInfo?.gender,
         status: event?.status,

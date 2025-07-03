@@ -34,6 +34,7 @@ function* patchCheckupConfirmManagerSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(patchManagerSuccessConfirmCheckup(response.data));
+      toast.success("Confirm Success");
 
       const fetchData = yield call(
         axios.get,

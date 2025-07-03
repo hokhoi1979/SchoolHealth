@@ -146,7 +146,6 @@ const MedicationUsing = () => {
         style={{ margin: "20px 0" }} // Add margin for spacing
       />
       <Modal
-        title="Edit Medication"
         open={modalVisible}
         onCancel={() => {
           setModalVisible(false);
@@ -154,68 +153,129 @@ const MedicationUsing = () => {
           setEditingMedication(null);
         }}
         onOk={handleSave}
-        okText="Save"
-        width={600}
+        footer={null}
+        width={650}
+        centered
+        style={{ top: 40 }}
       >
-        <Form layout="vertical" form={form}>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item label="Name" name="name" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Dosage"
-                name="dosage"
-                rules={[{ required: true }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Form.Item
-            label="Quantity"
-            name="quantity"
-            rules={[{ required: true }]}
+        <div style={{ padding: 16 }}>
+          <Title
+            level={4}
+            style={{ display: "flex", alignItems: "center", gap: 8 }}
           >
-            <Input />
-          </Form.Item>
+            <EditOutlined style={{ color: "#722ed1" }} />
+            Edit Medication
+          </Title>
 
-          <Form.Item
-            label="Usage Time"
-            name="usageTimes"
-            rules={[{ required: true }]}
+          <Form
+            layout="vertical"
+            form={form}
+            style={{
+              background: "#fafafa",
+              padding: 24,
+              borderRadius: 12,
+              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+            }}
           >
-            <Input />
-          </Form.Item>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="Name"
+                  name="name"
+                  rules={[{ required: true }]}
+                >
+                  <Input placeholder="Enter medicine name" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Dosage"
+                  name="dosage"
+                  rules={[{ required: true }]}
+                >
+                  <Input placeholder="E.g. 500mg" />
+                </Form.Item>
+              </Col>
+            </Row>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Start Date"
-                name="startDate"
-                rules={[{ required: true }]}
-              >
-                <DatePicker style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="End Date"
-                name="endDate"
-                rules={[{ required: true }]}
-              >
-                <DatePicker style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-          </Row>
+            <Form.Item
+              label="Quantity"
+              name="quantity"
+              rules={[{ required: true }]}
+            >
+              <Input placeholder="E.g. 2 tablets/day" />
+            </Form.Item>
 
-          <Form.Item label="Note" name="note">
-            <TextArea rows={2} />
-          </Form.Item>
-        </Form>
+            <Form.Item
+              label="Usage Time"
+              name="usageTimes"
+              rules={[{ required: true }]}
+            >
+              <Input placeholder="E.g. Morning, Evening" />
+            </Form.Item>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="Start Date"
+                  name="startDate"
+                  rules={[{ required: true }]}
+                >
+                  <DatePicker style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="End Date"
+                  name="endDate"
+                  rules={[{ required: true }]}
+                >
+                  <DatePicker style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Form.Item label="Note" name="note">
+              <TextArea
+                rows={2}
+                placeholder="Any additional instructions..."
+                style={{ backgroundColor: "#fffef6", borderRadius: 8 }}
+              />
+            </Form.Item>
+
+            <div style={{ textAlign: "right", marginTop: 24 }}>
+              <Button
+                onClick={() => {
+                  setModalVisible(false);
+                  form.resetFields();
+                  setEditingMedication(null);
+                }}
+                style={{
+                  marginRight: 10,
+                  backgroundColor: "#f5222d",
+                  color: "#fff",
+                  borderRadius: 6,
+                  border: "none",
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="primary"
+                onClick={handleSave}
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to right, #722ed1, #9254de)",
+                  border: "none",
+                  borderRadius: 6,
+                  color: "#fff",
+                }}
+              >
+                Save
+              </Button>
+            </div>
+          </Form>
+        </div>
       </Modal>
     </>
   );
