@@ -1,22 +1,26 @@
 import axios from "axios";
 
 import { call, put, select, takeLatest } from "redux-saga/effects";
-import {
-  DELETE__MEETING,
-  deleteMeetingFail,
-  deleteMeetingSuccess,
-} from "./deleteMeetingSlice";
+
 import { toast } from "react-toastify";
-import { fetchMeetedFail, fetchMeetedSuccess } from "../meeted/meetedSlice";
+import { fetchMeetedSuccess } from "../meeted/meetedSlice";
+import {
+  COMPLETE__MEETING,
+  completeMeetingFail,
+  completeMeetingSuccess,
+} from "./completeMeetingSlice";
 
 const URL_API = import.meta.env.VITE_API_URL;
-function* deleteMeetSaga(action) {
+function* completeMeetingSaga(action) {
   try {
     const token = yield select((state) => state.account.token);
     const id = action.payload;
+    console.log("Completing meeting with ID:", id);
+
     const response = yield call(
-      axios.delete,
+      axios.put,
       `${URL_API}/nurse/v1/check-up/meeting/${id}`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -25,9 +29,11 @@ function* deleteMeetSaga(action) {
       }
     );
 
+    console.log("PUT response:", response);
+
     if (response.status === 200 || response.status === 201) {
-      yield put(deleteMeetingSuccess(response.data));
-      toast.success("Delete successful!");
+      yield put(completeMeetingSuccess(response.data));
+      toast.success("Complete successful!");
 
       const fetch = yield call(
         axios.get,
@@ -40,23 +46,19 @@ function* deleteMeetSaga(action) {
         }
       );
 
-      if (fetch.status === 200 || fetch.status === 201) {
-        yield put(fetchMeetedSuccess(fetch.data));
-        console.log("SUCCESS", fetch.data);
-      } else {
-        yield put(fetchMeetedFail(fetch.status));
-      }
+      yield put(fetchMeetedSuccess(fetch.data));
     } else {
-      yield put(deleteMeetingFail(response.status));
+      yield put(completeMeetingFail(response.status));
     }
   } catch (error) {
-    yield put(deleteMeetingFail(error));
-    toast.error("Delete Fail: Status is PENDING!");
+    console.error("Complete Meeting Error:", error);
+    yield put(completeMeetingFail(error));
+    toast.error("Complete failed!");
   }
 }
 
-function* watchDeleteMeeting() {
-  yield takeLatest(DELETE__MEETING, deleteMeetSaga);
+function* watchCompleteMeeting() {
+  yield takeLatest(COMPLETE__MEETING, completeMeetingSaga);
 }
 
-export default watchDeleteMeeting;
+export default watchCompleteMeeting;

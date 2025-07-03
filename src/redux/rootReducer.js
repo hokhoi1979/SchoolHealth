@@ -124,6 +124,7 @@ import getAllAccountReducer from "./admin/getAllAccountSlice";
 import detailAccountReducer from "./admin/getDetailAccountSlice";
 import changeStatusUserReducer from "./admin/changeStatusUserSlice";
 import createInformationStudentAdminReducer from "./admin/createStudentAdminSlice";
+import completeMeetingReducer from "./checkupNurse/completeMeeting/completeMeetingSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -164,6 +165,7 @@ const rootReducer = combineReducers({
   meeted: meetedReducer,
   deleteMeeting: deleteMeetingReducer,
   deleteStudent: deleteStudentReducer,
+  completeMeeting: completeMeetingReducer,
 
   //api parent
   studentOfParent: studentOfParentReducer,
