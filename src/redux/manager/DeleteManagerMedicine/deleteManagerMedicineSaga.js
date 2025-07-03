@@ -37,7 +37,7 @@ function* deleteMedicineManagerSaga(action) {
       toast.success("Delete Succes");
       const fetchData = yield call(
         axios.get,
-        `${URL_API}/manager/v1/medicine-classify?page=1&limit=8sortBy=createdAt&order=asc`,
+        `${URL_API}/manager/v1/medicine-classify?page=1&limit=100sortBy=createdAt&order=asc`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

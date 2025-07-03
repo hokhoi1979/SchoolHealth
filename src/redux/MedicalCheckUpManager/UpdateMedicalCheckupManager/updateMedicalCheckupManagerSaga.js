@@ -32,17 +32,28 @@ function* updateMedicalCheckupManagerSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(putManagerSuccessMedicalCheckup(response.data));
-      console.log("Update success", response.data);
       toast.success("Update Success");
+      const fectch = yield call(axios.get, `${URL_API}/manager/v1/check-up`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (fectch.status === 200 || fectch.status === 201) {
+        yield put(fetchCheckupManagerSuccess(fectch.data));
+      } else {
+        yield put(fetchCheckupManagerFail(fectch.status));
+      }
     } else {
       yield put(putManagerFailMedicalCheckup(response.status));
     }
   } catch (error) {
-    const errMsg =
-      error?.response?.data?.message || error.message || "Unknown error";
-    yield put(putManagerFailMedicalCheckup(errMsg));
-    console.log(error);
-    toast.error("Update Fail");
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`Update Checkup Fail: ${errorMessage}`);
+    yield put(putManagerFailMedicalCheckup(errorMessage));
+    console.error("Update Checkup Error:", error);
   }
 }
 

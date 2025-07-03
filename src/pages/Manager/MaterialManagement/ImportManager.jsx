@@ -33,14 +33,14 @@ function ImportManager() {
   const [categories, setCategories] = useState([]);
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8;
+  const pageSize = 100;
   const [total, setTotal] = useState(0);
   const [detail, setDetail] = useState([]);
   const [selectedClassifyID, setSelectedClassifyID] = useState("");
   const [selectedClassify, setSelectedClassify] = useState("");
   const [newClassify, setNewClassify] = useState("");
   const paginatedCategories = categories;
-
+  const [imageFile, setImageFile] = useState(null);
   const { detailManagerClassify = [] } = useSelector(
     (state) => state.getDetailManagerClassify
   );
@@ -111,7 +111,7 @@ function ImportManager() {
     setSelectedCategory(category);
     setIsModalVisible(true);
     dispatch(
-      fetchDetailManagerClassify({ id: category.id, page: 1, limit: 8 })
+      fetchDetailManagerClassify({ id: category.id, page: 1, limit: 15 })
     );
   };
 
@@ -129,30 +129,28 @@ function ImportManager() {
   };
 
   const handleUpdate = async () => {
-    if (!selectedMedicine?.id) {
+    if (!selectedMedicine || !selectedMedicine?.id) {
       console.error("No medicine selected! Cannot update.");
       return;
     }
 
-    let classifyIDToUse =
-      selectedMedicine.classifyID || selectedClassifyID || "";
+    let classifyIDToUse = "";
 
-    // Nếu chọn "Other" thì tạo mới classify
     if (selectedClassify === "Other") {
       if (!newClassify?.trim()) {
         toast.error("Bạn chưa nhập tên loại thuốc mới!");
         return;
       }
 
+      // Gọi API tạo classify mới
       await new Promise((resolve) => {
         dispatch(
           postManagerClasstify({
             body: { name: newClassify.trim() },
             page: 1,
-            limit: 8,
-            onSuccess: (id) => {
-              classifyIDToUse = id;
-              console.log("==> New classify ID created for update:", id);
+            limit: 100,
+            onSuccess: (newID) => {
+              classifyIDToUse = newID;
               resolve();
             },
           })
@@ -163,6 +161,9 @@ function ImportManager() {
         toast.error("Không thể lấy ID của classify mới!");
         return;
       }
+    } else {
+      // ✅ Ưu tiên classify mới chọn từ dropdown nếu có
+      classifyIDToUse = selectedClassifyID || selectedMedicine.classifyID || "";
     }
 
     const formData = new FormData();
@@ -173,8 +174,8 @@ function ImportManager() {
     formData.append("type", selectedMedicine.type);
     formData.append("classifyID", classifyIDToUse);
 
-    if (selectedMedicine.image instanceof File) {
-      formData.append("image", selectedMedicine.image);
+    if (imageFile) {
+      formData.append("image", imageFile); // dùng file thật để gửi
     }
 
     dispatch(
@@ -184,7 +185,7 @@ function ImportManager() {
       })
     );
 
-    console.log("Updating with formData:");
+    console.log("Updating medicine with formData:");
     for (let pair of formData.entries()) {
       console.log(pair[0] + ": ", pair[1]);
     }
@@ -334,11 +335,11 @@ function ImportManager() {
 
   return (
     <div>
-      <div className="grid grid-cols-4 gap-4 mt-4 w-full px-4 font-kameron">
+      <div className="grid grid-cols-4 gap-4 mt-4 w-full px-4 font-kameron ">
         {categories.map((category) => (
           <div
             key={category?.id}
-            className="h-[100px] bg-white rounded-xl shadow hover:shadow-md cursor-pointer relative  transition-shadow"
+            className="h-[100px] bg-white rounded-xl shadow hover:shadow-md cursor-pointer relative  transition-shadow bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec]  border border-gray-200 p-5  flex flex-col justify-between  duration-300"
           >
             <div
               className="flex flex-col items-center justify-center h-full"
@@ -382,7 +383,7 @@ function ImportManager() {
         ))}
       </div>
       <div className="w-full h-10"></div>
-      <Pagination
+      {/* <Pagination
         current={currentPage}
         pageSize={pageSize}
         total={total}
@@ -391,11 +392,17 @@ function ImportManager() {
         }}
         showSizeChanger={false}
         className="mt-[20px] flex justify-center "
-      />
+      /> */}
 
       {/* Category Modal */}
       <Modal
-        title={`Medicines in ${selectedCategory?.name}`}
+        title={
+          <div
+            style={{ textAlign: "center", fontWeight: "600", fontSize: "18px" }}
+          >
+            Medicines in {selectedCategory?.name}
+          </div>
+        }
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
@@ -447,13 +454,15 @@ function ImportManager() {
                 showUploadList={false}
                 beforeUpload={(file) => {
                   const reader = new FileReader();
+
                   reader.onload = (e) => {
-                    const newImage = e.target.result;
-                    handleFieldChange("image", file);
-                    handleFieldChange("previewImage", newImage);
+                    const preview = e.target.result;
+                    handleFieldChange("previewImage", preview); // chỉ để xem
+                    setImageFile(file); // 👉 lưu lại file gốc
                   };
+
                   reader.readAsDataURL(file);
-                  return false;
+                  return false; // ngăn upload tự động
                 }}
               >
                 <div className="w-40 h-32 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center hover:border-blue-400 cursor-pointer overflow-hidden">

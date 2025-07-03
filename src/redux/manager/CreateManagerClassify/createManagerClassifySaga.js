@@ -64,8 +64,11 @@ function* managerClasstifySaga(action) {
       yield put(postManagerFailClasstify(`API ERROR: ${response.data}`));
     }
   } catch (error) {
-    console.log(error);
-    yield put(postManagerFailClasstify(`API ERROR: ${error}`));
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`Create Classify Fail: ${errorMessage}`);
+    yield put(postManagerFailClasstify(errorMessage));
+    console.error("Create Classify Error:", error);
   }
 }
 

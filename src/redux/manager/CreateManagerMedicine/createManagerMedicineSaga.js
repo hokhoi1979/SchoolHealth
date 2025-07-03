@@ -49,31 +49,31 @@ function* managerCreateMedicineSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(postManagerSucessMedicine(response.data));
       toast.success("Create Medicine Success");
-      const { limit, page } = action.payload;
+      const { page, limit = 100 } = action.payload || {};
 
-      const fetchData = yield call(
+      const fetch = yield call(
         axios.get,
-        `${URL_API}/manager/v1/medicineSupply?page=${page}&limit=${limit}&sortBy=createdAt&order=asc`,
+        `${URL_API}/manager/v1/medicine-classify?page=${page}&limit=${limit}&sortBy=createdAt&order=asc`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
 
-      if (fetchData.status === 200 || fetchData.status === 201) {
-        yield put(fetchAllMedicineSupplyManagerSuccess(fetchData.data));
+      if (fetch.status === 200 || fetch.status === 201) {
+        yield put(fetchMedicineClasstifyManagerSucess(fetch.data));
       } else {
-        yield put(fetchAllMedicineSupplyManagerFail(fetchData.status));
-        toast.error("Create Medicine Fail");
+        yield put(fetchMedicineClasstifyManagerFail(fetch.status));
       }
-    } else {
-      yield put(postMangerFailMedicine(`API ERROR: ${response.data}`));
-      toast.error("Create Medicine Fail");
     }
   } catch (error) {
-    console.error(error);
-    yield put(postMangerFailMedicine(`API ERROR: ${error}`));
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
+    toast.error(`Create Medicine Fail: ${errorMessage}`);
+    yield put(postMangerFailMedicine(errorMessage));
+    console.error("Create Medicine Error:", error);
   }
 }
 

@@ -17,12 +17,15 @@ import bs from "../../img/bs.png";
 import { AppFooter } from "../../components/Footer/AppFooter";
 import newspic from "../../img/newspic.jpg";
 import { Button } from "antd";
+import AIChatWidget from "../Student/AI/AIChatWidget ";
+import CauroselIntro from "../Home/CauroselIntro";
 
 function Home() {
   return (
     <>
       <Header />
-      <div className="flex flex-col min-h-screen">
+      <CauroselIntro />
+      <div className="flex flex-col min-h-screen ">
         <div className="flex flex-col flex-1">
           <div className="container w-full h-[100px] mt-20 mb-4">
             <div className="flex justify-between gap-6">
@@ -134,7 +137,9 @@ function Home() {
                 </div>
               </div>
             </div>
-
+            <div className=" fixed bottom-8 right-8 z-[9999]">
+              <AIChatWidget />
+            </div>
             <div className="relative mt-10 w-full h-[500px] ">
               <img
                 src={bs3}
@@ -204,9 +209,8 @@ function Home() {
                 </div>
               </div>
               <div className=" ml-10 mb-10">
-                <img src={newspic}   alt="" className=" rounded-2xl h-[400px]" />
+                <img src={newspic} alt="" className=" rounded-2xl h-[400px]" />
               </div>
-     
             </div>
 
             <AppFooter />

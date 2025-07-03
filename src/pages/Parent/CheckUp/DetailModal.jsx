@@ -118,12 +118,12 @@ const DetailModal = ({ open, onclose, checkupDetail, loading, error }) => {
         {detail.targets && detail.targets.length > 0 && (
           <Card title="Targets" size="small">
             <div className="flex flex-wrap gap-2">
-              {/* {detail.targetType === "SCHOOL" &&
+              {detail.targetType === "SCHOOL" &&
                 detail.targets.map((school, idx) => (
                   <Tag key={idx} color="blue">
                     {school.school || "All Schools"}
                   </Tag>
-                ))} */}
+                ))}
               {detail.targetType === "GRADE" &&
                 detail.targets.map((grade, idx) => (
                   <Tag key={idx} color="purple">

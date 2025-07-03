@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 import {
   GET_AI_CHAT,
@@ -10,15 +10,15 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* getAiChatSaga(action) {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
     const { page } = action.payload;
 
     const response = yield call(axios.get, `${URL_API}/v1/ai_prompt`, {
       params: {
         page,
-        limit: 5,
+        limit: 100,
         sortBy: "createdAt",
-        order: "desc",
+        order: "asc",
       },
       headers: {
         Authorization: `Bearer ${token}`,

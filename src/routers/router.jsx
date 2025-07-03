@@ -72,26 +72,20 @@ import StudentLayout from "../pages/Student/StudentLayout";
 import StudentInformation from "../pages/Student/StudentInformation/StudentInformation";
 import ChangePassword from "../pages/Student/ChangePassword/ChangePassword";
 import PrivateRoute from "./privateRoute";
+import News from "../pages/News/news";
 import AdminLayout from "../pages/Admin/AdminLayout";
 import AccountAdmin from "../pages/Admin/AccountAdmin/AccountAdmin";
 import StudentAdmin from "../pages/Admin/StudentAdmin/StudentAdmin";
 import DashboardAdmin from "../pages/Admin/DashboardAdmin/DashboardAdmin";
-
-import New from "../pages/News/New";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     children: [
-      {
-        path: "",
-        element: <Home />,
-      },
-      {
-        path: "/news",
-        element: <New />,
-      },
+      { path: "", element: <Home /> },
+      { path: "/news", element: <News /> },
+
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
 

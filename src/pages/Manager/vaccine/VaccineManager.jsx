@@ -18,6 +18,9 @@ import "./style.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TextArea from "antd/es/input/TextArea";
+import { AppFooter } from "../../../components/Footer/AppFooter";
+import ModalDetailVaccine from "./ModalDetailVaccine";
+import { fetchDetailVaccine } from "../../../redux/manager/GetDetailVaccineManager/getDetailVaccineManagerSlice";
 
 const VaccineManager = () => {
   const [open, setOpen] = useState(false);
@@ -37,10 +40,26 @@ const VaccineManager = () => {
   const [notificationContent, setNotificationContent] = useState("");
   const [items, setItems] = useState([]);
   const [updateItems, setUpdateItems] = useState([]);
+  const [openFullDetail, setOpenFullDetail] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   let targetIds = [];
   const dispatch = useDispatch();
 
+  const { vaccine: detailData } = useSelector(
+    (state) => state.getDetailVaccineManager
+  );
+
+  useEffect(() => {
+    if (openFullDetail && selectedId) {
+      dispatch(fetchDetailVaccine(selectedId));
+    }
+  }, [openFullDetail, selectedId]);
+
+  const handleOpenFullDetail = (id) => {
+    setSelectedId(id);
+    setOpenFullDetail(true);
+  };
   const {
     vaccine = [],
     loading,
@@ -291,9 +310,9 @@ const VaccineManager = () => {
       targetIds,
       items: cleanedItems,
     };
-
+    console.log(payload);
     try {
-      const data = await dispatch(postManagerVaccine(payload)).unwrap();
+      const data = await dispatch(postManagerVaccine(payload));
 
       console.log("Create Success:", data);
 
@@ -484,9 +503,7 @@ const VaccineManager = () => {
   const renderTargetSelection = () => {
     switch (targetType) {
       case "school":
-        return (
-          <div className="text-gray-600 italic">Áp dụng cho toàn trường</div>
-        );
+        return <div className="text-gray-600 italic">School</div>;
 
       case "class":
         return (
@@ -516,7 +533,7 @@ const VaccineManager = () => {
       case "grade":
         return (
           <div className="space-y-3">
-            <div className="font-medium mb-2">Chọn khối:</div>
+            <div className="font-medium mb-2">Pick Grade:</div>
             <div className="flex gap-4">
               {availableGrades.map((grade) => (
                 <Checkbox
@@ -593,7 +610,7 @@ const VaccineManager = () => {
       <div className="mt-10">
         <div className="grid grid-cols-3 mt-5 pl-5 gap-5.5">
           {data.map((item) => (
-            <div className="bg-white p-6 rounded-2xl flex flex-col justify-between h-full">
+            <div className="  flex flex-col justify-between h-full bg-white bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec] rounded-2xl border border-gray-200 shadow-md hover:shadow-lg p-5 transition-all duration-300">
               <div className="flex justify-between">
                 {item.status === "SUCCESSED" ? (
                   <Button className="!bg-[#6CC76F] !text-white">
@@ -608,18 +625,45 @@ const VaccineManager = () => {
                     {item.status}
                   </Button>
                 )}
+                <div className="flex gap-2">
+                  <div>
+                    {" "}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={25}
+                      height={25}
+                      viewBox="0 0 24 24"
+                      className="cursor-pointer"
+                      onClick={() => handleOpenFullDetail(item.id)}
+                    >
+                      <path
+                        fill="gray"
+                        d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
+                      ></path>
+                    </svg>
+                  </div>
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={25}
-                  height={25}
-                  viewBox="0 0 24 24"
-                  fill="gray"
-                  onClick={() => handleViewMore(item)}
-                  className="cursor-pointer"
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={25}
+                      height={25}
+                      viewBox="0 0 24 24"
+                      fill="gray"
+                      onClick={() => handleViewMore(item)}
+                      className="cursor-pointer"
+                    >
+                      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
+                    </svg>
+                  </div>
+
+                  {/* <Button
+                  size="small"
+                  onClick={() => handleOpenFullDetail(item.id)}
                 >
-                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
-                </svg>
+                  View Detail
+                </Button> */}
+                </div>
               </div>
               {openDetail && (
                 <ModalDetail
@@ -630,6 +674,12 @@ const VaccineManager = () => {
                   content={notificationContent}
                 />
               )}
+              <ModalDetailVaccine
+                open={openFullDetail}
+                onClose={() => setOpenFullDetail(false)}
+                data={detailData}
+              />
+
               <h1 className="mt-2 text-2xl">{item.name}</h1>
               <p className="text-gray-700">
                 {item.targets.length === 0
@@ -800,13 +850,19 @@ const VaccineManager = () => {
                           }%`,
                         }}
                       ></div>
+                      <div className="text-right text-sm text-gray-500">
+                        {item.total && item.total > 0
+                          ? Math.round((item.participate / item.total) * 100)
+                          : 0}
+                        %
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
               <div className="flex gap-2.5 mt-5">
                 <div>
-                  {item.status !== "ENDED" && item.status !== "CONFIRMED" && (
+                  {item.status === "DRAFT" && (
                     <Button onClick={() => handleUpdateEvent(item)}>
                       Update Schedule
                     </Button>
@@ -814,11 +870,11 @@ const VaccineManager = () => {
                 </div>
 
                 <div>
-                  {item.status !== "CONFIRMED" && (
+                  {item.status == "DRAFT" && (
                     <Popconfirm
-                      title="Bạn có chắc muốn xoá vaccine này không?"
+                      title="Are you sure about delete this vaccine ?"
                       okText="DELETE"
-                      cancelText="Hủy"
+                      cancelText="Cancel"
                       onConfirm={() => handleDeleteVaccine(item?.id)}
                     >
                       <Button danger>DELETE</Button>
@@ -829,9 +885,9 @@ const VaccineManager = () => {
                 <div className="w-full mr-10 ">
                   {item.status !== "SUCCESSED" && (
                     <Popconfirm
-                      title="Bạn có chắc muốn xác nhận vaccine này không?"
+                      title="Are you sure about confirm this vaccine ?"
                       okText="CONFIRM"
-                      cancelText="Hủy"
+                      cancelText="Cancel"
                       onConfirm={() => handleEndEvent(item?.id)}
                     >
                       <Button className="w-full">End Event</Button>
@@ -843,7 +899,8 @@ const VaccineManager = () => {
           ))}
         </div>
       </div>
-
+      <div className="w-full h-30"></div>
+      <AppFooter />
       {/* modal for create new medical checkup */}
       <Modal
         open={open}
@@ -1090,7 +1147,7 @@ const VaccineManager = () => {
                   style={{ width: "16px", height: "16px" }}
                 />
                 <span style={{ fontWeight: "600", fontSize: "14px" }}>
-                  Nội dung kiểm tra (thuốc):
+                  Content Check
                 </span>
               </div>
 
@@ -1115,7 +1172,7 @@ const VaccineManager = () => {
                   fontWeight: "500",
                 }}
               >
-                [+] Thêm mục kiểm tra
+                [+] Add check
               </Button>
 
               {items.length > 0 && (
@@ -1150,7 +1207,7 @@ const VaccineManager = () => {
                             fontWeight: "600",
                           }}
                         >
-                          Tên thuốc
+                          Name of Medicine/Supply
                         </th>
                         <th
                           style={{
@@ -1159,7 +1216,7 @@ const VaccineManager = () => {
                             fontWeight: "600",
                           }}
                         >
-                          Số lượng dự kiến
+                          Quantity Planned
                         </th>
                         <th
                           style={{
@@ -1177,7 +1234,7 @@ const VaccineManager = () => {
                             fontWeight: "600",
                           }}
                         >
-                          Ghi chú
+                          Notes
                         </th>
                         <th
                           style={{
@@ -1186,7 +1243,7 @@ const VaccineManager = () => {
                             fontWeight: "600",
                           }}
                         >
-                          Xóa
+                          Delete
                         </th>
                       </tr>
                     </thead>
@@ -1242,8 +1299,8 @@ const VaccineManager = () => {
                                 fontSize: "14px",
                               }}
                             >
-                              <option value="">Chọn</option>
-                              <optgroup label="Thuốc">
+                              <option value="">Pick</option>
+                              <optgroup label="Medicine">
                                 {medicineSupply
                                   .filter((m) => m.type === "medicine")
                                   .map((m) => (
@@ -1255,7 +1312,7 @@ const VaccineManager = () => {
                                     </option>
                                   ))}
                               </optgroup>
-                              <optgroup label="Vật tư">
+                              <optgroup label="Supply">
                                 {medicineSupply
                                   .filter((s) => s.type === "supply")
                                   .map((s) => (
@@ -1387,7 +1444,7 @@ const VaccineManager = () => {
         footer={[<Button onClick={handleUpdateSubmit}>Update</Button>]}
       >
         <div>
-          <h2 className="text-xl font-bold mb-4">
+          <h2 className="text-xl font-bold mb-4 text-center">
             Update Vaccination Schedule
           </h2>
           <div className="space-y-3">
