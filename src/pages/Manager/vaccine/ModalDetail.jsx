@@ -54,7 +54,7 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
               fontWeight: "bold",
               padding: "4px 0",
               background: "transparent",
-              textAlign: "center", // ✅ Canh giữa text trong input
+              textAlign: "center",
             }}
           />
         </div>

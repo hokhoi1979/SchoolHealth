@@ -8,6 +8,7 @@ import { rejectMedicineRequest } from "../../../redux/medicineRequestNurse/rejec
 import { acceptMedicineRequest } from "../../../redux/medicineRequestNurse/acceptMedicineRequest/acceptMedicineRequestSlice";
 import { receiveMedicineRequest } from "../../../redux/medicineRequestNurse/receiveMedicineRequest/receiveMedicineRequestSlice";
 import { fetchLowStock } from "../../../redux/materialsNurse/getLowStock/getLowStockSlice";
+import { stopProvideMedicince } from "../../../redux/medicineRequestNurse/stopProvideMedicine/stopProvideMedicineSlice";
 function MedicineForStudent() {
   const [open, setOpen] = useState(false);
   const [store, setStore] = useState([]);
@@ -90,6 +91,11 @@ function MedicineForStudent() {
 
   const handleReceive = async () => {
     await dispatch(receiveMedicineRequest(id));
+    setDetailOpen(false);
+  };
+
+  const handleStopProvide = async () => {
+    await dispatch(stopProvideMedicince(id));
     setDetailOpen(false);
   };
 
@@ -321,159 +327,186 @@ function MedicineForStudent() {
         footer={false}
         width={800}
       >
-        <h1 className="text-2xl font-serif mb-4 text-center">
-          Prescription details
-        </h1>
-
-        <Table
-          className="font-serif"
-          dataSource={
-            getMedicineDetailRequest?.data?.medicineRequestEntity?.MedicineRequestItem?.map(
-              (item, index) => ({
-                key: index,
-                name: item.medicineName,
-                quantity: item.quantitySent,
-                dosage: item.dosage,
-                usageTimes: item.usageTimes?.join(", "),
-                startDate: new Date(item.startDate).toLocaleDateString("vi-VN"),
-                endDate: new Date(item.endDate).toLocaleDateString("vi-VN"),
-              })
-            ) || []
-          }
-          columns={[
-            {
-              title: "Medicine Name",
-              dataIndex: "name",
-              key: "name",
-              align: "center",
-            },
-            {
-              title: "Quantity",
-              dataIndex: "quantity",
-              key: "quantity",
-              align: "center",
-            },
-            {
-              title: "Dosage",
-              dataIndex: "dosage",
-              key: "dosage",
-              align: "center",
-            },
-            {
-              title: "Duration",
-              dataIndex: "usageTimes",
-              key: "usageTimes",
-              align: "center",
-            },
-            {
-              title: "From Date ",
-              dataIndex: "startDate",
-              key: "startDate",
-              align: "center",
-            },
-            {
-              title: "To Date",
-              dataIndex: "endDate",
-              key: "endDate",
-              align: "center",
-            },
-          ]}
-          pagination={false}
-          bordered
-        />
-
-        {getMedicineDetailRequest?.data?.medicineRequestEntity?.MedicineRequestItem?.some(
-          (item) =>
-            Array.isArray(item.MedicineLog) && item.MedicineLog.length > 0
-        ) && (
-          <>
-            <h1 className="text-xl font-serif mt-6 mb-2 flex justify-center">
-              Medicine Usage History
-            </h1>
-            <Table
-              className="font-serif"
-              dataSource={
-                getMedicineDetailRequest?.data?.medicineRequestEntity?.MedicineRequestItem?.flatMap(
-                  (item, i) =>
-                    (item.MedicineLog || []).map((log, j) => ({
-                      key: `${i}-${j}`,
-                      medicineName: item.medicineName,
-                      takenAt: new Date(log.takenAt).toLocaleString("vi-VN"),
-                      note: log.note || "-",
-                      givenBy: log.givenBy || "-",
-                    }))
-                ) || []
-              }
-              columns={[
-                {
-                  title: "Medicine",
-                  dataIndex: "medicineName",
-                  key: "medicineName",
-                  align: "center",
-                },
-                {
-                  title: "Taken At",
-                  dataIndex: "takenAt",
-                  key: "takenAt",
-                  align: "center",
-                },
-                {
-                  title: "Note",
-                  dataIndex: "note",
-                  key: "note",
-                  align: "center",
-                },
-                {
-                  title: "Given By",
-                  dataIndex: "givenBy",
-                  key: "givenBy",
-                  align: "center",
-                },
-              ]}
-              pagination={false}
-              bordered
-            />
-          </>
-        )}
-
-        <div className="mt-5 flex justify-end gap-1">
-          {getMedicineDetailRequest?.data?.medicineRequestEntity?.status ===
-            "PENDING" && (
-            <>
-              {" "}
-              <Button
-                className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px] !text-white"
-                onClick={() => {
-                  handleReject();
-                }}
-              >
-                Reject
-              </Button>
-              <Button
-                className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px] !text-white"
-                onClick={() => {
-                  handleAccept();
-                }}
-              >
-                Accept
-              </Button>
-            </>
-          )}
-
-          {getMedicineDetailRequest?.data?.medicineRequestEntity?.status ===
-            "CONFIRMED_NOT_RECEIVED" && (
-            <>
-              <Button
-                className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px] !text-white"
-                onClick={() => {
-                  handleReceive();
-                }}
-              >
-                Receive
-              </Button>
-            </>
-          )}
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-500 rounded-t-md px-6 py-4 text-white text-center mb-4">
+          <img
+            src="https://img.icons8.com/emoji/48/pill-emoji.png"
+            alt="pill-icon"
+            className="mx-auto mb-2"
+          />
+          <h1 className="text-2xl font-bold">Medicine Administration</h1>
+          <p className="text-sm">Confirm medicine delivery to student</p>
         </div>
+
+        {(() => {
+          const request = getMedicineDetailRequest?.data?.medicineRequestEntity;
+          const student = getMedicineDetailRequest?.data?.student || {};
+          const medicineItem = request?.MedicineRequestItem?.[0];
+          const status = request?.status;
+
+          if (!request || !medicineItem) return <p>No data found</p>;
+
+          return (
+            <>
+              <div className="border-l-4 border-[#1bd0d8]  rounded-xl p-5 shadow flex justify-between">
+                <div>
+                  <p className="font-semibold text-lg">
+                    Học sinh {student?.name || "6"}
+                  </p>
+                  <p>
+                    Code: <strong>{student?.studentCode || "ST0004"}</strong>{" "}
+                    Class: <strong>{student?.class || "12C11"}</strong> Gender:{" "}
+                    <strong>{student?.gender || "Nam"}</strong>
+                  </p>
+                </div>
+
+                <div>
+                  <Tag
+                    color={
+                      status === "PENDING"
+                        ? "blue"
+                        : status === "CONFIRMED_NOT_RECEIVED"
+                        ? "orange"
+                        : status === "CONFIRMED_RECEIVED"
+                        ? "yellow"
+                        : status === "REJECTED"
+                        ? "red"
+                        : "green"
+                    }
+                    className="text-base"
+                  >
+                    {status === "PENDING"
+                      ? "Pending Approval"
+                      : status === "CONFIRMED_NOT_RECEIVED"
+                      ? "Confirmed - Not Received"
+                      : status === "CONFIRMED_RECEIVED"
+                      ? "Confirmed - Received"
+                      : status === "REJECTED"
+                      ? "Rejected"
+                      : "Completed"}
+                  </Tag>
+                </div>
+              </div>
+
+              <div className=" grid grid-cols-2 gap-2">
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mt-4">
+                  <p className="text-lg font-semibold text-blue-800">
+                    {medicineItem?.medicineName || "Medicine Name"}
+                  </p>
+                  <p>Dosage: {medicineItem?.dosage || "-"}</p>
+                  <p>Quantity: {medicineItem?.quantitySent || "-"}</p>
+                  <p>
+                    Usage:{" "}
+                    {Array.isArray(medicineItem?.usageTimes)
+                      ? medicineItem?.usageTimes?.join(", ")
+                      : "-"}
+                  </p>
+                </div>
+
+                <div className="bg-orange-50 border border-orange-200 rounded-md p-4 mt-4">
+                  <p className="text-lg font-semibold text-orange-800">
+                    Schedule
+                  </p>
+                  <p>
+                    ⏰{" "}
+                    {medicineItem?.startDate
+                      ? new Date(medicineItem?.startDate).toLocaleDateString(
+                          "vi-VN"
+                        )
+                      : "-"}
+                  </p>
+                  <p>
+                    Until:{" "}
+                    {medicineItem?.endDate
+                      ? new Date(medicineItem?.endDate).toLocaleDateString(
+                          "vi-VN"
+                        )
+                      : "-"}
+                  </p>
+                </div>
+              </div>
+
+              {status === "PENDING" && (
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 p-4 rounded-md mt-6">
+                  <p className="font-medium">⚠️ Confirmation Required:</p>
+                  <p>
+                    Please confirm that the medicine has been administered to
+                    the student.
+                  </p>
+                </div>
+              )}
+
+              {(status === "CONFIRMED_RECEIVED" || status === "COMPLETED") && (
+                <>
+                  {medicineItem?.MedicineLog.length > 0 && (
+                    <h1 className="text-xl font-serif mt-6 mb-2 font-semibold">
+                      Medicine Usage History
+                    </h1>
+                  )}
+
+                  <div className="space-y-3">
+                    {medicineItem?.MedicineLog?.map((log, index) => (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mt-4">
+                        <p>
+                          <strong>Medicine:</strong>{" "}
+                          {medicineItem?.medicineName}
+                        </p>
+                        <p>
+                          <strong>Taken At:</strong>{" "}
+                          {log?.takenAt
+                            ? new Date(log.takenAt).toLocaleString("vi-VN")
+                            : "-"}
+                        </p>
+                        <p>
+                          <strong>Note:</strong> {log?.note || "-"}
+                        </p>
+                        <p>
+                          <strong>Given By:</strong> {log?.givenBy || "-"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              <div className="mt-6 flex justify-end gap-2">
+                {status === "PENDING" && (
+                  <>
+                    <Button
+                      className="!bg-gradient-to-r !from-red-500 !to-pink-500 !rounded-t-md !text-white"
+                      onClick={handleReject}
+                    >
+                      Reject
+                    </Button>
+                    <Button
+                      className="!bg-gradient-to-r !from-indigo-500 !to-purple-500 !rounded-t-md !text-white"
+                      onClick={handleAccept}
+                    >
+                      Accept
+                    </Button>
+                  </>
+                )}
+
+                {status === "CONFIRMED_NOT_RECEIVED" && (
+                  <Button
+                    className="!bg-gradient-to-r !from-indigo-500 !to-purple-500 !rounded-t-md !text-white"
+                    onClick={handleReceive}
+                  >
+                    Receive
+                  </Button>
+                )}
+
+                {status === "CONFIRMED_RECEIVED" && (
+                  <Button
+                    className="!bg-gradient-to-r !from-indigo-500 !to-purple-500 !rounded-t-md !text-white"
+                    onClick={handleStopProvide}
+                  >
+                    Stop provide medicine
+                  </Button>
+                )}
+              </div>
+            </>
+          );
+        })()}
       </Modal>
     </div>
   );

@@ -1,4 +1,5 @@
 import { Modal } from "antd";
+import dayjs from "dayjs";
 import { CalendarIcon, HeartPulseIcon, InfoIcon } from "lucide-react";
 
 const statusColorMap = {
@@ -23,7 +24,7 @@ const CheckupDetailModal = ({ visible, onClose, event, onUseAsTemplate }) => {
   } = event;
 
   const formattedDate = scheduledAt
-    ? new Date(scheduledAt).toLocaleDateString()
+    ? dayjs(scheduledAt).format("DD/MM/YYYY")
     : "Not specified";
 
   const appliedTo =
@@ -35,7 +36,7 @@ const CheckupDetailModal = ({ visible, onClose, event, onUseAsTemplate }) => {
   return (
     <Modal open={visible} onCancel={onClose} footer={null} centered width={850}>
       {/* Header Gradient */}
-      <div className="bg-gradient-to-r from-purple-500 to-indigo-500 text-black p-5  rounded-t-md">
+      <div className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white p-5  rounded-t-md">
         <div className="flex items-center justify-center     gap-2">
           <HeartPulseIcon size={28} />
           <div>
@@ -153,12 +154,12 @@ const CheckupDetailModal = ({ visible, onClose, event, onUseAsTemplate }) => {
           >
             Close
           </button>
-          <button
+          {/* <button
             onClick={() => onUseAsTemplate(event)}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
           >
             Ok
-          </button>
+          </button> */}
         </div>
       </div>
     </Modal>

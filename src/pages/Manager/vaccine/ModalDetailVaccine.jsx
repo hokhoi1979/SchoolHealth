@@ -50,9 +50,9 @@ const ModalDetailVaccine = ({ open, onClose, data }) => {
     >
       {/* Header gradient */}
       <div className="bg-gradient-to-r from-purple-500 to-indigo-500 p-4 rounded-t-md flex items-center justify-center gap-3">
-        <Syringe size={28} color="black" />
+        <Syringe size={28} color="white" />
         <div>
-          <h2 className="text-black font-semibold text-lg">Vaccine Details</h2>
+          <h2 className="text-white font-semibold text-lg">Vaccine Details</h2>
         </div>
       </div>
 

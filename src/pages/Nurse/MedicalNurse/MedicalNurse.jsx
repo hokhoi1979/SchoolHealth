@@ -38,35 +38,6 @@ const MedicalNurse = () => {
             <CommonBreadcrumb role={"Nurse"} page={"medicalCheckup"} />
           </h1>
 
-          <div className="flex bg-[#F3F3F3] font-kameron w-[250px] h-10 items-center rounded-md ml-5 mt-5">
-            <div className="m-auto flex gap-5">
-              <div
-                className={`hover:bg-white p-1 rounded-md ${
-                  click === "medicalDay" ? "bg-white rounded-md text-black" : ""
-                }`}
-              >
-                <Link onClick={() => setClick("medicalDay")} to={""}>
-                  Medical day
-                </Link>
-              </div>
-
-              <div
-                className={`hover:bg-white p-1 rounded-md ${
-                  click === "medicalHistory"
-                    ? "bg-white rounded-md text-black"
-                    : ""
-                }`}
-              >
-                <Link
-                  onClick={() => setClick("medicalHistory")}
-                  to={"medicalHistory"}
-                >
-                  Medical history
-                </Link>
-              </div>
-            </div>
-          </div>
-
           <div className="flex-1 overflow-auto mr-5 mt-5 mb-10">
             <Outlet />
           </div>

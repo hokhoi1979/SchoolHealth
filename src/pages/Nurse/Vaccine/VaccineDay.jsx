@@ -78,7 +78,7 @@ function VaccineDay() {
       <div className="grid grid-cols-3 pl-5 gap-5.5 h-auto ">
         {data.map((item) => (
           <div
-            className="bg-white p-6 rounded-2xl hover:bg-gray-100"
+            className="h-auto bg-white bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec] rounded-2xl border border-gray-200 shadow-md hover:shadow-lg p-5 relative flex flex-col justify-between transition-all duration-300"
             style={{ cursor: "pointer" }}
             onClick={() => navigate(`studentList/${item.id}`)}
           >

@@ -111,6 +111,15 @@ import watchAiChat from "./AI_Chat/chatBoxSaga";
 import watchGetAllChatBoxAi from "./AI_Chat/getChaxBoxSaga";
 import watchFetchDetailCheckupManager from "./MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSaga";
 import watchFetchDetailVaccineManager from "./manager/GetDetailVaccineManager/getDetailVaccineManagerSaga";
+import watchStopProvideMedicine from "./medicineRequestNurse/stopProvideMedicine/stopProvideMedicineSaga";
+import watchStudentMeeting from "./checkupNurse/listStudentMeeting/listStudentMeetingSaga";
+import watchCheckTime from "./checkupNurse/checkTime/checkTimeSaga";
+import watchCreateMeeting from "./checkupNurse/createMeeting/createMeetingSaga";
+import watchMeeted from "./checkupNurse/meeted/meetedSaga";
+import watchDeleteMeeting from "./checkupNurse/deleteMeeting/deleteMeetingSaga";
+import watchDeleteStudent from "./checkupNurse/deleteStudent/deleteStudentSaga";
+import watchFetchStudentAdmin from "./ADMIN/GetAllStudent/getAllStudentSaga";
+import { watchCreateStudentAdmin } from "./ADMIN/GetAllStudent/CreateInformationStudentAdmin/createInformationStudentAdminSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -181,6 +190,13 @@ export default function* rootSaga() {
     watchFetchStudentCheckup(),
     watchFetchCheckupResult(),
     watchSendCheckupParent(),
+    watchStopProvideMedicine(),
+    watchStudentMeeting(),
+    watchCheckTime(),
+    watchCreateMeeting(),
+    watchMeeted(),
+    watchDeleteMeeting(),
+    watchDeleteStudent(),
 
     //Manager
     watchFetchManagerMedical(),
@@ -219,13 +235,9 @@ export default function* rootSaga() {
     watchFetchDetailVaccineManager(),
 
     // watchFetchVaccineResult(),
-    watchFetchVaccineResult(),
-    watchPostResultSaga(),
-    watchFetchCheckup(),
-    watchUpdateVaccineResult(),
-    watchFetchProfileDetail(),
-
-    watchHealthProfileSaga(),
+    //admin
+    watchFetchStudentAdmin(),
+    watchCreateStudentAdmin(),
 
     watchFetchStudentDetailProfile(),
     // AI Chat

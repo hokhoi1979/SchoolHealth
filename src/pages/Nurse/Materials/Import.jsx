@@ -508,13 +508,11 @@ function Import() {
           </p>
         </div>
 
-        {/* Body */}
-        <div className="bg-gradient-to-br from-orange-100 to-red-50 p-6 space-y-6 font-serif text-gray-800 rounded-2xl mt-5">
+        <div className=" p-6 space-y-6 font-serif text-gray-800 rounded-2xl mt-5 bg-gradient-to-br from-pink-50 to-blue-50 ">
           {detailRequest?.data ? (
             <>
-              {/* Info section */}
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-6 ">
+                <div className="space-y-3 ">
                   <h3 className="text-lg font-semibold flex items-center gap-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -535,19 +533,23 @@ function Import() {
                     </svg>
                     Event #{detailRequest.data.id}
                   </h3>
-                  <p>
-                    <strong>Created By:</strong> {detailRequest.data.createdBy}
-                  </p>
-                  <p>
-                    <strong>Status:</strong>{" "}
-                    <Tag color="green">{detailRequest.data.status}</Tag>
-                  </p>
-                  <p>
-                    <strong>Note:</strong>{" "}
-                    {detailRequest.data.note || (
-                      <span className="text-gray-400 italic">No Note</span>
-                    )}
-                  </p>
+
+                  <div className="bg-gradient-to-br from-orange-100 to-red-50 p-4 rounded-2xl">
+                    <p>
+                      <strong>Created By:</strong>{" "}
+                      {detailRequest.data.createdBy}
+                    </p>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      <Tag color="green">{detailRequest.data.status}</Tag>
+                    </p>
+                    <p>
+                      <strong>Note:</strong>{" "}
+                      {detailRequest.data.note || (
+                        <span className="text-gray-400 italic">No Note</span>
+                      )}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Items Table */}
