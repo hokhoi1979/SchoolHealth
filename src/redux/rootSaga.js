@@ -118,8 +118,6 @@ import watchCreateMeeting from "./checkupNurse/createMeeting/createMeetingSaga";
 import watchMeeted from "./checkupNurse/meeted/meetedSaga";
 import watchDeleteMeeting from "./checkupNurse/deleteMeeting/deleteMeetingSaga";
 import watchDeleteStudent from "./checkupNurse/deleteStudent/deleteStudentSaga";
-import watchFetchStudentAdmin from "./ADMIN/GetAllStudent/getAllStudentSaga";
-import { watchCreateStudentAdmin } from "./ADMIN/GetAllStudent/CreateInformationStudentAdmin/createInformationStudentAdminSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -236,8 +234,8 @@ export default function* rootSaga() {
 
     // watchFetchVaccineResult(),
     //admin
-    watchFetchStudentAdmin(),
-    watchCreateStudentAdmin(),
+    // watchFetchStudentAdmin(),
+    // watchCreateStudentAdmin(),
 
     watchFetchStudentDetailProfile(),
     // AI Chat

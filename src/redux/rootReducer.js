@@ -115,8 +115,6 @@ import createMeetingReducer from "./checkupNurse/createMeeting/createMeetingSlic
 import meetedReducer from "./checkupNurse/meeted/meetedSlice";
 import deleteMeetingReducer from "./checkupNurse/deleteMeeting/deleteMeetingSlice";
 import deleteStudentReducer from "./checkupNurse/deleteStudent/deleteStudentSlice";
-import getAllStudentAdminReducer from "./ADMIN/GetAllStudent/getAllStudentSlice";
-import createInformationStudentAdminReducer from "./ADMIN/GetAllStudent/CreateInformationStudentAdmin/createInformationStudentAdminSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -226,8 +224,8 @@ const rootReducer = combineReducers({
   getDetailCheckupManager: getDetailCheckupManagerReducer,
   getDetailVaccineManager: getDetailVaccineManagerReducer,
   //admin
-  getAllStudentAdmin: getAllStudentAdminReducer,
-  createInformationStudentAdmin: createInformationStudentAdminReducer,
+  // getAllStudentAdmin: getAllStudentAdminReducer,
+  // createInformationStudentAdmin: createInformationStudentAdminReducer,
 
   //
   parentProfileHealth: healthProfileReducer,
