@@ -109,20 +109,20 @@ function StudentAdmin() {
   };
 
   const columns = [
-    { title: "Mã học sinh", dataIndex: "student_code", key: "student_code" },
+    { title: "Student Code", dataIndex: "student_code", key: "student_code" },
     {
-      title: "Tên học sinh",
+      title: "Full Name",
       dataIndex: ["account", "fullname"],
       key: "fullname",
     },
     {
-      title: "Email học sinh",
+      title: "Email",
       dataIndex: ["account", "email"],
       key: "studentEmail",
     },
-    { title: "Giới tính", dataIndex: "gender", key: "gender" },
+    { title: "Sex", dataIndex: "gender", key: "gender" },
     {
-      title: "Lớp - Khối",
+      title: "Class-Grade",
       key: "classGrade",
       render: (_, record) => {
         const cls = record.lastAcamedicYear?.class?.name || "N/A";
@@ -131,12 +131,12 @@ function StudentAdmin() {
       },
     },
     {
-      title: "Năm học",
+      title: "Year",
       dataIndex: ["lastAcamedicYear", "academicYear", "name"],
       key: "academicYear",
     },
     {
-      title: "Phụ huynh",
+      title: "Parent",
       key: "parent",
       render: (_, record) => (
         <Descriptions column={1} size="small" bordered>
@@ -153,7 +153,7 @@ function StudentAdmin() {
       ),
     },
     {
-      title: "Trạng thái",
+      title: "Status",
       dataIndex: "graduated",
       key: "graduated",
       render: (value) =>
@@ -164,7 +164,7 @@ function StudentAdmin() {
         ),
     },
     {
-      title: "Thao tác",
+      title: "Action",
       key: "action",
       render: (_, record) => (
         <Button type="link" onClick={() => handleViewDetail(record.id)}>
@@ -179,7 +179,7 @@ function StudentAdmin() {
       <CommonBreadcrumb role={"Admin"} page={"student"} />
       <Card
         className="mb-4"
-        title="Bộ lọc dữ liệu học sinh"
+        title="Student Filter"
         bordered
         style={{ background: "#f9f9f9" }}
       >
@@ -195,82 +195,88 @@ function StudentAdmin() {
         <Row gutter={[16, 16]}>
           <Col span={8}>
             <label>
-              <b>Tìm kiếm theo tên hoặc email:</b>
+              <b>Search by name or email:</b>
             </label>
             <Input
-              placeholder="VD: Nguyễn Văn A"
+              placeholder="e.g. Nguyen Van A"
               value={filters.search}
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
               }
             />
           </Col>
+
           <Col span={4}>
             <label>
-              <b>Tên lớp:</b>
+              <b>Class name:</b>
             </label>
             <Input
-              placeholder="VD: 12A1"
+              placeholder="e.g. 12A1"
               value={filters.className}
               onChange={(e) =>
                 setFilters({ ...filters, className: e.target.value })
               }
             />
           </Col>
+
           <Col span={4}>
             <label>
-              <b>Khối:</b>
+              <b>Grade:</b>
             </label>
             <Input
-              placeholder="VD: 12"
+              placeholder="e.g. 12"
               value={filters.grade}
               onChange={(e) =>
                 setFilters({ ...filters, grade: e.target.value })
               }
             />
           </Col>
+
           <Col span={4}>
             <label>
-              <b>Năm học:</b>
+              <b>Academic year:</b>
             </label>
             <Input
-              placeholder="VD: 2025-2026"
+              placeholder="e.g. 2025-2026"
               value={filters.academicYearName}
               onChange={(e) =>
                 setFilters({ ...filters, academicYearName: e.target.value })
               }
             />
           </Col>
+
           <Col span={4}>
             <label>
-              <b>Trạng thái tốt nghiệp:</b>
+              <b>Graduation status:</b>
             </label>
             <Select
               value={filters.graduated}
               onChange={(value) => setFilters({ ...filters, graduated: value })}
               allowClear
-              placeholder="Chọn trạng thái"
+              placeholder="Select status"
               style={{ width: "100%" }}
             >
-              <Option value={true}>Đã tốt nghiệp</Option>
-              <Option value={false}>Chưa tốt nghiệp</Option>
+              <Option value={true}>Graduated</Option>
+              <Option value={false}>Not graduated</Option>
             </Select>
           </Col>
+
           <Col span={4}>
             <label>
-              <b>Sắp xếp theo trường:</b>
+              <b>Sort by field:</b>
             </label>
             <Input
-              placeholder="VD: createdAt, fullname"
+              placeholder="e.g. createdAt, fullname"
               value={filters.sortBy}
               onChange={(e) =>
                 setFilters({ ...filters, sortBy: e.target.value })
               }
             />
           </Col>
+
           <Col span={4}>
             <label>
-              <b>Thứ tự sắp xếp:</b>
+              <b>Sort order:</b>
             </label>
             <Select
               value={filters.order}
@@ -279,13 +285,14 @@ function StudentAdmin() {
               allowClear
               style={{ width: "100%" }}
             >
-              <Option value="asc">Tăng dần (asc)</Option>
-              <Option value="desc">Giảm dần (desc)</Option>
+              <Option value="asc">Ascending (asc)</Option>
+              <Option value="desc">Descending (desc)</Option>
             </Select>
           </Col>
+
           <Col span={4}>
             <label>
-              <b>Số dòng mỗi trang:</b>
+              <b>Rows per page:</b>
             </label>
             <Select
               value={filters.limit}
@@ -298,18 +305,19 @@ function StudentAdmin() {
               <Option value={50}>50</Option>
             </Select>
           </Col>
+
           <Col span={8} className="d-flex align-items-end">
             <Space style={{ marginTop: 23 }}>
               <Button type="primary" onClick={handleSearch}>
-                Tìm kiếm
+                Search
               </Button>
-              <Button onClick={handleReset}>Đặt lại</Button>
+              <Button onClick={handleReset}>Reset</Button>
             </Space>
           </Col>
         </Row>
       </Card>
 
-      <Card title="Danh sách học sinh" bordered loading={loading}>
+      <Card title="Student List" bordered loading={loading}>
         <Table
           rowKey="id"
           columns={columns}

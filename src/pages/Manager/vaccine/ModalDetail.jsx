@@ -22,12 +22,12 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
       style={{
         backgroundColor: "#fff",
         borderRadius: 12,
-        border: "2px solid black", // ✅ Viền đen rõ ràng
-        boxShadow: "none", // ✅ Tắt hoàn toàn bóng đổ
+        border: "2px solid black",
+        boxShadow: "none",
       }}
       footer={[
         <Button key="cancel" onClick={cancel}>
-          Huỷ
+          Cancel
         </Button>,
         <Button
           key="confirm"
@@ -37,7 +37,7 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
             cancel(); // đóng modal sau khi gửi
           }}
         >
-          Gửi thông báo
+          Send Notification
         </Button>,
       ]}
       title={
@@ -54,7 +54,7 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
               fontWeight: "bold",
               padding: "4px 0",
               background: "transparent",
-              textAlign: "center", // ✅ Canh giữa text trong input
+              textAlign: "center",
             }}
           />
         </div>

@@ -39,7 +39,7 @@ function MaterialManage() {
 
   useEffect(() => {
     if (open) {
-      dispatch(fetchMedicineClasstifyManager({ page: 1, limit: 8 }));
+      dispatch(fetchMedicineClasstifyManager({ page: 1, limit: 100 }));
     }
   }, [open]);
 
@@ -191,120 +191,235 @@ function MaterialManage() {
         {click === "inventory" && (
           <Modal
             open={open}
-            style={{ marginTop: 110 }}
             onCancel={() => setOpen(false)}
             footer={false}
+            centered
+            width={650}
+            className="custom-import-supply-modal"
           >
-            <h1 className="font-serif text-2xl flex justify-center">
-              Import medical supplies
-            </h1>
-
-            <div className="font-serif">
-              <h1 className="text-[17px] font-medium font-kameron mt-3">
-                Name of supplies
-              </h1>
-              <Input
-                placeholder="Enter name"
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-
-            <div className=" font-serif">
-              <div>
-                <h1 className="text-[17px] font-medium font-kameron mt-3">
-                  Quantity imported
+            <div style={{ padding: "8px 0" }}>
+              {/* Title */}
+              <div
+                style={{
+                  textAlign: "center",
+                  marginBottom: "32px",
+                  paddingBottom: "16px",
+                  borderBottom: "2px solid #f0f0f0",
+                }}
+              >
+                <h1
+                  style={{
+                    fontSize: "24px",
+                    fontFamily: "serif",
+                    fontWeight: "600",
+                    color: "#1f2937",
+                    margin: "0 0 8px 0",
+                  }}
+                >
+                  Import Medical Supply
                 </h1>
-                <Input
-                  type="number"
-                  placeholder="Enter number"
-                  onChange={(e) => setStock(e.target.value)}
-                />
+                <p style={{ fontSize: "14px", color: "#6b7280", margin: 0 }}>
+                  Fill in the supply details below
+                </p>
               </div>
-            </div>
 
-            <div className="font-serif">
-              <h1 className="text-[17px] font-medium font-kameron mt-3">
-                Category
-              </h1>
-              <Select
-                className="w-full"
-                placeholder="Select category"
-                value={category}
-                onChange={(value) => setCategory(value)}
-              >
-                {categoryOptions.map((cat) => (
-                  <Select.Option key={cat} value={cat}>
-                    {cat}
-                  </Select.Option>
-                ))}
-              </Select>
-            </div>
+              {/* Upload Image */}
+              <div style={{ marginBottom: "24px", textAlign: "center" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    color: "#374151",
+                    marginBottom: "12px",
+                    textAlign: "left",
+                  }}
+                >
+                  Supply Image
+                </label>
+                <Upload
+                  listType="picture"
+                  maxCount={1}
+                  showUploadList={false}
+                  beforeUpload={() => false}
+                  onChange={(info) => {
+                    const file = info.fileList[0]?.originFileObj;
+                    setImage(file);
+                  }}
+                >
+                  {image ? (
+                    <img
+                      src={URL.createObjectURL(image)}
+                      alt="preview"
+                      style={{
+                        width: "96px",
+                        height: "96px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                        border: "2px solid #e5e7eb",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                      }}
+                    />
+                  ) : (
+                    <Button
+                      style={{
+                        height: "96px",
+                        width: "96px",
+                        borderRadius: "8px",
+                        border: "2px dashed #d1d5db",
+                        backgroundColor: "#f9fafb",
+                        fontSize: "12px",
+                        color: "#6b7280",
+                      }}
+                    >
+                      Upload Image
+                    </Button>
+                  )}
+                </Upload>
+              </div>
 
-            <div>
-              <h1 className="text-[17px] font-medium font-kameron mt-3">
-                Description
-              </h1>
-              <Input
-                placeholder="Enter description"
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <h1 className="text-[17px] font-medium font-kameron mt-3 ">
-                Usage
-              </h1>
-              <TextArea
-                placeholder="Note if you have"
-                onChange={(e) => setUsage(e.target.value)}
-              />
-            </div>
-
-            <div className="font-serif mt-3">
-              <h1 className="text-[17px] font-medium font-kameron">
-                Upload Image
-              </h1>
-              <Upload
-                listType="picture"
-                maxCount={1}
-                beforeUpload={() => false}
-                onChange={(info) => {
-                  // Lấy file đầu tiên
-                  const file = info.fileList[0]?.originFileObj;
-                  setImage(file);
+              {/* Grid Fields */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "20px",
+                  fontFamily: "serif",
                 }}
               >
-                <Button>Click to Upload</Button>
-              </Upload>
-            </div>
+                {/* Name */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Name of Supply
+                  </label>
+                  <Input
+                    placeholder="Enter name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    style={{ height: 40, fontSize: 14, borderRadius: 6 }}
+                  />
+                </div>
 
-            <div className="mt-5 flex justify-end gap-3 font-serif">
-              <Button
-                type="secondary"
-                className="!bg-[#E26666] hover:!bg-[#E53838] w-[100px]"
-                onClick={() => setOpen(false)}
-              >
-                <p className="text-white text-xl font-serif p-1">Cancel</p>
-              </Button>
-              <Button
-                type="secondary"
-                className="!bg-[#6CC76F] hover:!bg-[#29CD2F] w-[100px]"
-                onClick={() => {
-                  dispatch(
-                    postManagerSupply({
-                      name,
-                      stock,
-                      description,
-                      usage,
-                      category,
-                      image,
-                    })
-                  );
-                  setOpen(false);
+                {/* Quantity */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Quantity Imported
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Enter quantity"
+                    value={stock}
+                    onChange={(e) => setStock(e.target.value)}
+                    style={{ height: 40, fontSize: 14, borderRadius: 6 }}
+                  />
+                </div>
+
+                {/* Category */}
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category
+                  </label>
+                  <Select
+                    className="w-full"
+                    placeholder="Select category"
+                    value={category}
+                    onChange={(value) => setCategory(value)}
+                    style={{ fontSize: 14 }}
+                  >
+                    {categoryOptions.map((cat) => (
+                      <Select.Option key={cat} value={cat}>
+                        {cat}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </div>
+
+                {/* Description */}
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Description
+                  </label>
+                  <Input
+                    placeholder="Enter description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    style={{ height: 40, fontSize: 14, borderRadius: 6 }}
+                  />
+                </div>
+
+                {/* Usage */}
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Usage
+                  </label>
+                  <TextArea
+                    rows={3}
+                    placeholder="How to use..."
+                    value={usage}
+                    onChange={(e) => setUsage(e.target.value)}
+                    style={{ fontSize: 14, borderRadius: 6 }}
+                  />
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div
+                style={{
+                  marginTop: "32px",
+                  paddingTop: "20px",
+                  borderTop: "1px solid #e5e7eb",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "12px",
                 }}
               >
-                <p className="text-white text-xl font-serif p-1">Save</p>
-              </Button>
+                <Button
+                  onClick={() => setOpen(false)}
+                  style={{
+                    backgroundColor: "#ef4444",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    fontWeight: "500",
+                    height: "40px",
+                    width: "100px",
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    dispatch(
+                      postManagerSupply({
+                        name,
+                        stock,
+                        description,
+                        usage,
+                        category,
+                        image,
+                      })
+                    );
+                    setName("");
+                    setStock("");
+                    setDescription("");
+                    setUsage("");
+                    setCategory(null);
+                    setImage(null);
+                    setOpen(false);
+                  }}
+                  style={{
+                    backgroundColor: "#10b981",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    fontWeight: "500",
+                    height: "40px",
+                    width: "100px",
+                  }}
+                >
+                  Save
+                </Button>
+              </div>
             </div>
           </Modal>
         )}
@@ -688,7 +803,7 @@ function MaterialManage() {
                             postManagerClasstify({
                               body: { name: newClassify.trim() },
                               page: 1,
-                              limit: 8,
+                              limit: 100,
                               onSuccess: (id) => {
                                 console.log("===> onSuccess with id:", id);
                                 classifyIDToUse = id;
@@ -804,7 +919,7 @@ function MaterialManage() {
                           await dispatch(
                             postManagerClasstify({
                               body: { name: categoryName },
-                              limit: 8,
+                              limit: 100,
                               page: 1,
                             })
                           );

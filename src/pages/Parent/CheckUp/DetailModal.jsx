@@ -136,39 +136,67 @@ const DetailModal = ({ open, onclose, checkupDetail, loading, error }) => {
             </Descriptions.Item>
           </Descriptions>
         </Card>
-        {/* Target Groups */}
-        <Card
-          title={
-            <span className="text-purple-600 font-medium text-base">
-              🎯 Target Groups
-            </span>
-          }
-          size="small"
-          className="bg-white border border-purple-100 rounded-xl shadow-sm"
-        >
-          <div className="flex flex-wrap gap-2">
-            {detail.targetType === "GRADE" &&
-              detail.targets.map((grade, idx) => (
-                <Tag
-                  key={idx}
-                  color="magenta"
-                  className="rounded-full px-4 py-1 text-sm font-medium"
-                >
-                  Grade {grade.grade}
-                </Tag>
+
+        {/* Target Grades */}
+        {detail.targets && detail.targets.length > 0 && (
+          <Card title="Targets" size="small">
+            <div className="flex flex-wrap gap-2">
+              {detail.targetType === "SCHOOL" &&
+                detail.targets.map((school, idx) => (
+                  <Tag key={idx} color="blue">
+                    {school.school || "All Schools"}
+                  </Tag>
+                ))}
+              {detail.targetType === "GRADE" &&
+                detail.targets.map((grade, idx) => (
+                  <Tag key={idx} color="purple">
+                    Grade {grade.grade}
+                  </Tag>
+                ))}
+              {detail.targetType === "CLASS" &&
+                detail.targets.map((cls, idx) => (
+                  <Tag key={idx} color="geekblue">
+                    {cls.className}
+                  </Tag>
+                ))}
+            </div>
+          </Card>
+        )}
+
+        {/* Checkup Content */}
+        {detail.content && detail.content.length > 0 && (
+          <Card title="Checkup Items" size="small">
+            <div className="space-y-3">
+              {detail.content.map((item) => (
+                <Card key={item.id} size="small" className="bg-gray-50">
+                  <div className="flex items-start gap-3">
+                    <CheckCircleOutlined className="text-green-500 mt-1" />
+                    <div className="flex-1">
+                      <Text strong className="block mb-1">
+                        {item.name}
+                      </Text>
+                      {item.description && (
+                        <Text className="text-gray-600 text-sm block mb-2">
+                          {item.description || "N/A"}
+                        </Text>
+                      )}
+                    </div>
+                  </div>
+                </Card>
               ))}
-            {detail.targetType === "CLASS" &&
-              detail.targets.map((cls, idx) => (
-                <Tag
-                  key={idx}
-                  color="geekblue"
-                  className="rounded-full px-4 py-1 text-sm font-medium"
-                >
-                  {cls.className}
-                </Tag>
-              ))}
-          </div>
-        </Card>
+              {detail.targetType === "CLASS" &&
+                detail.targets.map((cls, idx) => (
+                  <Tag
+                    key={idx}
+                    color="geekblue"
+                    className="rounded-full px-4 py-1 text-sm font-medium"
+                  >
+                    {cls.className}
+                  </Tag>
+                ))}
+            </div>
+          </Card>
+        )}
         {/* Checkup Items */}
         <Card
           title={

@@ -38,7 +38,7 @@ function* managerDeleteMedicineClassifySaga(action) {
       console.log("DELETE SUCCESS:", response.data);
       yield put(deleteManagerMedicineClassifySuccess(response.data));
 
-      const { page, limit } = action.payload || {};
+      const { page, limit = 100 } = action.payload || {};
 
       const fetchData = yield call(
         axios.get,

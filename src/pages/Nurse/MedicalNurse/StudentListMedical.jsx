@@ -5,6 +5,7 @@ import SentMedicalToParents from "./SentMedicalToParents";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStudentCheckup } from "../../../redux/checkupNurse/listStudentCheckup/listStudentCheckupSlice";
+import SpecialStudent from "./SpecialStudent";
 
 function StudentListMedical() {
   const { id } = useParams();
@@ -132,6 +133,37 @@ function StudentListMedical() {
         </Space>
       ),
     },
+    {
+      title: "Action",
+      key: "action",
+      align: "center",
+      render: (_, record) => (
+        <Space>
+          <Tooltip
+            placement="bottom"
+            title="View"
+            overlayInnerStyle={{
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "12px",
+            }}
+          >
+            <div style={{ cursor: "pointer" }}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={20}
+                height={20}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
+                ></path>
+              </svg>
+            </div>
+          </Tooltip>
+        </Space>
+      ),
+    },
   ];
 
   return (
@@ -151,6 +183,7 @@ function StudentListMedical() {
             <Option value="student">Student List</Option>
             <Option value="record">Recording Vaccination Results</Option>
             <Option value="send">Send to Vaccination Results</Option>
+            <Option value="special">Special case</Option>
           </Select>
         </div>
       </div>
@@ -419,6 +452,11 @@ function StudentListMedical() {
       {selectedOption === "send" && (
         <div className="flex gap-5 pl-5">
           <SentMedicalToParents id={id} />
+        </div>
+      )}
+      {selectedOption === "special" && (
+        <div className="flex gap-5 pl-5">
+          <SpecialStudent id={id} />
         </div>
       )}
       <div className="h-20"></div>

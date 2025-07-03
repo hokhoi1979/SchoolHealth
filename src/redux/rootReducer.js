@@ -109,6 +109,15 @@ import checkupResultReducer from "./checkupNurse/resultCheckup/resultCheckupSlic
 import sendCheckupParentReducer from "./checkupNurse/sendCheckupToParent/sendCheckupParentSlice";
 
 import studentDetailProfileReducer from "./getProflie/getProfileStudentSlice";
+import getDetailCheckupManagerReducer from "./MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSlice";
+import getDetailVaccineManagerReducer from "./manager/GetDetailVaccineManager/getDetailVaccineManagerSlice";
+import stopProvideMedicineReducer from "./medicineRequestNurse/stopProvideMedicine/stopProvideMedicineSlice";
+import studentMeetingReducer from "./checkupNurse/listStudentMeeting/listStudentMeetingSlice";
+import checkScheduleReducer from "./checkupNurse/checkTime/checkTimeSlice";
+import createMeetingReducer from "./checkupNurse/createMeeting/createMeetingSlice";
+import meetedReducer from "./checkupNurse/meeted/meetedSlice";
+import deleteMeetingReducer from "./checkupNurse/deleteMeeting/deleteMeetingSlice";
+import deleteStudentReducer from "./checkupNurse/deleteStudent/deleteStudentSlice";
 
 import getAllStudentReducer from "./admin/getAllStudentSlice";
 import getAllAccountReducer from "./admin/getAllAccountSlice";
@@ -148,6 +157,13 @@ const rootReducer = combineReducers({
   postCheckupDetailResult: postCheckupDetailResultReducer,
   studentCheckup: studentCheckupReducer,
   sendCheckupParent: sendCheckupParentReducer,
+  stopProvideMedicine: stopProvideMedicineReducer,
+  studentMeeting: studentMeetingReducer,
+  checkSchedule: checkScheduleReducer,
+  createMeeting: createMeetingReducer,
+  meeted: meetedReducer,
+  deleteMeeting: deleteMeetingReducer,
+  deleteStudent: deleteStudentReducer,
 
   //api parent
   studentOfParent: studentOfParentReducer,
@@ -217,7 +233,13 @@ const rootReducer = combineReducers({
   endEventMedicalCheckUpManager: endEventMedicalCheckUpManagerReducer,
   deleteMedicalCheckupManager: deleteMedicalCheckupManagerReducer,
   managerUpdateMedicalCheckup: managerUpdateMedicalCheckupReducer,
+  getDetailCheckupManager: getDetailCheckupManagerReducer,
+  getDetailVaccineManager: getDetailVaccineManagerReducer,
+  //admin
+  // getAllStudentAdmin: getAllStudentAdminReducer,
+  // createInformationStudentAdmin: createInformationStudentAdminReducer,
 
+  //
   parentProfileHealth: healthProfileReducer,
 
   //api student

@@ -45,24 +45,24 @@ const CheckupItemsTable = ({
           }}
         />
         <span className="font-semibold">
-          Nội dung kiểm tra (thuốc / vật tư):
+          Checkup Items (Medicine / Supplies):
         </span>
       </div>
 
       <Button size="small" onClick={handleAddItem} className="mb-3">
-        [+] Thêm mục kiểm tra
+        [+] Add Checkup Item"
       </Button>
 
       {Array.isArray(items) && items.length > 0 && (
         <table className="w-full text-left border border-collapse">
           <thead>
             <tr className="bg-gray-200">
-              <th className="border px-2">STT</th>
-              <th className="border px-2">Tên thuốc / vật tư</th>
-              <th className="border px-2">Số lượng</th>
-              <th className="border px-2">Hình ảnh</th>
-              <th className="border px-2">Ghi chú</th>
-              <th className="border px-2">Xoá</th>
+              <th className="border px-2">ID</th>
+              <th className="border px-2">Medicine / Supply Name</th>
+              <th className="border px-2">Quantity</th>
+              <th className="border px-2">Image</th>
+              <th className="border px-2">Note</th>
+              <th className="border px-2">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -99,14 +99,14 @@ const CheckupItemsTable = ({
                       }}
                     >
                       <option value="">Chọn</option>
-                      <optgroup label="Thuốc">
+                      <optgroup label="Medicine">
                         {formattedData.medicine.map((m) => (
                           <option key={`med-${m.id}`} value={`med-${m.id}`}>
                             {m.name}
                           </option>
                         ))}
                       </optgroup>
-                      <optgroup label="Vật tư">
+                      <optgroup label="Supply">
                         {formattedData.supply.map((s) => (
                           <option key={`sup-${s.id}`} value={`sup-${s.id}`}>
                             {s.name}

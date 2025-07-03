@@ -149,11 +149,10 @@ const ChangePassword = () => {
                     icon={<UserOutlined />}
                     className="border-4 border-blue-100"
                   />
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    {userInfo?.fullname}
-                  </h3>
+
+                  <p className="text-gray-600 text-sm">{userInfo?.fullname}</p>
                   <p className="text-gray-600 text-sm">
-                    Email: {profile.data.email}
+                    Email: {userInfo?.email}
                   </p>
                 </div>
               </Card>

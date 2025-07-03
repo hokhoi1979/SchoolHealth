@@ -1,4 +1,14 @@
-import { Button, Input, Modal, Select, Space, Table, Tag, Tooltip } from "antd";
+import {
+  Button,
+  Checkbox,
+  Input,
+  Modal,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +27,7 @@ function MedicalResult({ id }) {
   const [overallNotes, setOverallNotes] = useState("");
   const [selectedStudentID, setSelectedStudentID] = useState(null);
   const [submittedStudents, setSubmittedStudents] = useState([]);
+  const [isMeeting, setIsMeeting] = useState(false);
 
   const { studentJoin = [] } = useSelector((state) => state.checkupJoin);
   const { checkDetail = [] } = useSelector(
@@ -83,6 +94,7 @@ function MedicalResult({ id }) {
     const payload = {
       studentID: Number(selectedStudentID),
       results: resultsArray,
+      isMeeting: isMeeting,
       status: "SUCCESS",
       overallNotes: overallNotes || "Không có phản ứng phụ",
       overallResult: overallResult || "GOOD",
@@ -90,6 +102,7 @@ function MedicalResult({ id }) {
 
     dispatch(postCheckupDetailResult({ id, body: payload }));
     setSubmittedStudents((prev) => [...prev, selectedStudentID]);
+    setIsMeeting(false);
 
     setOpen(false);
   };
@@ -196,11 +209,6 @@ function MedicalResult({ id }) {
         </p>
 
         <div className="mt-5">
-          <p className="font-serif text-sm">
-            Vaccination day:{" "}
-            <span className="text-gray-500">Flu vaccination (15/06/2025)</span>
-          </p>
-
           <Table
             columns={columnsRecord}
             dataSource={dataRecord}
@@ -271,6 +279,16 @@ function MedicalResult({ id }) {
                 onChange={(e) => setOverallNotes(e.target.value)}
                 placeholder="Ghi chú về phản ứng phụ hoặc lưu ý"
               />
+            </div>
+
+            <div className="mt-4">
+              <p className="font-semibold mb-1">Trường hợp đặc biệt?</p>
+              <Checkbox
+                checked={isMeeting}
+                onChange={(e) => setIsMeeting(e.target.checked)}
+              >
+                Có
+              </Checkbox>
             </div>
 
             <div className="flex justify-end mt-5 gap-4">
