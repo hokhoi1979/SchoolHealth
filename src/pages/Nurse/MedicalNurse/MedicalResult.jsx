@@ -4,7 +4,6 @@ import {
   Input,
   Modal,
   Select,
-  Space,
   Table,
   Tag,
   Tooltip,
@@ -18,11 +17,11 @@ import { postCheckupDetailResult } from "../../../redux/checkupNurse/sendCheckup
 
 function MedicalResult({ id }) {
   const dispatch = useDispatch();
-  const [start, setStart] = useState(false);
   const [dataRecord, setDataRecord] = useState([]);
   const [open, setOpen] = useState(false);
   const [detail, setDetail] = useState([]);
   const [inputValues, setInputValues] = useState({});
+  const [inputErrors, setInputErrors] = useState({});
   const [overallResult, setOverallResult] = useState("");
   const [overallNotes, setOverallNotes] = useState("");
   const [selectedStudentID, setSelectedStudentID] = useState(null);
@@ -80,9 +79,42 @@ function MedicalResult({ id }) {
       ...prev,
       [id]: value,
     }));
+
+    setInputErrors((prev) => ({
+      ...prev,
+      [id]: null,
+    }));
   };
 
   const handleSendResult = () => {
+    const newErrors = {};
+    let hasError = false;
+
+    detail.data.forEach((item) => {
+      const value = inputValues[item.id];
+
+      if (item.name.toLowerCase().includes("height")) {
+        const height = parseFloat(value);
+        if (isNaN(height) || height <= 0 || height > 250) {
+          newErrors[item.id] = "Chiều cao không hợp lệ (0 - 250 cm)";
+          hasError = true;
+        }
+      }
+
+      if (item.name.toLowerCase().includes("weight")) {
+        const weight = parseFloat(value);
+        if (isNaN(weight) || weight <= 0 || weight > 601) {
+          newErrors[item.id] = "Cân nặng không hợp lệ (0 - 600 kg)";
+          hasError = true;
+        }
+      }
+    });
+
+    if (hasError) {
+      setInputErrors(newErrors);
+      return;
+    }
+
     const resultsArray = Object.entries(inputValues).map(
       ([contentID, value]) => ({
         contentID: Number(contentID),
@@ -103,7 +135,6 @@ function MedicalResult({ id }) {
     dispatch(postCheckupDetailResult({ id, body: payload }));
     setSubmittedStudents((prev) => [...prev, selectedStudentID]);
     setIsMeeting(false);
-
     setOpen(false);
   };
 
@@ -133,21 +164,10 @@ function MedicalResult({ id }) {
     {
       title: "HasResult",
       dataIndex: "hasResult",
-      render: (text, record) => (
-        <p>
-          {text === true ? (
-            <>
-              <Tag color="green">Đã có</Tag>
-            </>
-          ) : (
-            <>
-              <Tag color="blue">Chưa có</Tag>
-            </>
-          )}
-        </p>
+      render: (text) => (
+        <Tag color={text ? "green" : "blue"}>{text ? "Đã có" : "Chưa có"}</Tag>
       ),
     },
-
     {
       title: "Action",
       key: "action",
@@ -191,21 +211,10 @@ function MedicalResult({ id }) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between mt-2">
-        <div></div>
-        {/* <Button
-          type="secondary"
-          className="!bg-black hover:!bg-gray-600  !text-white"
-          onClick={() => setStart(true)}
-        >
-          Start Vaccination
-        </Button> */}
-      </div>
-
       <div className="w-full bg-white rounded-xl p-5 mt-5">
-        <h1 className="font-serif text-2xl">Recording Vaccination Results</h1>
+        <h1 className="font-serif text-2xl">Recording Medical Results</h1>
         <p className="font-serif text-sm text-gray-500">
-          Update vaccination results and monitor post-vaccination reactions
+          Update checkup results and monitor health
         </p>
 
         <div className="mt-5">
@@ -240,19 +249,18 @@ function MedicalResult({ id }) {
                     value={inputValues[item.id] || ""}
                     onChange={(e) => handleInputChange(item.id, e.target.value)}
                   />
-                ) : item.inputType === "NUMBER" ? (
-                  <Input
-                    type="number"
-                    placeholder="Nhập số liệu"
-                    value={inputValues[item.id] || ""}
-                    onChange={(e) => handleInputChange(item.id, e.target.value)}
-                  />
                 ) : (
                   <Input
+                    type={item.inputType === "NUMBER" ? "number" : "text"}
                     placeholder="Nhập dữ liệu"
                     value={inputValues[item.id] || ""}
                     onChange={(e) => handleInputChange(item.id, e.target.value)}
                   />
+                )}
+                {inputErrors[item.id] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {inputErrors[item.id]}
+                  </p>
                 )}
               </div>
             ))}

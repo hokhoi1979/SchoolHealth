@@ -223,7 +223,7 @@ const MedicalEvent = () => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return false; // ❗ Trả về false nếu có lỗi
+      return false;
     }
 
     const payload = {
@@ -241,7 +241,7 @@ const MedicalEvent = () => {
     console.log("Payload gửi API: ", payload);
     await dispatch(postMedicalEvent(payload));
 
-    return true; // ✅ Trả về true nếu thành công
+    return true;
   };
 
   const handleSendEvent = async (id) => {

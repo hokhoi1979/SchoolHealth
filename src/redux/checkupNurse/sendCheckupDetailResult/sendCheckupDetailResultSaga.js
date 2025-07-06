@@ -34,7 +34,7 @@ function* postCheckupDetailResultSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(postCheckupDetailResultSuccess(response.data));
       toast.success("Send successful!");
-
+      console.log(response.data);
       const fetch = yield call(
         axios.get,
         `${URL_API}/nurse/v1/check-up/${id}/students-result-status`,

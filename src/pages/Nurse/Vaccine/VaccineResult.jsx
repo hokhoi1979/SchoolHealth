@@ -13,6 +13,8 @@ function VaccineResult({ studentList }) {
     (state) => state.updateVaccineResult
   );
 
+  console.log("first", studentList);
+
   useEffect(() => {
     if (studentList && Array.isArray(studentList)) {
       const filtered = studentList.filter(
@@ -180,12 +182,6 @@ function VaccineResult({ studentList }) {
             </div>
 
             <div className="flex justify-end mt-5 gap-5">
-              <Button
-                className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
-                type="secondary"
-              >
-                Cancel
-              </Button>
               <Button
                 className="!bg-[#6CC76F] w-[100px] !p-2 hover:!bg-[#3BB32B] !text-white !font-serif"
                 type="secondary"

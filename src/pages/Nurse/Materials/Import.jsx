@@ -495,7 +495,6 @@ function Import() {
         closable={false}
         className="!rounded-xl !overflow-hidden"
       >
-        {/* Header */}
         <div className="bg-gradient-to-br from-cyan-100 to-pink-100 p-6 text-black text-center rounded-2xl">
           <img
             src="https://img.icons8.com/emoji/48/clipboard-emoji.png"
@@ -552,7 +551,6 @@ function Import() {
                   </div>
                 </div>
 
-                {/* Items Table */}
                 <div>
                   <h3 className="text-lg font-bold mb-2">Requested Items</h3>
                   <Table
@@ -626,7 +624,6 @@ function Import() {
                 </div>
               </div>
 
-              {/* Footer actions */}
               <div className="flex justify-end mt-6">
                 <Button onClick={() => setOpenDetail(false)}>Close</Button>
               </div>
