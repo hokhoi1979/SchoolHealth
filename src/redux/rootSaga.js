@@ -128,8 +128,11 @@ import watchFetchGetAllAccount from "./admin/getAllAccountSaga";
 import watchFetchDetailAccount from "./admin/getDetailAccountSaga";
 import watchFetchChangeStatusUser from "./admin/changeStatusUserSaga";
 import { watchCreateStudentAdmin } from "./admin/createStudentAdminSaga";
+
 import watchMedicalEventDashboard from "./admin/getMedicalEventDashboardSaga";
 import watchHealthProfileDashboard from "./admin/getHealthProfileDashboardSaga";
+
+import watchCompleteMeeting from "./checkupNurse/completeMeeting/completeMeetingSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -210,7 +213,7 @@ export default function* rootSaga() {
     watchMeeted(),
     watchDeleteMeeting(),
     watchDeleteStudent(),
-
+    watchCompleteMeeting(),
     //Manager
     watchFetchManagerMedical(),
     watchPostManagerVaccine(),
