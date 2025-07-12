@@ -124,6 +124,10 @@ import getAllAccountReducer from "./admin/getAllAccountSlice";
 import detailAccountReducer from "./admin/getDetailAccountSlice";
 import changeStatusUserReducer from "./admin/changeStatusUserSlice";
 import createInformationStudentAdminReducer from "./admin/createStudentAdminSlice";
+import medicalEventDashboardReducer, {
+  medicalEventDashboard,
+} from "./admin/getMedicalEventDashboardSlice";
+import healthProfileDashboardReducer from "./admin/getHealthProfileDashboardSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -253,6 +257,8 @@ const rootReducer = combineReducers({
   getDetailAccount: detailAccountReducer,
   changeStatusUser: changeStatusUserReducer,
   createInformationStudentAdmin: createInformationStudentAdminReducer,
+  getMedicalEventDashboard: medicalEventDashboardReducer,
+  getHealthProfileDashboard: healthProfileDashboardReducer,
 });
 
 export default rootReducer;

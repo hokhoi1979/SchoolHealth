@@ -82,6 +82,8 @@ import AccountAdmin from "../pages/Admin/AccountAdmin/AccountAdmin";
 import StudentAdmin from "../pages/Admin/StudentAdmin/StudentAdmin";
 import DashboardAdmin from "../pages/Admin/DashboardAdmin/DashboardAdmin";
 import StudentDetail from "../pages/Admin/StudentAdmin/StudentDetail";
+import MedicalEventDashboard from "../pages/Admin/DashboardAdmin/MedicalEventDashboard";
+import HealthProfileDashboard from "../pages/Admin/DashboardAdmin/HealthProfileDashboard";
 import New from "../pages/News/New";
 
 const router = createBrowserRouter([
@@ -103,7 +105,20 @@ const router = createBrowserRouter([
             path: "",
             element: <AdminLayout />,
             children: [
-              { path: "", element: <DashboardAdmin /> },
+              {
+                path: "",
+                element: <DashboardAdmin />,
+                children: [
+                  {
+                    path: "",
+                    element: <HealthProfileDashboard />,
+                  },
+                  {
+                    path: "medical_event",
+                    element: <MedicalEventDashboard />,
+                  },
+                ],
+              },
               {
                 path: "studentAdmin",
                 element: <StudentAdmin />,

@@ -128,6 +128,8 @@ import watchFetchGetAllAccount from "./admin/getAllAccountSaga";
 import watchFetchDetailAccount from "./admin/getDetailAccountSaga";
 import watchFetchChangeStatusUser from "./admin/changeStatusUserSaga";
 import { watchCreateStudentAdmin } from "./admin/createStudentAdminSaga";
+import watchMedicalEventDashboard from "./admin/getMedicalEventDashboardSaga";
+import watchHealthProfileDashboard from "./admin/getHealthProfileDashboardSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -260,5 +262,7 @@ export default function* rootSaga() {
     watchFetchDetailAccount(),
     watchFetchChangeStatusUser(),
     watchCreateStudentAdmin(),
+    watchMedicalEventDashboard(),
+    watchHealthProfileDashboard(),
   ]);
 }
