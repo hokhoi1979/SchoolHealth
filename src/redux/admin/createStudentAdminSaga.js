@@ -5,13 +5,13 @@ import {
   createStudentAdminSuccess,
   createStudentAdminFail,
 } from "./createStudentAdminSlice";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import {
   fetchAllStudentSuccess,
   fetchAllStudentFail,
 } from "./getAllStudentSlice";
 
-const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const URL_API = import.meta.env.VITE_API_URL;
 
 function* createStudentAdminSaga(action) {
   try {
@@ -57,7 +57,6 @@ function* createStudentAdminSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Create Student Fail: ${errorMessage}`);
     yield put(createStudentAdminFail(errorMessage));
-    console.error("Create Student Error:", error);
   }
 }
 

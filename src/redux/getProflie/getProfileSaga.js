@@ -19,12 +19,10 @@ function* fetchGetProfileSaga() {
     });
     if (response.status === 200 || response.status === 201) {
       yield put(fetchGetProfileSuccess(response.data));
-      console.log("Profile Data: ", response.data);
     } else {
       yield put(fetchGetProfileFail("Unexpected response status"));
     }
   } catch (error) {
-    console.error("FETCH GET PROFILE FAILED", error);
     const errorMessage =
       error.response?.data?.message ||
       error.message ||

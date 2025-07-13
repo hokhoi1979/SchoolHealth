@@ -5,10 +5,7 @@ import { useEffect } from "react";
 const ResultModal = ({ open, onClose, resultData, loading, error }) => {
   const student = resultData?.data?.data;
 
-  useEffect(() => {
-    console.log("🧪 resultData:", resultData);
-    console.log("🎓 student:", student);
-  }, [resultData]);
+  useEffect(() => {}, [resultData]);
 
   const renderContent = () => {
     if (loading) {

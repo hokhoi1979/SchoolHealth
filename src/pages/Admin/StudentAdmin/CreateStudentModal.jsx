@@ -33,9 +33,7 @@ function CreateStudentModal({ visible, onCancel, onCreate, classList = [] }) {
 
         onCreate(formatted);
       })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
-      });
+      .catch((info) => {});
   };
 
   const centeredDivider = (text) => (

@@ -13,7 +13,6 @@ function* parentHealthProfileSaga() {
   try {
     // const token = localStorage.getItem("accessToken");
     const token = yield select((state) => state.account.token);
-    console.log("TOKEN", token);
     const response = yield call(axios.get, `${URL_API}/parent/v1/health`, {
       headers: {
         Authorization: `Bearer ${token}`, // 👈 Add "Bearer"
@@ -23,12 +22,10 @@ function* parentHealthProfileSaga() {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchParentHealthSuccess(response.data.data));
-      console.log(response.data);
     } else {
       yield put(fetchParentHealthFail(error));
     }
   } catch (error) {
-    console.log(error);
     yield put(fetchParentHealthFail(error));
   }
 }

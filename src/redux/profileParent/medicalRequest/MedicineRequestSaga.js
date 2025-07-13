@@ -31,12 +31,10 @@ function* medicineRequestSaga(action) {
     });
     if (response.status === 200 || response.status === 201) {
       yield put(fetchMedicineRequestSuccess(response.data));
-      console.log(response.data);
     } else {
       yield put(fetchMedicineRequestFail(error));
     }
   } catch (error) {
-    console.log(error);
     yield put(fetchMedicineRequestFail(error));
   }
 }
