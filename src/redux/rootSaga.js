@@ -133,6 +133,7 @@ import watchMedicalEventDashboard from "./admin/getMedicalEventDashboardSaga";
 import watchHealthProfileDashboard from "./admin/getHealthProfileDashboardSaga";
 
 import watchCompleteMeeting from "./checkupNurse/completeMeeting/completeMeetingSaga";
+import watchFetchUpdateParent from "./profileParent/updateParentProfile/updateParentProfileSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -256,6 +257,7 @@ export default function* rootSaga() {
     // watchCreateStudentAdmin(),
 
     watchFetchStudentDetailProfile(),
+    watchFetchUpdateParent(),
     // AI Chat
     watchAiChat(),
     watchGetAllChatBoxAi(),

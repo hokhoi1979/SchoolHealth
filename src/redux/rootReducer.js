@@ -131,6 +131,7 @@ import medicalEventDashboardReducer, {
 import healthProfileDashboardReducer from "./admin/getHealthProfileDashboardSlice";
 
 import completeMeetingReducer from "./checkupNurse/completeMeeting/completeMeetingSlice";
+import updateParentReducer from "./profileParent/updateParentProfile/updateParentProfileSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -249,6 +250,7 @@ const rootReducer = combineReducers({
 
   //
   parentProfileHealth: healthProfileReducer,
+  updateParentProfile: updateParentReducer,
 
   //api student
   getProfile: getProfileReducer,
