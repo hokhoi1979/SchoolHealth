@@ -13,9 +13,11 @@ function* checkupJoinSaga(action) {
     const token = yield select((state) => state.account.token);
 
     const id = action.payload;
+
     const response = yield call(
       axios.get,
       `${URL_API}/nurse/v1/check-up/${id}/students-result-status`,
+
       {
         headers: {
           Authorization: `Bearer ${token}`,

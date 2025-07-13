@@ -43,7 +43,6 @@ const accountReducers = (state = initialState, action) => {
     case FETCH_API_FAIL:
       return { ...state, loading: false, error: action.payload };
     case LOG_OUT:
-      localStorage.removeItem("accessToken");
       return { ...initialState };
     default:
       return state;

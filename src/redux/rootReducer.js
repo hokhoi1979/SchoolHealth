@@ -129,7 +129,9 @@ import completeMeetingReducer from "./checkupNurse/completeMeeting/completeMeeti
 const rootReducer = combineReducers({
   account: accountReducers,
   accountRegister: registerReducer,
+
   profile: profileReducer,
+
   vaccine: vaccineReducer,
   vaccineStudent: vaccineStudentReducer,
   medicineNurse: getAllMedicineNurseReducer,
