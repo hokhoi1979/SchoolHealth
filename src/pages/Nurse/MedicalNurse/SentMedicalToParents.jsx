@@ -37,7 +37,6 @@ function SentMedicalToParents({ id }) {
         };
       });
       setStudent(data);
-      console.log("KAKAJ", data);
     }
   };
 
@@ -60,7 +59,6 @@ function SentMedicalToParents({ id }) {
       });
 
       setResult(data);
-      console.log("AA", data);
     }
   };
 

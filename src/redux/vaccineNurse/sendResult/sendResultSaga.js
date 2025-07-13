@@ -34,7 +34,6 @@ function* sendResultVaccineSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(postResultVaccineSuccess(response.data));
       message.success("Gửi kết quả tiêm thành công");
-      console.log("SUCCESS", response.data);
       yield put(postResultVaccineSuccess(response.data));
       const fetchResponse = yield call(
         axios.get,

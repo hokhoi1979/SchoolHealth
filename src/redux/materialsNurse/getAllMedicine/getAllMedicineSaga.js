@@ -9,7 +9,6 @@ const URL_API = import.meta.env.VITE_API_URL;
 
 function* getAllMedicineSaga() {
   try {
-    // const token = localStorage.getItem("accessToken");
     const token = yield select((state) => state.account.token);
 
     const response = yield call(
@@ -25,7 +24,6 @@ function* getAllMedicineSaga() {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchAllMedicineSuccess(response.data));
-      console.log("MEDINCE", response.data);
     } else {
       yield put(fetchAllMedicineFail(response.status));
     }

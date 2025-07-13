@@ -25,8 +25,6 @@ function* studentMeetingSaga() {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(studentMeetingSuccess(response.data));
-
-      console.log("MEETING", response.data);
     } else {
       yield put(studentMeetingFail(response.status));
     }

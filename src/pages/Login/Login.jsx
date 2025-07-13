@@ -22,11 +22,8 @@ function Login() {
   const handleLogin = async () => {
     try {
       const values = await form.validateFields();
-      console.log("EOOOO", values);
       dispatch(fetchLogin(values));
-    } catch (err) {
-      console.log("Validation failed:", err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -47,8 +44,6 @@ function Login() {
 
   useEffect(() => {
     if (error) {
-      console.log(error);
-
       setCustomMessage(error);
     }
   }, [error]);
@@ -102,7 +97,6 @@ function Login() {
                   prefix={<MailOutlined style={{ color: "#767676" }} />}
                 />
               </Form.Item>
-
               <Form.Item
                 name="password"
                 rules={[
@@ -123,7 +117,6 @@ function Login() {
                   onChange={() => setCustomMessage("")}
                 />
               </Form.Item>
-
               {error === "Tài khoản không tồn tại" &&
                 form.getFieldError("email").length === 0 && (
                   <p className="text-red-500  relative bottom-3">
@@ -131,13 +124,17 @@ function Login() {
                   </p>
                 )}
 
+              {error === "Tài khoản đã bị vô hiệu hóa" && (
+                <p className="text-red-500  relative bottom-3">
+                  Account has blocked!
+                </p>
+              )}
               {customMessage === "Mật khẩu không đúng" &&
                 form.getFieldError("password").length === 0 && (
                   <p className="text-red-500  relative bottom-3">
                     Password is not correct!
                   </p>
                 )}
-
               <Button
                 htmlType="submit"
                 style={{ height: "40px", fontWeight: 300 }}

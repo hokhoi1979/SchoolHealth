@@ -25,7 +25,6 @@ function* checkupResultSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchCheckupResultSuccess(response.data));
-      console.log("RESULT", response.data);
     } else {
       yield put(fetchCheckupResultFail(response.status));
     }

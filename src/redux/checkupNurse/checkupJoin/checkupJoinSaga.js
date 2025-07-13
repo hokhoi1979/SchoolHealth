@@ -27,7 +27,6 @@ function* checkupJoinSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchCheckupJoinSuccess(response.data));
-      console.log("JOIN", response.data);
     } else {
       yield put(fetchCheckupJoinFail(response.status));
     }

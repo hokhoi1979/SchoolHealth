@@ -23,7 +23,6 @@ function* vaccineResultSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchVaccineResultSuccess(response.data));
-      console.log("KHOI", response.data);
     } else {
       yield put(fetchVaccineResultFail(error));
     }

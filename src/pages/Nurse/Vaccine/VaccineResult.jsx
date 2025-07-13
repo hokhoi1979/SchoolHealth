@@ -13,8 +13,6 @@ function VaccineResult({ studentList }) {
     (state) => state.updateVaccineResult
   );
 
-  console.log("first", studentList);
-
   useEffect(() => {
     if (studentList && Array.isArray(studentList)) {
       const filtered = studentList.filter(
@@ -36,7 +34,6 @@ function VaccineResult({ studentList }) {
       setDataRecord(formatted);
     }
   }, [studentList]);
-  console.log("DATA", dataRecord);
   const handleCheckboxChange = (key, checked) => {
     setDataRecord((prev) =>
       prev.map((item) =>
@@ -59,14 +56,12 @@ function VaccineResult({ studentList }) {
 
   const handleSendResult = () => {
     if (dataRecord.length === 0) {
-      console.error("Không có dữ liệu để gửi");
       return;
     }
 
     const idVaccine = dataRecord[0]?.idVaccine;
 
     if (!idVaccine) {
-      console.error("Không tìm thấy idVaccine");
       return;
     }
 
@@ -79,8 +74,6 @@ function VaccineResult({ studentList }) {
     const total = {
       result: format,
     };
-    console.log("Gửi dữ liệu POST:", total);
-    console.log("ID Vaccine:", idVaccine);
 
     dispatch(updateVaccineResult({ IdVaccine: idVaccine, bodyVaccine: total }));
   };

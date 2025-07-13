@@ -16,9 +16,6 @@ function VaccineDay() {
   const fetchData = () => {
     dispatch(fetchVaccine());
   };
-  useEffect(() => {
-    console.log("DUC", data);
-  }, [data]);
 
   const formatData = () => {
     if (

@@ -55,7 +55,7 @@ const Pending = ({ notifications, onOpenModal }) => {
           )}
 
           <Paragraph className="text-gray-600 mt-2 mb-4">
-            {notification.description}
+            Reason: {notification.description}
           </Paragraph>
 
           <div className="bg-gray-50 p-3 rounded-lg mb-4">

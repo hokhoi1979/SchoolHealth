@@ -25,7 +25,6 @@ function* getMedicalEventDetailSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchMedicalEventDetailSuccess(response.data));
-      console.log("VIEW", response.data);
     } else {
       yield put(fetchMedicalEventDetailFail(response.status));
     }

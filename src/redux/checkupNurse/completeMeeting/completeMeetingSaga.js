@@ -15,7 +15,6 @@ function* completeMeetingSaga(action) {
   try {
     const token = yield select((state) => state.account.token);
     const id = action.payload;
-    console.log("Completing meeting with ID:", id);
 
     const response = yield call(
       axios.put,
@@ -28,8 +27,6 @@ function* completeMeetingSaga(action) {
         },
       }
     );
-
-    console.log("PUT response:", response);
 
     if (response.status === 200 || response.status === 201) {
       yield put(completeMeetingSuccess(response.data));
@@ -51,7 +48,6 @@ function* completeMeetingSaga(action) {
       yield put(completeMeetingFail(response.status));
     }
   } catch (error) {
-    console.error("Complete Meeting Error:", error);
     yield put(completeMeetingFail(error));
     toast.error("Complete failed!");
   }

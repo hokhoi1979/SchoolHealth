@@ -30,6 +30,7 @@ import { fetchCreateHealth } from "../../../redux/profileParent/createHealthSlic
 import { fetchForm } from "../../../redux/profileParent/formSlice";
 import { fetchHealth } from "../../../redux/profileParent/HealthByIdSlice";
 import { fetchUpdateHealth } from "../../../redux/profileParent/updateHealthSlice";
+import { toast } from "react-toastify";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -376,8 +377,10 @@ const StudentHealth = () => {
       if (selectedStudent) {
         dispatch(fetchHealth(selectedStudent));
       }
-
-      window.location.reload();
+      message.success("Create health profile successfully");
+      setTimeout(() => {
+        window.location.reload();
+      }, 400);
     } catch (error) {
       console.error("Failed to create health record:", error);
     }

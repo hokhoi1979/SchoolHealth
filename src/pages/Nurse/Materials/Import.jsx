@@ -168,14 +168,7 @@ function Import() {
 
   const handleDetail = (id) => {
     dispatch(fetchRequestDetail(id));
-    console.log("GET", detailRequest);
   };
-
-  // useEffect(() => {
-  //   if (detailRequest?.data?.id) {
-  //     setOpenDetail(true);
-  //   }
-  // }, [detailRequest]);
 
   const columns = [
     {

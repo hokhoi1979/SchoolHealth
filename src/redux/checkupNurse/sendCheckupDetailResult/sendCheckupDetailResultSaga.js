@@ -34,7 +34,6 @@ function* postCheckupDetailResultSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(postCheckupDetailResultSuccess(response.data));
       toast.success("Send successful!");
-      console.log(response.data);
       const fetch = yield call(
         axios.get,
         `${URL_API}/nurse/v1/check-up/${id}/students-result-status`,
@@ -47,7 +46,6 @@ function* postCheckupDetailResultSaga(action) {
       );
       if (fetch.status === 200 || fetch.status === 201) {
         yield put(fetchCheckupJoinSuccess(fetch.data));
-        console.log("JOIN", fetch.data);
       } else {
         yield put(fetchCheckupJoinFail(fetch.status));
       }

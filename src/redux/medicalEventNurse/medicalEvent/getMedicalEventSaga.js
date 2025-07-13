@@ -20,7 +20,6 @@ function* getMedicalEventSaga() {
     });
     if (response.status === 200 || response.status === 201) {
       yield put(fetchMedicalEventSuccess(response.data));
-      console.log("KHOI", response.data);
     } else {
       yield put(fetchMedicalEventFail(response.status));
     }

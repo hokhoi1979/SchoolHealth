@@ -26,7 +26,6 @@ function* postRequestMedicineSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(postRequestMedicineSuccess(response.data));
       toast.success("CREATE SUCCESSFUL");
-      console.log("SUCCESS", response.data);
       yield put(fetchRequestMedicine());
     }
   } catch (error) {

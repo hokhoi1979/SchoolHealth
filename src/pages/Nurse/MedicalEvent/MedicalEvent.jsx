@@ -116,7 +116,6 @@ const MedicalEvent = () => {
     const combined = [...medicineStore, ...medicineSupplyStore];
     setCombinedStore(combined);
   }, [medicineStore, medicineSupplyStore]);
-  console.log("ALL", combinedStore);
 
   const handleQuantityChange = (index, value) => {
     const updated = [...selectedItems];
@@ -152,9 +151,7 @@ const MedicalEvent = () => {
           : { medicineID: Number(item.id) }),
       })),
     };
-    console.log("IDD", id);
 
-    console.log("PAYLOAD", payload);
     try {
       const response = await dispatch(
         postMedicineEvent({ id: id, body: payload })
@@ -238,7 +235,6 @@ const MedicalEvent = () => {
       }),
     };
 
-    console.log("Payload gửi API: ", payload);
     await dispatch(postMedicalEvent(payload));
 
     return true;
@@ -287,7 +283,6 @@ const MedicalEvent = () => {
 
     setSearchStore(data);
     setSearch("");
-    console.log("SEARCH", data);
   };
 
   const handleRemoveItem = (index) => {
@@ -396,16 +391,13 @@ const MedicalEvent = () => {
                     if (record.severity === "HOSPITAL") {
                       setOpenHospital(true);
                       setIdStatus(record?.id);
-                      console.log("ID", record?.id);
                     } else {
                       if (record.status === "PENDING") {
-                        console.log("ID", record?.id);
                         setOpenNormal(true);
                         setIdNormal(record?.id);
                       } else {
                         setOpenHospital(true);
                         setIdStatus(record?.id);
-                        console.log("ID", record?.id);
                       }
                     }
                   }}
@@ -445,7 +437,6 @@ const MedicalEvent = () => {
                   viewBox="0 0 24 24"
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    console.log("ID", record?.id);
                     handleDelete(record?.id);
                   }}
                 >
@@ -515,7 +506,6 @@ const MedicalEvent = () => {
                 placeholder="Search for ID, Name student..."
                 onChange={(e) => {
                   setSearch(e.target.value);
-                  console.log(search);
                 }}
                 value={search}
               />

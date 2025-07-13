@@ -28,7 +28,6 @@ function* hospitalEventSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(patchHospitalEventSuccess(response.data));
-      console.log("PATCH", response.data);
       toast.success("Confirm successful!");
       const fetchData = yield call(
         axios.get,
@@ -42,7 +41,6 @@ function* hospitalEventSaga(action) {
       );
       if (fetchData.status === 200 || fetchData.status === 201) {
         yield put(fetchMedicalEventSuccess(fetchData.data));
-        console.log("KHOI", fetchData.data);
       } else {
         yield put(fetchMedicalEventFail(fetchData.status));
       }

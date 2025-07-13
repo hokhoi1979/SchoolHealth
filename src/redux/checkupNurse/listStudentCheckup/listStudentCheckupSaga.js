@@ -27,7 +27,6 @@ function* listStudentCheckupSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchStudentCheckupSuccess(response.data));
-      console.log("STUDENT", response.data);
     } else {
       yield put(fetchStudentCheckupFail(response.status));
     }
