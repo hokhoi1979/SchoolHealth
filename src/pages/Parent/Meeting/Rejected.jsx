@@ -99,7 +99,7 @@ const Reject = ({ notifications }) => {
           )}
 
           <Paragraph className="text-gray-600 mt-2 mb-4">
-            {notification.description}
+            Reason: {notification.description}
           </Paragraph>
 
           {/* Response Information */}

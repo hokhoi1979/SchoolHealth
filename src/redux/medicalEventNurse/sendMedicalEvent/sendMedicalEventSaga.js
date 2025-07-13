@@ -38,12 +38,9 @@ function* sendMedicalEventSaga(action) {
       });
       if (fetch.status === 200 || fetch.status === 201) {
         yield put(fetchMedicalEventSuccess(fetch.data));
-        console.log("KHOI", fetch.data);
       } else {
         yield put(fetchMedicalEventFail(fetch.status));
       }
-
-      console.log("SEND", response.data);
     } else {
       yield put(sendMedicalEventFail(response.status));
     }

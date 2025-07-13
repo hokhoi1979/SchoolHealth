@@ -26,8 +26,6 @@ const StudentProfile = () => {
     fetchData();
   }, []);
 
-  console.log(student);
-
   const formatData = () => {
     if (
       student?.listHealthProfiles &&
@@ -197,7 +195,6 @@ const StudentProfile = () => {
       ).length;
 
       setDataDetail(formatDetail[0]);
-      console.log("HELLO", dataDetail);
     }
   };
 

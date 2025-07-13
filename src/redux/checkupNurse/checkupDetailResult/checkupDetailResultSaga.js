@@ -25,7 +25,6 @@ function* checkupDetailResultSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchCheckupDetailResultSuccess(response.data));
-      console.log("DETAIL", response.data);
     } else {
       yield put(fetchCheckupDetailResultFail(response.status));
     }

@@ -1,8 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Descriptions, Avatar, Tag, Spin, Alert } from "antd";
+import {
+  Card,
+  Descriptions,
+  Avatar,
+  Tag,
+  Spin,
+  Alert,
+  Modal,
+  Button,
+  Form,
+  Input,
+} from "antd";
 import {
   UserOutlined,
   PhoneOutlined,
@@ -10,14 +21,21 @@ import {
   CalendarOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
+
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import { fetchGetProfile } from "../../../redux/getProflie/getProfileSlice";
+import { fetchUpdateParent } from "../../../redux/profileParent/updateParentProfile/updateParentProfileSlice";
+import { toast } from "react-toastify";
 import parent from "../../../img/parent.jpg";
+import { __values } from "tslib";
 
 const ParentInformation = () => {
   const dispatch = useDispatch();
   const { profile, loading, error } = useSelector((state) => state.getProfile);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     dispatch(fetchGetProfile());
@@ -27,6 +45,17 @@ const ParentInformation = () => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
     return date.toLocaleDateString("vi-VN");
+  };
+
+  const handleUpdate = (values) => {
+    // Dispatch update
+    dispatch(fetchUpdateParent(values));
+    setIsModalVisible(false);
+
+    // Delay reload
+    setTimeout(() => {
+      dispatch(fetchGetProfile());
+    }, 1000);
   };
 
   if (loading) {
@@ -75,7 +104,7 @@ const ParentInformation = () => {
           Parent profile information
         </p>
 
-        {/* Profile Header Card */}
+        {/* Header card */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex items-center gap-6">
             <Avatar
@@ -105,12 +134,24 @@ const ParentInformation = () => {
                 </div>
               </div>
             </div>
+            <Button
+              type="primary"
+              className="bg-blue-500"
+              onClick={() => {
+                form.setFieldsValue({
+                  email: profile?.data?.parentInfo?.email,
+                  phone: profile?.data?.parentInfo?.phone,
+                });
+                setIsModalVisible(true);
+              }}
+            >
+              Update Info
+            </Button>
           </div>
         </div>
 
-        {/* Information Cards */}
+        {/* Parent info card */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Parent Information Card */}
           <Card
             title={
               <div className="flex items-center gap-2">
@@ -123,43 +164,22 @@ const ParentInformation = () => {
             className="shadow-sm"
           >
             <Descriptions column={1} size="middle" className="font-inria">
-              <Descriptions.Item
-                label={
-                  <span className="font-semibold text-gray-700">Full Name</span>
-                }
-              >
+              <Descriptions.Item label="Full Name">
                 {profile?.data?.parentInfo?.fullname || "N/A"}
               </Descriptions.Item>
-
-              <Descriptions.Item
-                label={
-                  <span className="font-semibold text-gray-700">Email</span>
-                }
-              >
+              <Descriptions.Item label="Email">
                 <div className="flex items-center gap-2">
                   <MailOutlined className="text-blue-500" />
                   {profile?.data?.parentInfo?.email || "N/A"}
                 </div>
               </Descriptions.Item>
-
-              <Descriptions.Item
-                label={
-                  <span className="font-semibold text-gray-700">Phone</span>
-                }
-              >
+              <Descriptions.Item label="Phone">
                 <div className="flex items-center gap-2">
                   <PhoneOutlined className="text-blue-500" />
                   {profile?.data?.parentInfo?.phone || "N/A"}
                 </div>
               </Descriptions.Item>
-
-              <Descriptions.Item
-                label={
-                  <span className="font-semibold text-gray-700">
-                    Created Date
-                  </span>
-                }
-              >
+              <Descriptions.Item label="Created Date">
                 <div className="flex items-center gap-2">
                   <CalendarOutlined className="text-blue-500" />
                   {formatDate(profile?.data?.parentInfo?.createdAt)}
@@ -168,7 +188,7 @@ const ParentInformation = () => {
             </Descriptions>
           </Card>
 
-          {/* Student Information Card */}
+          {/* Student info card */}
           <Card
             title={
               <div className="flex items-center gap-2">
@@ -180,8 +200,7 @@ const ParentInformation = () => {
             }
             className="shadow-sm"
           >
-            {profile?.data?.studentOfParent &&
-            profile?.data?.studentOfParent.length > 0 ? (
+            {profile?.data?.studentOfParent?.length > 0 ? (
               <div className="space-y-4">
                 {profile.data.studentOfParent.map((student, index) => (
                   <div
@@ -193,38 +212,17 @@ const ParentInformation = () => {
                       size="middle"
                       className="font-inria"
                     >
-                      <Descriptions.Item
-                        label={
-                          <span className="font-semibold text-gray-700">
-                            Student Name
-                          </span>
-                        }
-                      >
+                      <Descriptions.Item label="Student Name">
                         {student?.account?.fullname || "N/A"}
                       </Descriptions.Item>
-
-                      <Descriptions.Item
-                        label={
-                          <span className="font-semibold text-gray-700">
-                            Email
-                          </span>
-                        }
-                      >
+                      <Descriptions.Item label="Email">
                         <div className="flex items-center gap-2">
                           <MailOutlined className="text-blue-500" />
                           {student?.account?.email || "N/A"}
                         </div>
                       </Descriptions.Item>
-
-                      <Descriptions.Item
-                        label={
-                          <span className="font-semibold text-gray-700">
-                            Class
-                          </span>
-                        }
-                      >
-                        {student?.classAssignments &&
-                        student.classAssignments.length > 0 ? (
+                      <Descriptions.Item label="Class">
+                        {student?.classAssignments?.length > 0 ? (
                           student.classAssignments.map((assignment, idx) => (
                             <Tag key={idx} color="green">
                               {assignment?.class?.name || "N/A"}
@@ -251,8 +249,43 @@ const ParentInformation = () => {
           </Card>
         </div>
       </div>
-      <div className="h-[160px] w-full"></div>
+
       <AppFooter />
+
+      {/* Modal update */}
+      <Modal
+        title="Update Parent Info"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => handleUpdate(values))
+            .catch(() => {});
+        }}
+        okText="Update"
+        cancelText="Cancel"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: "Please enter email" },
+              { type: "email", message: "Invalid email format" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Phone"
+            name="phone"
+            rules={[{ required: true, message: "Please enter phone" }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

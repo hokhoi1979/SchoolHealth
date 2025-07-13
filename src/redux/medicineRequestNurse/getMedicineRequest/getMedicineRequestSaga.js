@@ -23,7 +23,6 @@ function* getMedicineReuqestSaga() {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchMedicineRequestSuccess(response.data));
-      console.log("RES", response.data);
     } else {
       yield put(fetchMedicineRequestFail(response.status));
     }

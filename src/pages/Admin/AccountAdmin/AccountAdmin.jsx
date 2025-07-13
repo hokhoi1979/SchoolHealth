@@ -32,7 +32,7 @@ function AccountAdmin() {
 
   const [filters, setFilters] = useState({
     search: "",
-    roleID: "",
+    roleID: "all",
     page: 1,
     limit: 10,
     sortBy: "createdAt",
@@ -46,20 +46,29 @@ function AccountAdmin() {
   };
 
   useEffect(() => {
-    dispatch(fetchAllAccount(filters));
-  }, [dispatch, filters.page, filters.limit]);
+    const newFilters = { ...filters, page: 1 };
+    setFilters(newFilters);
+    dispatch(fetchAllAccount(newFilters));
+  }, []);
 
+  // Only fetch when search is triggered
   const handleSearch = () => {
-    dispatch(fetchAllAccount({ ...filters, page: 1 }));
+    const newFilters = { ...filters, page: 1 };
+    setFilters(newFilters);
+    dispatch(fetchAllAccount(newFilters));
   };
 
   const handleReset = () => {
-    setFilters({
+    const resetFilters = {
       search: "",
       roleID: "",
       page: 1,
       limit: 10,
-    });
+      sortBy: "createdAt",
+      order: "asc",
+    };
+    setFilters(resetFilters);
+    dispatch(fetchAllAccount(resetFilters));
   };
 
   const handleTableChange = (pagination) => {
@@ -75,7 +84,7 @@ function AccountAdmin() {
     dispatch(fetchChangeStatusUser({ id: record.id, status: newStatus }));
     setTimeout(() => {
       dispatch(fetchAllAccount(filters));
-    }, 500); // delay nhỏ để đảm bảo backend đã xử lý xong
+    }, 500); // slight delay to allow backend to process
   };
 
   const columns = [
@@ -94,21 +103,21 @@ function AccountAdmin() {
         ),
     },
     {
-      title: "Hành động",
+      title: "Actions",
       key: "action",
       render: (_, record) => (
         <Space>
-          <Button onClick={() => onViewDetail(record.id)}>Xem chi tiết</Button>
+          <Button onClick={() => onViewDetail(record.id)}>View Details</Button>
           <Popconfirm
-            title={`Bạn có chắc muốn đổi trạng thái sang ${
+            title={`Are you sure you want to change status to ${
               record.status === "ACTIVE" ? "BLOCK" : "ACTIVE"
             }?`}
             onConfirm={() => handleChangeStatus(record)}
-            okText="Đồng ý"
-            cancelText="Huỷ"
+            okText="Yes"
+            cancelText="Cancel"
           >
             <Button danger type="dashed">
-              Đổi trạng thái
+              Change Status
             </Button>
           </Popconfirm>
         </Space>
@@ -119,14 +128,14 @@ function AccountAdmin() {
   return (
     <div className="p-5">
       <CommonBreadcrumb role={"Admin"} page={"account"} />
-      <Card className="mb-4" title="Bộ lọc dữ liệu tài khoản">
+      <Card className="mb-4" title="Account Filter">
         <Row gutter={[16, 16]}>
           <Col span={8}>
             <label>
-              <b>Tìm kiếm theo tên hoặc email</b>
+              <b>Search by name or email</b>
             </label>
             <Input
-              placeholder="VD: Nguyễn Văn A"
+              placeholder="e.g. John Doe"
               value={filters.search}
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
@@ -135,76 +144,35 @@ function AccountAdmin() {
           </Col>
           <Col span={4}>
             <label>
-              <b>Tìm kiếm theo vai trò</b>
+              <b>Filter by role</b>
             </label>
             <Select
               value={filters.roleID}
               onChange={(value) => setFilters({ ...filters, roleID: value })}
-              allowClear
-              placeholder="Chọn mã vai trò"
+              placeholder="Select role ID"
               style={{ width: "100%" }}
             >
-              <Option value="1">1</Option>
-              <Option value="2">2</Option>
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
+              <Option value="all">All</Option>
+              <Option value="1">Admin</Option>
+              <Option value="2">Manager</Option>
+              <Option value="3">Nurse</Option>
+              <Option value="4">Parent</Option>
+              <Option value="5">Student</Option>
             </Select>
           </Col>
-          <Col span={4}>
-            <label>
-              <b>Sắp xếp theo trường:</b>
-            </label>
-            <Input
-              placeholder="VD: createdAt, fullname"
-              value={filters.sortBy}
-              onChange={(e) =>
-                setFilters({ ...filters, sortBy: e.target.value })
-              }
-            />
-          </Col>
-          <Col span={4}>
-            <label>
-              <b>Thứ tự sắp xếp:</b>
-            </label>
-            <Select
-              value={filters.order}
-              onChange={(value) => setFilters({ ...filters, order: value })}
-              placeholder="asc / desc"
-              allowClear
-              style={{ width: "100%" }}
-            >
-              <Option value="asc">Tăng dần (asc)</Option>
-              <Option value="desc">Giảm dần (desc)</Option>
-            </Select>
-          </Col>
-          <Col span={4}>
-            <label>
-              <b>Số dòng mỗi trang:</b>
-            </label>
-            <Select
-              value={filters.limit}
-              onChange={(value) => setFilters({ ...filters, limit: value })}
-              style={{ width: "100%" }}
-            >
-              <Option value={5}>5</Option>
-              <Option value={10}>10</Option>
-              <Option value={20}>20</Option>
-              <Option value={50}>50</Option>
-            </Select>
-          </Col>
+
           <Col span={8} className="d-flex align-items-end">
             <Space style={{ marginTop: 23 }}>
               <Button type="primary" onClick={handleSearch}>
-                Tìm kiếm
+                Search
               </Button>
-              <Button onClick={handleReset}>Đặt lại</Button>
+              <Button onClick={handleReset}>Reset</Button>
             </Space>
           </Col>
         </Row>
       </Card>
 
-      <Card title="Danh sách tài khoản">
+      <Card title="Account List">
         <Table
           rowKey="id"
           columns={columns}
@@ -219,38 +187,38 @@ function AccountAdmin() {
         />
         <Modal
           open={openDetailModal}
-          title="Chi tiết tài khoản"
+          title="Account Details"
           onCancel={() => setOpenDetailModal(false)}
           footer={null}
         >
           {detail?.data ? (
             <Descriptions column={1} bordered>
               <Descriptions.Item label="ID">{detail.data.id}</Descriptions.Item>
-              <Descriptions.Item label="Họ tên">
+              <Descriptions.Item label="Full Name">
                 {detail.data.fullname}
               </Descriptions.Item>
               <Descriptions.Item label="Email">
                 {detail.data.email}
               </Descriptions.Item>
-              <Descriptions.Item label="Vai trò">
+              <Descriptions.Item label="Role">
                 {detail.data.roleID}
               </Descriptions.Item>
-              <Descriptions.Item label="Trạng thái">
+              <Descriptions.Item label="Status">
                 {detail.data.status === "ACTIVE" ? (
                   <Tag color="green">ACTIVE</Tag>
                 ) : (
                   <Tag color="red">BLOCK</Tag>
                 )}
               </Descriptions.Item>
-              <Descriptions.Item label="Ngày tạo">
+              <Descriptions.Item label="Created At">
                 {new Date(detail.data.createdAt).toLocaleString()}
               </Descriptions.Item>
-              <Descriptions.Item label="Cập nhật gần nhất">
+              <Descriptions.Item label="Last Updated">
                 {new Date(detail.data.updatedAt).toLocaleString()}
               </Descriptions.Item>
             </Descriptions>
           ) : (
-            <p>Đang tải...</p>
+            <p>Loading...</p>
           )}
         </Modal>
       </Card>

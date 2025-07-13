@@ -21,7 +21,6 @@ function* profileStudentSaga(action) {
     });
 
     if (response.status === 201 || response.status === 200) {
-      console.log("DETAIL", response.data);
       yield put(fetchProfileDetailSuccess(response.data));
     } else {
       yield put(fetchProfileDetailFail(response.status));

@@ -31,7 +31,6 @@ function* sendCheckupParenSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(sendCheckupParentSuccess(response.data));
-      console.log("SUCCESS", response.data);
       toast.success("Send mail to Parent success");
       const fetch = yield call(
         axios.get,

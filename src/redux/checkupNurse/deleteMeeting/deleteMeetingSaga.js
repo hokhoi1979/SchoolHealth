@@ -42,7 +42,6 @@ function* deleteMeetSaga(action) {
 
       if (fetch.status === 200 || fetch.status === 201) {
         yield put(fetchMeetedSuccess(fetch.data));
-        console.log("SUCCESS", fetch.data);
       } else {
         yield put(fetchMeetedFail(fetch.status));
       }

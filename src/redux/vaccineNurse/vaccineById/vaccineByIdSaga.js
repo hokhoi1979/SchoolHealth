@@ -26,7 +26,6 @@ function* vaccineStudentSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchVaccineStudentSucess(response.data));
-      console.log("BYID", response.data);
     } else {
       yield put(fetchVaccineStudentFail(response.status));
     }

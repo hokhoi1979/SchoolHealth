@@ -26,7 +26,6 @@ function* fetchLowStockSaga() {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchLowStockSuccess(response.data));
-      console.log("STOCK", response.data);
     } else {
       yield put(fetchLowStockFail(response.status));
     }

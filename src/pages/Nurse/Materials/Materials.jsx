@@ -8,16 +8,6 @@ import { AppFooter } from "../../../components/Footer/AppFooter";
 
 function Materials() {
   const [click, setClick] = useState("inventory");
-  let material = [
-    {
-      total: "79",
-      stock: "99",
-    },
-  ];
-
-  useEffect(() => {
-    console.log(material);
-  }, []);
 
   return (
     <>

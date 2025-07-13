@@ -31,8 +31,6 @@ export function* fetchLogin(action) {
       throw new Error("Email or password is not correct! Try again");
     }
   } catch (error) {
-    console.error("Login error:", error.response || error.message);
-
     let errorMessage = "Login failed!";
     if (error.response?.data?.message) {
       errorMessage = error.response.data.message;

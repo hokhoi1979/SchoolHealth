@@ -22,7 +22,6 @@ function* checkupSaga() {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchCheckupSuccess(response.data));
-      console.log("EVNT", response.data);
     } else {
       yield put(fetchCheckupFail(response.status));
     }

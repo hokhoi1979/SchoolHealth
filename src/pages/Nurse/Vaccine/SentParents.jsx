@@ -5,7 +5,6 @@ import { fetchVaccineResult } from "../../../redux/vaccineNurse/vaccineResult/va
 import { postResultVaccine } from "../../../redux/vaccineNurse/sendResult/sendResultSlice";
 import { toast } from "react-toastify";
 function SentParents({ studentList, id }) {
-  console.log("Student", studentList);
   const [idVaccine, setIdVaccine] = useState(null);
   const [open, setOpen] = useState(false);
   const [mainData, setMainData] = useState([]);
@@ -90,8 +89,6 @@ function SentParents({ studentList, id }) {
       setSending(false);
     }
   };
-
-  console.log("first", sent);
 
   const handleCancel = () => {
     setOpen(false);
