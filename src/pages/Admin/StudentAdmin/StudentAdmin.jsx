@@ -14,7 +14,6 @@ import {
   Space,
   message,
 } from "antd";
-import moment from "moment";
 import { fetchAllStudent } from "../../../redux/admin/getAllStudentSlice";
 import { createStudentAdmin } from "../../../redux/admin/createStudentAdminSlice";
 import { fetchClassManager } from "../../../redux/manager/getClassManagerSlice";
@@ -206,17 +205,26 @@ function StudentAdmin() {
             />
           </Col>
 
-          <Col span={4}>
+          <Col span={6}>
+            {" "}
+            {/* tăng span từ 4 lên 8 hoặc nhiều hơn */}
             <label>
               <b>Class name:</b>
             </label>
-            <Input
-              placeholder="e.g. 12A1"
+            <Select
+              placeholder="Select class"
+              style={{ width: "100%" }}
               value={filters.className}
-              onChange={(e) =>
-                setFilters({ ...filters, className: e.target.value })
-              }
-            />
+              onChange={(value) => setFilters({ ...filters, className: value })}
+              allowClear
+            >
+              {Array.isArray(classList) &&
+                classList.map((cls) => (
+                  <Select.Option key={cls.id} value={cls.name}>
+                    {cls.name}
+                  </Select.Option>
+                ))}
+            </Select>
           </Col>
 
           <Col span={4}>
@@ -230,80 +238,6 @@ function StudentAdmin() {
                 setFilters({ ...filters, grade: e.target.value })
               }
             />
-          </Col>
-
-          <Col span={4}>
-            <label>
-              <b>Academic year:</b>
-            </label>
-            <Input
-              placeholder="e.g. 2025-2026"
-              value={filters.academicYearName}
-              onChange={(e) =>
-                setFilters({ ...filters, academicYearName: e.target.value })
-              }
-            />
-          </Col>
-
-          <Col span={4}>
-            <label>
-              <b>Graduation status:</b>
-            </label>
-            <Select
-              value={filters.graduated}
-              onChange={(value) => setFilters({ ...filters, graduated: value })}
-              allowClear
-              placeholder="Select status"
-              style={{ width: "100%" }}
-            >
-              <Option value={true}>Graduated</Option>
-              <Option value={false}>Not graduated</Option>
-            </Select>
-          </Col>
-
-          <Col span={4}>
-            <label>
-              <b>Sort by field:</b>
-            </label>
-            <Input
-              placeholder="e.g. createdAt, fullname"
-              value={filters.sortBy}
-              onChange={(e) =>
-                setFilters({ ...filters, sortBy: e.target.value })
-              }
-            />
-          </Col>
-
-          <Col span={4}>
-            <label>
-              <b>Sort order:</b>
-            </label>
-            <Select
-              value={filters.order}
-              onChange={(value) => setFilters({ ...filters, order: value })}
-              placeholder="asc / desc"
-              allowClear
-              style={{ width: "100%" }}
-            >
-              <Option value="asc">Ascending (asc)</Option>
-              <Option value="desc">Descending (desc)</Option>
-            </Select>
-          </Col>
-
-          <Col span={4}>
-            <label>
-              <b>Rows per page:</b>
-            </label>
-            <Select
-              value={filters.limit}
-              onChange={(value) => setFilters({ ...filters, limit: value })}
-              style={{ width: "100%" }}
-            >
-              <Option value={5}>5</Option>
-              <Option value={10}>10</Option>
-              <Option value={20}>20</Option>
-              <Option value={50}>50</Option>
-            </Select>
           </Col>
 
           <Col span={8} className="d-flex align-items-end">

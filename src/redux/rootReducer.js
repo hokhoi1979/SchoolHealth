@@ -124,7 +124,14 @@ import getAllAccountReducer from "./admin/getAllAccountSlice";
 import detailAccountReducer from "./admin/getDetailAccountSlice";
 import changeStatusUserReducer from "./admin/changeStatusUserSlice";
 import createInformationStudentAdminReducer from "./admin/createStudentAdminSlice";
+
+import medicalEventDashboardReducer, {
+  medicalEventDashboard,
+} from "./admin/getMedicalEventDashboardSlice";
+import healthProfileDashboardReducer from "./admin/getHealthProfileDashboardSlice";
+
 import completeMeetingReducer from "./checkupNurse/completeMeeting/completeMeetingSlice";
+import updateParentReducer from "./profileParent/updateParentProfile/updateParentProfileSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -243,6 +250,7 @@ const rootReducer = combineReducers({
 
   //
   parentProfileHealth: healthProfileReducer,
+  updateParentProfile: updateParentReducer,
 
   //api student
   getProfile: getProfileReducer,
@@ -255,6 +263,8 @@ const rootReducer = combineReducers({
   getDetailAccount: detailAccountReducer,
   changeStatusUser: changeStatusUserReducer,
   createInformationStudentAdmin: createInformationStudentAdminReducer,
+  getMedicalEventDashboard: medicalEventDashboardReducer,
+  getHealthProfileDashboard: healthProfileDashboardReducer,
 });
 
 export default rootReducer;

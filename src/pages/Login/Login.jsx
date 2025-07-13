@@ -102,7 +102,6 @@ function Login() {
                   prefix={<MailOutlined style={{ color: "#767676" }} />}
                 />
               </Form.Item>
-
               <Form.Item
                 name="password"
                 rules={[
@@ -123,7 +122,6 @@ function Login() {
                   onChange={() => setCustomMessage("")}
                 />
               </Form.Item>
-
               {error === "Tài khoản không tồn tại" &&
                 form.getFieldError("email").length === 0 && (
                   <p className="text-red-500  relative bottom-3">
@@ -131,13 +129,17 @@ function Login() {
                   </p>
                 )}
 
+              {error === "Tài khoản đã bị vô hiệu hóa" && (
+                <p className="text-red-500  relative bottom-3">
+                  Account has blocked!
+                </p>
+              )}
               {customMessage === "Mật khẩu không đúng" &&
                 form.getFieldError("password").length === 0 && (
                   <p className="text-red-500  relative bottom-3">
                     Password is not correct!
                   </p>
                 )}
-
               <Button
                 htmlType="submit"
                 style={{ height: "40px", fontWeight: 300 }}
