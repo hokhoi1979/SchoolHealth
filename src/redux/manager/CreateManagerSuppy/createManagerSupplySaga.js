@@ -66,7 +66,6 @@ function* managerCreateSupplySaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Create Supply Fail: ${errorMessage}`);
     yield put(postManagerFailSupply(errorMessage));
-    console.error("Create Supply Error:", error);
   }
 }
 

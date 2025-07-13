@@ -21,6 +21,7 @@ import TextArea from "antd/es/input/TextArea";
 import { AppFooter } from "../../../components/Footer/AppFooter";
 import ModalDetailVaccine from "./ModalDetailVaccine";
 import { fetchDetailVaccine } from "../../../redux/manager/GetDetailVaccineManager/getDetailVaccineManagerSlice";
+import { fetchTotalStudent } from "../../../redux/manager/GetTotalStudent/getTotalStudentSlice";
 
 const VaccineManager = () => {
   const [open, setOpen] = useState(false);
@@ -116,7 +117,7 @@ const VaccineManager = () => {
   const formattedData = formatMedicineAndSupply();
 
   useEffect(() => {
-    console.log("Formatted Data:", formattedData);
+    // console.log("Formatted Data:", formattedData);
   }, [medicineSupply]);
 
   const fetchVaccine = () => {
@@ -163,7 +164,7 @@ const VaccineManager = () => {
           item.targetIds.forEach((targetId) => {
             const classObj = classList.find((cls) => cls.id === targetId);
             if (classObj) {
-              const grade = classObj.name.slice(0, 2); // Lấy số khối từ tên lớp (VD: "10A1" → "10")
+              const grade = classObj.name.slice(0, 2);
               gradesSet.add(grade);
             }
           });
@@ -200,12 +201,7 @@ const VaccineManager = () => {
     formatData();
   }, [vaccineDay]);
 
-  useEffect(() => {
-    console.log("FORMAT", data);
-  }, []);
-  useEffect(() => {
-    console.log("classManager data:", classManager);
-  }, [classManager]);
+  useEffect(() => {}, [classManager]);
 
   const handleUpdateSubmit = () => {
     if (!selectedEvent) return;
@@ -237,13 +233,11 @@ const VaccineManager = () => {
       targetIds: updatedTargetIds,
     };
 
-    console.log("Final PAYLOAD gửi PUT:", payload);
     dispatch(putManagerMedical(payload));
     dispatch(fetchVaccineManager());
     setIsUpdateModalOpen(false);
 
     if (payload && payload.data) {
-      // Reset form after successful creation
       setOpen(false);
       setVaccineName("");
       setVaccineDescription("");
@@ -302,35 +296,32 @@ const VaccineManager = () => {
 
       return cleaned;
     });
+
     const payload = {
       name: vaccineName,
       description: vaccineDescription,
-      scheduledAt: dayjs(vaccineDate).format("YYYY-MM-DD"), // Ensure correct date format
+      scheduledAt: dayjs(vaccineDate).format("YYYY-MM-DD"),
       targetType: targetTypeFormatted,
       targetIds,
       items: cleanedItems,
     };
-    console.log(payload);
+
     try {
       const data = await dispatch(postManagerVaccine(payload));
-
-      console.log("Create Success:", data);
-
-      console.log(payload);
 
       resetForm();
       handleCloseModal();
     } catch (error) {
       if (error.response) {
         // Lỗi từ API
-        console.error("API Error Response:", error.response);
-        console.error("API Error Data:", error.response.data);
-        console.error("API Error Status:", error.response.status);
-        console.error("API Error Headers:", error.response.headers);
+        // console.error("API Error Response:", error.response);
+        // console.error("API Error Data:", error.response.data);
+        // console.error("API Error Status:", error.response.status);
+        // console.error("API Error Headers:", error.response.headers);
       } else if (error.request) {
-        console.error("No response from API:", error.request);
+        // console.error("No response from API:", error.request);
       } else {
-        console.error("Error in request setup:", error.message);
+        // console.error("Error in request setup:", error.message);
       }
     }
   };
@@ -354,7 +345,7 @@ const VaccineManager = () => {
     const isValidDate = dayjs(scheduledAt, "DD/MM/YYYY HH:mm", true).isValid();
 
     if (!isValidDate) {
-      console.error("Invalid scheduledAt date:", scheduledAt);
+      // console.error("Invalid scheduledAt date:", scheduledAt);
       return null;
     }
 
@@ -367,12 +358,12 @@ const VaccineManager = () => {
   const handleSendConfirm = async () => {
     const { id } = selectedEvent;
     if (!id) {
-      console.error("Event ID is missing");
+      // console.error("Event ID is missing");
       return;
     }
 
     if (!notificationTitle || !notificationContent) {
-      console.error("Title or Content is missing");
+      // console.error("Title or Content is missing");
       return;
     }
 
@@ -389,29 +380,25 @@ const VaccineManager = () => {
     // Kiểm tra selectedGrades và classIdMap
     const targetIds = selectedGrades.includes("GRADE")
       ? []
-      : selectedGrades.map(Number); // Chỉ dùng số khối, không map class
+      : selectedGrades.map(Number);
 
     const payload = {
       id,
       customMailTitle: notificationTitle,
-      customMailBody: notificationContent, // Nội dung email
-      scheduledAt: formattedScheduledAt, // Đảm bảo trường này được bao gồm
-      targetIds: targetIds, // Đảm bảo trường này được bao gồm
+      customMailBody: notificationContent,
+      // scheduledAt: formattedScheduledAt,
+      // targetIds: targetIds,
     };
-
-    console.log("Payload to send:", payload); // Log payload để kiểm tra
 
     // Gửi payload bằng API
     try {
       dispatch(patchManagerConfirmVaccine(payload));
     } catch (error) {
-      console.error("API Error:", error?.response?.data || error?.message);
+      // console.error("API Error:", error?.response?.data || error?.message);
     }
   };
 
   const handleViewMore = (event) => {
-    console.log("event trong handleViewMore:", event);
-
     setSelectedEvent(event);
     setNotificationTitle(`Checkup Notice for ${event?.name}`);
 
@@ -433,13 +420,13 @@ const VaccineManager = () => {
     let isSchool = false;
 
     if (!Array.isArray(classList)) {
-      console.warn("classList chưa sẵn sàng");
+      // console.warn("classList chưa sẵn sàng");
       return;
     }
 
     if (targets.length > 0 && targets[0]?.classID !== undefined) {
       classIds = targets.map((t) => t.classID);
-      targetType = "CLASS"; // ép targetType về CLASS
+      targetType = "CLASS";
     } else if (targetType === "GRADE") {
       grades = event?.targetIds?.length
         ? event.targetIds
@@ -499,11 +486,36 @@ const VaccineManager = () => {
       setSelectedGrades(selectedGrades.filter((g) => g !== grade));
     }
   };
+  const totalStudents = useSelector(
+    (state) => state.getTotalStudent?.totalStudents ?? 0
+  );
+
+  useEffect(() => {
+    if (targetType === "school") {
+      dispatch(fetchTotalStudent({ targetType: "SCHOOL", targetIds: [] }));
+    } else if (targetType === "class" && selectedClasses.length > 0) {
+      const classIds = classList
+        .filter((cls) => selectedClasses.includes(cls.name))
+        .map((cls) => String(cls.id));
+
+      dispatch(fetchTotalStudent({ targetType: "CLASS", targetIds: classIds }));
+    } else if (targetType === "grade" && selectedGrades.length > 0) {
+      const gradeIds = selectedGrades.map(String);
+      dispatch(fetchTotalStudent({ targetType: "GRADE", targetIds: gradeIds }));
+    }
+  }, [targetType, selectedClasses, selectedGrades, classList]);
 
   const renderTargetSelection = () => {
     switch (targetType) {
       case "school":
-        return <div className="text-gray-600 italic">School</div>;
+        return (
+          <div className="text-gray-600 italic">
+            School
+            <div className="text-green-600 text-sm mt-1">
+              Total students: {totalStudents}
+            </div>
+          </div>
+        );
 
       case "class":
         return (
@@ -525,6 +537,9 @@ const VaccineManager = () => {
             {selectedClasses.length > 0 && (
               <div className="text-sm text-blue-600">
                 Picked Classes: {selectedClasses.join(", ")}
+                <div className="text-green-600 text-sm">
+                  Total students: {totalStudents}
+                </div>
               </div>
             )}
           </div>
@@ -548,6 +563,11 @@ const VaccineManager = () => {
             {selectedGrades.length > 0 && (
               <div className="text-sm text-blue-600">
                 Grade {selectedGrades.join(", ")}
+                {totalStudents !== null && (
+                  <div className="text-green-600 text-sm">
+                    Total students: {totalStudents}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -566,7 +586,6 @@ const VaccineManager = () => {
     resetForm();
   };
   const resetForm = () => {
-    console.log("RESET FORM");
     setVaccineName("");
     setVaccineDescription("");
     setVaccineDate("");

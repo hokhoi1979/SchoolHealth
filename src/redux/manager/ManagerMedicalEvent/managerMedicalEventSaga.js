@@ -24,13 +24,11 @@ function* managerMedicalEventSaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("✅ managerMedicalEventSaga:", response.data);
       yield put(fetchManagerMedicalEventSuccess(response.data));
     } else {
       yield put(fetchManagerMedicalEventFail(response.status));
     }
   } catch (error) {
-    console.error(" managerMedicalEventSaga Error:", error);
     yield put(fetchManagerMedicalEventFail(error));
   }
 }

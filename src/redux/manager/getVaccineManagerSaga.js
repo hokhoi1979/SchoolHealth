@@ -23,8 +23,6 @@ function* vaccineManagerSaga() {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DUCC", response.data);
-
       yield put(fetchVaccineManagerSucess(response.data));
     } else {
       yield put(fetchVaccineManagerFail(response.status));

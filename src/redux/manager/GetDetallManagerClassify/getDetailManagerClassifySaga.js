@@ -34,7 +34,6 @@ function* detailManagerClassifySaga(action) {
     }
   } catch (error) {
     yield put(fetchDetailManagerClassifyFail(error));
-    console.log("eror", error);
   }
 }
 

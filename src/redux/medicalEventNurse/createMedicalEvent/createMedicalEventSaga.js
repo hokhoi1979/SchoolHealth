@@ -34,6 +34,7 @@ function* createMedicalEventSaga(action) {
     }
   } catch (error) {
     yield put(postMedicalEventFail(error));
+    toast.error("Can not find student!");
   }
 }
 function* watchPostMedicalEvent() {

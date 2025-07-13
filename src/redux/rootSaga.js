@@ -129,6 +129,7 @@ import watchFetchDetailAccount from "./admin/getDetailAccountSaga";
 import watchFetchChangeStatusUser from "./admin/changeStatusUserSaga";
 import { watchCreateStudentAdmin } from "./admin/createStudentAdminSaga";
 import watchCompleteMeeting from "./checkupNurse/completeMeeting/completeMeetingSaga";
+import { totalStudentSaga } from "./manager/GetTotalStudent/getTotalStudentSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -245,6 +246,7 @@ export default function* rootSaga() {
     watchUpdateMedicalCheckupManager(),
     watchFetchDetailCheckupManager(),
     watchFetchDetailVaccineManager(),
+    totalStudentSaga(),
 
     // watchFetchVaccineResult(),
     //admin

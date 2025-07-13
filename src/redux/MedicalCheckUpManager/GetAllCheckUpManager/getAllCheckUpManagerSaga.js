@@ -26,7 +26,6 @@ function* getAllCheckUpManagerSaga() {
     }
   } catch (error) {
     yield put(fetchCheckupManagerFail(error));
-    console.log(error);
   }
 }
 

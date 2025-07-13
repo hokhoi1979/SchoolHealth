@@ -33,7 +33,6 @@ function* updateManagerSupplySaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("Success:", response.data);
       yield put(updateManagerSupplySuccess(response.data));
 
       const fetchData = yield call(axios.get, `${URL_API}/manager/v1/request`, {
@@ -44,7 +43,6 @@ function* updateManagerSupplySaga(action) {
       });
 
       if (fetchData.status === 200 || fetchData.status === 201) {
-        console.log("DUCC", fetchData.data);
         yield put(fetchAllRequestSuccess(fetchData.data));
         toast.success("Aprroved Success");
       } else {
@@ -58,7 +56,6 @@ function* updateManagerSupplySaga(action) {
     const errMsg =
       error?.response?.data?.message || error.message || "Unknown error";
     yield put(updateManagerSupplyFail(errMsg));
-    console.error(error);
   }
 }
 

@@ -34,7 +34,6 @@ function* getDetailCheckUpManagerSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Get Detail CheckUp Fail: ${errorMessage}`);
     yield put(fetchDetailCheckupManagerFail(errorMessage));
-    console.error("Get Detail CheckUp Error:", error);
   }
 }
 

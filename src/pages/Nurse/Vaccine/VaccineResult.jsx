@@ -164,13 +164,6 @@ function VaccineResult({ studentList }) {
         {start ? (
           <>
             <div className="mt-5 space-y-4">
-              <div className="flex gap-2">
-                <p className="font-serif text-sm">Vaccination day:</p>
-                <p className="text-gray-500 text-sm">
-                  Flu vaccination (15/06/2025)
-                </p>
-              </div>
-
               <Table
                 columns={columnsRecord}
                 dataSource={dataRecord}

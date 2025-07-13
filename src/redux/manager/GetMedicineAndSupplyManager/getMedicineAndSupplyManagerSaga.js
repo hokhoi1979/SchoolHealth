@@ -17,8 +17,6 @@ function* medicineSupplyManagerSaga() {
         "Content-Type": "application/json",
       },
     });
-    console.log("hdushdiu");
-    console.log(">>>>>>>", response);
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchMedicineSupplyManagerSucess(response.data));

@@ -56,7 +56,6 @@ function* managerCheckupSaga(action) {
     }
   } catch (error) {
     yield put(postManagerFailCheckup(`API ERROR: ${error}`));
-    console.log(error);
     const message =
       error.response?.data?.message ||
       error.message ||

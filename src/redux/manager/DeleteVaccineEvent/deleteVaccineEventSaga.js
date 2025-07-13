@@ -30,7 +30,6 @@ function* managerDeleteVaccineSaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DUCC", response.data);
       yield put(deleteManagerSucessVaccine(response.data));
       toast.success("Delete Success");
       const fetchData = yield call(

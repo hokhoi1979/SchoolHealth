@@ -19,8 +19,6 @@ function* classManagerSaga() {
     });
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DUCC", response.data);
-
       yield put(fetchClassManagerSucess(response.data));
     } else {
       yield put(fetchClassManagerFail(response.status));

@@ -481,6 +481,12 @@ const StudentHealth = () => {
       weight: updateModalForm.weight.toString(),
     };
 
+    if (updateModalForm.weight == 10 && updateModalForm.weight == 120) {
+      return updateModalForm.weight;
+    } else {
+      message.error("Cân nặng không hợp lệ");
+    }
+
     try {
       const result = await dispatch(fetchUpdateHealth(updatedFields));
 

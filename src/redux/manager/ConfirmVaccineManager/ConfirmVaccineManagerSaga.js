@@ -23,12 +23,11 @@ const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 function* patchVaccineConfirmManagerSaga(action) {
   try {
     const token = yield select((state) => state.account.token);
-    console.log("TOKEN", token);
-    const { id, body } = action.payload;
+    const { id, customMailTitle, customMailBody } = action.payload;
     const response = yield call(
       axios.patch,
       `${URL_API}/manager/v1/vaccinationEvent/${id}`,
-      { body },
+      { customMailTitle, customMailBody },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -38,8 +37,6 @@ function* patchVaccineConfirmManagerSaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DUCC", response.data);
-
       yield put(patchManagerSucessConfirmVaccine(response.data));
       toast.success("Confirm Success");
 
@@ -55,8 +52,6 @@ function* patchVaccineConfirmManagerSaga(action) {
       );
 
       if (fetchData.status === 200 || fetchData.status === 201) {
-        console.log("DUCC", fetchData.data);
-
         yield put(fetchVaccineManagerSucess(fetchData.data));
       } else {
         yield put(fetchVaccineManagerFail(fetchData.status));
@@ -70,7 +65,6 @@ function* patchVaccineConfirmManagerSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Confirm Vaccine Fail: ${errorMessage}`);
     yield put(patchMangerFailConfirmVaccine(errorMessage));
-    console.error("Confirm Vaccine Error:", error);
   }
 }
 

@@ -125,6 +125,7 @@ import detailAccountReducer from "./admin/getDetailAccountSlice";
 import changeStatusUserReducer from "./admin/changeStatusUserSlice";
 import createInformationStudentAdminReducer from "./admin/createStudentAdminSlice";
 import completeMeetingReducer from "./checkupNurse/completeMeeting/completeMeetingSlice";
+import getTotalStudentSlice from "./manager/GetTotalStudent/getTotalStudentSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
@@ -237,6 +238,8 @@ const rootReducer = combineReducers({
   managerUpdateMedicalCheckup: managerUpdateMedicalCheckupReducer,
   getDetailCheckupManager: getDetailCheckupManagerReducer,
   getDetailVaccineManager: getDetailVaccineManagerReducer,
+  getTotalStudent: getTotalStudentSlice,
+
   //admin
   // getAllStudentAdmin: getAllStudentAdminReducer,
   // createInformationStudentAdmin: createInformationStudentAdminReducer,
