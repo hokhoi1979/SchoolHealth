@@ -17,7 +17,6 @@ function* stopProvideMedicinceSaga(action) {
   try {
     const id = action.payload;
     const token = yield select((state) => state.account.token);
-    console.log("TOKEN", token);
 
     const response = yield call(
       axios.put,

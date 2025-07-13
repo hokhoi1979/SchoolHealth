@@ -25,7 +25,6 @@ function* meetedSaga() {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchMeetedSuccess(response.data));
-      console.log("SUCCESS", response.data);
     } else {
       yield put(fetchMeetedFail(response.status));
     }

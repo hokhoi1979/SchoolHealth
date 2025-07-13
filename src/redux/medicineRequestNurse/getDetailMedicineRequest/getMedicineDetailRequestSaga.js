@@ -25,7 +25,6 @@ function* getMedicineDetailRequestSaga(action) {
     );
     if (response.status === 200 || response.status === 201) {
       yield put(fetchMedicineDetailRequestSuccess(response.data));
-      console.log("DETAIL", response.data);
     } else {
       yield put(fetchMedicineDetailRequestFail(response.status));
     }

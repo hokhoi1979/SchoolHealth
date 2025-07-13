@@ -44,7 +44,6 @@ function* patchQuantityStockSaga(action) {
       );
       if (fetch.status === 200 || fetch.status === 201) {
         yield put(fetchLowStockSuccess(fetch.data));
-        console.log("STOCK", fetch.data);
       } else {
         yield put(fetchLowStockFail(fetch.status));
       }

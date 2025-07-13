@@ -14,10 +14,8 @@ import {
 } from "../listStudentMeeting/listStudentMeetingSlice";
 
 const URL_API = import.meta.env.VITE_API_URL;
-console.log("🧠 Saga file loaded");
 function* createMeetingSaga(action) {
   try {
-    console.log("👉 createMeetingSaga triggered", action.payload);
     const token = yield select((state) => state.account.token);
     const body = action.payload;
 
@@ -58,7 +56,6 @@ function* createMeetingSaga(action) {
     }
   } catch (error) {
     yield put(createMeetingFail(error));
-    console.error("Create meeting error:", error);
     toast.error("Create meeting failed due to network or server error.");
   }
 }

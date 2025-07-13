@@ -34,7 +34,6 @@ function VaccineResult({ studentList }) {
       setDataRecord(formatted);
     }
   }, [studentList]);
-  console.log("DATA", dataRecord);
   const handleCheckboxChange = (key, checked) => {
     setDataRecord((prev) =>
       prev.map((item) =>
@@ -57,14 +56,12 @@ function VaccineResult({ studentList }) {
 
   const handleSendResult = () => {
     if (dataRecord.length === 0) {
-      console.error("Không có dữ liệu để gửi");
       return;
     }
 
     const idVaccine = dataRecord[0]?.idVaccine;
 
     if (!idVaccine) {
-      console.error("Không tìm thấy idVaccine");
       return;
     }
 
@@ -77,8 +74,6 @@ function VaccineResult({ studentList }) {
     const total = {
       result: format,
     };
-    console.log("Gửi dữ liệu POST:", total);
-    console.log("ID Vaccine:", idVaccine);
 
     dispatch(updateVaccineResult({ IdVaccine: idVaccine, bodyVaccine: total }));
   };
@@ -180,12 +175,6 @@ function VaccineResult({ studentList }) {
             </div>
 
             <div className="flex justify-end mt-5 gap-5">
-              <Button
-                className="!bg-[#E26666] w-[100px] !p-2 hover:!bg-[#EE3B3B] !text-white !font-serif"
-                type="secondary"
-              >
-                Cancel
-              </Button>
               <Button
                 className="!bg-[#6CC76F] w-[100px] !p-2 hover:!bg-[#3BB32B] !text-white !font-serif"
                 type="secondary"

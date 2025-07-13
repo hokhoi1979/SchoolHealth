@@ -46,7 +46,6 @@ function VaccineHistory() {
         });
 
       setData(formatted);
-      console.log(formatted);
     }
   };
 

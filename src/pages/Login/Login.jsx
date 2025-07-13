@@ -22,11 +22,8 @@ function Login() {
   const handleLogin = async () => {
     try {
       const values = await form.validateFields();
-      console.log("EOOOO", values);
       dispatch(fetchLogin(values));
-    } catch (err) {
-      console.log("Validation failed:", err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -47,8 +44,6 @@ function Login() {
 
   useEffect(() => {
     if (error) {
-      console.log(error);
-
       setCustomMessage(error);
     }
   }, [error]);

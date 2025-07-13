@@ -29,13 +29,8 @@ function StudentList() {
   };
 
   useEffect(() => {
-    console.log("ID", id);
-  }, []);
-
-  useEffect(() => {
     fetchData();
   }, []);
-  console.log("STUDENT", student);
 
   const formatData = () => {
     if (
@@ -58,7 +53,6 @@ function StudentList() {
       });
 
       setData(format);
-      console.log("FORMAT", data);
     }
   };
 

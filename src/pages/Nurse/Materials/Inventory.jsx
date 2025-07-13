@@ -44,8 +44,6 @@ function Inventory() {
     formatMedicineSupplyData();
   }, []);
 
-  console.log("KHOI", medicineSupplyStore);
-
   const fetchMedicineData = () => {
     dispatch(fetchAllMedicine());
   };
@@ -79,7 +77,6 @@ function Inventory() {
       setCombinedStore(combined);
     }
   }, [medicineStore, medicineSupplyStore]);
-  console.log("ALLL:L", combinedStore);
 
   const columns = [
     {
@@ -100,7 +97,6 @@ function Inventory() {
       key: "image",
       align: "center",
       render: (_, record) => {
-        console.log("Image URL:", record.image);
         return <img src={record.image} alt="" width={60} />;
       },
     },
