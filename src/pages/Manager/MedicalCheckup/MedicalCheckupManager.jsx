@@ -353,6 +353,7 @@ function MedicalCheckup() {
     setSelectedEvent(event);
     setOpen(true);
   };
+  const checkups = checkupManagerList?.data?.checkUpEntities || [];
 
   const handleUpdateCheckup = (event) => {
     setSelectedEvent(event);
@@ -1109,6 +1110,8 @@ function MedicalCheckup() {
         setSelectedClasses={setSelectedClasses}
         checkupContents={checkupContents}
         setCheckupContents={setCheckupContents}
+        checkupList={checkups}
+        totalStudents={totalStudents}
       />
       <CheckupDetailModal
         visible={viewModalOpen}

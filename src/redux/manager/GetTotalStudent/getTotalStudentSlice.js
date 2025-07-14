@@ -1,6 +1,7 @@
 export const FETCH__TOTAL__STUDENT = "FETCH__TOTAL__STUDENT";
 export const FETCH__TOTAL__STUDENT__SC = "FETCH__TOTAL__STUDENT__SC";
 export const FETCH__TOTAL__STUDENT__FL = "FETCH__TOTAL__STUDENT__FL";
+export const RESET__TOTAL__STUDENT = "RESET__TOTAL__STUDENT";
 
 // Action Creators
 export const fetchTotalStudent = (payload) => ({
@@ -17,7 +18,9 @@ export const fetchTotalStudentFail = (error) => ({
   type: FETCH__TOTAL__STUDENT__FL,
   payload: error,
 });
-
+export const resetTotalStudent = () => ({
+  type: RESET__TOTAL__STUDENT,
+});
 // Initial State
 const initialState = {
   totalStudents: [],
@@ -35,6 +38,8 @@ const getTotalStudentSlice = (state = initialState, action) => {
       return { ...state, loading: false, totalStudents: action.payload };
     case FETCH__TOTAL__STUDENT__FL:
       return { ...state, loading: false, error: action.payload };
+    case RESET__TOTAL__STUDENT:
+      return { ...state, totalStudents: 0 };
     default:
       return state;
   }
