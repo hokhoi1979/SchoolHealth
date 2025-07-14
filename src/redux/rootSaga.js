@@ -88,7 +88,7 @@ import watchPostManagerClasstify from "./manager/CreateManagerClassify/createMan
 import watchFetchDetailManagerClassify from "./manager/GetDetallManagerClassify/getDetailManagerClassifySaga";
 import watchPutClassifyManager from "./manager/UpdateDetailClassifyManager/updateDetailClassifyManagerSaga";
 import watchDeleteManagerMedicineClassify from "./manager/DeleteManagerClassify/deleteManagerMedicineClassifySaga";
-import watchDeleteMedicineManager from "./manager/DeleteManagerMedicine/DeleteManagerMedicineSaga";
+import watchDeleteMedicineManager from "./manager/DeleteManagerMedicine/deleteManagerMedicineSaga";
 import watchFetchAllMedicineSupplyManager from "./manager/GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSaga";
 import watchPostManagerSupply from "./manager/CreateManagerSuppy/createManagerSupplySaga";
 import watchPutManagerSupply from "./manager/UpdateManagerSupply/updateManagerSupplySaga";
