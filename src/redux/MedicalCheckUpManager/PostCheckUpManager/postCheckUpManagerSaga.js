@@ -6,7 +6,7 @@ import {
   POST__MANAGER__CHECKUP,
   postManagerFailCheckup,
   postManagerSuccessCheckup,
-} from "./PostCheckUpManagerSlice";
+} from "./postCheckUpManagerSlice";
 import {
   fetchCheckupManagerFail,
   fetchCheckupManagerSuccess,
