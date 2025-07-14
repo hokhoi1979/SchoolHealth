@@ -34,7 +34,7 @@ import { putManagerMedicalCheckup } from "../../../redux/MedicalCheckUpManager/U
 import CheckupDetailModal from "./CheckupDetailModal";
 import { fetchDetailCheckupManager } from "../../../redux/MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSlice";
 import { fetchTotalStudent } from "../../../redux/manager/GetTotalStudent/getTotalStudentSlice";
-import { postManagerCheckup } from "../../../redux/MedicalCheckUpManager/PostCheckUpManager/postCheckUpManagerSlice";
+import { postManagerCheckup } from "../../../redux/MedicalCheckUpManager/postCheckUpManager/postCheckUpManagerSlice";
 
 function MedicalCheckup() {
   const [loading, setLoading] = useState(false);
