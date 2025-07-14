@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchRequestMedicine } from "../../../redux/materialsNurse/getSendRequestMedicine/getRequestMedicineSlice";
 import { fetchAllMedicine } from "../../../redux/materialsNurse/getAllMedicine/getAllMedicineSlice";
 import { fetchMedicineSupply } from "../../../redux/materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
-import { postRequestMedicine } from "../../../redux/materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSLice";
+import { postRequestMedicine } from "../../../redux/materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSlice";
 import { fetchRequestDetail } from "../../../redux/materialsNurse/getDetailRequest/getDetailRequestSlice";
 function Import() {
   const [open, setOpen] = useState(false);
