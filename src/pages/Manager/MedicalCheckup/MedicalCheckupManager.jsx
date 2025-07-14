@@ -25,7 +25,7 @@ import { CalendarIcon, ClockIcon } from "lucide-react";
 import dayjs from "dayjs";
 import { fetchClassManager } from "../../../redux/manager/getClassManagerSlice";
 import { toast } from "react-toastify";
-import { postManagerCheckup } from "../../../redux/MedicalCheckUpManager/PostCheckUpManager/PostCheckUpManagerSlice";
+
 import { patchManagerConfirmCheckup } from "../../../redux/MedicalCheckUpManager/ConfirmMedicalCheckupManager/confirmMedicalCheckupManagerSlice";
 import { patchManagerEndMedicalCheckup } from "../../../redux/MedicalCheckUpManager/EndEventMedicalCheckUpManager/endEventMedicalCheckUpManagerSlice";
 import { deleteManagerMedicalCheckup } from "../../../redux/MedicalCheckUpManager/DeleteMedicalCheckupManager/deleteMedicalCheckupManagerSlice";
@@ -34,6 +34,7 @@ import { putManagerMedicalCheckup } from "../../../redux/MedicalCheckUpManager/U
 import CheckupDetailModal from "./CheckupDetailModal";
 import { fetchDetailCheckupManager } from "../../../redux/MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSlice";
 import { fetchTotalStudent } from "../../../redux/manager/GetTotalStudent/getTotalStudentSlice";
+import { postManagerCheckup } from "../../../redux/MedicalCheckUpManager/PostCheckUpManager/postCheckUpManagerSlice";
 
 function MedicalCheckup() {
   const [loading, setLoading] = useState(false);
