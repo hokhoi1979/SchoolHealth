@@ -80,7 +80,6 @@ const Meeting = () => {
       await dispatch(fetchMeetingParent());
       setModalVisible(false);
     } catch (err) {
-      console.error(err);
       message.error("Có lỗi xảy ra khi gửi phản hồi.");
     }
   };

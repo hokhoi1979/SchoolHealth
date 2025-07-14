@@ -32,21 +32,17 @@ function StudentAdmin() {
   const classList = classManager?.data || [];
 
   const handleCreateStudent = (studentData) => {
-    console.log("Created student data:", studentData);
-
     dispatch(createStudentAdmin(studentData));
 
     message.success("Student created successfully!");
     setModalVisible(false);
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000); // chờ 1 giây cho toast hiển thị
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 1000); // chờ 1 giây cho toast hiển thị
   };
 
-  useEffect(() => {
-    console.log("Class list:", classList);
-  }, [classList]);
+  useEffect(() => {}, [classList]);
 
   const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {

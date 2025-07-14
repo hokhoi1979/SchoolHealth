@@ -363,9 +363,6 @@ const StudentHealth = () => {
       DetailSideEffect: hadSideEffects === "no" ? "" : detailSideEffect,
     };
 
-    // Debug log - remove in production
-    console.log("Sending payload:", JSON.stringify(payload, null, 2));
-
     try {
       // Dispatch the action to create health record
       await dispatch(fetchCreateHealth(payload));
@@ -378,12 +375,10 @@ const StudentHealth = () => {
         dispatch(fetchHealth(selectedStudent));
       }
       message.success("Create health profile successfully");
-      setTimeout(() => {
-        window.location.reload();
-      }, 400);
-    } catch (error) {
-      console.error("Failed to create health record:", error);
-    }
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 400);
+    } catch (error) {}
   };
 
   //State local trong modal de edit
@@ -492,9 +487,7 @@ const StudentHealth = () => {
         setModalIsEditing(false);
         dispatch(fetchHealth(selectedStudent));
       }
-    } catch (error) {
-      console.error("Update failed:", error);
-    }
+    } catch (error) {}
   };
 
   return (

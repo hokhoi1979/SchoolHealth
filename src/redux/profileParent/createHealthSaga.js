@@ -42,13 +42,14 @@ function* createHealthSaga(action) {
 
       if (fetch.status === 200 || fetch.status === 201) {
         yield put(fetchParentHealthSuccess(fetch.data.data));
-        console.log(fetch.data);
+        toast.success(response.data.message);
       } else {
         yield put(fetchParentHealthFail(error));
+        toast.error(response.data.message);
       }
     } else {
       yield put(fetchCreateHealthFail(`Status: ${response.status}`));
-      console.log("EROR", response.status);
+
       toast.error(response.data.message);
     }
   } catch (error) {

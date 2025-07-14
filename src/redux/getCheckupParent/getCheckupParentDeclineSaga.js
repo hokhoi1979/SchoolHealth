@@ -36,11 +36,6 @@ function* getCheckUpParentDeclineSaga(action) {
     }
   } catch (error) {
     const errorMessage = error.response?.data?.message;
-    console.error("Decline Saga - Full Error:", {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-    });
     yield put(
       fetchDeclineCheckUpFail({
         message: error.message,

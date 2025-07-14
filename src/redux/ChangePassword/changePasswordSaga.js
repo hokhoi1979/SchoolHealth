@@ -14,12 +14,6 @@ function* changePasswordSaga(action) {
     const token = yield select((state) => state.account.token);
     const { currentPassword, newPassword } = action.payload;
 
-    console.log("Change Password Saga - Payload:", action.payload);
-    console.log(
-      "Change Password Saga - URL:",
-      `${URL_API}/v1/auth/change-password`
-    );
-
     const response = yield call(
       axios.post,
       `${URL_API}/v1/auth/change-password`,
@@ -35,15 +29,12 @@ function* changePasswordSaga(action) {
       }
     );
 
-    console.log("Change Password Saga - Response:", response);
-
     if (response.status === 200 || response.status === 201) {
       yield put(fetchChangePasswordSuccess(response.data));
     } else {
       yield put(fetchChangePasswordFail(response.status));
     }
   } catch (error) {
-    console.error("Change Password Saga - Error:", error);
     yield put(
       fetchChangePasswordFail({
         message:
