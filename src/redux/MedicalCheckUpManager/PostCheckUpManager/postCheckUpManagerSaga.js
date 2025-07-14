@@ -2,7 +2,11 @@ import { call, put, select, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 
 import { toast } from "react-toastify";
-Z;
+import {
+  POST__MANAGER__CHECKUP,
+  postManagerFailCheckup,
+  postManagerSuccessCheckup,
+} from "./postCheckUpManagerSlice";
 import {
   fetchCheckupManagerFail,
   fetchCheckupManagerSuccess,
