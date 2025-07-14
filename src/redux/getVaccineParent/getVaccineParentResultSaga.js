@@ -1,0 +1,39 @@
+import axios from "axios";
+import { call, put, select, takeLatest } from "redux-saga/effects";
+import {
+  FETCH_VACCINE_PARENT_RESULT,
+  fetchVaccineParentResultFail,
+  fetchVaccineParentResultSuccess,
+} from "./getVaccineParentResultSlice";
+
+const URL_API = import.meta.env.VITE_API_URL;
+
+function* vaccineParentResultSaga() {
+  try {
+    // const token = localStorage.getItem("accessToken");
+    const token = yield select((state) => state.account.token);
+    const response = yield call(
+      axios.get,
+      `${URL_API}/parent/v1/vaccinationEvent/result`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 200 || response.status === 201) {
+      yield put(fetchVaccineParentResultSuccess(response.data));
+    } else {
+      yield put(fetchVaccineParentResultFail(`API Error: ${response.data}`));
+    }
+  } catch (error) {
+    yield put(fetchVaccineParentResultFail(`API Error: ${error}`));
+  }
+}
+
+function* watchFetchVaccineParentResult() {
+  yield takeLatest(FETCH_VACCINE_PARENT_RESULT, vaccineParentResultSaga);
+}
+export default watchFetchVaccineParentResult;

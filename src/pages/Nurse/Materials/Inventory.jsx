@@ -1,11 +1,88 @@
-import { Space, Table, Tooltip } from "antd";
-
+import { Button, Input, Modal, Select, Space, Table, Tooltip } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllMedicine } from "../../../redux/materialsNurse/getAllMedicine/getAllMedicineSlice";
+import { useEffect, useState } from "react";
+import TextArea from "antd/es/input/TextArea";
+import { fetchMedicineSupply } from "../../../redux/materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
 function Inventory() {
+  const { medicine = [] } = useSelector((state) => state.medicineNurse);
+  const { medicineSupply = [] } = useSelector(
+    (state) => state.getMedicineSupplyNurse
+  );
+  const [medicineStore, setMedicineStore] = useState([]);
+  const [medicineSupplyStore, setMedicineSupplyStore] = useState([]);
+  const [combinedStore, setCombinedStore] = useState([]);
+
+  const dispatch = useDispatch();
+
+  const fetchMedicineSupplyData = () => {
+    dispatch(fetchMedicineSupply());
+  };
+
+  useEffect(() => {
+    fetchMedicineSupplyData();
+  }, []);
+
+  const formatMedicineSupplyData = () => {
+    if (medicineSupply?.data && Array.isArray(medicineSupply?.data)) {
+      const format = medicineSupply?.data.map((item) => {
+        return {
+          id: item?.id,
+          nameMedicine: item?.name,
+          image: item?.image,
+          stock: item?.stock,
+          usage: item?.usage,
+          description: item?.description,
+          type: item?.category,
+        };
+      });
+      setMedicineSupplyStore(format);
+    }
+  };
+
+  useEffect(() => {
+    formatMedicineSupplyData();
+  }, []);
+
+  const fetchMedicineData = () => {
+    dispatch(fetchAllMedicine());
+  };
+
+  useEffect(() => {
+    fetchMedicineData();
+  }, []);
+
+  const formatMedicineData = () => {
+    if (Array.isArray(medicine?.data?.medicines)) {
+      const format = medicine.data.medicines.map((item, index) => ({
+        id: item?.id,
+        nameMedicine: item?.name,
+        stock: item?.stock,
+        type: item?.type,
+        usage: item?.usage,
+        image: item?.image,
+        description: item?.description,
+      }));
+      setMedicineStore(format);
+    }
+  };
+
+  useEffect(() => {
+    formatMedicineData();
+  }, [medicine]);
+
+  useEffect(() => {
+    if (medicineStore.length || medicineSupplyStore.length) {
+      const combined = [...medicineStore, ...medicineSupplyStore];
+      setCombinedStore(combined);
+    }
+  }, [medicineStore, medicineSupplyStore]);
+
   const columns = [
     {
-      title: "Number",
-      dataIndex: "num",
-      key: "num",
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
       align: "center",
     },
     {
@@ -15,90 +92,43 @@ function Inventory() {
       align: "center",
     },
     {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      align: "center",
+      render: (_, record) => {
+        return <img src={record.image} alt="" width={60} />;
+      },
+    },
+    {
       title: "Amount",
-      dataIndex: "amount",
-      key: "amount",
+      dataIndex: "stock",
+      key: "stock",
       align: "center",
     },
     {
-      title: "Inventory",
-      dataIndex: "inventory",
-      key: "inventory",
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
       align: "center",
     },
     {
-      title: "Action",
-      key: "action",
+      title: "Usage",
+      dataIndex: "usage",
+      key: "usage",
       align: "center",
-      render: (_, record) => (
-        <Space>
-          <Tooltip
-            placement="bottom"
-            title="View"
-            overlayInnerStyle={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "12px",
-            }}
-          >
-            <div style={{ cursor: "pointer" }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
-                ></path>
-              </svg>
-            </div>
-          </Tooltip>
-        </Space>
-      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      align: "center",
     },
   ];
 
-  const dataSource = [
-    {
-      num: "1",
-      nameMedicine: "Paracetamol",
-
-      amount: 150,
-      inventory: "Available",
-    },
-    {
-      num: "2",
-      nameMedicine: "Amoxicillin",
-      type: "Capsule",
-      amount: 80,
-      inventory: "Low Stock",
-    },
-    {
-      num: "3",
-      nameMedicine: "Syringe 5ml",
-
-      amount: 300,
-      inventory: "Available",
-    },
-    {
-      num: "4",
-      nameMedicine: "Vitamin C",
-
-      amount: 0,
-      inventory: "Out of Stock",
-    },
-    {
-      num: "5",
-      nameMedicine: "Syringe 5ml",
-
-      amount: 300,
-      inventory: "Available",
-    },
-  ];
   return (
     <div>
-      <Table className="mt-5" columns={columns} dataSource={dataSource} />
+      <Table className="mt-5" columns={columns} dataSource={combinedStore} />
     </div>
   );
 }

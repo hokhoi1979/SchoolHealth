@@ -1,38 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../img/icon.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import bs from "../../img/bs.png";
+import { useDispatch, useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import { fetchSuccess, logout } from "../../redux/auth/authSlice";
 const SideBar = () => {
   const [click, setClick] = useState("");
   const [toggle, setToggle] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { token } = useSelector((state) => state.account);
 
   const handleToggle = () => {
     setToggle((pre) => !pre);
   };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    if (token) {
+      const decode = jwtDecode(token);
+      dispatch(fetchSuccess({ user: decode, token: token }));
+    }
+  }, [dispatch]);
   return (
     <>
       <div
-        className={` h-full bg-white pt-2 pb-2 font-inria flex flex-col ${
-          toggle ? "w-[7%] " : "w-[18%]"
+        className={`h-full bg-white pt-2 pb-2 font-inria flex flex-col ${
+          toggle ? "w-[8%] " : "w-[18%]"
         }  transition-all duration-400 ease-in-out overflow-hidden`}
       >
         <div className="flex items-center pt-2 pb-2  pl-1 pr-1 gap-3">
           <div className="flex items-center">
-            <div className="w-[80px]">
-              <img src={logo} className="flex m-auto" width="60%" alt="" />
-              <p className="font-inria text-center justify-center text-[13px] font-medium text-[#040404] font-kameron">
+            <div className="w-[70px]">
+              <img
+                src={logo}
+                className="flex m-auto"
+                width="60%"
+                height="60%"
+                alt=""
+              />
+              <p className="font-inria text-center justify-center text-[10px] font-medium text-[#040404] font-kameron">
                 Heath Care
               </p>
             </div>
             {!toggle && (
-              <h1 className="font-inria text-xl pl-6 font-medium text-center justify-center items-center">
-                School Health
-              </h1>
+              <div className="w-[127px]">
+                {" "}
+                <h1 className="font-inria text-[16px] pl-6 font-medium text-center justify-center items-center">
+                  School Health
+                </h1>
+              </div>
             )}
           </div>
           {!toggle && (
             <div
-              style={{ cursor: "pointer", marginLeft: 50 }}
+              style={{ cursor: "pointer", marginLeft: 10 }}
               onClick={handleToggle}
             >
               <svg
@@ -69,42 +97,15 @@ const SideBar = () => {
 
         <div className="pl-3 pr-3 pt-5 text-[#5B5454]">
           <div
-            className={`flex items-center gap-4  hover:bg-[#EFEEEE] p-2 rounded-xl ${
-              click === "dashboard"
-                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
-                : ""
-            } ${toggle && "justify-center"} `}
-            style={{ cursor: "pointer" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              className="text-[#5B5454]"
-            >
-              <path
-                fill="#5B5454"
-                d="M2 13h6v8H2zm14-5h6v13h-6zM9 3h6v18H9zM4 15v4h2v-4zm7-10v14h2V5zm7 5v9h2v-9z"
-              />
-            </svg>
-            {!toggle && (
-              <Link
-                onClick={() => setClick("dashboard")}
-                to={"/nurse"}
-                className="text-[18px]"
-              >
-                Dash Board
-              </Link>
-            )}
-          </div>
-
-          <div
             className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
               click === "materials"
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
+            onClick={() => {
+              setClick("materials");
+              navigate("/nurse/materials");
+            }}
             style={{ cursor: "pointer" }}
           >
             <svg
@@ -123,11 +124,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("materials")}
-                to={"/nurse/materials"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/materials"} className="text-[18px]">
                 Materials
               </Link>
             )}
@@ -140,6 +137,10 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/student");
+              setClick("profile");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -153,11 +154,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("profile")}
-                to={"/nurse/student"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/student"} className="text-[18px]">
                 Student Profile
               </Link>
             )}
@@ -170,6 +167,10 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/medicalEvent");
+              setClick("medical");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -183,11 +184,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("medical")}
-                to={"/nurse/medical"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/medicalEvent"} className="text-[18px]">
                 Medical Event
               </Link>
             )}
@@ -200,6 +197,10 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/vaccine");
+              setClick("vaccine");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -217,11 +218,7 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("vaccine")}
-                to={"/nurse/vaccine"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/vaccine"} className="text-[18px]">
                 Vaccine Management
               </Link>
             )}
@@ -234,6 +231,10 @@ const SideBar = () => {
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/medical");
+              setClick("checkup");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -247,23 +248,54 @@ const SideBar = () => {
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("checkup")}
-                to={"/nurse/checkup"}
-                className="text-[18px]"
-              >
+              <Link to={"/nurse/medical"} className="text-[18px]">
                 Medical Checkup
               </Link>
             )}
           </div>
 
-          <div
+          {/* <div
             className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
-              click === "history"
+              click === "information"
                 ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
                 : ""
             } ${toggle && "justify-center"}`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/information");
+              setClick("information");
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M13 9h-2V7h2m0 10h-2v-6h2m-1-9A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2"
+              />
+            </svg>
+
+            {!toggle && (
+              <Link to={"/nurse/information"} className="text-[18px]">
+                Nurse Information
+              </Link>
+            )}
+          </div> */}
+
+          <div
+            className={`flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+              click === "change_password"
+                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
+                : ""
+            } ${toggle && "justify-center"}`}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/nurse/change_password");
+              setClick("change_password");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -272,17 +304,13 @@ const SideBar = () => {
               viewBox="0 0 24 24"
             >
               <path
-                fill="#5B5454"
-                d="M12 22q-3.55 0-6.262-2.175t-3.488-5.55q-.1-.425.15-.763t.675-.387t.75.2t.45.675q.675 2.625 2.813 4.313T12 20q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4Q9.85 4 8.012 5.062T5.1 8H7q.425 0 .713.288T8 9t-.288.713T7 10H3.6q-.55 0-.875-.437t-.15-.938q1.05-2.95 3.625-4.788T12 2q2.075 0 3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m1-10.4l2.5 2.5q.275.275.275.7t-.275.7t-.7.275t-.7-.275l-2.8-2.8q-.15-.15-.225-.337T11 11.975V8q0-.425.288-.712T12 7t.713.288T13 8z"
+                fill="currentColor"
+                d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"
               />
             </svg>
             {!toggle && (
-              <Link
-                onClick={() => setClick("history")}
-                to={"/nurse"}
-                className="text-[18px]"
-              >
-                History & Report
+              <Link to={"/nurse/change_password"} className="text-[18px]">
+                Change Password
               </Link>
             )}
           </div>
@@ -306,8 +334,14 @@ const SideBar = () => {
           <div
             className={`flex items-center  p-2 rounded-xl ${
               toggle && "justify-center w-full"
-            } hover:bg-[#EFEEEE] `}
+            } hover:bg-[#EFEEEE]`}
             style={{ cursor: "pointer" }}
+            onClick={() => {
+              const confirmed = window.confirm("Do you want to logout?");
+              if (confirmed) {
+                handleLogout();
+              }
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -328,3 +362,34 @@ const SideBar = () => {
 };
 
 export default SideBar;
+{
+  /* <div
+            className={flex items-center gap-4 mt-1 hover:bg-[#EFEEEE] p-2 rounded-xl ${
+              click === "history"
+                ? "bg-[#EFEEEE] p-2 rounded-xl text-black"
+                : ""
+            } ${toggle && "justify-center"}}
+            style={{ cursor: "pointer" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="#5B5454"
+                d="M12 22q-3.55 0-6.262-2.175t-3.488-5.55q-.1-.425.15-.763t.675-.387t.75.2t.45.675q.675 2.625 2.813 4.313T12 20q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4Q9.85 4 8.012 5.062T5.1 8H7q.425 0 .713.288T8 9t-.288.713T7 10H3.6q-.55 0-.875-.437t-.15-.938q1.05-2.95 3.625-4.788T12 2q2.075 0 3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m1-10.4l2.5 2.5q.275.275.275.7t-.275.7t-.7.275t-.7-.275l-2.8-2.8q-.15-.15-.225-.337T11 11.975V8q0-.425.288-.712T12 7t.713.288T13 8z"
+              />
+            </svg>
+            {!toggle && (
+              <Link
+                onClick={() => setClick("history")}
+                to={"/nurse"}
+                className="text-[18px]"
+              >
+                History & Report
+              </Link>
+            )}
+          </div> */
+}

@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import SideBar from "../../components/SideBar/SideBarNurse";
+
+import { toast } from "react-toastify";
 
 const NurseLayout = () => {
   return (
