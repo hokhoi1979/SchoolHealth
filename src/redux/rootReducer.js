@@ -95,7 +95,7 @@ import getDetailRequestManagerReducer from "./manager/GetDetailRequestManager/ge
 import createAiChatReducer from "./AI_Chat/chatBoxSlice";
 import getAllChatBoxAiReducer from "./AI_Chat/getChaxBoxSlice";
 import getAllCheckupManagerReducer from "./MedicalCheckUpManager/GetAllCheckUpManager/getAllCheckUpManagerSlice";
-import managerCheckupReducer from "./MedicalCheckUpManager/PostCheckUpManager/PostCheckUpManagerSlice";
+// import managerCheckupReducer from "./MedicalCheckUpManager/PostCheckUpManager/ostCheckUpManagerSlice";
 import patchManagerConfirmCheckupReducer from "./MedicalCheckUpManager/ConfirmMedicalCheckupManager/confirmMedicalCheckupManagerSlice";
 import endEventMedicalCheckUpManagerReducer from "./MedicalCheckUpManager/EndEventMedicalCheckUpManager/endEventMedicalCheckUpManagerSlice";
 import deleteMedicalCheckupManagerReducer from "./MedicalCheckUpManager/DeleteMedicalCheckupManager/deleteMedicalCheckupManagerSlice";
@@ -133,6 +133,7 @@ import healthProfileDashboardReducer from "./admin/getHealthProfileDashboardSlic
 import completeMeetingReducer from "./checkupNurse/completeMeeting/completeMeetingSlice";
 import getTotalStudentSlice from "./manager/GetTotalStudent/getTotalStudentSlice";
 import updateParentReducer from "./profileParent/updateParentProfile/updateParentProfileSlice";
+import managerCheckupReducer from "./MedicalCheckUpManager/PostCheckUpManager/postCheckUpManagerSlice";
 
 const rootReducer = combineReducers({
   account: accountReducers,
