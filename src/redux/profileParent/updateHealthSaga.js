@@ -29,14 +29,13 @@ function* updateHealthSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchUpdateHealthSucess(response.data));
-      console.log("SUCCESS", response);
+
       toast.success(response.data.message);
     } else {
       yield put(fetchUpdateHealthFail(response.status));
       toast.error(response.data.message);
     }
   } catch (error) {
-    console.log(error);
     // Xử lý lỗi và hiển thị thông báo lỗi từ backend nếu có
     const errorMessage = error.response?.data?.message || error.message;
     yield put(

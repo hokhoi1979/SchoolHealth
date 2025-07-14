@@ -61,10 +61,8 @@ const ChangePassword = () => {
         newPassword: values.newPassword,
       };
 
-      console.log("Submitting change password", payload);
       dispatch(fetchChangePassword(payload));
     } catch (error) {
-      console.error("Error submitting change password:", error);
       message.error("Có lỗi xảy ra, vui lòng thử lại!");
     }
   };

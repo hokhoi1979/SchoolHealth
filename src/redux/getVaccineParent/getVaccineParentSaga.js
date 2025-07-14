@@ -24,7 +24,6 @@ function* vaccineParentSaga() {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("KHANH", response.data);
       yield put(fetchVaccineParentSuccess(response.data));
     } else {
       yield put(fetchVaccineParentFail(`API Error: ${response.data}`));

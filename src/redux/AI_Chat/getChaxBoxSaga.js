@@ -27,7 +27,6 @@ function* getAiChatSaga(action) {
     });
 
     if (response.status === 200 || response.status === 201) {
-      console.log("Get success", response.data);
       //   yield put(getAiChatSuccess({ from: "ai", text: response.data.data }));
       const rawData = response.data.data;
 

@@ -33,7 +33,7 @@ function* managerCheckupSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(postManagerSuccessCheckup(response.data));
-
+      toast.success("Create Check Up Success");
       const fecthData = yield call(
         axios.get,
         `${URL_API}/manager/v1/check-up`,
@@ -58,7 +58,7 @@ function* managerCheckupSaga(action) {
     yield put(postManagerFailCheckup(`API ERROR: ${error}`));
     const message =
       error.response?.data?.message ||
-      error.message ||
+      error?.message ||
       "Đã xảy ra lỗi. Vui lòng thử lại.";
     toast.error(message);
   }

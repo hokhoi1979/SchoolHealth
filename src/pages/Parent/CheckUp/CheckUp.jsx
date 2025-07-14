@@ -91,7 +91,6 @@ const CheckUp = () => {
   };
 
   const handleViewDetail = (healthCheckUpID) => {
-    console.log("Viewing detail for:", healthCheckUpID); // Debug log
     dispatch(fetchDetailCheckUpParent({ id: healthCheckUpID }));
     setIsDetailModalOpen(true);
   };
@@ -118,7 +117,6 @@ const CheckUp = () => {
 
     try {
       if (response.consent === "yes") {
-        console.log("Accepting checkup with payload:", payload);
         await dispatch(fetchAcceptCheckUp(payload));
         message.success("CheckUp accepted successfully!");
       } else {
@@ -126,10 +124,6 @@ const CheckUp = () => {
           message.error("Please provide a reason for rejection");
           return;
         }
-        console.log("Declining checkup with payload:", {
-          ...payload,
-          note: response.reason,
-        });
         await dispatch(
           fetchDeclineCheckUp({
             ...payload,
@@ -144,11 +138,9 @@ const CheckUp = () => {
       setResponse({ consent: "yes", reason: "" });
 
       setTimeout(() => {
-        console.log("Refreshing data...");
         dispatch(fetchCheckUpParent());
       }, 1000);
     } catch (error) {
-      console.error("Error submitting response:", error);
       message.error("Failed to submit response. Please try again.");
     }
   };

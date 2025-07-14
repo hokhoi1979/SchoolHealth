@@ -23,7 +23,7 @@ function* resultCheckUpParentSaga(action) {
         },
       }
     );
-    console.log("he", response);
+
     if (response.status === 200 || response.status === 201) {
       yield put(fetchResultCheckUpParentSuccess(response.data));
     } else {

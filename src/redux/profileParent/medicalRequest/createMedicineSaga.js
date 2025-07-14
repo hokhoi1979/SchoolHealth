@@ -42,13 +42,12 @@ function* createMedicineSaga(action) {
       });
       if (fetch.status === 200 || fetch.status === 201) {
         yield put(fetchMedicineRequestSuccess(fetch.data));
-        console.log(fetch.data);
       } else {
         yield put(fetchMedicineRequestFail(error));
       }
     } else {
       yield put(fetchCreateMedicineFail(`Status: ${response.status}`));
-      console.log("EROR", response.status);
+
       toast.error(response.data.message);
     }
   } catch (error) {

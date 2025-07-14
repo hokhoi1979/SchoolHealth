@@ -123,7 +123,6 @@ const Vaccination = () => {
         dispatch(fetchVaccineParent());
       }, 1000);
     } catch (error) {
-      console.error("Error submitting response:", error);
       message.error("Failed to submit response. Please try again.");
     }
   };
