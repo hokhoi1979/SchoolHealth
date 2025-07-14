@@ -66,7 +66,7 @@ import updateManagerSupplyReducer from "./manager/RejectRequestManager/rejectReq
 import getAllMedicineNurseReducer from "./materialsNurse/getAllMedicine/getAllMedicineSlice";
 import getRequestMedicineReducer from "./materialsNurse/getSendRequestMedicine/getRequestMedicineSlice";
 import getMedicineSupplyReducer from "./materialsNurse/getMedicineSupplies/getMedicineSuppliesSlice";
-import postRequestMedicineReducer from "./materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSLice";
+import postRequestMedicineReducer from "./materialsNurse/sendRequestMedicineNurse/sendRequestMedicineSlice";
 import getRequestDetailReducer from "./materialsNurse/getDetailRequest/getDetailRequestSlice";
 import getMedicalEventNurseReducer from "./medicalEventNurse/medicalEvent/getMedicalEventSlice";
 import getMedicalEventDetailReducer from "./medicalEventNurse/medicalDetailEvent/getMedicalEventDetailSlice";
