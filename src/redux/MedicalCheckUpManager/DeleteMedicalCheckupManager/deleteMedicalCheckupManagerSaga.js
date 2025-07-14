@@ -59,7 +59,6 @@ function* managerDeleteMedicalCheckupSaga(action) {
         error?.response?.data?.message || error.message || "Unknown error"
       )
     );
-    console.log("ERROR", error);
     toast.error("Đã xảy ra lỗi khi xóa nội dung kiểm tra");
   }
 }

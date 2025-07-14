@@ -33,6 +33,7 @@ import UpdateCheckupModal from "./UpdateCheckupModal";
 import { putManagerMedicalCheckup } from "../../../redux/MedicalCheckUpManager/UpdateMedicalCheckupManager/updateMedicalCheckupManagerSlice";
 import CheckupDetailModal from "./CheckupDetailModal";
 import { fetchDetailCheckupManager } from "../../../redux/MedicalCheckUpManager/getDetailCheckUpManager/getDetailCheckUpManagerSlice";
+import { fetchTotalStudent } from "../../../redux/manager/GetTotalStudent/getTotalStudentSlice";
 
 function MedicalCheckup() {
   const [loading, setLoading] = useState(false);
@@ -81,7 +82,6 @@ function MedicalCheckup() {
   const handleViewMore = (event) => {
     if (!event?.id) return;
     dispatch(fetchDetailCheckupManager(event.id));
-    console.log(event);
     setViewModalOpen(true);
   };
 
@@ -137,8 +137,7 @@ function MedicalCheckup() {
     setData(formatted);
   }, [checkupManagerList]);
   const avg = (Number(data.participate) / Number(data.totalStudent)) * 100;
-  console.log("avg", avg);
-  console.log("Student", data);
+
   useEffect(() => {
     dispatch(fetchCheckupManager());
   }, [dispatch]);
@@ -158,9 +157,7 @@ function MedicalCheckup() {
     setCheckupDescription("");
     setCheckupDate(null);
     setItems([]);
-    setCheckupContents([
-      { name: "", description: "", inputType: "TEXT" }, // reset về mặc định
-    ]);
+    setCheckupContents([{ name: "", description: "", inputType: "TEXT" }]);
 
     setNotificationTitle("");
     setNotificationContent("");
@@ -199,15 +196,13 @@ function MedicalCheckup() {
     };
 
     try {
-      console.log(payload);
       dispatch(postManagerCheckup(payload));
-      toast.success("Create Success");
       closeModal();
     } catch (error) {
       toast.error("Tạo sự kiện thất bại");
-      console.error("API ERROR:", error);
     }
   };
+
   const [targetTypeState, setTargetTypeState] = useState([]);
   const [checkupContents, setCheckupContents] = useState([]);
 
@@ -230,12 +225,12 @@ function MedicalCheckup() {
   const handleSendConfirm = async () => {
     const { id } = selectedEvent;
     if (!id) {
-      console.error("Event ID is missing");
+      // console.error("Event ID is missing");
       return;
     }
 
     if (!notificationTitle || !notificationContent) {
-      console.error("Title or Content is missing");
+      // console.error("Title or Content is missing");
       return;
     }
 
@@ -248,13 +243,11 @@ function MedicalCheckup() {
 
       setNotificationModalOpen(false);
     } catch (error) {
-      console.error("API Error:", error?.response?.data || error?.message);
       toast.error("Failed to send confirmation");
     }
   };
 
   const handleViewConfirm = (event) => {
-    console.log("event trong handleViewConfirm:", event);
     setSelectedEvent(event);
     setNotificationTitle(`Checkup Notice for ${event?.title}`);
 
@@ -276,7 +269,7 @@ function MedicalCheckup() {
     let isSchool = false;
 
     if (!Array.isArray(classList)) {
-      console.warn("classList chưa sẵn sàng");
+      // console.warn("classList chưa sẵn sàng");
       return;
     }
 
@@ -350,7 +343,6 @@ function MedicalCheckup() {
   };
 
   const handleEndCheckup = (id) => {
-    console.log(id);
     dispatch(patchManagerEndMedicalCheckup(id));
   };
 
@@ -358,8 +350,8 @@ function MedicalCheckup() {
     dispatch(deleteManagerMedicalCheckup(id));
   };
   const handleSelectEvent = (event) => {
-    setSelectedEvent(event); // Cập nhật selectedEvent khi chọn sự kiện mới
-    setOpen(true); // Mở modal
+    setSelectedEvent(event);
+    setOpen(true);
   };
 
   const handleUpdateCheckup = (event) => {
@@ -393,11 +385,36 @@ function MedicalCheckup() {
       setSelectedGrades(selectedGrades.filter((g) => g !== grade));
     }
   };
+  const totalStudents = useSelector(
+    (state) => state.getTotalStudent?.totalStudents ?? 0
+  );
+
+  useEffect(() => {
+    if (targetType === "school") {
+      dispatch(fetchTotalStudent({ targetType: "SCHOOL", targetIds: [] }));
+    } else if (targetType === "class" && selectedClasses.length > 0) {
+      const classIds = classList
+        .filter((cls) => selectedClasses.includes(cls.name))
+        .map((cls) => String(cls.id));
+
+      dispatch(fetchTotalStudent({ targetType: "CLASS", targetIds: classIds }));
+    } else if (targetType === "grade" && selectedGrades.length > 0) {
+      const gradeIds = selectedGrades.map(String);
+      dispatch(fetchTotalStudent({ targetType: "GRADE", targetIds: gradeIds }));
+    }
+  }, [targetType, selectedClasses, selectedGrades, classList]);
 
   const renderTargetSelection = () => {
     switch (targetType) {
       case "school":
-        return <div className="text-gray-600 italic">School</div>;
+        return (
+          <div className="text-gray-600 italic">
+            School
+            <div className="text-green-600 text-sm mt-1">
+              Total students: {totalStudents}
+            </div>
+          </div>
+        );
 
       case "class":
         return (
@@ -418,6 +435,9 @@ function MedicalCheckup() {
             {selectedClasses.length > 0 && (
               <div className="text-sm text-blue-600">
                 Picked: {selectedClasses.join(", ")}
+                <div className="text-green-600 text-sm">
+                  Total students: {totalStudents}
+                </div>
               </div>
             )}
           </div>
@@ -441,6 +461,9 @@ function MedicalCheckup() {
             {selectedGrades.length > 0 && (
               <div className="text-sm text-blue-600">
                 Grade {selectedGrades.join(", ")}
+                <div className="text-green-600 text-sm">
+                  Total students: {totalStudents}
+                </div>
               </div>
             )}
           </div>

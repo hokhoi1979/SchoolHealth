@@ -100,7 +100,7 @@ const UpdateCheckupModal = ({
       description: checkupDescription,
     };
 
-    console.log("Payload being sent:", payload);
+    // console.log("Payload being sent:", payload);
 
     try {
       dispatch(
@@ -111,9 +111,9 @@ const UpdateCheckupModal = ({
       onCancel();
     } catch (error) {
       toast.error("Update Failed");
-      console.error("API ERROR:", error);
+      // console.error("API ERROR:", error);
       if (error.response) {
-        console.error("API Response Error:", error.response.data);
+        // console.error("API Response Error:", error.response.data);
       }
     }
   };

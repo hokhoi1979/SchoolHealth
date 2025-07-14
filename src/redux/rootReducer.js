@@ -131,6 +131,7 @@ import medicalEventDashboardReducer, {
 import healthProfileDashboardReducer from "./admin/getHealthProfileDashboardSlice";
 
 import completeMeetingReducer from "./checkupNurse/completeMeeting/completeMeetingSlice";
+import getTotalStudentSlice from "./manager/GetTotalStudent/getTotalStudentSlice";
 import updateParentReducer from "./profileParent/updateParentProfile/updateParentProfileSlice";
 
 const rootReducer = combineReducers({
@@ -246,6 +247,8 @@ const rootReducer = combineReducers({
   managerUpdateMedicalCheckup: managerUpdateMedicalCheckupReducer,
   getDetailCheckupManager: getDetailCheckupManagerReducer,
   getDetailVaccineManager: getDetailVaccineManagerReducer,
+  getTotalStudent: getTotalStudentSlice,
+
   //admin
   // getAllStudentAdmin: getAllStudentAdminReducer,
   // createInformationStudentAdmin: createInformationStudentAdminReducer,

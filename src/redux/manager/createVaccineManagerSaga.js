@@ -30,7 +30,6 @@ function* managerVaccineSaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DUCC", response.data);
       yield put(postManagerSucessVaccine(response.data));
       const fetchData = yield call(
         axios.get,
@@ -44,8 +43,6 @@ function* managerVaccineSaga(action) {
       );
 
       if (fetchData.status === 200 || fetchData.status === 201) {
-        console.log("DUCC", fetchData.data);
-
         yield put(fetchVaccineManagerSucess(fetchData.data));
         toast.success("Create Vaccine Success");
       } else {
@@ -58,9 +55,8 @@ function* managerVaccineSaga(action) {
   } catch (error) {
     const errorMessage =
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
-    toast.error(`Create Vaccine Fail: ${errorMessage}`);
+
     yield put(postMangerFailVaccine(errorMessage));
-    console.error("Create Vaccine Error:", error);
   }
 }
 function* watchPostManagerVaccine() {

@@ -41,7 +41,6 @@ function* rejectMedicineSupplyManagerSaga(action) {
       });
 
       if (fetchData.status === 200 || fetchData.status === 201) {
-        console.log("DUCC", fetchData.data);
         yield put(fetchAllRequestSuccess(fetchData.data));
       } else {
         yield put(fetchAllRequestFail(fetchData.status));
@@ -55,7 +54,6 @@ function* rejectMedicineSupplyManagerSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Reject Fail: ${errorMessage}`);
     yield put(rejectManagerMedicineSupplyFail(errorMessage));
-    console.error("Reject Error:", error);
   }
 }
 

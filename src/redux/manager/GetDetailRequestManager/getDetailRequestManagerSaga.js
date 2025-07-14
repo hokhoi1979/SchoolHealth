@@ -26,13 +26,11 @@ function* getDetailRequestSaga(action) {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchDetailRequestSuccess(response.data));
-      console.log("DUCC", response.data);
     } else {
       yield put(fetchDetailRequestFail(response.status));
     }
   } catch (error) {
     yield put(fetchDetailRequestFail(error));
-    console.log(error);
   }
 }
 

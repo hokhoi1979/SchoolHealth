@@ -133,6 +133,7 @@ import watchMedicalEventDashboard from "./admin/getMedicalEventDashboardSaga";
 import watchHealthProfileDashboard from "./admin/getHealthProfileDashboardSaga";
 
 import watchCompleteMeeting from "./checkupNurse/completeMeeting/completeMeetingSaga";
+import { totalStudentSaga } from "./manager/GetTotalStudent/getTotalStudentSaga";
 import watchFetchUpdateParent from "./profileParent/updateParentProfile/updateParentProfileSaga";
 
 export default function* rootSaga() {
@@ -250,6 +251,7 @@ export default function* rootSaga() {
     watchUpdateMedicalCheckupManager(),
     watchFetchDetailCheckupManager(),
     watchFetchDetailVaccineManager(),
+    totalStudentSaga(),
 
     // watchFetchVaccineResult(),
     //admin

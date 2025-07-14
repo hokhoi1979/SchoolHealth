@@ -22,7 +22,6 @@ const URL_API = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 function* patchVaccineManagerSaga(action) {
   try {
     const token = yield select((state) => state.account.token);
-    console.log("TOKEN", token);
     const id = action.payload;
     const response = yield call(
       axios.patch,
@@ -37,7 +36,6 @@ function* patchVaccineManagerSaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DUCC", response.data);
       const fetchData = yield call(
         axios.get,
         `${URL_API}/manager/v1/vaccinationEvent`,
@@ -66,7 +64,6 @@ function* patchVaccineManagerSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Create Vaccine Fail: ${errorMessage}`);
     yield put(patchMangerFailVaccine(errorMessage));
-    console.error("Create Vaccine Error:", error);
   }
 }
 

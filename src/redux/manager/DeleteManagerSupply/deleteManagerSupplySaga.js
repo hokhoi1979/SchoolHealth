@@ -30,7 +30,6 @@ function* managerDeleteSupplySaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DELETE SUCCESS:", response.data);
       yield put(deleteManagerSupplySuccess(response.data));
 
       const { page, limit } = action.payload;
@@ -56,7 +55,6 @@ function* managerDeleteSupplySaga(action) {
     }
   } catch (error) {
     yield put(deleteManagerSupplyFail(`API ERROR: ${error}`));
-    console.log(error);
   }
 }
 

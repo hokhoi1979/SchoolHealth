@@ -52,8 +52,6 @@ function* updateClassifyManagerSaga(action) {
       );
 
       if (fetchData.status === 200 || fetchData.status === 201) {
-        console.log("DUCC", fetchData.data);
-
         yield put(fetchMedicineClasstifyManagerSucess(fetchData.data));
       } else {
         yield put(fetchMedicineClasstifyManagerFail(fetchData.status));
@@ -66,7 +64,6 @@ function* updateClassifyManagerSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Lỗi update: ${errorMessage}`);
     yield put(putManagerClassifyFail(errorMessage));
-    console.error("Lỗi update::", error);
   }
 }
 

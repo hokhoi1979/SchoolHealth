@@ -73,7 +73,6 @@ function* managerCreateMedicineSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Create Medicine Fail: ${errorMessage}`);
     yield put(postMangerFailMedicine(errorMessage));
-    console.error("Create Medicine Error:", error);
   }
 }
 

@@ -60,7 +60,7 @@ function MaterialManage() {
     }));
 
     setStore(format);
-    console.log("List", store);
+    // console.log("List", store);
   }, [medicineClasstifyManager]);
 
   const { medicineSupplyManager = [] } = useSelector(
@@ -805,7 +805,7 @@ function MaterialManage() {
                               page: 1,
                               limit: 100,
                               onSuccess: (id) => {
-                                console.log("===> onSuccess with id:", id);
+                                // console.log("===> onSuccess with id:", id);
                                 classifyIDToUse = id;
                                 resolve();
                               },
@@ -853,7 +853,6 @@ function MaterialManage() {
                       resetForm();
                       setOpen(false);
                     } catch (err) {
-                      console.error("Lỗi khi tạo thuốc:", err);
                       toast.error(
                         "Không thể tạo thuốc. Vui lòng kiểm tra lại!"
                       );

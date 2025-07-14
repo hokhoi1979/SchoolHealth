@@ -102,10 +102,8 @@ function ImportManager() {
   };
 
   const showModal = (category) => {
-    console.log("===> showModal: category = ", category);
     if (!category?.id) {
-      console.error("🚨 Category ID is missing! Cannot fetch detail");
-      return; // Chặn luôn, tránh gọi BEs
+      return;
     }
 
     setSelectedCategory(category);
@@ -130,7 +128,7 @@ function ImportManager() {
 
   const handleUpdate = async () => {
     if (!selectedMedicine || !selectedMedicine?.id) {
-      console.error("No medicine selected! Cannot update.");
+      toast.error("No medicine selected! Cannot update.");
       return;
     }
 
@@ -162,7 +160,6 @@ function ImportManager() {
         return;
       }
     } else {
-      // ✅ Ưu tiên classify mới chọn từ dropdown nếu có
       classifyIDToUse = selectedClassifyID || selectedMedicine.classifyID || "";
     }
 
@@ -175,7 +172,7 @@ function ImportManager() {
     formData.append("classifyID", classifyIDToUse);
 
     if (imageFile) {
-      formData.append("image", imageFile); // dùng file thật để gửi
+      formData.append("image", imageFile);
     }
 
     dispatch(
@@ -185,10 +182,10 @@ function ImportManager() {
       })
     );
 
-    console.log("Updating medicine with formData:");
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": ", pair[1]);
-    }
+    // console.log("Updating medicine with formData:");
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0] + ": ", pair[1]);
+    // }
 
     setSelectedMedicine(null);
     setSelectedClassifyID(null);
@@ -319,7 +316,6 @@ function ImportManager() {
             cancelText="No"
             okType="danger"
             onConfirm={() => {
-              console.log("Deleting medicine ID:", record.id);
               dispatch(deleteMedicineManager({ id: record.id }));
               setIsModalVisible(false);
             }}

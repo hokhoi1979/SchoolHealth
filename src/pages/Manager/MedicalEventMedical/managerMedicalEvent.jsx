@@ -31,7 +31,6 @@ const MedicalEventList = () => {
       severity: item.severity,
       raw: item,
     }));
-    console.log(formatted);
     setData(formatted);
   }, [managerMedicalEvent]);
 
@@ -42,7 +41,6 @@ const MedicalEventList = () => {
   const detail = useSelector((state) => state.getManagerMedicalEventDetail);
 
   const handleViewDetail = (item) => {
-    console.log(item?.id);
     dispatch(fetchManagerMedicalEventDetail(item.id));
     setSelectedItem(item.raw);
     setShowModal(true);
@@ -67,7 +65,7 @@ const MedicalEventList = () => {
 
   useEffect(() => {
     if (selectedItem) {
-      console.log("Updated selectedItem", selectedItem);
+      // console.log("Updated selectedItem", selectedItem);
     }
   }, [selectedItem]);
   return (

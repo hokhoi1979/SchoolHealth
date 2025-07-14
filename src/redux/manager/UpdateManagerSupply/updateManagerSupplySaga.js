@@ -69,7 +69,6 @@ function* updateManagerSupplySaga(action) {
     const errMsg =
       error?.response?.data?.message || error.message || "Unknown error";
     yield put(putManagerFailSupply(errMsg));
-    console.log(error);
   }
 }
 

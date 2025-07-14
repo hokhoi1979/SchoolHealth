@@ -33,7 +33,6 @@ function* managerClasstifySaga(action) {
     if (response.status === 200 || response.status === 201) {
       const createdData = response.data;
       const newId = response?.data?.data?.id;
-      console.log("DUCC CLASSTIFY", response.data);
       yield put(postManagerSuccessClasstify(response.data));
       if (onSuccess && typeof onSuccess === "function") {
         yield call(onSuccess, newId); // GỌI CALLBACK VỚI ID
@@ -52,8 +51,6 @@ function* managerClasstifySaga(action) {
       );
 
       if (fetchData.status === 200 || fetchData.status === 201) {
-        console.log("DUCC", fetchData.data);
-
         yield put(fetchMedicineClasstifyManagerSucess(fetchData.data));
         toast.success("Create Success Classify");
       } else {
@@ -68,7 +65,6 @@ function* managerClasstifySaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Create Classify Fail: ${errorMessage}`);
     yield put(postManagerFailClasstify(errorMessage));
-    console.error("Create Classify Error:", error);
   }
 }
 

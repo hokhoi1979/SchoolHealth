@@ -35,7 +35,6 @@ function* managerDeleteMedicineClassifySaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DELETE SUCCESS:", response.data);
       yield put(deleteManagerMedicineClassifySuccess(response.data));
 
       const { page, limit = 100 } = action.payload || {};
@@ -52,8 +51,6 @@ function* managerDeleteMedicineClassifySaga(action) {
       );
 
       if (fetchData.status === 200 || fetchData.status === 201) {
-        console.log("DUCC", response.data);
-
         yield put(fetchMedicineClasstifyManagerSucess(fetchData.data));
         toast.success("Delete Success Classify");
       } else {
@@ -67,7 +64,6 @@ function* managerDeleteMedicineClassifySaga(action) {
     }
   } catch (error) {
     yield put(deleteManagerMedicineClassifyFail(`API ERROR: ${error}`));
-    console.log(error);
   }
 }
 
