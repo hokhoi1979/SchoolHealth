@@ -73,84 +73,91 @@ const MedicalEventList = () => {
       <h1 className="text-xl font-inria font-medium mb-4 p-10">
         <CommonBreadcrumb role={"Manager"} page={"Event"} />
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 font-kameron">
-        {data.map((item) => (
-          <div
-            key={item.id}
-            className="relative bg-white  bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec]  border border-gray-200    shadow-md rounded-2xl p-5 h-full min-h-[370px] max-w-[420px] hover:shadow-lg transition"
-          >
-            {/* Tiêu đề */}
-            <h2 className="text-2xl font-bold mb-4 text-black text-center">
-              Medical Event
-            </h2>
+      <div className="flex flex-col min-h-screen">
+        <main className="flex-1 px-6 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 font-kameron">
+            {data.map((item) => (
+              <div
+                key={item.id}
+                className="relative bg-white  bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec]  border border-gray-200    shadow-md rounded-2xl p-5 h-full min-h-[370px] max-w-[420px] hover:shadow-lg transition"
+              >
+                {/* Tiêu đề */}
+                <h2 className="text-2xl font-bold mb-4 text-black text-center">
+                  Medical Event
+                </h2>
 
-            {/* Nội dung chi tiết */}
-            <div className="mb-3 flex gap-2 text-[17px]">
-              <p className="font-semibold">ID:</p>
-              <p>{item.id}</p>
-            </div>
-            <div className="mb-3 flex gap-2 text-[17px]">
-              <p className="font-semibold">Type:</p>
-              <p>{item.type}</p>
-            </div>
-            <div className="mb-3 flex gap-2 text-[17px]">
-              <p className="font-semibold">Occurred At:</p>
-              <p>{dayjs(item.occurredAt).format("DD/MM/YYYY HH:mm:ss")}</p>
-            </div>
-            <div className="mb-3 text-[17px]">
-              <p className="font-semibold">Status:</p>
-              <p
-                className={`  font-bold ${
-                  item.status === "PENDING"
-                    ? "text-blue-400"
-                    : item.status === "PROCESSING"
-                    ? "text-yellow-500"
-                    : "text-green-400"
-                }`}
-              >
-                {item.status}
-              </p>
-            </div>
-            <div className="mb-3 text-[17px]">
-              <p className="font-semibold">Severity:</p>
-              <p
-                className={`${
-                  item.severity === "HOSPITAL" ? "text-red-500" : "text-black"
-                }`}
-              >
-                {item.severity}
-              </p>
-            </div>
+                {/* Nội dung chi tiết */}
+                <div className="mb-3 flex gap-2 text-[17px]">
+                  <p className="font-semibold">ID:</p>
+                  <p>{item.id}</p>
+                </div>
+                <div className="mb-3 flex gap-2 text-[17px]">
+                  <p className="font-semibold">Type:</p>
+                  <p>{item.type}</p>
+                </div>
+                <div className="mb-3 flex gap-2 text-[17px]">
+                  <p className="font-semibold">Occurred At:</p>
+                  <p>{dayjs(item.occurredAt).format("DD/MM/YYYY HH:mm:ss")}</p>
+                </div>
+                <div className="mb-3 text-[17px]">
+                  <p className="font-semibold">Status:</p>
+                  <p
+                    className={`  font-bold ${
+                      item.status === "PENDING"
+                        ? "text-blue-400"
+                        : item.status === "PROCESSING"
+                        ? "text-yellow-500"
+                        : "text-green-400"
+                    }`}
+                  >
+                    {item.status}
+                  </p>
+                </div>
+                <div className="mb-3 text-[17px]">
+                  <p className="font-semibold">Severity:</p>
+                  <p
+                    className={`${
+                      item.severity === "HOSPITAL"
+                        ? "text-red-500"
+                        : "text-black"
+                    }`}
+                  >
+                    {item.severity}
+                  </p>
+                </div>
 
-            {/* Nút icon xem chi tiết */}
-            <button
-              className="absolute top-4 right-4 text-gray-600 hover:text-blue-600"
-              onClick={() => handleViewDetail(item)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="26"
-                height="26"
-                viewBox="0 0 24 24"
-              >
-                <g
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
+                {/* Nút icon xem chi tiết */}
+                <button
+                  className="absolute top-4 right-4 text-gray-600 hover:text-blue-600"
+                  onClick={() => handleViewDetail(item)}
                 >
-                  <path d="M21.544 11.045c.304.426.456.64.456.955 0 .316-.152.529-.456.955C20.178 14.871 16.689 19 12 19c-4.69 0-8.178-4.13-9.544-6.045C2.152 12.529 2 12.315 2 12c0-.316.152-.529.456-.955C3.822 9.129 7.311 5 12 5c4.69 0 8.178 4.13 9.544 6.045" />
-                  <path d="M15 12a3 3 0 1 0-6 0 3 3 0 0 0 6 0" />
-                </g>
-              </svg>
-            </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="26"
+                    height="26"
+                    viewBox="0 0 24 24"
+                  >
+                    <g
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    >
+                      <path d="M21.544 11.045c.304.426.456.64.456.955 0 .316-.152.529-.456.955C20.178 14.871 16.689 19 12 19c-4.69 0-8.178-4.13-9.544-6.045C2.152 12.529 2 12.315 2 12c0-.316.152-.529.456-.955C3.822 9.129 7.311 5 12 5c4.69 0 8.178 4.13 9.544 6.045" />
+                      <path d="M15 12a3 3 0 1 0-6 0 3 3 0 0 0 6 0" />
+                    </g>
+                  </svg>
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
+        </main>
+
+        <div className="w-full h-30 mt-10"></div>
+        <AppFooter />
       </div>
 
-      <div className="w-full h-30 mt-13"></div>
-      <AppFooter />
       {/* Modal Detail */}
       <Modal
         open={showModal}

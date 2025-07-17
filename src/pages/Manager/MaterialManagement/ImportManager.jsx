@@ -266,6 +266,7 @@ function ImportManager() {
       dataIndex: "stock",
       key: "stock",
       align: "center",
+      width: 300,
     },
     {
       title: "Type",

@@ -489,296 +489,306 @@ function MedicalCheckup() {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-3 mt-5 pl-5 gap-6 items-stretch">
-        {data.map((item) => {
-          const percentage =
-            Number(item.totalStudent) > 0
-              ? Math.round(
-                  (Number(item.participate) / Number(item.totalStudent)) * 100
-                )
-              : 0;
+      <div className="flex flex-col min-h-screen">
+        <main className="flex-1">
+          <div className="grid grid-cols-3 mt-5 pl-5 gap-6 items-stretch">
+            {data.map((item) => {
+              const percentage =
+                Number(item.totalStudent) > 0
+                  ? Math.round(
+                      (Number(item.participate) / Number(item.totalStudent)) *
+                        100
+                    )
+                  : 0;
 
-          return (
-            <div
-              key={item.id}
-              className="flex flex-col justify-between h-[370px] bg-white bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec] rounded-2xl border border-gray-200 shadow-md hover:shadow-lg p-5 transition-all duration-300"
-            >
-              {/* TOP: Trạng thái + icon */}
-              <div className="flex justify-between">
-                <Button
-                  className={`!text-white ${
-                    item.status === "SUCCESSED"
-                      ? "!bg-[#6CC76F]"
-                      : item.status === "CONFIRMED"
-                      ? "!bg-[#62d49f]"
-                      : "!bg-[#CBD361]"
-                  }`}
+              return (
+                <div
+                  key={item.id}
+                  className="flex flex-col justify-between h-[370px] bg-white bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec] rounded-2xl border border-gray-200 shadow-md hover:shadow-lg p-5 transition-all duration-300"
                 >
-                  {item.status}
-                </Button>
-
-                <div className="flex gap-2">
-                  <Tooltip title="Xem chi tiết">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={25}
-                      height={25}
-                      viewBox="0 0 24 24"
-                      onClick={() => handleViewMore(item)}
-                      className="cursor-pointer"
+                  {/* TOP: Trạng thái + icon */}
+                  <div className="flex justify-between">
+                    <Button
+                      className={`!text-white ${
+                        item.status === "SUCCESSED"
+                          ? "!bg-[#6CC76F]"
+                          : item.status === "CONFIRMED"
+                          ? "!bg-[#62d49f]"
+                          : "!bg-[#CBD361]"
+                      }`}
                     >
-                      <path
-                        fill="gray"
-                        d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
-                      ></path>
-                    </svg>
-                  </Tooltip>
+                      {item.status}
+                    </Button>
 
-                  <Tooltip title="Send To Parent">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={25}
-                      height={25}
-                      viewBox="0 0 24 24"
-                      fill="gray"
-                      onClick={() => handleViewConfirm(item)}
-                      className="cursor-pointer"
-                    >
-                      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
-                    </svg>
-                  </Tooltip>
-                </div>
-              </div>
+                    <div className="flex gap-2">
+                      <Tooltip title="Xem chi tiết">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={25}
+                          height={25}
+                          viewBox="0 0 24 24"
+                          onClick={() => handleViewMore(item)}
+                          className="cursor-pointer"
+                        >
+                          <path
+                            fill="gray"
+                            d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"
+                          ></path>
+                        </svg>
+                      </Tooltip>
 
-              <div className="flex-grow">
-                <h1 className="mt-2 text-2xl font-semibold">{item.title}</h1>
-                {(item?.targets ?? []).length === 0 ? (
-                  <span>SCHOOL</span>
-                ) : (
-                  <span>
-                    {item.targets
-                      .map((target) =>
-                        target.className
-                          ? target.className
-                          : target.grade !== undefined
-                          ? ` ${target.grade}`
-                          : target.name ?? "?"
-                      )
-                      .join(", ")}
-                  </span>
-                )}
-                <div className="flex gap-2.5 mt-3 ">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <mask id="lineMdFileDocumentMinus0">
-                      <g
-                        fill="none"
-                        stroke="#fff"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                      <Tooltip title="Send To Parent">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={25}
+                          height={25}
+                          viewBox="0 0 24 24"
+                          fill="gray"
+                          onClick={() => handleViewConfirm(item)}
+                          className="cursor-pointer"
+                        >
+                          <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
+                        </svg>
+                      </Tooltip>
+                    </div>
+                  </div>
+
+                  <div className="flex-grow">
+                    <h1 className="mt-2 text-2xl font-semibold">
+                      {item.title}
+                    </h1>
+                    {(item?.targets ?? []).length === 0 ? (
+                      <span>SCHOOL</span>
+                    ) : (
+                      <span>
+                        {item.targets
+                          .map((target) =>
+                            target.className
+                              ? target.className
+                              : target.grade !== undefined
+                              ? ` ${target.grade}`
+                              : target.name ?? "?"
+                          )
+                          .join(", ")}
+                      </span>
+                    )}
+                    <div className="flex gap-2.5 mt-3 ">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
                       >
-                        <path
-                          stroke-dasharray="64"
-                          stroke-dashoffset="64"
-                          d="M13.5 3l5.5 5.5v11.5c0 0.55 -0.45 1 -1 1h-12c-0.55 0 -1 -0.45 -1 -1v-16c0 -0.55 0.45 -1 1 -1Z"
-                        >
-                          <animate
-                            fill="freeze"
-                            attributeName="stroke-dashoffset"
-                            dur="0.6s"
-                            values="64;0"
-                          />
-                        </path>
-                        <path d="M14.5 3.5l2.25 2.25l2.25 2.25z" opacity="0">
-                          <animate
-                            fill="freeze"
-                            attributeName="d"
-                            begin="0.6s"
-                            dur="0.2s"
-                            values="M14.5 3.5l2.25 2.25l2.25 2.25z;M14.5 3.5l0 4.5l4.5 0z"
-                          />
-                          <set
-                            fill="freeze"
-                            attributeName="opacity"
-                            begin="0.6s"
-                            to="1"
-                          />
-                        </path>
-                        <path
-                          stroke-dasharray="8"
-                          stroke-dashoffset="8"
-                          d="M9 13h6"
-                        >
-                          <animate
-                            fill="freeze"
-                            attributeName="stroke-dashoffset"
-                            begin="0.8s"
-                            dur="0.2s"
-                            values="8;0"
-                          />
-                        </path>
-                        <path
-                          stroke-dasharray="4"
-                          stroke-dashoffset="4"
-                          d="M9 17h3"
-                        >
-                          <animate
-                            fill="freeze"
-                            attributeName="stroke-dashoffset"
-                            begin="1s"
-                            dur="0.2s"
-                            values="4;0"
-                          />
-                        </path>
-                        <path
-                          fill="#000"
-                          fill-opacity="0"
-                          stroke="none"
-                          d="M19 13c3.31 0 6 2.69 6 6c0 3.31 -2.69 6 -6 6c-3.31 0 -6 -2.69 -6 -6c0 -3.31 2.69 -6 6 -6Z"
-                        >
-                          <set
-                            fill="freeze"
-                            attributeName="fill-opacity"
-                            begin="1.2s"
-                            to="1"
-                          />
-                        </path>
-                        <path
-                          stroke-dasharray="8"
-                          stroke-dashoffset="8"
-                          d="M16 19h6"
-                        >
-                          <animate
-                            fill="freeze"
-                            attributeName="stroke-dashoffset"
-                            begin="1.2s"
-                            dur="0.2s"
-                            values="8;0"
-                          />
-                        </path>
-                      </g>
-                    </mask>
-                    <rect
-                      width="24"
-                      height="24"
-                      fill="currentColor"
-                      mask="url(#lineMdFileDocumentMinus0)"
-                    />
-                  </svg>
-                  <p>{item.description}</p>
-                </div>
-                <div className="flex gap-2.5 mt-3">
-                  <CalendarIcon />
-                  <p>{item.date || "Chưa có ngày"}</p>
-                </div>
+                        <mask id="lineMdFileDocumentMinus0">
+                          <g
+                            fill="none"
+                            stroke="#fff"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                          >
+                            <path
+                              stroke-dasharray="64"
+                              stroke-dashoffset="64"
+                              d="M13.5 3l5.5 5.5v11.5c0 0.55 -0.45 1 -1 1h-12c-0.55 0 -1 -0.45 -1 -1v-16c0 -0.55 0.45 -1 1 -1Z"
+                            >
+                              <animate
+                                fill="freeze"
+                                attributeName="stroke-dashoffset"
+                                dur="0.6s"
+                                values="64;0"
+                              />
+                            </path>
+                            <path
+                              d="M14.5 3.5l2.25 2.25l2.25 2.25z"
+                              opacity="0"
+                            >
+                              <animate
+                                fill="freeze"
+                                attributeName="d"
+                                begin="0.6s"
+                                dur="0.2s"
+                                values="M14.5 3.5l2.25 2.25l2.25 2.25z;M14.5 3.5l0 4.5l4.5 0z"
+                              />
+                              <set
+                                fill="freeze"
+                                attributeName="opacity"
+                                begin="0.6s"
+                                to="1"
+                              />
+                            </path>
+                            <path
+                              stroke-dasharray="8"
+                              stroke-dashoffset="8"
+                              d="M9 13h6"
+                            >
+                              <animate
+                                fill="freeze"
+                                attributeName="stroke-dashoffset"
+                                begin="0.8s"
+                                dur="0.2s"
+                                values="8;0"
+                              />
+                            </path>
+                            <path
+                              stroke-dasharray="4"
+                              stroke-dashoffset="4"
+                              d="M9 17h3"
+                            >
+                              <animate
+                                fill="freeze"
+                                attributeName="stroke-dashoffset"
+                                begin="1s"
+                                dur="0.2s"
+                                values="4;0"
+                              />
+                            </path>
+                            <path
+                              fill="#000"
+                              fill-opacity="0"
+                              stroke="none"
+                              d="M19 13c3.31 0 6 2.69 6 6c0 3.31 -2.69 6 -6 6c-3.31 0 -6 -2.69 -6 -6c0 -3.31 2.69 -6 6 -6Z"
+                            >
+                              <set
+                                fill="freeze"
+                                attributeName="fill-opacity"
+                                begin="1.2s"
+                                to="1"
+                              />
+                            </path>
+                            <path
+                              stroke-dasharray="8"
+                              stroke-dashoffset="8"
+                              d="M16 19h6"
+                            >
+                              <animate
+                                fill="freeze"
+                                attributeName="stroke-dashoffset"
+                                begin="1.2s"
+                                dur="0.2s"
+                                values="8;0"
+                              />
+                            </path>
+                          </g>
+                        </mask>
+                        <rect
+                          width="24"
+                          height="24"
+                          fill="currentColor"
+                          mask="url(#lineMdFileDocumentMinus0)"
+                        />
+                      </svg>
+                      <p>{item.description}</p>
+                    </div>
+                    <div className="flex gap-2.5 mt-3">
+                      <CalendarIcon />
+                      <p>{item.date || "Chưa có ngày"}</p>
+                    </div>
 
-                {/* <div className="flex gap-2.5 mt-3">
+                    {/* <div className="flex gap-2.5 mt-3">
                   <ClockIcon />
                   <p>{item.time || "Chưa có giờ"}</p>
                 </div> */}
-                <div className="flex gap-2.5 mt-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="none"
-                      stroke="#5B5454"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="m17 3l4 4m-2-2l-4.5 4.5m-3-3l6 6m-1-1L10 18H6v-4l6.5-6.5m-5 5L9 14m1.5-4.5L12 11M3 21l3-3"
-                    />
-                  </svg>
-                  <p>School</p>
-                </div>
-              </div>
-
-              <div className="mt-3">
-                {item?.status !== "DRAFT" && (
-                  <div>
-                    <div className="flex justify-between mb-1 text-sm text-gray-600">
-                      <span>Confirm Participate</span>
-                      <span>
-                        {item.participate ?? 0}/{item.totalStudent ?? 0}
-                      </span>
-                    </div>
-
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-3">
-                      <div
-                        className="bg-teal-500 h-2.5 rounded-full"
-                        style={{
-                          width: `${
-                            item.totalStudent && item.totalStudent > 0
-                              ? (
-                                  (item.participate / item.totalStudent) *
-                                  100
-                                ).toFixed(0)
-                              : 0
-                          }%`,
-                        }}
-                      ></div>
-                    </div>
-
-                    <div className="text-right text-sm text-gray-500 mt-1">
-                      {item.totalStudent && item.totalStudent > 0
-                        ? Math.round(
-                            (item.participate / item.totalStudent) * 100
-                          )
-                        : 0}
-                      %
+                    <div className="flex gap-2.5 mt-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="none"
+                          stroke="#5B5454"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="m17 3l4 4m-2-2l-4.5 4.5m-3-3l6 6m-1-1L10 18H6v-4l6.5-6.5m-5 5L9 14m1.5-4.5L12 11M3 21l3-3"
+                        />
+                      </svg>
+                      <p>School</p>
                     </div>
                   </div>
-                )}
-              </div>
 
-              <div className="space-y-3 ">
-                <div className="flex gap-2.5 ">
-                  {item.status == "DRAFT" && (
-                    <>
-                      <Button
-                        className="w-full"
-                        onClick={() => handleUpdateCheckup(item)}
-                      >
-                        Update
-                      </Button>
-                      <Popconfirm
-                        title="Are you sure you want to delete this medical checkup?"
-                        onConfirm={() => handleDeleteCheckup(item.id)}
-                        okText="Delete"
-                        cancelText="Cancel"
-                      >
-                        <Button danger>Delete</Button>
-                      </Popconfirm>
-                    </>
-                  )}
-                  <div className="w-full  ">
-                    {item.status !== "SUCCESSED" && (
-                      <Popconfirm
-                        title="Are you sure you want to end this medical checkup?"
-                        onConfirm={() => handleEndCheckup(item?.id)}
-                        okText="Confirm"
-                        cancelText="Cancel"
-                      >
-                        <Button className="w-full">End Event</Button>
-                      </Popconfirm>
+                  <div className="mt-3">
+                    {item?.status !== "DRAFT" && (
+                      <div>
+                        <div className="flex justify-between mb-1 text-sm text-gray-600">
+                          <span>Confirm Participate</span>
+                          <span>
+                            {item.participate ?? 0}/{item.totalStudent ?? 0}
+                          </span>
+                        </div>
+
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-3">
+                          <div
+                            className="bg-teal-500 h-2.5 rounded-full"
+                            style={{
+                              width: `${
+                                item.totalStudent && item.totalStudent > 0
+                                  ? (
+                                      (item.participate / item.totalStudent) *
+                                      100
+                                    ).toFixed(0)
+                                  : 0
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+
+                        <div className="text-right text-sm text-gray-500 mt-1">
+                          {item.totalStudent && item.totalStudent > 0
+                            ? Math.round(
+                                (item.participate / item.totalStudent) * 100
+                              )
+                            : 0}
+                          %
+                        </div>
+                      </div>
                     )}
                   </div>
+
+                  <div className="space-y-3 ">
+                    <div className="flex gap-2.5 ">
+                      {item.status == "DRAFT" && (
+                        <>
+                          <Button
+                            className="w-full"
+                            onClick={() => handleUpdateCheckup(item)}
+                          >
+                            Update
+                          </Button>
+                          <Popconfirm
+                            title="Are you sure you want to delete this medical checkup?"
+                            onConfirm={() => handleDeleteCheckup(item.id)}
+                            okText="Delete"
+                            cancelText="Cancel"
+                          >
+                            <Button danger>Delete</Button>
+                          </Popconfirm>
+                        </>
+                      )}
+                      <div className="w-full  ">
+                        {item.status !== "SUCCESSED" && (
+                          <Popconfirm
+                            title="Are you sure you want to end this medical checkup?"
+                            onConfirm={() => handleEndCheckup(item?.id)}
+                            okText="Confirm"
+                            cancelText="Cancel"
+                          >
+                            <Button className="w-full">End Event</Button>
+                          </Popconfirm>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        </main>
+        <div className="mt-20"></div>
+        <AppFooter />
       </div>
-      <div className="w-full h-30"></div>
-      <AppFooter />
       {/* Modal */}
       <Modal
         open={open}
