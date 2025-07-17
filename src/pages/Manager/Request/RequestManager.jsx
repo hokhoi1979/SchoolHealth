@@ -33,7 +33,7 @@ function RequestManager() {
       note: item?.note,
       status: item?.status,
       createdAt: item?.createdAt
-        ? dayjs(item.createdAt).format("DD/MM/YYYY")
+        ? dayjs(item.createdAt, "DD-MM-YYYY").format("DD/MM/YYYY")
         : "Chưa xác định",
       createdBy: item?.createdBy,
     }));
@@ -85,7 +85,7 @@ function RequestManager() {
         <h1 className="text-xl font-inria font-medium  p-10">
           <CommonBreadcrumb role={"Manager"} page={"request"} />
         </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 w-[700] px-5 font-kameron">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 w-full max-w-screen-xl px-5 font-kameron mx-auto">
           {data.map((item) => (
             <div
               key={item.id}
@@ -122,7 +122,7 @@ function RequestManager() {
                 <div>
                   <p className="font-semibold text-gray-600">Created At:</p>
                   <p className="text-gray-800">
-                    {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                    {item?.createdAt || "don not"}
                   </p>
                 </div>
                 <div>
