@@ -24,7 +24,7 @@ const initialState = {
   error: null,
 };
 
-const studentCheckupReducer = (state = initialState, action) => {
+const CheckupDetailReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH__STUDENT__CHECKUP:
       return { ...state, loading: true, error: null };
@@ -37,4 +37,4 @@ const studentCheckupReducer = (state = initialState, action) => {
   }
 };
 
-export default studentCheckupReducer;
+export default CheckupDetailReducer;

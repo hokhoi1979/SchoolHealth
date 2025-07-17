@@ -25,7 +25,6 @@ function* vaccineSaga() {
 
     if (response.status === 200 || response.status === 201) {
       yield put(fetchVaccineSuccess(response.data));
-      console.log("RESPONSE", response.data);
     } else {
       yield put(fetchVaccineFail(`API Error: ${response.status}`));
     }

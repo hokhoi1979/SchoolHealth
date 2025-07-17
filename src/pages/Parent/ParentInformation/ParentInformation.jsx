@@ -55,7 +55,7 @@ const ParentInformation = () => {
     // Delay reload
     setTimeout(() => {
       dispatch(fetchGetProfile());
-    }, 1000);
+    }, 500);
   };
 
   if (loading) {
@@ -145,7 +145,7 @@ const ParentInformation = () => {
                 setIsModalVisible(true);
               }}
             >
-              Update Info
+              Update Information
             </Button>
           </div>
         </div>

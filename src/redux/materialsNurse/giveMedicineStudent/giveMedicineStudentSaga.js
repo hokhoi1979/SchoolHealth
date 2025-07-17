@@ -47,7 +47,6 @@ function* giveMedicineStudentSaga(action) {
       } else {
         yield put(fetchMedicineScheduleFail(fetch.status));
       }
-      console.log("GIVE MEDICINE", response.data);
     } else {
       yield put(giveMedicineStudentFail(response.status));
     }

@@ -144,8 +144,6 @@ const MedicineSchedule = () => {
                 onClick={() => {
                   setSelect(record);
                   setOpen(true);
-
-                  console.log("RECORD:", record);
                 }}
               >
                 <path
@@ -219,7 +217,6 @@ const MedicineSchedule = () => {
                 viewBox="0 0 24 24"
                 onClick={() => {
                   setSelect(record);
-                  console.log("RECORD", record);
                   setOpenStock(true);
                 }}
               >

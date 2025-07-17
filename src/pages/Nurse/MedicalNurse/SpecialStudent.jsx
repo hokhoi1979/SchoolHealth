@@ -44,7 +44,6 @@ function SpecialStudent() {
       reason,
     };
 
-    console.log("POST payload", payload);
     dispatch(createMeeting(payload));
     setReason("");
     setSchedule("");
@@ -205,8 +204,6 @@ function SpecialStudent() {
               viewBox="0 0 24 24"
               style={{ cursor: "pointer" }}
               onClick={() => {
-                console.log(record);
-
                 handleDeleteStudent(record);
               }}
             >

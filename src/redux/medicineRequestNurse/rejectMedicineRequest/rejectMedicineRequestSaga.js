@@ -31,7 +31,6 @@ function* rejectMedicineRequestSaga(action) {
     if (response.status === 200 || response.status === 201) {
       yield put(rejectMedicineRequestSuccess(response.data));
       toast.success("Reject successful!");
-      console.log("REJECT", response.data);
       const reject = yield call(
         axios.get,
         `${URL_API}/nurse/v1/medicineRequest`,

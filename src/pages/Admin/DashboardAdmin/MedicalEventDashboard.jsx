@@ -43,6 +43,30 @@ const MedicalEventDashboard = () => {
   const eventBySeverity = data?.eventBySeverity || [];
   const eventTimeline = data?.eventTimeline || [];
 
+  const eventTimelineTotal = eventTimeline.reduce(
+    (total, item) => total + (item.count || 0),
+    0
+  );
+
+  const summaryCards = [
+    {
+      title: "Tổng sự kiện y tế",
+      value: data?.summary?.eventsTotal || 0,
+    },
+    {
+      title: "Phân loại sự kiện",
+      value: eventByType.length,
+    },
+    {
+      title: "Mức độ nghiêm trọng",
+      value: eventBySeverity.length,
+    },
+    {
+      title: "Sự kiện theo thời gian",
+      value: eventTimelineTotal,
+    },
+  ];
+
   const summaryData = [
     {
       name: "Hôm nay",
@@ -60,8 +84,21 @@ const MedicalEventDashboard = () => {
 
   return (
     <Spin spinning={loading}>
+      {/* 4 ô vuông thống kê */}
+      <Row gutter={[16, 16]} className="px-4 pt-4">
+        {summaryCards.map((item, index) => (
+          <Col xs={24} sm={12} md={6} key={index}>
+            <Card className="rounded-2xl shadow h-full" bordered={false}>
+              <div className="text-base text-gray-500">{item.title}</div>
+              <div className="text-2xl font-semibold mt-2">{item.value}</div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+
+      {/* Biểu đồ phân tích */}
       <Row gutter={[16, 16]} className="p-4">
-        {/* Tổng quan */}
+        {/* Tổng quan sự kiện y tế */}
         <Col xs={24} md={12}>
           <div className="bg-white rounded-2xl shadow p-4 h-full">
             <Card title="Tổng quan sự kiện y tế" bordered={false}>
@@ -151,7 +188,7 @@ const MedicalEventDashboard = () => {
           </div>
         </Col>
 
-        {/* Biểu đồ cột theo thời gian */}
+        {/* Sự kiện theo thời gian */}
         <Col xs={24} md={12}>
           <div className="bg-white rounded-2xl shadow p-4 h-full">
             <Card title="Sự kiện theo thời gian" bordered={false}>

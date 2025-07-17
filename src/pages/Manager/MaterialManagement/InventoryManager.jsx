@@ -239,6 +239,18 @@ function InventoryManager() {
         return;
       }
 
+      // const excepting = supply;
+      // const double = excepting.some(
+      //   (item) =>
+      //     item.name.trim().toLowerCase() ===
+      //     selectedRecord.name.trim().toLowerCase()
+      // );
+
+      // if (double) {
+      //   alert("jjj");
+      //   return;
+      // }
+
       dispatch(
         putManagerSupply({
           id: selectedRecord.id,
