@@ -102,6 +102,7 @@ function InventoryManager() {
       dataIndex: "description",
       key: "description",
       align: "center",
+      render: (text) => <div style={{ width: 100 }}>{text}</div>,
     },
     {
       title: "Usage",

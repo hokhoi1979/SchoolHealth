@@ -57,6 +57,7 @@ function* managerVaccineSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
 
     yield put(postMangerFailVaccine(errorMessage));
+    toast.error(errorMessage);
   }
 }
 function* watchPostManagerVaccine() {

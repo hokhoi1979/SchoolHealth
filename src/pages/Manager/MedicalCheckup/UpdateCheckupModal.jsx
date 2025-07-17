@@ -132,8 +132,6 @@ const UpdateCheckupModal = ({
       description: checkupDescription,
     };
 
-    // console.log("Payload being sent:", payload);
-
     try {
       dispatch(
         putManagerMedicalCheckup({

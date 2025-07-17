@@ -85,127 +85,133 @@ function RequestManager() {
         <h1 className="text-xl font-inria font-medium  p-10">
           <CommonBreadcrumb role={"Manager"} page={"request"} />
         </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 w-full max-w-screen-xl px-5 font-kameron mx-auto">
-          {data.map((item) => (
-            <div
-              key={item.id}
-              className="h-[350px] bg-white bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec] rounded-2xl border border-gray-200 shadow-md hover:shadow-lg p-5 relative flex flex-col justify-between transition-all duration-300"
-            >
-              {/* Ảnh */}
-              <div className="w-full flex justify-center items-center mb-4">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 rotate-[12deg] shadow-lg flex items-center justify-center">
-                  <Package className="text-white w-8 h-8 -rotate-[12deg]" />
-                </div>
-              </div>
-
-              {/* Thông tin */}
-              <div className="grid grid-cols-2 gap-x-20 text-[17px] text-gray-800 leading-relaxed">
-                <div>
-                  <p className="font-semibold text-gray-600">Note:</p>
-                  <p>{item.note}</p>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-600">Status:</p>
-                  <p
-                    className={`capitalize text-sm font-bold ${
-                      item.status === "REJECTED"
-                        ? "text-red-500"
-                        : item.status === "APPROVED"
-                        ? "text-green-600"
-                        : "text-yellow-600"
-                    }`}
-                  >
-                    {item.status}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-semibold text-gray-600">Created At:</p>
-                  <p className="text-gray-800">
-                    {item?.createdAt || "don not"}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-600">Created By:</p>
-                  <p>{item.createdBy}</p>
-                </div>
-              </div>
-
-              {/* Icon xem chi tiết */}
-              <div
-                className="absolute right-3 top-3 cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => {
-                  handleViewDetail(item?.id);
-                  setShowModal(true);
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
+        <div className="flex flex-col min-h-screen">
+          {/* MAIN content occupies full height */}
+          <main className="flex-1 mt-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 w-full max-w-screen-xl px-5 font-kameron mx-auto">
+              {data.map((item) => (
+                <div
+                  key={item.id}
+                  className="h-[350px] bg-white bg-gradient-to-br from-[#e0f7fa] via-white to-[#fce4ec] rounded-2xl border border-gray-200 shadow-md hover:shadow-lg p-5 relative flex flex-col justify-between transition-all duration-300"
                 >
-                  <g
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  >
-                    <path d="M21.544 11.045c.304.426.456.64.456.955c0 .316-.152.529-.456.955C20.178 14.871 16.689 19 12 19c-4.69 0-8.178-4.13-9.544-6.045C2.152 12.529 2 12.315 2 12c0-.316.152-.529.456-.955C3.822 9.129 7.311 5 12 5c4.69 0 8.178 4.13 9.544 6.045" />
-                    <path d="M15 12a3 3 0 1 0-6 0a3 3 0 0 0 6 0" />
-                  </g>
-                </svg>
-              </div>
+                  {/* Ảnh */}
+                  <div className="w-full flex justify-center items-center mb-4">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 rotate-[12deg] shadow-lg flex items-center justify-center">
+                      <Package className="text-white w-8 h-8 -rotate-[12deg]" />
+                    </div>
+                  </div>
 
-              {/* Nút action */}
-              <div className="mt-5 flex gap-4">
-                {item.status !== "REJECTED" && (
-                  <button
-                    className={`flex-1 py-2 rounded-full text-white font-semibold tracking-wide shadow-md transition-all duration-300
+                  {/* Thông tin */}
+                  <div className="grid grid-cols-2 gap-x-20 text-[17px] text-gray-800 leading-relaxed">
+                    <div>
+                      <p className="font-semibold text-gray-600">Note:</p>
+                      <p>{item.note}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-600">Status:</p>
+                      <p
+                        className={`capitalize text-sm font-bold ${
+                          item.status === "REJECTED"
+                            ? "text-red-500"
+                            : item.status === "APPROVED"
+                            ? "text-green-600"
+                            : "text-yellow-600"
+                        }`}
+                      >
+                        {item.status}
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold text-gray-600">Created At:</p>
+                      <p className="text-gray-800">
+                        {item?.createdAt || "don not"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-600">Created By:</p>
+                      <p>{item.createdBy}</p>
+                    </div>
+                  </div>
+
+                  {/* Icon xem chi tiết */}
+                  <div
+                    className="absolute right-3 top-3 cursor-pointer hover:scale-105 transition-transform"
+                    onClick={() => {
+                      handleViewDetail(item?.id);
+                      setShowModal(true);
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <g
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                      >
+                        <path d="M21.544 11.045c.304.426.456.64.456.955c0 .316-.152.529-.456.955C20.178 14.871 16.689 19 12 19c-4.69 0-8.178-4.13-9.544-6.045C2.152 12.529 2 12.315 2 12c0-.316.152-.529.456-.955C3.822 9.129 7.311 5 12 5c4.69 0 8.178 4.13 9.544 6.045" />
+                        <path d="M15 12a3 3 0 1 0-6 0a3 3 0 0 0 6 0" />
+                      </g>
+                    </svg>
+                  </div>
+
+                  {/* Nút action */}
+                  <div className="mt-5 flex gap-4">
+                    {item.status !== "REJECTED" && (
+                      <button
+                        className={`flex-1 py-2 rounded-full text-white font-semibold tracking-wide shadow-md transition-all duration-300
     ${
       item.status === "APPROVED"
         ? "bg-gradient-to-r from-green-400 to-green-600 cursor-not-allowed opacity-80"
         : "bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700"
     }`}
-                    disabled={item.status === "APPROVED"}
-                    onClick={() => {
-                      if (item.status !== "APPROVED") {
-                        handleApprove(item?.id);
-                      }
-                    }}
-                  >
-                    {item.status === "APPROVED" ? "APPROVED" : " Approve"}
-                  </button>
-                )}
+                        disabled={item.status === "APPROVED"}
+                        onClick={() => {
+                          if (item.status !== "APPROVED") {
+                            handleApprove(item?.id);
+                          }
+                        }}
+                      >
+                        {item.status === "APPROVED" ? "APPROVED" : " Approve"}
+                      </button>
+                    )}
 
-                {item.status !== "APPROVED" && (
-                  <Popconfirm
-                    title="Are you sure about refusing this requirement?"
-                    okText="Yes"
-                    cancelText="Cancel  "
-                    onConfirm={() => handleReject(item?.id)}
-                  >
-                    <button
-                      className={`flex-1 py-2 rounded-full text-white font-semibold tracking-wide shadow-md transition-all duration-300
+                    {item.status !== "APPROVED" && (
+                      <Popconfirm
+                        title="Are you sure about refusing this requirement?"
+                        okText="Yes"
+                        cancelText="Cancel  "
+                        onConfirm={() => handleReject(item?.id)}
+                      >
+                        <button
+                          className={`flex-1 py-2 rounded-full text-white font-semibold tracking-wide shadow-md transition-all duration-300
       ${
         item.status === "REJECTED"
           ? "bg-gradient-to-r from-red-400 to-red-600 cursor-not-allowed opacity-80"
           : "bg-gradient-to-r from-red-400 to-red-600 hover:from-red-400 hover:to-red-900"
       }`}
-                      disabled={item.status === "REJECTED"}
-                    >
-                      {item.status === "REJECTED" ? "REJECTED" : "Reject"}
-                    </button>
-                  </Popconfirm>
-                )}
-              </div>
+                          disabled={item.status === "REJECTED"}
+                        >
+                          {item.status === "REJECTED" ? "REJECTED" : "Reject"}
+                        </button>
+                      </Popconfirm>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </main>
+
+          {/* Footer luôn nằm dưới cùng */}
+          <AppFooter />
         </div>
       </div>
-      <div className="w-full h-30 mt-13 "></div>
-      <AppFooter />
 
       <Modal
         open={showModal}

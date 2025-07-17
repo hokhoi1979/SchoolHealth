@@ -374,7 +374,15 @@ function MaterialManage() {
                 }}
               >
                 <Button
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    setOpen(false);
+                    setName("");
+                    setStock("");
+                    setDescription("");
+                    setUsage("");
+                    setCategory(null);
+                    setImage(null);
+                  }}
                   style={{
                     backgroundColor: "#ef4444",
                     color: "white",
