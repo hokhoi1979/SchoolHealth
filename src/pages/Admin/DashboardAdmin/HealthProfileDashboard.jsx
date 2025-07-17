@@ -53,77 +53,121 @@ const HealthProfileDashboard = () => {
 
   return (
     <Spin spinning={loading}>
-      <Row gutter={16}>
-        <Col span={8}>
-          <Card title="Tổng học sinh">
-            <p>{totalStudents}</p>
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card title="Đã có hồ sơ sức khỏe">
-            <p>{totalHealthProfile}</p>
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card title="Chưa có hồ sơ">
-            <p>{studentNotHealthProfile}</p>
-          </Card>
-        </Col>
-      </Row>
+      <div className="p-4">
+        {/* Thống kê tổng quan */}
+        <Row gutter={[16, 16]} className="mb-4">
+          <Col xs={24} sm={8}>
+            <Card
+              className="rounded-2xl shadow h-full"
+              title="Tổng học sinh"
+              bordered={false}
+            >
+              <div className="text-2xl font-semibold text-blue-600">
+                {totalStudents}
+              </div>
+            </Card>
+          </Col>
+          <Col xs={24} sm={8}>
+            <Card
+              className="rounded-2xl shadow h-full"
+              title="Đã có hồ sơ sức khỏe"
+              bordered={false}
+            >
+              <div className="text-2xl font-semibold text-green-600">
+                {totalHealthProfile}
+              </div>
+            </Card>
+          </Col>
+          <Col xs={24} sm={8}>
+            <Card
+              className="rounded-2xl shadow h-full"
+              title="Chưa có hồ sơ"
+              bordered={false}
+            >
+              <div className="text-2xl font-semibold text-red-500">
+                {studentNotHealthProfile}
+              </div>
+            </Card>
+          </Col>
+        </Row>
 
-      <Card title="Tỷ lệ hoàn thành hồ sơ" className="mt-6">
-        <Progress percent={percentProfileCompleted} status="active" />
-      </Card>
+        {/* Tỷ lệ hoàn thành */}
+        <Card
+          title="Tỷ lệ hoàn thành hồ sơ"
+          className="rounded-2xl shadow mb-6"
+          bordered={false}
+        >
+          <Progress percent={percentProfileCompleted} status="active" />
+        </Card>
 
-      <Row gutter={16} className="mt-6">
-        <Col span={8}>
-          <Card title="Dị ứng phổ biến">
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={allergyData}>
-                <XAxis dataKey="allergy" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
-          </Card>
-        </Col>
+        {/* 3 biểu đồ thống kê */}
+        <Row gutter={[16, 16]} className="mb-6">
+          <Col xs={24} md={8}>
+            <Card
+              title="Dị ứng phổ biến"
+              className="rounded-2xl shadow h-full"
+              bordered={false}
+            >
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={allergyData}>
+                  <XAxis dataKey="allergy" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
 
-        <Col span={8}>
-          <Card title="Bệnh mãn tính phổ biến">
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={chronicData}>
-                <XAxis dataKey="disease" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#82ca9d" />
-              </BarChart>
-            </ResponsiveContainer>
-          </Card>
-        </Col>
+          <Col xs={24} md={8}>
+            <Card
+              title="Bệnh mãn tính phổ biến"
+              className="rounded-2xl shadow h-full"
+              bordered={false}
+            >
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={chronicData}>
+                  <XAxis dataKey="disease" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#82ca9d" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
 
-        <Col span={8}>
-          <Card title="Vaccine phổ biến">
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={vaccineData}>
-                <XAxis dataKey="vaccine" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#ffc658" />
-              </BarChart>
-            </ResponsiveContainer>
-          </Card>
-        </Col>
-      </Row>
+          <Col xs={24} md={8}>
+            <Card
+              title="Vaccine phổ biến"
+              className="rounded-2xl shadow h-full"
+              bordered={false}
+            >
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={vaccineData}>
+                  <XAxis dataKey="vaccine" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#ffc658" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
+        </Row>
 
-      <Card title="Học sinh chưa có hồ sơ" className="mt-6">
-        <Table
-          columns={columns}
-          dataSource={studentsWithoutProfile}
-          rowKey="id"
-          pagination={{ pageSize: 5 }}
-        />
-      </Card>
+        {/* Danh sách học sinh chưa có hồ sơ */}
+        <Card
+          title="Học sinh chưa có hồ sơ"
+          className="rounded-2xl shadow"
+          bordered={false}
+        >
+          <Table
+            columns={columns}
+            dataSource={studentsWithoutProfile}
+            rowKey="id"
+            pagination={{ pageSize: 5 }}
+          />
+        </Card>
+      </div>
     </Spin>
   );
 };
