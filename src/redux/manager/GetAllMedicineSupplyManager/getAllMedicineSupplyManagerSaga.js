@@ -31,7 +31,6 @@ function* getAllMedicineSupplyManagerSaga(action) {
     }
   } catch (error) {
     yield put(fetchAllMedicineSupplyManagerFail(error));
-    console.log(error);
   }
 }
 

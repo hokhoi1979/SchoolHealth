@@ -59,7 +59,6 @@ function* patchCheckupConfirmManagerSaga(action) {
     const errMsg =
       error?.response?.data?.message || error.message || "Unknown error";
     yield put(patchManagerFailConfirmCheckup(errMsg));
-    console.log(error);
     toast.error("Confirm Fail");
   }
 }

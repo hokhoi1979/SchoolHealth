@@ -55,7 +55,6 @@ function* patchEndMedicalCheckupManagerSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`End MedicalCheckup Fail: ${errorMessage}`);
     yield put(patchManagerFailEndMedicalCheckup(errorMessage));
-    console.error("Create Vaccine Error:", error);
   }
 }
 

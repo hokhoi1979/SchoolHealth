@@ -53,7 +53,6 @@ function* updateMedicalCheckupManagerSaga(action) {
       error?.response?.data?.message || error?.message || "Đã có lỗi xảy ra";
     toast.error(`Update Checkup Fail: ${errorMessage}`);
     yield put(putManagerFailMedicalCheckup(errorMessage));
-    console.error("Update Checkup Error:", error);
   }
 }
 

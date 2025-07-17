@@ -88,7 +88,7 @@ import watchPostManagerClasstify from "./manager/CreateManagerClassify/createMan
 import watchFetchDetailManagerClassify from "./manager/GetDetallManagerClassify/getDetailManagerClassifySaga";
 import watchPutClassifyManager from "./manager/UpdateDetailClassifyManager/updateDetailClassifyManagerSaga";
 import watchDeleteManagerMedicineClassify from "./manager/DeleteManagerClassify/deleteManagerMedicineClassifySaga";
-import watchDeleteMedicineManager from "./manager/DeleteManagerMedicine/DeleteManagerMedicineSaga";
+import watchDeleteMedicineManager from "./manager/DeleteManagerMedicine/deleteManagerMedicineSaga";
 import watchFetchAllMedicineSupplyManager from "./manager/GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSaga";
 import watchPostManagerSupply from "./manager/CreateManagerSuppy/createManagerSupplySaga";
 import watchPutManagerSupply from "./manager/UpdateManagerSupply/updateManagerSupplySaga";
@@ -133,6 +133,7 @@ import watchMedicalEventDashboard from "./admin/getMedicalEventDashboardSaga";
 import watchHealthProfileDashboard from "./admin/getHealthProfileDashboardSaga";
 
 import watchCompleteMeeting from "./checkupNurse/completeMeeting/completeMeetingSaga";
+import { totalStudentSaga } from "./manager/GetTotalStudent/getTotalStudentSaga";
 import watchFetchUpdateParent from "./profileParent/updateParentProfile/updateParentProfileSaga";
 
 export default function* rootSaga() {
@@ -250,6 +251,7 @@ export default function* rootSaga() {
     watchUpdateMedicalCheckupManager(),
     watchFetchDetailCheckupManager(),
     watchFetchDetailVaccineManager(),
+    totalStudentSaga(),
 
     // watchFetchVaccineResult(),
     //admin

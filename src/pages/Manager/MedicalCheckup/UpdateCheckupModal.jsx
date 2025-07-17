@@ -3,7 +3,11 @@ import { Modal, Input, Button, Radio, Space, Checkbox } from "antd";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { putManagerMedicalCheckup } from "../../../redux/MedicalCheckUpManager/UpdateMedicalCheckupManager/updateMedicalCheckupManagerSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchTotalStudent,
+  resetTotalStudent,
+} from "../../../redux/manager/GetTotalStudent/getTotalStudentSlice";
 
 const UpdateCheckupModal = ({
   visible,
@@ -13,6 +17,7 @@ const UpdateCheckupModal = ({
   classList,
   targetType,
   id,
+  checkupList = [],
 }) => {
   const dispatch = useDispatch();
 
@@ -70,6 +75,33 @@ const UpdateCheckupModal = ({
       );
     }
   };
+  const totalStudents = useSelector(
+    (state) => state.getTotalStudent?.totalStudents ?? 0
+  );
+
+  useEffect(() => {
+    if (targetTypeState === "school") {
+      dispatch(fetchTotalStudent({ targetType: "SCHOOL", targetIds: [] }));
+    } else if (targetTypeState === "class") {
+      if (selectedClassIds.length > 0) {
+        const classIds = selectedClassIds.map(String);
+        dispatch(
+          fetchTotalStudent({ targetType: "CLASS", targetIds: classIds })
+        );
+      } else {
+        dispatch(resetTotalStudent());
+      }
+    } else if (targetTypeState === "grade") {
+      if (selectedGrades.length > 0) {
+        const gradeIds = selectedGrades.map(String);
+        dispatch(
+          fetchTotalStudent({ targetType: "GRADE", targetIds: gradeIds })
+        );
+      } else {
+        dispatch(resetTotalStudent());
+      }
+    }
+  }, [targetTypeState, selectedClassIds, selectedGrades, dispatch]);
 
   const handleUpdate = async () => {
     if (!id) {
@@ -100,7 +132,7 @@ const UpdateCheckupModal = ({
       description: checkupDescription,
     };
 
-    console.log("Payload being sent:", payload);
+    // console.log("Payload being sent:", payload);
 
     try {
       dispatch(
@@ -111,9 +143,9 @@ const UpdateCheckupModal = ({
       onCancel();
     } catch (error) {
       toast.error("Update Failed");
-      console.error("API ERROR:", error);
+      // console.error("API ERROR:", error);
       if (error.response) {
-        console.error("API Response Error:", error.response.data);
+        // console.error("API Response Error:", error.response.data);
       }
     }
   };
@@ -122,7 +154,16 @@ const UpdateCheckupModal = ({
     switch (targetTypeState) {
       case "school":
         return (
-          <div className="text-gray-600 italic">Áp dụng cho toàn trường</div>
+          <div className="text-gray-600 italic">
+            Áp dụng cho toàn trường
+            {targetTypeState === "school" && (
+              <>
+                <div className="text-green-600 text-sm mt-2">
+                  Total students: {totalStudents}
+                </div>
+              </>
+            )}
+          </div>
         );
 
       case "class":
@@ -152,6 +193,13 @@ const UpdateCheckupModal = ({
                   .join(", ")}
               </div>
             )}
+            {targetTypeState === "class" && (
+              <>
+                <div className="text-green-600 text-sm mt-2">
+                  Total students: {totalStudents}
+                </div>
+              </>
+            )}
           </div>
         );
 
@@ -176,6 +224,14 @@ const UpdateCheckupModal = ({
               <div className="text-sm text-blue-600">
                 Grade {selectedGrades.join(", ")}
               </div>
+            )}
+            {targetTypeState === "grade" && (
+              <>
+                {/* checkbox chọn khối */}
+                <div className="text-green-600 text-sm mt-2">
+                  Total students: {totalStudents}
+                </div>
+              </>
             )}
           </div>
         );

@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchAllMedicineSupplyManager } from "../../../redux/manager/GetAllMedicineSupplyManager/getAllMedicineSupplyManagerSlice";
 import { putManagerSupply } from "../../../redux/manager/UpdateManagerSupply/updateManagerSupplySlice";
 import { deleteManagerSupply } from "../../../redux/manager/DeleteManagerSupply/deleteManagerSupplySlice";
+import toast from "react-hot-toast";
 
 const { Option } = Select;
 
@@ -234,10 +235,6 @@ function InventoryManager() {
   const handleUpdate = () => {
     if (selectedRecord) {
       const stockValue = Number(selectedRecord.stock);
-      if (isNaN(stockValue) || stockValue < 0) {
-        message.error("Stock phải là số hợp lệ!");
-        return;
-      }
 
       // const excepting = supply;
       // const double = excepting.some(
@@ -278,7 +275,7 @@ function InventoryManager() {
     const imageUrl = URL.createObjectURL(file);
     setPreviewImage(imageUrl);
 
-    return false; // Chặn upload mặc định nếu dùng Ant Upload
+    return false;
   };
   useEffect(() => {
     if (selectedRecord) {

@@ -27,8 +27,6 @@ function* medicineClasstifyManagerSaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DUCC", response.data);
-
       yield put(fetchMedicineClasstifyManagerSucess(response.data));
     } else {
       yield put(fetchMedicineClasstifyManagerFail(response.status));

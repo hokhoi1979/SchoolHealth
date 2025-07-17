@@ -37,8 +37,6 @@ function* updateVaccineManagerSaga(action) {
     );
 
     if (response.status === 200 || response.status === 201) {
-      console.log("DUCC", response.data);
-
       yield put(putManagerSucessMedical(response.data));
       toast.success("Update Success");
       const fetchData = yield call(
@@ -53,8 +51,6 @@ function* updateVaccineManagerSaga(action) {
       );
 
       if (fetchData.status === 200 || fetchData.status === 201) {
-        console.log("DUCC", fetchData.data);
-
         yield put(fetchVaccineManagerSucess(fetchData.data));
       } else {
         yield put(fetchVaccineManagerFail(fetchData.status));
@@ -67,7 +63,6 @@ function* updateVaccineManagerSaga(action) {
     const errMsg =
       error?.response?.data?.message || error.message || "Unknown error";
     yield put(putMangerFailMedical(errMsg));
-    console.log(error);
   }
 }
 

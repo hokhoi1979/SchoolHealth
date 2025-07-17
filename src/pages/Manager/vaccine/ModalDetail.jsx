@@ -34,7 +34,7 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
           type="primary"
           onClick={() => {
             ok({ title: editableTitle, content: editableContent });
-            cancel(); // đóng modal sau khi gửi
+            cancel();
           }}
         >
           Send Notification
@@ -43,7 +43,6 @@ export const ModalDetail = ({ open, cancel, ok, title, content }) => {
       title={
         <div style={{ textAlign: "center" }}>
           {" "}
-          {/* ✅ Canh giữa tiêu đề */}
           <Input
             value={editableTitle}
             onChange={(e) => setEditableTitle(e.target.value)}
