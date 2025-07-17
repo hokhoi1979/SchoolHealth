@@ -33,6 +33,7 @@ const MedicalRequest = () => {
   const [extraMedications, setExtraMedications] = useState([]);
   const [medications, setMedications] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false); // Add loading state
+  const [extraErrors, setExtraErrors] = useState([]);
 
   useEffect(() => {
     dispatch(fetchStudent());
@@ -66,6 +67,29 @@ const MedicalRequest = () => {
 
   const handleAdd = async (values) => {
     if (isSubmitting) return;
+
+    // Validate extraMedications before anything else
+    const errors = extraMedications.map((item) => {
+      const err = {};
+      if (!item.name) err.name = "Please enter name medicine";
+      if (!item.dosage) err.dosage = "Please enter dosage";
+      if (!item.quantitySent) err.quantitySent = "Please enter quantity";
+      else if (Number(item.quantitySent) < 0)
+        err.quantitySent = "Quantity must be ≥ 0";
+      if (!item.usageTimes) err.usageTimes = "Please enter usage times";
+      if (!item.startDate) err.startDate = "Please enter start date";
+      if (!item.endDate) err.endDate = "Please enter end date";
+      return err;
+    });
+
+    const hasError = errors.some((err) => Object.keys(err).length > 0);
+    if (hasError) {
+      setExtraErrors(errors);
+      toast.error("Please fix errors in additional medications.");
+      return;
+    }
+
+    setExtraErrors([]); // Clear if no errors
 
     setIsSubmitting(true);
     try {
@@ -112,7 +136,7 @@ const MedicalRequest = () => {
               startDate: item.startDate || "",
               endDate: item.endDate || "",
               status: detailData.status || "PENDING",
-              note: detailData.note || "", // ✅ Thêm dòng này
+              note: detailData.note || "", // ✅ preserved
             }));
 
             setMedications((prev) => [...prev, ...mapped]);
@@ -185,102 +209,96 @@ const MedicalRequest = () => {
         >
           <Form layout="vertical" form={form} onFinish={handleAdd}>
             {/* Student */}
-            <div className="mb-4">
-              <label className="block font-medium text-sm mb-1">Student</label>
-              <Form.Item name="studentID" noStyle rules={[{ required: true }]}>
-                <Select
-                  placeholder="Select student"
-                  loading={loading}
-                  className="w-full rounded border"
-                >
-                  {student.map((stu) => (
-                    <Option key={stu.id} value={stu.id}>
-                      {`${stu.account?.fullname} - ${stu.student_code} (${
-                        stu.classAssignments?.[0]?.class?.name || "No Class"
-                      })`}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </div>
+            <Form.Item
+              name="studentID"
+              label="Student"
+              rules={[{ required: true, message: "Please select a student" }]}
+            >
+              <Select
+                placeholder="Select student"
+                loading={loading}
+                className="w-full rounded border"
+              >
+                {student.map((stu) => (
+                  <Option key={stu.id} value={stu.id}>
+                    {`${stu.account?.fullname} - ${stu.student_code} (${
+                      stu.classAssignments?.[0]?.class?.name || "No Class"
+                    })`}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
 
             {/* Main Medicine Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium text-sm mb-1">Name</label>
-                <Form.Item name="name" noStyle rules={[{ required: true }]}>
-                  <Input className="w-full rounded border px-3 py-2" />
-                </Form.Item>
-              </div>
+              <Form.Item
+                name="name"
+                label="Name"
+                rules={[
+                  { required: true, message: "Please enter medicine name" },
+                ]}
+              >
+                <Input className="w-full rounded border px-3 py-2" />
+              </Form.Item>
 
-              <div>
-                <label className="block font-medium text-sm mb-1">Dosage</label>
-                <Form.Item name="dosage" noStyle rules={[{ required: true }]}>
-                  <Input className="w-full rounded border px-3 py-2" />
-                </Form.Item>
-              </div>
+              <Form.Item
+                name="dosage"
+                label="Dosage"
+                rules={[{ required: true, message: "Please enter dosage" }]}
+              >
+                <Input className="w-full rounded border px-3 py-2" />
+              </Form.Item>
 
-              <div>
-                <label className="block font-medium text-sm mb-1">
-                  Quantity Sent
-                </label>
-                <Form.Item
-                  name="quantitySent"
-                  noStyle
-                  rules={[{ required: true }]}
-                >
-                  <Input className="w-full rounded border px-3 py-2" />
-                </Form.Item>
-              </div>
-
-              <div>
-                <label className="block font-medium text-sm mb-1">
-                  Usage Times
-                </label>
-                <Form.Item
-                  name="usageTimes"
-                  noStyle
-                  rules={[{ required: true }]}
-                >
-                  <Input
-                    placeholder="e.g. 08:00, 14:00"
-                    className="w-full rounded border px-3 py-2"
-                  />
-                </Form.Item>
-              </div>
-
-              <div>
-                <label className="block font-medium text-sm mb-1">
-                  Start Date
-                </label>
-                <Form.Item
-                  name="startDate"
-                  noStyle
-                  rules={[{ required: true }]}
-                >
-                  <DatePicker className="w-full rounded border px-2 py-2" />
-                </Form.Item>
-              </div>
-
-              <div>
-                <label className="block font-medium text-sm mb-1">
-                  End Date
-                </label>
-                <Form.Item name="endDate" noStyle rules={[{ required: true }]}>
-                  <DatePicker className="w-full rounded border px-2 py-2" />
-                </Form.Item>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <label className="block font-medium text-sm mb-1">Note</label>
-              <Form.Item name="note" noStyle rules={[{ required: true }]}>
-                <TextArea
-                  rows={2}
+              <Form.Item
+                name="quantitySent"
+                label="Quantity Sent"
+                rules={[{ required: true, message: "Please enter quantity" }]}
+              >
+                <Input
+                  type="number"
                   className="w-full rounded border px-3 py-2"
                 />
               </Form.Item>
+
+              <Form.Item
+                name="usageTimes"
+                label="Usage Times"
+                rules={[
+                  { required: true, message: "Please enter usage times" },
+                ]}
+              >
+                <Input
+                  placeholder="e.g. 08:00, 14:00"
+                  className="w-full rounded border px-3 py-2"
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="startDate"
+                label="Start Date"
+                rules={[
+                  { required: true, message: "Please select start date" },
+                ]}
+              >
+                <DatePicker className="w-full rounded border px-2 py-2" />
+              </Form.Item>
+
+              <Form.Item
+                name="endDate"
+                label="End Date"
+                rules={[{ required: true, message: "Please select end date" }]}
+              >
+                <DatePicker className="w-full rounded border px-2 py-2" />
+              </Form.Item>
             </div>
+
+            <Form.Item
+              name="note"
+              label="Note"
+              rules={[{ required: true, message: "Please enter a note" }]}
+            >
+              <TextArea rows={2} className="w-full rounded border px-3 py-2" />
+            </Form.Item>
 
             {/* Extra Medications */}
             <div className="mt-8 bg-gray-50 p-4 rounded-lg border">
@@ -294,62 +312,110 @@ const MedicalRequest = () => {
                     key={index}
                     className="flex flex-wrap gap-3 bg-white p-3 rounded-md shadow-sm border"
                   >
-                    <Input
-                      className="w-[120px] rounded border"
-                      placeholder="Name"
-                      value={item.name}
-                      onChange={(e) =>
-                        updateExtraMedication(index, "name", e.target.value)
-                      }
-                    />
-                    <Input
-                      className="w-[100px] rounded border"
-                      placeholder="Dosage"
-                      value={item.dosage}
-                      onChange={(e) =>
-                        updateExtraMedication(index, "dosage", e.target.value)
-                      }
-                    />
-                    <Input
-                      className="w-[80px] rounded border"
-                      placeholder="Qty"
-                      value={item.quantitySent}
-                      onChange={(e) =>
-                        updateExtraMedication(
-                          index,
-                          "quantitySent",
-                          e.target.value
-                        )
-                      }
-                    />
-                    <Input
-                      className="w-[140px] rounded border"
-                      placeholder="Times"
-                      value={item.usageTimes}
-                      onChange={(e) =>
-                        updateExtraMedication(
-                          index,
-                          "usageTimes",
-                          e.target.value
-                        )
-                      }
-                    />
-                    <DatePicker
-                      placeholder="Start"
-                      value={item.startDate}
-                      onChange={(date) =>
-                        updateExtraMedication(index, "startDate", date)
-                      }
-                      className="w-[140px] border rounded"
-                    />
-                    <DatePicker
-                      placeholder="End"
-                      value={item.endDate}
-                      onChange={(date) =>
-                        updateExtraMedication(index, "endDate", date)
-                      }
-                      className="w-[140px] border rounded"
-                    />
+                    <div>
+                      <Input
+                        className="w-[120px] rounded border"
+                        placeholder="Name*"
+                        value={item.name}
+                        onChange={(e) =>
+                          updateExtraMedication(index, "name", e.target.value)
+                        }
+                      />
+                      {extraErrors[index]?.name && (
+                        <div className="text-red-500 text-xs">
+                          {extraErrors[index].name}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <Input
+                        className="w-[100px] rounded border"
+                        placeholder="Dosage*"
+                        value={item.dosage}
+                        onChange={(e) =>
+                          updateExtraMedication(index, "dosage", e.target.value)
+                        }
+                      />
+                      {extraErrors[index]?.dosage && (
+                        <div className="text-red-500 text-xs">
+                          {extraErrors[index].dosage}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <Input
+                        className="w-[80px] rounded border"
+                        placeholder="Qty*"
+                        value={item.quantitySent}
+                        onChange={(e) =>
+                          updateExtraMedication(
+                            index,
+                            "quantitySent",
+                            e.target.value
+                          )
+                        }
+                      />
+                      {extraErrors[index]?.quantitySent && (
+                        <div className="text-red-500 text-xs">
+                          {extraErrors[index].quantitySent}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <Input
+                        className="w-[140px] rounded border"
+                        placeholder="Times*"
+                        value={item.usageTimes}
+                        onChange={(e) =>
+                          updateExtraMedication(
+                            index,
+                            "usageTimes",
+                            e.target.value
+                          )
+                        }
+                      />
+                      {extraErrors[index]?.usageTimes && (
+                        <div className="text-red-500 text-xs">
+                          {extraErrors[index].usageTimes}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <DatePicker
+                        placeholder="Start*"
+                        value={item.startDate}
+                        onChange={(date) =>
+                          updateExtraMedication(index, "startDate", date)
+                        }
+                        className="w-[140px] border rounded"
+                      />
+                      {extraErrors[index]?.startDate && (
+                        <div className="text-red-500 text-xs">
+                          {extraErrors[index].startDate}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <DatePicker
+                        placeholder="End*"
+                        value={item.endDate}
+                        onChange={(date) =>
+                          updateExtraMedication(index, "endDate", date)
+                        }
+                        className="w-[140px] border rounded"
+                      />
+                      {extraErrors[index]?.endDate && (
+                        <div className="text-red-500 text-xs">
+                          {extraErrors[index].endDate}
+                        </div>
+                      )}
+                    </div>
+
                     <TextArea
                       rows={1}
                       placeholder="Note"
@@ -359,6 +425,7 @@ const MedicalRequest = () => {
                         updateExtraMedication(index, "note", e.target.value)
                       }
                     />
+
                     <Button
                       danger
                       onClick={() => removeExtraMedication(index)}

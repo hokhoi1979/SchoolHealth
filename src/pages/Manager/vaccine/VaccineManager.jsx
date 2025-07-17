@@ -1,4 +1,4 @@
-import { Button, Checkbox, Input, Modal, Popconfirm, Radio } from "antd";
+import { Alert, Button, Checkbox, Input, Modal, Popconfirm, Radio } from "antd";
 import React, { use, useEffect, useState } from "react";
 import CommonBreadcrumb from "../../../components/CommonBreadcrumb/CommonBreadcrumb";
 import logo from "../../../img/icon.png";
@@ -296,6 +296,16 @@ const VaccineManager = () => {
 
       return cleaned;
     });
+
+    // const excepting = vaccineDay?.data?.vaccinationEvents;
+    // const double = excepting.some(
+    //   (item) =>
+    //     item.name.trim().toLowerCase() === vaccineName.trim().toLowerCase()
+    // );
+    // if (double) {
+    //   alert("trung name");
+    //   return;
+    // }
 
     const payload = {
       name: vaccineName,
